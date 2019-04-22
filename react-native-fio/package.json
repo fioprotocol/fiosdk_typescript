@@ -1,0 +1,47 @@
+{
+    "_from": "react-native-fio",
+    "_id": "react-native-fio@1.0.0",
+    "_inBundle": false,
+    "_integrity": "sha512-nE4gfLu6Y02jZkZULTVzkpn+Ck+Fadsf07WZL02VruHbgEfrCadxxg8csPaEJkvktuOHpPPCYZ8JJjxJhuia1w==",
+    "_location": "/react-native-fio",
+    "_phantomChildren": {},
+    "_requested": {
+        "type": "tag",
+        "registry": true,
+        "raw": "react-native-fio",
+        "name": "react-native-fio",
+        "escapedName": "react-native-fio",
+        "rawSpec": "",
+        "saveSpec": null,
+        "fetchSpec": "latest"
+    },
+    "_requiredBy": [
+        "#USER",
+        "/"
+    ],
+    "_spec": "react-native-fio",
+    "_where": "/Users/davidfaerman/dapix/sdks/typeScript/test1",
+    "author": {
+        "name": "Fio Foundation"
+    },
+    "bundleDependencies": false,
+    "deprecated": false,
+    "description": "Fio SDK",
+    "keywords": [
+        "react-native",
+        "fio",
+        "eos",
+        "native",
+        "client",
+        "blockchain"
+    ],
+    "main": "index.js",
+    "name": "react-native-fio",
+    "peerDependencies": {
+        "react-native": "^0.41.2"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "version": "1.0.0"
+}
