@@ -1,0 +1,5 @@
+rootProject.name = 'test1'
+include ':react-native-fio'
+project(':react-native-fio').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fio/android')
+
+include ':app'
