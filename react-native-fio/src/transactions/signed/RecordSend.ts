@@ -1,5 +1,6 @@
-import { SignedTransaction } from 'react-native-fio/transactions/signed/SignedTransaction';
 import { RecordSendRequest } from '../../entities/RecordSendRequest';
+
+import { SignedTransaction } from './SignedTransaction';
 
 export class RecordSend extends SignedTransaction{
 

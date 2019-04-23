@@ -1,4 +1,4 @@
-import { SignedTransaction } from 'react-native-fio/transactions/signed/SignedTransaction';
+import { SignedTransaction } from './SignedTransaction';
 
 export class RejectFundsRequest extends SignedTransaction{
 

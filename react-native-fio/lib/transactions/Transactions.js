@@ -1,4 +1,5 @@
 "use strict";
+//import ReactNativeFio from 'react-native-fio'
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -8,14 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const react_native_fio_1 = require("react-native-fio");
 class Transactions {
     constructor() {
         this.serilizeEndpoint = "chain/serialize_json";
     }
     getActor() {
         return __awaiter(this, void 0, void 0, function* () {
-            let actor = yield react_native_fio_1.default.getActor(Transactions.publicKey);
+            let actor = yield Transactions.ReactNativeFio.getActor(Transactions.publicKey);
             return actor;
         });
     }
@@ -59,7 +59,7 @@ class Transactions {
         return __awaiter(this, void 0, void 0, function* () {
             let chain = yield this.getChainInfo().catch((error) => console.error("chain"));
             let block = yield this.getBlock(chain).catch((error) => console.error("block"));
-            let signedTransacion = yield react_native_fio_1.default.getSignedTransaction(account, action, serializedData, Transactions.publicKey, Transactions.privateKey, JSON.stringify(chain), JSON.stringify(block));
+            let signedTransacion = yield Transactions.ReactNativeFio.getSignedTransaction(account, action, serializedData, Transactions.publicKey, Transactions.privateKey, JSON.stringify(chain), JSON.stringify(block));
             let sigArray = new Array();
             sigArray.push(signedTransacion.signature);
             let data = {

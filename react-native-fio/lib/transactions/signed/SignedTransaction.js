@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const Transactions_1 = require("react-native-fio/transactions/Transactions");
+const Transactions_1 = require("../Transactions");
 class SignedTransaction extends Transactions_1.Transactions {
     execute() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -3,6 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransactions = require("./transactions/signed");
 const queries = require("./transactions/queries");
 const Transactions_1 = require("./transactions/Transactions");
+// todo's:
+// How do we do unit tests?  We should have unit tests.
+// Add a new method called: getFioPublicAddress()  this will return the fio public key (which is currently the generated actor value)
+// change 'pendingFioRequests' to 'getpendingFioRequests'
+// change 'sentFioRequests' to 'getSentFioRequests'
+// the difference between fioAddress i.e. alice.brd AND fioPublicAddress i.e. '0x132432'
 class FIOSDK {
     constructor(baseUrl, publicKey, privateKey) {
         this.transactions = new Transactions_1.Transactions();
@@ -22,6 +28,7 @@ class FIOSDK {
         let recordSend = new SignedTransactions.RecordSend(recordSendRequest);
         return recordSend.execute();
     }
+    // spell out the parameter name i.e. fioRequestId
     rejectFundsRequest(fioreqid) {
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioreqid);
         return rejectFundsRequest.execute();
@@ -34,18 +41,22 @@ class FIOSDK {
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
         return availabilityCheck.execute();
     }
+    // parameter name should be: fioPublicAddress
     getFioBalance(fioAddress) {
         let getFioBalance = new queries.GetFioBalance(fioAddress);
         return getFioBalance.execute();
     }
+    // parameter name should be: fioPublicAddress
     getNames(fioAddress) {
         let getNames = new queries.GetNames(fioAddress);
         return getNames.execute();
     }
+    // parameter name should be: fioPublicAddress
     pendingFioRequests(publicAddress) {
         let pendingFioRequests = new queries.PendingFioRequests(publicAddress);
         return pendingFioRequests.execute();
     }
+    // parameter name should be: fioPublicAddress
     sentFioRequests(fioAddress) {
         let sentFioRequest = new queries.SentFioRequests(fioAddress);
         return sentFioRequest.execute();

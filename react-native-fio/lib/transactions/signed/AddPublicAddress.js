@@ -8,7 +8,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const SignedTransaction_1 = require("react-native-fio/transactions/signed/SignedTransaction");
+const SignedTransaction_1 = require("./SignedTransaction");
 class AddPublicAddress extends SignedTransaction_1.SignedTransaction {
     constructor(fioAddress, tokenCode, publicAddress) {
         super();

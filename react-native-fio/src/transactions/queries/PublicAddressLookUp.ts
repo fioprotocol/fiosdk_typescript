@@ -1,4 +1,4 @@
-import { Query } from "react-native-fio/transactions/queries/Query";
+import { Query } from "./Query";
 
 
 export class PublicAddressLookUp extends Query{

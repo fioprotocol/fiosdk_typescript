@@ -1,4 +1,4 @@
-import { Transactions } from 'react-native-fio/transactions/Transactions';
+import { Transactions } from '../Transactions';
 
 export abstract class Query extends Transactions{
         abstract ENDPOINT:string;

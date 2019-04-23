@@ -1,5 +1,5 @@
-export { AddPublicAddress } from 'react-native-fio/transactions/signed/AddPublicAddress';
-export { RequestNewFunds } from 'react-native-fio/transactions/signed/RequestNewFunds';
-export { RejectFundsRequest } from 'react-native-fio/transactions/signed/RejectFundsRequest';
-export { RecordSend } from 'react-native-fio/transactions/signed/RecordSend';
-export { RegisterName} from 'react-native-fio/transactions/signed/RegisterName';
+export { AddPublicAddress } from './AddPublicAddress';
+export { RequestNewFunds } from './RequestNewFunds';
+export { RejectFundsRequest } from './RejectFundsRequest';
+export { RecordSend } from './RecordSend';
+export { RegisterName} from './RegisterName';

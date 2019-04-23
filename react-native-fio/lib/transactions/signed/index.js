@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var AddPublicAddress_1 = require("react-native-fio/transactions/signed/AddPublicAddress");
+var AddPublicAddress_1 = require("./AddPublicAddress");
 exports.AddPublicAddress = AddPublicAddress_1.AddPublicAddress;
-var RequestNewFunds_1 = require("react-native-fio/transactions/signed/RequestNewFunds");
+var RequestNewFunds_1 = require("./RequestNewFunds");
 exports.RequestNewFunds = RequestNewFunds_1.RequestNewFunds;
-var RejectFundsRequest_1 = require("react-native-fio/transactions/signed/RejectFundsRequest");
+var RejectFundsRequest_1 = require("./RejectFundsRequest");
 exports.RejectFundsRequest = RejectFundsRequest_1.RejectFundsRequest;
-var RecordSend_1 = require("react-native-fio/transactions/signed/RecordSend");
+var RecordSend_1 = require("./RecordSend");
 exports.RecordSend = RecordSend_1.RecordSend;
-var RegisterName_1 = require("react-native-fio/transactions/signed/RegisterName");
+var RegisterName_1 = require("./RegisterName");
 exports.RegisterName = RegisterName_1.RegisterName;
