@@ -1,13 +1,16 @@
 
 //import ReactNativeFio from 'react-native-fio'
 
+
 export class Transactions {
     static baseUrl:string;
     static publicKey:string;
     static privateKey:string;
     serilizeEndpoint:string = "chain/serialize_json";
-    static ReactNativeFio:any;
-
+    static ReactNativeFio:{
+         getActor(param:any):Promise<any>;
+         getSignedTransaction(params:any,params2:any,params3:any,params4:any,params5:any,params6:any,params7:any):Promise<any>;
+    };
     async getActor():Promise<string>{
         let actor = await Transactions.ReactNativeFio.getActor(Transactions.publicKey)
         return actor;

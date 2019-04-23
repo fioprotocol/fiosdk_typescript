@@ -10,9 +10,10 @@ Pod::Spec.new do |s|
   s.author         = package['author']
   s.license        = package['license']
   s.homepage       = package['homepage']
-  s.source         = { :git => 'https://github.com/dapixio/fiosdk_typescript.git', :tag => "v#{s.version}"}
+  s.source         = { :path =>  './node_modules/'}
   s.platform       = :ios, "7.0"
   s.preserve_paths = '*.js'
+  s.homepage = 'http://fio.dev'
 
   s.source_files = "react-native-fio/ios/**/*.{h,m,swift}"
   s.dependency "React"
