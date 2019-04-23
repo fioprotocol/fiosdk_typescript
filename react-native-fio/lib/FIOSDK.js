@@ -3,8 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransactions = require("./transactions/signed");
 const queries = require("./transactions/queries");
 const Transactions_1 = require("./transactions/Transactions");
-const  ReactNativeFio = requiere('react-native-fio');
-
 // todo's:
 // How do we do unit tests?  We should have unit tests.
 // Add a new method called: getFioPublicAddress()  this will return the fio public key (which is currently the generated actor value)
@@ -17,7 +15,7 @@ class FIOSDK {
         Transactions_1.Transactions.baseUrl = baseUrl;
         Transactions_1.Transactions.publicKey = publicKey;
         Transactions_1.Transactions.privateKey = privateKey;
-        Transactions_1.Transactions.ReactNativeFio = ReactNativeFio;
+        Transactions_1.Transactions.ReactNativeFio = FIOSDK.ReactNativeFio;
     }
     registerName(name) {
         let registerName = new SignedTransactions.RegisterName(name);

@@ -15,12 +15,14 @@ import { RecordSendRequest }  from './entities/RecordSendRequest';
 // the difference between fioAddress i.e. alice.brd AND fioPublicAddress i.e. '0x132432'
 
 export class FIOSDK{
+    static ReactNativeFio:any;
     transactions:Transactions 
     constructor(baseUrl:string,publicKey:string,privateKey:string){
         this.transactions = new Transactions();   
         Transactions.baseUrl = baseUrl;
         Transactions.publicKey = publicKey;
-        Transactions.privateKey = privateKey;     
+        Transactions.privateKey = privateKey; 
+        Transactions.ReactNativeFio = FIOSDK.ReactNativeFio;   
     }
 
     registerName(name:string):Promise<any>{
