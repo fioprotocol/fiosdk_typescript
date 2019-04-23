@@ -8,8 +8,8 @@
     },
     "dependencies": {
         "querystring": "^0.2.0",
-        "react": "16.8.3",
-        "react-native": "0.59.3",
+        "react": "16.4.1",
+        "react-native": "0.55.3",
         "react-native-fio": "^1.0.0"
     },
     "devDependencies": {
