@@ -3,16 +3,6 @@ import * as queries from './transactions/queries'
 import { Transactions } from './transactions/Transactions';
 import { RecordSendRequest }  from './entities/RecordSendRequest';
 
-// todo's:
-// How do we do unit tests?  We should have unit tests.
-
-// Add a new method called: getFioPublicAddress()  this will return the fio public key (which is currently the generated actor value)
-
-// change 'pendingFioRequests' to 'getpendingFioRequests'
-// change 'sentFioRequests' to 'getSentFioRequests'
-
-
-// the difference between fioAddress i.e. alice.brd AND fioPublicAddress i.e. '0x132432'
 
 export class FIOSDK{
     static ReactNativeFio:any;
@@ -23,6 +13,10 @@ export class FIOSDK{
         Transactions.publicKey = publicKey;
         Transactions.privateKey = privateKey; 
         Transactions.ReactNativeFio = FIOSDK.ReactNativeFio;   
+    }
+    
+    getFioPublicAddress():Promise<any>{
+        return this.transactions.getActor()
     }
 
     registerName(name:string):Promise<any>{
@@ -70,13 +64,13 @@ export class FIOSDK{
     }
 
 // parameter name should be: fioPublicAddress
-    pendingFioRequests(publicAddress:string):Promise<any>{
+getpendingFioRequests(publicAddress:string):Promise<any>{
         let pendingFioRequests = new queries.PendingFioRequests(publicAddress);
         return pendingFioRequests.execute()
     }
 
 // parameter name should be: fioPublicAddress
-    sentFioRequests(fioAddress:string):Promise<any>{
+getSentFioRequests(fioAddress:string):Promise<any>{
         let sentFioRequest = new queries.SentFioRequests(fioAddress);
         return sentFioRequest.execute()
     }
