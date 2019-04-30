@@ -5,9 +5,8 @@ let ReactNativeFio = RNFio;
 
 export default ReactNativeFio;
 
-//export { FIOSDK } from 'react-native-fio/FIOSDK';
-import { FIOSDK } from 'react-native-fio/lib/FIOSDK';
-const FioSDK = FIOSDK;
-FioSDK.ReactNativeFio = ReactNativeFio;
+fio = require('./lib/FIOSDK');
+const FIOSDK = fio;
+FIOSDK.ReactNativeFio = ReactNativeFio;
 
-export { FioSDK };
+export { FIOSDK };
