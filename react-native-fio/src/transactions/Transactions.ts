@@ -72,7 +72,7 @@ export class Transactions {
         }
         
         return this.executeCall(endpoint,JSON.stringify(data))
-    } //11 70539183 13:39
+    }
 
     executeCall(endPoint:string,body:string,fetchOptions?:any):Promise<any>{
         let options:any;

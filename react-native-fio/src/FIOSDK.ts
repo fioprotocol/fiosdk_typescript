@@ -1,8 +1,7 @@
-import  * as  SignedTransactions  from './transactions/signed';
-import * as queries from './transactions/queries'
-import { Transactions } from './transactions/Transactions';
 import { RecordSendRequest }  from './entities/RecordSendRequest';
-
+import { Transactions } from './transactions/Transactions';
+import  * as  SignedTransactions  from './transactions/signed';
+import * as queries from './transactions/queries';
 
 export class FIOSDK{
     static ReactNativeFio:any;
@@ -34,9 +33,8 @@ export class FIOSDK{
         return recordSend.execute();
     }
 
-// spell out the parameter name i.e. fioRequestId
-    rejectFundsRequest(fioreqid: string):Promise<any>{
-        let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioreqid)
+    rejectFundsRequest(fioRequestId: string):Promise<any>{
+        let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId)
         return rejectFundsRequest.execute();
     }
 
@@ -50,28 +48,24 @@ export class FIOSDK{
         return availabilityCheck.execute();
     }
     
-// parameter name should be: fioPublicAddress
-    getFioBalance(fioAddress: string):Promise<any>{
-        let getFioBalance = new queries.GetFioBalance(fioAddress);
+    getFioBalance(fioPublicAddress: string):Promise<any>{
+        let getFioBalance = new queries.GetFioBalance(fioPublicAddress);
         return getFioBalance.execute();
     }
 
-// parameter name should be: fioPublicAddress
-    getNames(fioAddress:string):Promise<any>{
-        let getNames = new queries.GetNames(fioAddress);
+    getNames(fioPublicAddress:string):Promise<any>{
+        let getNames = new queries.GetNames(fioPublicAddress);
         return getNames.execute()
 
     }
 
-// parameter name should be: fioPublicAddress
-getpendingFioRequests(publicAddress:string):Promise<any>{
-        let pendingFioRequests = new queries.PendingFioRequests(publicAddress);
+    getpendingFioRequests(fioPublicAddress:string):Promise<any>{
+        let pendingFioRequests = new queries.PendingFioRequests(fioPublicAddress);
         return pendingFioRequests.execute()
     }
 
-// parameter name should be: fioPublicAddress
-getSentFioRequests(fioAddress:string):Promise<any>{
-        let sentFioRequest = new queries.SentFioRequests(fioAddress);
+    getSentFioRequests(fioPublicAddress:string):Promise<any>{
+        let sentFioRequest = new queries.SentFioRequests(fioPublicAddress);
         return sentFioRequest.execute()
     }
 

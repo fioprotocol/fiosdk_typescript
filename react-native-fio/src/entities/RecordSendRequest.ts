@@ -9,6 +9,6 @@ export interface RecordSendRequest{
         status:string,
         obt_id:string,
         metadata:string,
-        fio_request_id:string
+        fio_request_id:string,
         actor:string
 }

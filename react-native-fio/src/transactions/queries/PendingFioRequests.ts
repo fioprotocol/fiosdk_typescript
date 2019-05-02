@@ -1,7 +1,7 @@
 import { Query } from "./Query";
+import { PendingFioRequestsResponse } from "../../entities/PendingFioRequestsResponse";
 
-
-export class PendingFioRequests extends Query{
+export class PendingFioRequests extends Query<PendingFioRequestsResponse>{
     ENDPOINT:string = "chain/get_pending_fio_requests";
     publicAddress:string;
 

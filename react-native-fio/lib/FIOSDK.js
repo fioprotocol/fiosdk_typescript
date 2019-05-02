@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Transactions_1 = require("./transactions/Transactions");
 const SignedTransactions = require("./transactions/signed");
 const queries = require("./transactions/queries");
-const Transactions_1 = require("./transactions/Transactions");
 class FIOSDK {
     constructor(baseUrl, publicKey, privateKey) {
         this.transactions = new Transactions_1.Transactions();
@@ -26,9 +26,8 @@ class FIOSDK {
         let recordSend = new SignedTransactions.RecordSend(recordSendRequest);
         return recordSend.execute();
     }
-    // spell out the parameter name i.e. fioRequestId
-    rejectFundsRequest(fioreqid) {
-        let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioreqid);
+    rejectFundsRequest(fioRequestId) {
+        let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId);
         return rejectFundsRequest.execute();
     }
     requestNewFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, tokenCode, amount, metaData) {
@@ -39,24 +38,20 @@ class FIOSDK {
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
         return availabilityCheck.execute();
     }
-    // parameter name should be: fioPublicAddress
-    getFioBalance(fioAddress) {
-        let getFioBalance = new queries.GetFioBalance(fioAddress);
+    getFioBalance(fioPublicAddress) {
+        let getFioBalance = new queries.GetFioBalance(fioPublicAddress);
         return getFioBalance.execute();
     }
-    // parameter name should be: fioPublicAddress
-    getNames(fioAddress) {
-        let getNames = new queries.GetNames(fioAddress);
+    getNames(fioPublicAddress) {
+        let getNames = new queries.GetNames(fioPublicAddress);
         return getNames.execute();
     }
-    // parameter name should be: fioPublicAddress
-    getpendingFioRequests(publicAddress) {
-        let pendingFioRequests = new queries.PendingFioRequests(publicAddress);
+    getpendingFioRequests(fioPublicAddress) {
+        let pendingFioRequests = new queries.PendingFioRequests(fioPublicAddress);
         return pendingFioRequests.execute();
     }
-    // parameter name should be: fioPublicAddress
-    getSentFioRequests(fioAddress) {
-        let sentFioRequest = new queries.SentFioRequests(fioAddress);
+    getSentFioRequests(fioPublicAddress) {
+        let sentFioRequest = new queries.SentFioRequests(fioPublicAddress);
         return sentFioRequest.execute();
     }
     publicAddressLookUp(fioAddress, tokenCode) {
