@@ -1,7 +1,8 @@
 import { Query } from "./Query";
+import { SentFioRequestResponse } from "../../entities/SentFioRequestsResponse";
 
 
-export class SentFioRequests extends Query{
+export class SentFioRequests extends Query<SentFioRequestResponse>{
     ENDPOINT:string = "chain/get_sent_fio_requests";
     fioAddress:string;
 
