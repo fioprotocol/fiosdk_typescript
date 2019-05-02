@@ -6,7 +6,7 @@ import * as queries from './transactions/queries';
 export class FIOSDK{
     static ReactNativeFio:any;
     transactions:Transactions 
-    constructor(baseUrl:string,publicKey:string,privateKey:string){
+    constructor(privateKey:string,publicKey:string,baseUrl:string){
         this.transactions = new Transactions();   
         Transactions.baseUrl = baseUrl;
         Transactions.publicKey = publicKey;

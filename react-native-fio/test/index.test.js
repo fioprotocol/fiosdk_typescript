@@ -5,8 +5,9 @@ const serverMocks = require('./serverMockResponses');
 global.fetch = require('jest-fetch-mock')
 
 FIOSDK.FIOSDK.ReactNativeFio = new ReactNativeFio.ReactNativeFio();
-fiosdk = new FIOSDK.FIOSDK("http://34.220.57.45:8889/v1/", "EOS7isxEua78KPVbGzKemH4nj2bWE52gqj8Hkac3tc7jKNvpfWzYS",
-    "5KBX1dwHME4VyuUss2sYM25D5ZTDvyYrbEz37UJqwAVAsR4tGuY");
+fiosdk = new FIOSDK.FIOSDK("5KBX1dwHME4VyuUss2sYM25D5ZTDvyYrbEz37UJqwAVAsR4tGuY",
+    "EOS7isxEua78KPVbGzKemH4nj2bWE52gqj8Hkac3tc7jKNvpfWzYS",
+    "http://34.220.57.45:8889/v1/");
 
 test('getActor, should return a string "actor"', () => {
     fiosdk.getFioPublicAddress().then(res => expect(res).toBe("actor"));
