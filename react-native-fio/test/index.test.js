@@ -44,7 +44,7 @@ test('GetFioBalance', done => {
     fetch.mockResponse(JSON.stringify(serverMocks.FioBalance));
 
     function callback(data) {
-        //expect(data).toBe(false)
+        expect(data.balance).toBe("1000.0000")
         expect(fetch.mock.calls.length).toEqual(1)
         expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_fio_balance')
         done();
@@ -58,15 +58,16 @@ test('GetFioBalance', done => {
 
 test('GetNames', done => {
     fetch.resetMocks()
-    fetch.mockResponse(JSON.stringify(serverMocks.FioBalance));
+    fetch.mockResponse(JSON.stringify(serverMocks.FioNames));
 
     function callback(data) {
-        //expect(data).toBe(false)
+        expect(data.fio_domains[0].expiration).toBe("15734567")
         expect(fetch.mock.calls.length).toEqual(1)
         expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_fio_names')
         done();
     }
     fiosdk.getNames("name.brd").then(res => {
+        console.log("GetNames response: %j", res)
         callback(res);
     }).catch(error => {
         console.error(error)

@@ -52,7 +52,17 @@ const serverMocks = {
         }],
     },
     FioBalance: {
-
+        balance: "1000.0000"
+    },
+    FioNames: {
+        "fio_domains": [{
+            "fio_domain": "alice",
+            "expiration": "15734567"
+        }],
+        "fio_addresses": [{
+            "fio_address": "purse.alice",
+            "expiration": "15734567"
+        }]
     },
     pendingRequest: {
         "requests": [{ "fio_request_id": 86, "payer_fio_address": "76456891.brd", "payee_fio_address": "76454437.brd", "payee_public_address": "76454437.brd", "amount": "100.0", "token_code": "ETH", "metadata": "{\"memo\": \"testingWithVitor\"}", "time_stamp": 1556676465 }]
@@ -175,9 +185,44 @@ const serverMocks = {
             "except": null
         }
     },
-    requestNewFunds: { "processed": { "id": "c4c0482faf743064367c660251e0f43e6a7eb9918eaef40303b1e41a53a0322b", "block_num": 2646444, "block_time": "2019-05-01T04:33:02.500", "producer_block_id": null, "receipt": { "status": "executed", "cpu_usage_us": 841, "net_usage_words": 26 }, "elapsed": 841, "net_usage": 208, "scheduled": false, "action_traces": [{ "receipt": { "receiver": "fio.reqobt", "response": "{\"fio_request_id\":94,\"status\":\"requested\"}", "act_digest": "45f0980d70c1c192598a7ac1be85dff5e2ec7fcdec9567c3c74595f0b20a66bc", "global_sequence": 2650010, "recv_sequence": 153, "auth_sequence": [
+    requestNewFunds: {
+        "processed": {
+            "id": "c4c0482faf743064367c660251e0f43e6a7eb9918eaef40303b1e41a53a0322b",
+            "block_num": 2646444,
+            "block_time": "2019-05-01T04:33:02.500",
+            "producer_block_id": null,
+            "receipt": { "status": "executed", "cpu_usage_us": 841, "net_usage_words": 26 },
+            "elapsed": 841,
+            "net_usage": 208,
+            "scheduled": false,
+            "action_traces": [{
+                "receipt": {
+                    "receiver": "fio.reqobt",
+                    "response": "{\"fio_request_id\":94,\"status\":\"requested\"}",
+                    "act_digest": "45f0980d70c1c192598a7ac1be85dff5e2ec7fcdec9567c3c74595f0b20a66bc",
+                    "global_sequence": 2650010,
+                    "recv_sequence": 153,
+                    "auth_sequence": [
                         ["p4hc54ppiofx", 73]
-                    ], "code_sequence": 1, "abi_sequence": 1 }, "act": { "account": "fio.reqobt", "name": "newfundsreq", "authorization": [{ "actor": "p4hc54ppiofx", "permission": "active" }], "data": { "payer_fio_address": "77632281.brd", "payee_fio_address": "77081021.brd", "payee_public_address": "0xab5801a7d398351b8be11c439e05c5b3259aec9b", "amount": "100.0", "token_code": "ETH", "metadata": "{\"memo\": \"Invoice1234\"}", "actor": "p4hc54ppiofx" }, "hex_data": "0c37373633323238312e6272640c37373038313032312e6272642a307861623538303161376433393833353162386265313163343339653035633562333235396165633962053130302e3003455448177b226d656d6f223a2022496e766f69636531323334227d0c7034686335347070696f6678" }, "context_free": false, "elapsed": 699, "console": "account: 12185195308425484240 actor: 12185195308425484240\n", "trx_id": "c4c0482faf743064367c660251e0f43e6a7eb9918eaef40303b1e41a53a0322b", "block_num": 2646444, "block_time": "2019-05-01T04:33:02.500", "producer_block_id": null, "account_ram_deltas": [{ "account": "fio.reqobt", "delta": 477 }], "except": null, "inline_traces": [] }], "except": null } }
+                    ],
+                    "code_sequence": 1,
+                    "abi_sequence": 1
+                },
+                "act": { "account": "fio.reqobt", "name": "newfundsreq", "authorization": [{ "actor": "p4hc54ppiofx", "permission": "active" }], "data": { "payer_fio_address": "77632281.brd", "payee_fio_address": "77081021.brd", "payee_public_address": "0xab5801a7d398351b8be11c439e05c5b3259aec9b", "amount": "100.0", "token_code": "ETH", "metadata": "{\"memo\": \"Invoice1234\"}", "actor": "p4hc54ppiofx" }, "hex_data": "0c37373633323238312e6272640c37373038313032312e6272642a307861623538303161376433393833353162386265313163343339653035633562333235396165633962053130302e3003455448177b226d656d6f223a2022496e766f69636531323334227d0c7034686335347070696f6678" },
+                "context_free": false,
+                "elapsed": 699,
+                "console": "account: 12185195308425484240 actor: 12185195308425484240\n",
+                "trx_id": "c4c0482faf743064367c660251e0f43e6a7eb9918eaef40303b1e41a53a0322b",
+                "block_num": 2646444,
+                "block_time": "2019-05-01T04:33:02.500",
+                "producer_block_id": null,
+                "account_ram_deltas": [{ "account": "fio.reqobt", "delta": 477 }],
+                "except": null,
+                "inline_traces": []
+            }],
+            "except": null
+        }
+    }
 
 }
 
