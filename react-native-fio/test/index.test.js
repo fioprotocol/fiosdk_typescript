@@ -230,3 +230,20 @@ test('RequestNewFunds', done => {
         console.error(error)
     })
 })
+
+test('TransferToken', done => {
+    fetch.resetMocks()
+    fetch.mockResponse(JSON.stringify(serverMocks.transferToken));
+
+    function callback(data) {
+        expect(data).toBe("{\"status\": \"OK\",\"fee_collected\": 0}")
+        expect(fetch.mock.calls.length).toEqual(4)
+        expect(fetch.mock.calls[3][0]).toEqual('http://34.220.57.45:8889/v1/chain/transfer_tokens')
+        done();
+    }
+    fiosdk.transferTokens("EOS8PRe4WRZJj5mkem6qVGKyvNFgPsNnjNN6kPhh6EaCpzCVin5Jj", "1.0").then(res => {
+        callback(res.processed.action_traces[0].receipt.response);
+    }).catch(error => {
+        console.error(error)
+    })
+})

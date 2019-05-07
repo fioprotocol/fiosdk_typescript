@@ -60,10 +60,6 @@ class Entrypoint: NSObject {
         resolve(actor)
     }
     
-    @objc func test(_ banana: NSString, nothing:NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        resolve("ok test")
-    }
-    
     @objc func getSignedTransaction(_ account: NSString,action: NSString, serializedData: NSString,pubKey: NSString,privKey: NSString,chainJson: NSString,blockJson:NSString ,resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         if let chainData = chainJson.data(using: String.Encoding.utf8.rawValue),
            let blockData = blockJson.data(using: String.Encoding.utf8.rawValue) {
@@ -96,6 +92,21 @@ class Entrypoint: NSObject {
     static func requiresMainQueueSetup() -> Bool {
         return true
     }
+ 
+    
+    @objc func generatePrivatePubKeyPair(_ mnemonic: String,resolver resolve: @escaping RCTPromiseResolveBlock,  rejecter reject: @escaping RCTPromiseRejectBlock) {
+        let slipFIO: UInt32 = 235
+        do {
+            let privKey = try PrivateKey(enclave: .Secp256k1, mnemonicString: mnemonic, slip: slipFIO)
+            guard let pk = privKey else { reject ("code", "message",NSError(domain: "KeyGeneration", code: -999, userInfo: nil)) }
+            let result = ["privateKey": pk.rawPrivateKey(), "publicKey":PublicKey(privateKey: pk).rawPublicKey() ]
+            resolve (result)
+        }
+        catch {
+            reject ("code", "message",error as NSError)
+        }
+    } 
+
 }
 
 

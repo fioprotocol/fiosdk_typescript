@@ -14,6 +14,10 @@ export class FIOSDK{
         Transactions.ReactNativeFio = FIOSDK.ReactNativeFio;   
     }
     
+    static createKeyPair(mnemonic:string):Promise<any>{
+        return FIOSDK.ReactNativeFio.generatePrivatePubKeyPair(mnemonic)
+    }
+
     getFioPublicAddress():Promise<any>{
         return this.transactions.getActor()
     }
@@ -72,5 +76,10 @@ export class FIOSDK{
     publicAddressLookUp(fioAddress:string, tokenCode:string):Promise<any>{
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
         return publicAddressLookUp.execute();
+    }
+
+    transferTokens(payeePublicKey:string,amount:string):Promise<any>{
+        let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount);
+        return transferTokens.execute()
     }
 }
