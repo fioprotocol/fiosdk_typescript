@@ -10,3 +10,5 @@ var RecordSend_1 = require("./RecordSend");
 exports.RecordSend = RecordSend_1.RecordSend;
 var RegisterName_1 = require("./RegisterName");
 exports.RegisterName = RegisterName_1.RegisterName;
+var TransferTokens_1 = require("./TransferTokens");
+exports.TransferTokens = TransferTokens_1.TransferTokens;

@@ -4,12 +4,15 @@ const Transactions_1 = require("./transactions/Transactions");
 const SignedTransactions = require("./transactions/signed");
 const queries = require("./transactions/queries");
 class FIOSDK {
-    constructor(baseUrl, publicKey, privateKey) {
+    constructor(privateKey, publicKey, baseUrl) {
         this.transactions = new Transactions_1.Transactions();
         Transactions_1.Transactions.baseUrl = baseUrl;
         Transactions_1.Transactions.publicKey = publicKey;
         Transactions_1.Transactions.privateKey = privateKey;
         Transactions_1.Transactions.ReactNativeFio = FIOSDK.ReactNativeFio;
+    }
+    static createKeyPair(mnemonic) {
+        return FIOSDK.ReactNativeFio.generatePrivatePubKeyPair(mnemonic);
     }
     getFioPublicAddress() {
         return this.transactions.getActor();
@@ -57,6 +60,10 @@ class FIOSDK {
     publicAddressLookUp(fioAddress, tokenCode) {
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
         return publicAddressLookUp.execute();
+    }
+    transferTokens(payeePublicKey, amount) {
+        let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey, amount);
+        return transferTokens.execute();
     }
 }
 exports.FIOSDK = FIOSDK;

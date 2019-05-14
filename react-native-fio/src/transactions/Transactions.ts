@@ -1,7 +1,3 @@
-
-//import ReactNativeFio from 'react-native-fio'
-
-
 export class Transactions {
     static baseUrl:string;
     static publicKey:string;

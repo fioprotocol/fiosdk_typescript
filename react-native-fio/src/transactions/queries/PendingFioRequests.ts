@@ -3,14 +3,14 @@ import { PendingFioRequestsResponse } from "../../entities/PendingFioRequestsRes
 
 export class PendingFioRequests extends Query<PendingFioRequestsResponse>{
     ENDPOINT:string = "chain/get_pending_fio_requests";
-    publicAddress:string;
+    fioPublicKey:string;
 
-    constructor(publicAddress:string){
+    constructor(fioPublicKey:string){
         super();
-        this.publicAddress = publicAddress
+        this.fioPublicKey = fioPublicKey
     }
 
     getData() {
-        return {fio_public_address:this.publicAddress};
+        return {fio_public_key:this.fioPublicKey};
     }
 }

@@ -10,7 +10,7 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Alert} from 'react-native';
-import { FIOSDK } from 'react-native-fio/FIOSDK';
+import { FIOSDK } from 'react-native-fio/src/FIOSDK';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -38,10 +38,18 @@ export default class App extends Component<Props> {
   }
   
   async fio(){
-    let fiosdk = new FIOSDK("http://34.220.57.45:8889/v1/","EOS7isxEua78KPVbGzKemH4nj2bWE52gqj8Hkac3tc7jKNvpfWzYS",
-    "5KBX1dwHME4VyuUss2sYM25D5ZTDvyYrbEz37UJqwAVAsR4tGuY");
-    fiosdk.registerName("hola4341.brd").then((res)=>console.debug("All good " + JSON.stringify(res))).catch((error)=>console.error("something wrong " + error));
-    fiosdk.availabilityCheck("hola4341.brd").then((res)=>console.debug("All good " + JSON.stringify(res))).catch((error)=>console.error("something wrong " + error));
+    //console.error("keys: por generar")
+    let fiosdk = new FIOSDK("http://34.220.57.45:8889/v1/","EOS7zPgz8vH4PzhpGFLSC4fKPfxn29AiXsuVXMA1ETihqJ5QtbhAC",
+    "5JzW8LSE7YQJ6x2Xfjq6xFaBdsgejPJthP7uidEAuLoDMeHJVDE");
+    //fiosdk.registerName("hola4341.brd").then((res)=>console.debug("All good " + JSON.stringify(res))).catch((error)=>console.error("something wrong " + error));
+    //fiosdk.availabilityCheck("hola4341.brd").then((res)=>console.debug("All good " + JSON.stringify(res))).catch((error)=>console.error("something wrong " + error));
+    /*try{
+      let keyPair = await FIOSDK.createKeyPair("mirror bid phrase scheme wing valid fringe insane august wasp join toast")
+      console.error("keys: %j", keyPair)
+    }catch(error){
+      console.error("error: " + error);
+    }*/
+    fiosdk.rejectFundsRequest("1")
   }
 
   render() {

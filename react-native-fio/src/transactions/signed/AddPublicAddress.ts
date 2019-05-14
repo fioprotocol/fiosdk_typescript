@@ -22,7 +22,8 @@ export class AddPublicAddress extends SignedTransaction{
             fio_address:this.fioAddress,
             token_code:this.tokenCode,
             public_address:this.publicAddress,
-            actor: actor
+            actor: actor,
+            max_fee: 0
         }
         return data;
     }

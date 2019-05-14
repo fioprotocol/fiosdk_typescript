@@ -2,6 +2,9 @@ import { RecordSendRequest }  from './entities/RecordSendRequest';
 import { Transactions } from './transactions/Transactions';
 import  * as  SignedTransactions  from './transactions/signed';
 import * as queries from './transactions/queries';
+import { Constants } from './utils/constants'
+import { RegisterFioAddress } from './transactions/signed/RegisterFioAddress';
+import { MockRegisterFioAddress } from './transactions/signed/MockRegisterFioAddress';
 
 export class FIOSDK{
     static ReactNativeFio:any;
@@ -22,9 +25,14 @@ export class FIOSDK{
         return this.transactions.getActor()
     }
 
-    registerName(name:string):Promise<any>{
-        let registerName =  new SignedTransactions.RegisterName(name);
-        return registerName.execute()
+    RegisterFioAddress(fioAddress:string):Promise<any>{
+        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress);
+        return registerFioAddress.execute()
+    }
+
+    RegisterFioDomain(fioDomain:string):Promise<any>{
+        let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain);
+        return registerFioDomain.execute()
     }
 
     addPublicAddress(fioAddress:string,tokenCode:string,publicAddress:string):Promise<any>{
@@ -57,19 +65,19 @@ export class FIOSDK{
         return getFioBalance.execute();
     }
 
-    getNames(fioPublicAddress:string):Promise<any>{
-        let getNames = new queries.GetNames(fioPublicAddress);
+    getNames(fioPublicKey:string):Promise<any>{
+        let getNames = new queries.GetNames(fioPublicKey);
         return getNames.execute()
 
     }
 
-    getpendingFioRequests(fioPublicAddress:string):Promise<any>{
-        let pendingFioRequests = new queries.PendingFioRequests(fioPublicAddress);
+    getpendingFioRequests(fioPublicKey:string):Promise<any>{
+        let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
         return pendingFioRequests.execute()
     }
 
-    getSentFioRequests(fioPublicAddress:string):Promise<any>{
-        let sentFioRequest = new queries.SentFioRequests(fioPublicAddress);
+    getSentFioRequests(fioPublicKey:string):Promise<any>{
+        let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
         return sentFioRequest.execute()
     }
 
@@ -81,5 +89,20 @@ export class FIOSDK{
     transferTokens(payeePublicKey:string,amount:string):Promise<any>{
         let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount);
         return transferTokens.execute()
+    }
+
+    getFee(endPoint:string,fioAddress=""):Promise<any>{
+        let fioFee = new queries.GetFee(endPoint,fioAddress);
+        return fioFee.execute()
+    }
+
+    MockRegisterFioAddress(fioAddress:string,publicKey:string){
+        let server = "mock.dapix.io/mockd/DEV2"
+        let mockRegisterFioAddress = new MockRegisterFioAddress(fioAddress,publicKey,server)
+        return mockRegisterFioAddress.execute();
+    }
+
+    getMultiplier(){
+        return Constants.multiplier;
     }
 }

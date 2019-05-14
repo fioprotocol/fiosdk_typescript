@@ -32,7 +32,8 @@ export class RequestNewFunds extends SignedTransaction{
             amount:this.amount,
             token_code:this.tokenCode,
             metadata:this.metaData,
-            actor: actor
+            actor: actor,
+            max_fee: 0
         }
         return data;
     }

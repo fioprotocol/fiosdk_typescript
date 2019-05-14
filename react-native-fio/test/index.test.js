@@ -238,7 +238,8 @@ test('TransferToken', done => {
     function callback(data) {
         expect(data).toBe("{\"status\": \"OK\",\"fee_collected\": 0}")
         expect(fetch.mock.calls.length).toEqual(4)
-        expect(fetch.mock.calls[3][0]).toEqual('http://34.220.57.45:8889/v1/chain/transfer_tokens')
+        expect(fetch.mock.calls[3][0]).toEqual('http://34.220.57.45:8889/v1/chain/transfer_tokens_pub_key')
+        expect(fetch.mock.calls[0][1].body).toEqual("{\"action\":\"transferfio\",\"json\":{\"payee_public_key\":\"actor\",\"amount\":\"1.0\",\"max_fee\":0,\"actor\":\"actor\"}}")
         done();
     }
     fiosdk.transferTokens("EOS8PRe4WRZJj5mkem6qVGKyvNFgPsNnjNN6kPhh6EaCpzCVin5Jj", "1.0").then(res => {

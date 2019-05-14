@@ -18,7 +18,8 @@ export class RejectFundsRequest extends SignedTransaction{
         let actor = await this.getActor();
         let data = {
             fio_request_id:this.fioreqid,
-            actor: actor
+            actor: actor,
+            max_fee: 0
         }
         return data;
     }

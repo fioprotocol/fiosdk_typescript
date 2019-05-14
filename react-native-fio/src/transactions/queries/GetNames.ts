@@ -4,14 +4,14 @@ import { FioNamesResponse } from "../../entities/FioNamesResponse";
 
 export class GetNames extends Query<FioNamesResponse>{
     ENDPOINT:string = "chain/get_fio_names";
-    fioAddress:string;
+    fioPublicKey:string;
 
-    constructor(fioAddress:string){
+    constructor(fioPublicKey:string){
         super();
-        this.fioAddress = fioAddress
+        this.fioPublicKey = fioPublicKey
     }
 
     getData() {
-        return {fio_public_address:this.fioAddress};
+        return {fio_public_key:this.fioPublicKey};
     }
 }
