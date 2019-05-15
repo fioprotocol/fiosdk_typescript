@@ -86,8 +86,8 @@ export class FIOSDK{
         return publicAddressLookUp.execute();
     }
 
-    transferTokens(payeePublicKey:string,amount:string):Promise<any>{
-        let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount);
+    transferTokens(payeePublicKey:string,amount:string,maxFee:number):Promise<any>{
+        let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount,maxFee);
         return transferTokens.execute()
     }
 
