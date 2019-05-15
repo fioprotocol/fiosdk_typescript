@@ -1,3 +1,4 @@
 .DS_Store
 /example/react-native-fio
 /react-native-fio/test/fails.tst.js
+/.vscode
