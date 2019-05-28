@@ -1,5 +1,5 @@
 export class Constants{
-    static endPoints:{
+    static endPoints:any = {
         AddPublicAddress:"add_pub_address",
         RecordSend:"record_send",
         RegisterFioAddress:"register_fio_address",
@@ -12,7 +12,15 @@ export class Constants{
     static feeNoAddressOperation:Array<string> = [
         Constants.endPoints.RegisterFioDomain,
         Constants.endPoints.RegisterFioAddress,
-        Constants.endPoints.TransferTokensKey,]
+        Constants.endPoints.TransferTokensKey
+    ]
+
+
+    static rawAbiAccountName:Array<string> = [
+        "fio.system",
+        "fio.reqobt",
+        "fio.token"
+    ]
 
     static multiplier = 1000000000;
 

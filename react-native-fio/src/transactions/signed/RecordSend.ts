@@ -15,8 +15,8 @@ export class RecordSend extends SignedTransaction{
         recordSendRequest.max_fee = 0;
     }
 
-    async getData():Promise<any>{
-        let actor = await this.getActor();
+    getData():any{
+        let actor =  this.getActor();
         this.recordSendRequest.actor = actor;
         let data = this.recordSendRequest;
         /*{

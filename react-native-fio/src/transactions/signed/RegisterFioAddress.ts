@@ -13,8 +13,8 @@ export class RegisterFioAddress extends SignedTransaction{
         this.fioAddress = fioAddress;
     }
 
-    async getData():Promise<any>{
-        let actor = await this.getActor();
+    getData():any{
+        let actor = this.getActor();
         let data = {
             fio_address:this.fioAddress,
             owner_fio_public_key:Transactions.publicKey,

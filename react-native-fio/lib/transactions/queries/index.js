@@ -12,3 +12,7 @@ var GetFioBalance_1 = require("./GetFioBalance");
 exports.GetFioBalance = GetFioBalance_1.GetFioBalance;
 var PendingFioRequests_1 = require("./PendingFioRequests");
 exports.PendingFioRequests = PendingFioRequests_1.PendingFioRequests;
+var GetFee_1 = require("./GetFee");
+exports.GetFee = GetFee_1.GetFee;
+var GetAbi_1 = require("./GetAbi");
+exports.GetAbi = GetAbi_1.GetAbi;

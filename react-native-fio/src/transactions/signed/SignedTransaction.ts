@@ -1,4 +1,7 @@
 import { Transactions } from "../Transactions";
+import { Autorization } from '../../entities/Autorization';
+import { RawAction } from "../../entities/RawAction";
+import { RawTransaction } from "../../entities/RawTransaction";
 
 export abstract class SignedTransaction extends Transactions{
 
@@ -11,9 +14,22 @@ export abstract class SignedTransaction extends Transactions{
 
 
     async execute():Promise<any>{
-        return this.getData().then((res:any)=>{return this.serializeJson(res,this.getAction())})
-        .then((jsonData:any)=>{return jsonData.serialized_json})
-        .then((serializedData:string)=>{return this.pushToServer(serializedData,this.getAcount(),this.getAction(),this.getEndPoint())})
+        const rawTransaction = new RawTransaction()
+        const rawaction = new RawAction()
+        rawaction.account = this.getAcount()
+        const actor = await this.getActor()
+        
+        rawaction.authorization.push(new Autorization(actor))
+        rawaction.account = this.getAcount()
+        rawaction.name = this.getAction()
+        rawaction.data = this.getData()
+        rawTransaction.actions.push(rawaction)    
+        return this.pushToServer(rawTransaction,this.getEndPoint())
+        
+        
+      //  return this.getData().then((res:any)=>{return this.serializeJson(res,this.getAction())})
+        //.then((jsonData:any)=>{return jsonData.serialized_json})
+        //.then((serializedData:string)=>{return this.pushToServer(serializedData,this.getAcount(),this.getAction(),this.getEndPoint())})
     }
 
     getAction(): string {

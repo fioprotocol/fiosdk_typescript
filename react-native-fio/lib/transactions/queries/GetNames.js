@@ -2,13 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Query_1 = require("./Query");
 class GetNames extends Query_1.Query {
-    constructor(fioAddress) {
+    constructor(fioPublicKey) {
         super();
         this.ENDPOINT = "chain/get_fio_names";
-        this.fioAddress = fioAddress;
+        this.fioPublicKey = fioPublicKey;
     }
     getData() {
-        return { fio_public_address: this.fioAddress };
+        return { fio_public_key: this.fioPublicKey };
     }
 }
 exports.GetNames = GetNames;
