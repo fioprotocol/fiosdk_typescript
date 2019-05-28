@@ -20,12 +20,12 @@ class FIOSDK {
         this.transactions = new Transactions_1.Transactions();
         this.io = io;
         Transactions_1.Transactions.baseUrl = baseUrl;
-        Transactions_1.Transactions.publicKey = publicKey;
-        Transactions_1.Transactions.privateKey = privateKey;
         Transactions_1.Transactions.FioProvider = fiojs_1.Fio;
         Transactions_1.Transactions.io = io;
         Transactions_1.Transactions.fetchJson = fetchjson;
         this.registerMockUrl = registerMockUrl;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
         for (let accountName of constants_1.Constants.rawAbiAccountName) {
             this.getAbi(accountName).then(response => {
                 Transactions_1.Transactions.abiMap.set(response.account_name, response);
@@ -56,63 +56,63 @@ class FIOSDK {
     }
     registerFioAddress(fioAddress) {
         let registerFioAddress = new SignedTransactions.RegisterFioAddress(fioAddress);
-        return registerFioAddress.execute();
+        return registerFioAddress.execute(this.privateKey, this.publicKey);
     }
     registerFioDomain(fioDomain) {
         let registerFioDomain = new SignedTransactions.RegisterFioDomain(fioDomain);
-        return registerFioDomain.execute();
+        return registerFioDomain.execute(this.privateKey, this.publicKey);
     }
     addPublicAddress(fioAddress, tokenCode, publicAddress, maxFee) {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
-        return addPublicAddress.execute();
+        return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
     recordSend(recordSendRequest) {
         let recordSend = new SignedTransactions.RecordSend(recordSendRequest);
-        return recordSend.execute();
+        return recordSend.execute(this.privateKey, this.publicKey);
     }
     rejectFundsRequest(fioRequestId, maxFee) {
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId, maxFee);
-        return rejectFundsRequest.execute();
+        return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
     requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, metaData, maxFee) {
         let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, tokenCode, amount, metaData, maxFee);
-        return requestNewFunds.execute();
+        return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
     isAvailable(fioName) {
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
-        return availabilityCheck.execute();
+        return availabilityCheck.execute(this.publicKey);
     }
     getFioBalance(fioPublicAddress) {
         let getFioBalance = new queries.GetFioBalance(fioPublicAddress);
-        return getFioBalance.execute();
+        return getFioBalance.execute(this.publicKey);
     }
     getFioNames(fioPublicKey) {
         let getNames = new queries.GetNames(fioPublicKey);
-        return getNames.execute();
+        return getNames.execute(this.publicKey);
     }
     getpendingFioRequests(fioPublicKey) {
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
-        return pendingFioRequests.execute();
+        return pendingFioRequests.execute(this.publicKey);
     }
     getSentFioRequests(fioPublicKey) {
         let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
-        return sentFioRequest.execute();
+        return sentFioRequest.execute(this.publicKey);
     }
     getPublicAddress(fioAddress, tokenCode) {
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
-        return publicAddressLookUp.execute();
+        return publicAddressLookUp.execute(this.publicKey);
     }
     transferTokens(payeePublicKey, amount, maxFee) {
         let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey, amount, maxFee);
-        return transferTokens.execute();
+        return transferTokens.execute(this.privateKey, this.publicKey);
     }
     getFee(endPoint, fioAddress = "") {
         let fioFee = new queries.GetFee(endPoint, fioAddress);
-        return fioFee.execute();
+        return fioFee.execute(this.publicKey);
     }
     getAbi(accountName) {
         let abi = new queries.GetAbi(accountName);
-        return abi.execute();
+        return abi.execute(this.publicKey);
     }
     registerFIOAddressOnBehalfOfUser(fioAddress, publicKey) {
         let server = this.registerMockUrl; // "mock.dapix.io/mockd/DEV2"

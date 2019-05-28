@@ -17,16 +17,18 @@ export class FIOSDK{
     transactions:Transactions 
     io:{fetch(param:any,param2:any):any}
     registerMockUrl:string
+    privateKey:string
+    publicKey:string
     constructor(privateKey:string,publicKey:string,baseUrl:string,io:any,fetchjson:FetchJson,registerMockUrl=''){
         this.transactions = new Transactions()
         this.io = io
         Transactions.baseUrl = baseUrl
-        Transactions.publicKey = publicKey
-        Transactions.privateKey = privateKey
         Transactions.FioProvider = Fio
         Transactions.io = io
         Transactions.fetchJson = fetchjson
         this.registerMockUrl = registerMockUrl
+        this.privateKey = privateKey
+        this.publicKey = publicKey
         for (let accountName of Constants.rawAbiAccountName) {
             this.getAbi(accountName).then(response => {
                 Transactions.abiMap.set(response.account_name, response)
@@ -59,78 +61,78 @@ export class FIOSDK{
 
     registerFioAddress(fioAddress:string):Promise<any>{
         let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress);
-        return registerFioAddress.execute()
+        return registerFioAddress.execute(this.privateKey, this.publicKey)
     }
 
     registerFioDomain(fioDomain:string):Promise<any>{
         let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain);
-        return registerFioDomain.execute()
+        return registerFioDomain.execute(this.privateKey, this.publicKey)
     }
 
     addPublicAddress(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number):Promise<any>{
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress,tokenCode,publicAddress,maxFee);
-        return addPublicAddress.execute()
+        return addPublicAddress.execute(this.privateKey, this.publicKey)
     }
 
     recordSend(recordSendRequest: RecordSendRequest):Promise<any>{
         let recordSend = new SignedTransactions.RecordSend(recordSendRequest);
-        return recordSend.execute();
+        return recordSend.execute(this.privateKey, this.publicKey);
     }
 
     rejectFundsRequest(fioRequestId: string,maxFee:number):Promise<any>{
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId,maxFee)
-        return rejectFundsRequest.execute();
+        return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
     requestFunds(payerFioAddress: string, payeeFioAddress: string, payeePublicAddress: string, amount: Number,tokenCode: string, metaData: string,maxFee:number):Promise<any>{
         let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payeeFioAddress,payeePublicAddress,tokenCode,amount,metaData,maxFee);
-        return requestNewFunds.execute();
+        return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
 
     isAvailable(fioName:string):Promise<any>{
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
-        return availabilityCheck.execute();
+        return availabilityCheck.execute(this.publicKey);
     }
     
     getFioBalance(fioPublicAddress: string):Promise<any>{
         let getFioBalance = new queries.GetFioBalance(fioPublicAddress);
-        return getFioBalance.execute();
+        return getFioBalance.execute(this.publicKey);
     }
 
     getFioNames(fioPublicKey:string):Promise<any>{
         let getNames = new queries.GetNames(fioPublicKey);
-        return getNames.execute()
+        return getNames.execute(this.publicKey)
 
     }
 
     getpendingFioRequests(fioPublicKey:string):Promise<any>{
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
-        return pendingFioRequests.execute()
+        return pendingFioRequests.execute(this.publicKey)
     }
 
     getSentFioRequests(fioPublicKey:string):Promise<any>{
         let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
-        return sentFioRequest.execute()
+        return sentFioRequest.execute(this.publicKey)
     }
 
     getPublicAddress(fioAddress:string, tokenCode:string):Promise<any>{
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
-        return publicAddressLookUp.execute();
+        return publicAddressLookUp.execute(this.publicKey);
     }
 
     transferTokens(payeePublicKey:string,amount:number,maxFee:number):Promise<any>{
         let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount,maxFee);
-        return transferTokens.execute()
+        return transferTokens.execute(this.privateKey, this.publicKey)
     }
 
     getFee(endPoint:string,fioAddress=""):Promise<any>{
         let fioFee = new queries.GetFee(endPoint,fioAddress);
-        return fioFee.execute()
+        return fioFee.execute(this.publicKey)
     }
 
     getAbi(accountName:string):Promise<AbiResponse>{
         let abi = new queries.GetAbi(accountName);
-        return abi.execute()
+        return abi.execute(this.publicKey)
     }
 
     registerFIOAddressOnBehalfOfUser(fioAddress:string,publicKey:string){

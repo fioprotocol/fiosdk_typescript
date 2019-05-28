@@ -4,7 +4,7 @@ class RawAction {
     constructor() {
         this.account = ''; //'testeostoken',
         this.name = ''; //'transfer',
-        this.authorization = new Array(1);
+        this.authorization = new Array();
     }
 }
 exports.RawAction = RawAction;

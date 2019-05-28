@@ -13,8 +13,10 @@ const Autorization_1 = require("../../entities/Autorization");
 const RawAction_1 = require("../../entities/RawAction");
 const RawTransaction_1 = require("../../entities/RawTransaction");
 class SignedTransaction extends Transactions_1.Transactions {
-    execute() {
+    execute(privateKey, publicKey) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.privateKey = privateKey;
+            this.publicKey = publicKey;
             const rawTransaction = new RawTransaction_1.RawTransaction();
             const rawaction = new RawAction_1.RawAction();
             rawaction.account = this.getAcount();
@@ -25,9 +27,6 @@ class SignedTransaction extends Transactions_1.Transactions {
             rawaction.data = this.getData();
             rawTransaction.actions.push(rawaction);
             return this.pushToServer(rawTransaction, this.getEndPoint());
-            //  return this.getData().then((res:any)=>{return this.serializeJson(res,this.getAction())})
-            //.then((jsonData:any)=>{return jsonData.serialized_json})
-            //.then((serializedData:string)=>{return this.pushToServer(serializedData,this.getAcount(),this.getAction(),this.getEndPoint())})
         });
     }
     getAction() {

@@ -4,7 +4,8 @@ export abstract class Query<T> extends Transactions{
         abstract ENDPOINT:string;
         abstract getData():any
     
-        async execute():Promise<T>{ 
+        async execute(publicKey:string):Promise<T>{ 
+            this.publicKey = publicKey
             return this.executeCall(this.getEndPoint(),JSON.stringify(this.getData()))
         }
 

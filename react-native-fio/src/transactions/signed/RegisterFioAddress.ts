@@ -1,6 +1,4 @@
 import { SignedTransaction } from './SignedTransaction';
-import { Transactions } from "../Transactions";
-
 export class RegisterFioAddress extends SignedTransaction{
 
     ENDPOINT:string = "chain/register_fio_address"; 
@@ -17,7 +15,7 @@ export class RegisterFioAddress extends SignedTransaction{
         let actor = this.getActor();
         let data = {
             fio_address:this.fioAddress,
-            owner_fio_public_key:Transactions.publicKey,
+            owner_fio_public_key:this.publicKey,
             max_fee: 0,
             actor: actor
         }
