@@ -54,8 +54,8 @@ class FIOSDK {
     getActor() {
         return Transactions_1.Transactions.FioProvider.accountHash(this.publicKey);
     }
-    getFioPublicAddress() {
-        return 'publicFioAddress';
+    getFioPublicKey() {
+        return this.publicKey;
     }
     registerFioAddress(fioAddress) {
         let registerFioAddress = new SignedTransactions.RegisterFioAddress(fioAddress);
@@ -69,8 +69,8 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(recordSendRequest) {
-        let recordSend = new SignedTransactions.RecordSend(recordSendRequest);
+    recordSend(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee) {
+        let recordSend = new SignedTransactions.RecordSend(fioReqID, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
     rejectFundsRequest(fioRequestId, maxFee) {
@@ -93,7 +93,7 @@ class FIOSDK {
         let getNames = new queries.GetNames(fioPublicKey);
         return getNames.execute(this.publicKey);
     }
-    getpendingFioRequests(fioPublicKey) {
+    getPendingFioRequests(fioPublicKey) {
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
         return pendingFioRequests.execute(this.publicKey);
     }
@@ -117,7 +117,7 @@ class FIOSDK {
         let abi = new queries.GetAbi(accountName);
         return abi.execute(this.publicKey);
     }
-    registerFIOAddressOnBehalfOfUser(fioAddress, publicKey) {
+    registerFioAddressOnBehalfOfUser(fioAddress, publicKey) {
         let server = this.registerMockUrl; // "mock.dapix.io/mockd/DEV2"
         let mockRegisterFioAddress = new MockRegisterFioAddress_1.MockRegisterFioAddress(fioAddress, publicKey, server);
         return mockRegisterFioAddress.execute();

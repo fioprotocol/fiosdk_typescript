@@ -11,8 +11,7 @@ export class GetFioBalance extends Query<BalanceResponse>{
     }
 
     getData() {
-        return {fio_pub_address:this.fioAddress};
+        return {fio_public_address:this.fioAddress};
     }
-
 
 }

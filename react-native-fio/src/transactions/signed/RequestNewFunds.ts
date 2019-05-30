@@ -10,11 +10,11 @@ export class RequestNewFunds extends SignedTransaction{
     payeeFioAddress:string
     payeePublicAddress:string
     tokenCode:string
-    amount: Number; 
+    amount: number; 
     metaData:string
     maxFee:number
 
-    constructor(payerFioAddress:string,payeeFioAddress:string,payeePublicAddress:string,tokenCode:string,amount:Number,metaData:string, maxFee:number){
+    constructor(payerFioAddress:string,payeeFioAddress:string,payeePublicAddress:string,tokenCode:string,amount:number,metaData:string, maxFee:number){
         super();
         this.payerFioAddress = payerFioAddress;
         this.payeeFioAddress = payeeFioAddress;

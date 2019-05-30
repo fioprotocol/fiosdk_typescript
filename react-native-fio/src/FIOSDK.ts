@@ -1,4 +1,3 @@
-import { RecordSendRequest }  from './entities/RecordSendRequest'
 import { Transactions } from './transactions/Transactions'
 
 import * as queries from './transactions/queries'
@@ -78,8 +77,19 @@ export class FIOSDK{
         return addPublicAddress.execute(this.privateKey, this.publicKey)
     }
 
-    recordSend(recordSendRequest: RecordSendRequest):Promise<any>{
-        let recordSend = new SignedTransactions.RecordSend(recordSendRequest);
+    recordSend(fioReqID: string = '',
+    payerFIOAddress: string,
+    payeeFIOAddress: string,
+    payerPublicAddress: string,
+    payeePublicAddress: string,
+    amount: number,
+    tokenCode: string,
+    obtID: string,
+    memo: string,
+    maxFee: number):Promise<any>{
+        let recordSend = new SignedTransactions.RecordSend(fioReqID,
+        payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress,
+        amount, tokenCode, obtID, memo, maxFee);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
@@ -88,7 +98,7 @@ export class FIOSDK{
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
-    requestFunds(payerFioAddress: string, payeeFioAddress: string, payeePublicAddress: string, amount: Number,tokenCode: string, metaData: string,maxFee:number):Promise<any>{
+    requestFunds(payerFioAddress: string, payeeFioAddress: string, payeePublicAddress: string, amount: number,tokenCode: string, metaData: string,maxFee:number):Promise<any>{
         let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payeeFioAddress,payeePublicAddress,tokenCode,amount,metaData,maxFee);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
     }

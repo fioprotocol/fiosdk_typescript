@@ -8,7 +8,7 @@ class GetFioBalance extends Query_1.Query {
         this.fioAddress = fioAddress;
     }
     getData() {
-        return { fio_pub_address: this.fioAddress };
+        return { fio_public_address: this.fioAddress };
     }
 }
 exports.GetFioBalance = GetFioBalance;
