@@ -52,7 +52,7 @@ class Transactions {
             return res;
         });
     }
-    pushToServer(transaction, endpoint) {
+    pushToServer(transaction, endpoint, dryRun) {
         return __awaiter(this, void 0, void 0, function* () {
             const privky = new Array();
             privky.push(this.privateKey);
@@ -64,11 +64,19 @@ class Transactions {
             expiration.setSeconds(expiration.getSeconds() + 120);
             let expirationStr = expiration.toISOString();
             transaction.expiration = expirationStr.substr(0, expirationStr.length - 1);
-            const signedTransaction = yield Transactions.FioProvider.prepareTransaction({
-                transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
-                textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
-            });
-            return this.executeCall(endpoint, JSON.stringify(signedTransaction));
+            if (dryRun) {
+                return Transactions.FioProvider.prepareTransaction({
+                    transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+                    textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
+                });
+            }
+            else {
+                const signedTransaction = yield Transactions.FioProvider.prepareTransaction({
+                    transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+                    textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
+                });
+                return this.executeCall(endpoint, JSON.stringify(signedTransaction));
+            }
         });
     }
     executeCall(endPoint, body, fetchOptions) {

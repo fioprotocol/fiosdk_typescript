@@ -54,7 +54,7 @@ export class Transactions {
         return  res
   }
 
-    async pushToServer(transaction:RawTransaction,endpoint:string):Promise<any>{
+    async pushToServer(transaction:RawTransaction,endpoint:string,dryRun:boolean):Promise<any>{
         const privky:Array<string> = new Array<string>()
         privky.push(this.privateKey)
         let chain = await this.getChainInfo().catch((error) => console.error("chain:: " + error))
@@ -65,10 +65,17 @@ export class Transactions {
         expiration.setSeconds(expiration.getSeconds() + 120)
         let expirationStr = expiration.toISOString()
         transaction.expiration = expirationStr.substr(0, expirationStr.length - 1);
-        const signedTransaction = await Transactions.FioProvider.prepareTransaction({
-            transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
-            textDecoder: new TextDecoder(), textEncoder: new TextEncoder()})
-        return this.executeCall(endpoint,JSON.stringify(signedTransaction))
+        if(dryRun){
+            return Transactions.FioProvider.prepareTransaction({
+                transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+                textDecoder: new TextDecoder(), textEncoder: new TextEncoder()})
+        }else{
+            const signedTransaction = await Transactions.FioProvider.prepareTransaction({
+                transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+                textDecoder: new TextDecoder(), textEncoder: new TextEncoder()})
+            return this.executeCall(endpoint,JSON.stringify(signedTransaction))
+        }
+
     }
 
     executeCall(endPoint:string,body:string,fetchOptions?:any):any{

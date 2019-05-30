@@ -13,7 +13,7 @@ const Autorization_1 = require("../../entities/Autorization");
 const RawAction_1 = require("../../entities/RawAction");
 const RawTransaction_1 = require("../../entities/RawTransaction");
 class SignedTransaction extends Transactions_1.Transactions {
-    execute(privateKey, publicKey) {
+    execute(privateKey, publicKey, dryRun = false) {
         return __awaiter(this, void 0, void 0, function* () {
             this.privateKey = privateKey;
             this.publicKey = publicKey;
@@ -26,7 +26,7 @@ class SignedTransaction extends Transactions_1.Transactions {
             rawaction.name = this.getAction();
             rawaction.data = this.getData();
             rawTransaction.actions.push(rawaction);
-            return this.pushToServer(rawTransaction, this.getEndPoint());
+            return this.pushToServer(rawTransaction, this.getEndPoint(), dryRun);
         });
     }
     getAction() {

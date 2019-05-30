@@ -51,6 +51,9 @@ class FIOSDK {
         }
         return { publicKey, ownerPublicKey };
     }
+    getActor() {
+        return Transactions_1.Transactions.FioProvider.accountHash(this.publicKey);
+    }
     getFioPublicAddress() {
         return 'publicFioAddress';
     }
@@ -102,9 +105,9 @@ class FIOSDK {
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
         return publicAddressLookUp.execute(this.publicKey);
     }
-    transferTokens(payeePublicKey, amount, maxFee) {
+    transferTokens(payeePublicKey, amount, maxFee, dryRun = false) {
         let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey, amount, maxFee);
-        return transferTokens.execute(this.privateKey, this.publicKey);
+        return transferTokens.execute(this.privateKey, this.publicKey, dryRun);
     }
     getFee(endPoint, fioAddress = "") {
         let fioFee = new queries.GetFee(endPoint, fioAddress);

@@ -1,6 +1,7 @@
 import { RecordSendRequest } from '../../entities/RecordSendRequest';
 
 import { SignedTransaction } from './SignedTransaction';
+import { FioRequestStatus } from '../../entities/FioRequestStatus';
 
 export class RecordSend extends SignedTransaction{
 
@@ -13,6 +14,7 @@ export class RecordSend extends SignedTransaction{
         super();
         this.recordSendRequest = recordSendRequest
         recordSendRequest.max_fee = 0;
+        recordSendRequest.status = FioRequestStatus[FioRequestStatus.sent_to_blockchain]
     }
 
     getData():any{

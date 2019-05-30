@@ -12,7 +12,9 @@ export class Constants{
     static feeNoAddressOperation:Array<string> = [
         Constants.endPoints.RegisterFioDomain,
         Constants.endPoints.RegisterFioAddress,
-        Constants.endPoints.TransferTokensKey
+        Constants.endPoints.TransferTokensKey,
+        'transfer_tokens_by_pub_key',
+        
     ]
 
 

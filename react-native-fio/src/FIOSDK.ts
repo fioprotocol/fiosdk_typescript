@@ -55,8 +55,12 @@ export class FIOSDK{
         return { publicKey, ownerPublicKey }
     }
 
-    getFioPublicAddress():string{
-        return 'publicFioAddress'
+    getActor():string{
+        return Transactions.FioProvider.accountHash(this.publicKey)
+    }
+
+    getFioPublicKey():string{
+        return this.publicKey
     }
 
     registerFioAddress(fioAddress:string):Promise<any>{
@@ -105,7 +109,7 @@ export class FIOSDK{
 
     }
 
-    getpendingFioRequests(fioPublicKey:string):Promise<any>{
+    getPendingFioRequests(fioPublicKey:string):Promise<any>{
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
         return pendingFioRequests.execute(this.publicKey)
     }
@@ -120,9 +124,9 @@ export class FIOSDK{
         return publicAddressLookUp.execute(this.publicKey);
     }
 
-    transferTokens(payeePublicKey:string,amount:number,maxFee:number):Promise<any>{
+    transferTokens(payeePublicKey:string,amount:number,maxFee:number,dryRun:boolean=false):Promise<any>{
         let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount,maxFee);
-        return transferTokens.execute(this.privateKey, this.publicKey)
+        return transferTokens.execute(this.privateKey, this.publicKey,dryRun)
     }
 
     getFee(endPoint:string,fioAddress=""):Promise<any>{
@@ -135,7 +139,7 @@ export class FIOSDK{
         return abi.execute(this.publicKey)
     }
 
-    registerFIOAddressOnBehalfOfUser(fioAddress:string,publicKey:string){
+    registerFioAddressOnBehalfOfUser(fioAddress:string,publicKey:string){
         let server = this.registerMockUrl // "mock.dapix.io/mockd/DEV2"
         let mockRegisterFioAddress = new MockRegisterFioAddress(fioAddress,publicKey,server)
         return mockRegisterFioAddress.execute();
