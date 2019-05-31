@@ -1,10 +1,10 @@
-class ReactNativeFio{
+class MockFioProvider{
     
-    getActor(param){
+    accountHash(param){
         return Promise.resolve("actor");
     }
 
-    getSignedTransaction(params,params2,params3,params4,params5,params6,params7){
+    prepareTransaction(params,params2,params3,params4,params5,params6,params7){
         var arr = Array();
         arr['hex'] = "hexhexhex";
         arr['signature'] = "signature";
@@ -12,4 +12,4 @@ class ReactNativeFio{
     }
 };
 
-exports.ReactNativeFio = ReactNativeFio;
+exports.MockFioProvider = MockFioProvider;

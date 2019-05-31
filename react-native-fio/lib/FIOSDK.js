@@ -85,8 +85,8 @@ class FIOSDK {
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
         return availabilityCheck.execute(this.publicKey);
     }
-    getFioBalance(fioPublicAddress) {
-        let getFioBalance = new queries.GetFioBalance(fioPublicAddress);
+    getFioBalance() {
+        let getFioBalance = new queries.GetFioBalance();
         return getFioBalance.execute(this.publicKey);
     }
     getFioNames(fioPublicKey) {

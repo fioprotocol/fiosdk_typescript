@@ -1,13 +1,33 @@
 const FIOSDK = require('../lib/FIOSDK');
 const Transactions = require('../lib/transactions/Transactions');
-const ReactNativeFio = require('./ReactNativeFioMock');
+const MockFioProvider = require('./MockFioProvider');
 const serverMocks = require('./serverMockResponses');
-global.fetch = require('jest-fetch-mock')
+fetch = require('jest-fetch-mock')
+const encoding = require ('text-encoding');
+global.TextDecoder = encoding.TextDecoder
+global.TextEncoder = encoding.TextEncoder
 
-FIOSDK.FIOSDK.ReactNativeFio = new ReactNativeFio.ReactNativeFio();
-fiosdk = new FIOSDK.FIOSDK("5KBX1dwHME4VyuUss2sYM25D5ZTDvyYrbEz37UJqwAVAsR4tGuY",
+ async function fetchJson(url,options){
+    res = await fetch(url,options)
+    reply =  await res.json()
+    //console.log(reply)
+    return reply    
+}
+
+fiosdk = ''
+ beforeEach(async () => {
+    fetch.resetMocks()
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.abi1))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.abi2))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.abi3))
+
+    fiosdk = new FIOSDK.FIOSDK("5KBX1dwHME4VyuUss2sYM25D5ZTDvyYrbEz37UJqwAVAsR4tGuY",
     "EOS7isxEua78KPVbGzKemH4nj2bWE52gqj8Hkac3tc7jKNvpfWzYS",
-    "http://34.220.57.45:8889/v1/");
+    "http://34.220.57.45:8889/v1/",fetchJson,fetchJson);  
+    Transactions.Transactions.FioProvider = new MockFioProvider.MockFioProvider()
+});
+
+
 
 test('getActor, should return a string "actor"', () => {
     fiosdk.getFioPublicAddress().then(res => expect(res).toBe("actor"));
@@ -212,37 +232,41 @@ test('RejectFundsRequest', done => {
     })
 })
 
-test('RequestNewFunds', done => {
+test.only('RequestNewFunds', done => {
     fetch.resetMocks()
-    fetch.mockResponse(JSON.stringify(serverMocks.requestNewFunds));
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.chain))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.block))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.requestNewFunds));
 
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("c4c0482faf743064367c660251e0f43e6a7eb9918eaef40303b1e41a53a0322b"))
-        expect(fetch.mock.calls.length).toEqual(4)
-        expect(fetch.mock.calls[3][0]).toEqual('http://34.220.57.45:8889/v1/chain/new_funds_request')
+        expect(fetch.mock.calls.length).toEqual(3)
+        expect(fetch.mock.calls[2][0]).toEqual('http://34.220.57.45:8889/v1/chain/new_funds_request')
         done();
     }
 
-    fiosdk.requestNewFunds("77632281.brd", "77081021.brd", "0xab5801a7d398351b8be11c439e05c5b3259aec9b",
+    fiosdk.requestFunds("77632281.brd", "77081021.brd", "0xab5801a7d398351b8be11c439e05c5b3259aec9b",
         "ETH", 100.00, "{\"memo\": \"Invoice1234\"}").then(res => {
         callback(res.processed.id);
     }).catch(error => {
         console.error(error)
     })
-})
+});
 
-test('TransferToken', done => {
+ test('TransferToken', async done => {
     fetch.resetMocks()
-    fetch.mockResponse(JSON.stringify(serverMocks.transferToken));
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.chain))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.block))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.transferToken));
+    //Transactions.fetchJson = fetchJson
 
     function callback(data) {
         expect(data).toBe("{\"status\": \"OK\",\"fee_collected\": 0}")
-        expect(fetch.mock.calls.length).toEqual(4)
-        expect(fetch.mock.calls[3][0]).toEqual('http://34.220.57.45:8889/v1/chain/transfer_tokens_pub_key')
-        expect(fetch.mock.calls[0][1].body).toEqual("{\"action\":\"transferfio\",\"json\":{\"payee_public_key\":\"actor\",\"amount\":\"1.0\",\"max_fee\":0,\"actor\":\"actor\"}}")
+        expect(fetch.mock.calls.length).toEqual(3)
+        expect(fetch.mock.calls[2][0]).toEqual('http://34.220.57.45:8889/v1/chain/transfer_tokens_pub_key')
         done();
     }
-    fiosdk.transferTokens("EOS8PRe4WRZJj5mkem6qVGKyvNFgPsNnjNN6kPhh6EaCpzCVin5Jj", "1.0").then(res => {
+    fiosdk.transferTokens("EOS8PRe4WRZJj5mkem6qVGKyvNFgPsNnjNN6kPhh6EaCpzCVin5Jj", "1.0",1).then(res => {
         callback(res.processed.action_traces[0].receipt.response);
     }).catch(error => {
         console.error(error)
@@ -250,7 +274,7 @@ test('TransferToken', done => {
 })
 
 test('createKeys', async function () {
-    const privatekeys = await FIOSDK.FIOSDK.createKeyPair()
+    const privatekeys = await FIOSDK.FIOSDK.createPrivateKeyPair()
     const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioOwnerKey, privatekeys.fioKey)
     console.log("%j",privatekeys)
     console.log("%j",publickeys)

@@ -58,7 +58,7 @@ export class Transactions {
         const privky:Array<string> = new Array<string>()
         privky.push(this.privateKey)
         let chain = await this.getChainInfo().catch((error) => console.error("chain:: " + error))
-        let block = await this.getBlock(chain).catch((error) => console.error("block"));
+        let block = await this.getBlock(chain).catch((error) => console.error("block: " + error));
         transaction.ref_block_num = block.block_num & 0xFFFF
         transaction.ref_block_prefix = block.ref_block_prefix
         let expiration = new Date(block.timestamp  + "Z")
