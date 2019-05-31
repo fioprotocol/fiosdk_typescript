@@ -108,8 +108,8 @@ export class FIOSDK{
         return availabilityCheck.execute(this.publicKey);
     }
     
-    getFioBalance(fioPublicAddress: string):Promise<any>{
-        let getFioBalance = new queries.GetFioBalance(fioPublicAddress);
+    getFioBalance():Promise<any>{
+        let getFioBalance = new queries.GetFioBalance();
         return getFioBalance.execute(this.publicKey);
     }
 
