@@ -293,7 +293,7 @@ test('Derived public key', async function () {
     console.log("%j",publickeys)
 })
 
-test.only('GenericAction', done => {
+test('GenericAction', done => {
     fetch.resetMocks()
     fetch.mockResponse(JSON.stringify(serverMocks.FioNames));
 
