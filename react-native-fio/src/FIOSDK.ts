@@ -44,6 +44,32 @@ export class FIOSDK{
         const fioKey = privateActiveKey.toString();
         return { fioOwnerKey, fioKey }
     }
+//let entropy = Buffer.from(this.io.random(32)).toString('hex')
+
+// HDKey.fromMasterSeed(sha512(secret_buffer))
+    static createPrivateKeyPair2(entropy:Buffer,entropy2:Buffer):any{        
+        const hdkey = require('hdkey')
+        const wif = require('wif')
+        const ecc = require('eosjs-ecc')
+        var sha512 = require('js-sha512').sha512;
+        // const bip39 = require('bip39')
+        // const mnemonic = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
+        // const seed = bip39.mnemonicToSeedHex(mnemonic)
+        // const master = hdkey.fromMasterSeed(Buffer(seed, 'hex'))
+        let master = hdkey.fromMasterSeed(sha512(entropy))
+        let node = master.derive("m/44'/235'/0'/0/0")
+        console.error("fioOwnerKey: "+wif.encode(128, node._privateKey, false))
+        console.error("publicKey: "+ecc.PublicKey(node._publicKey).toString())
+        const fioOwnerKey = wif.encode(128, node._privateKey, false)
+        
+        master = hdkey.fromMasterSeed(sha512(entropy2))
+        node = master.derive("m/44'/235'/0'/0/0")
+        console.error("fioKey: "+wif.encode(128, node._privateKey, false))
+        console.error("publicKey: "+ecc.PublicKey(node._publicKey).toString())
+        const fioKey =  wif.encode(128, node._privateKey, false)
+        
+        return { fioOwnerKey, fioKey }
+    }
 
     static derivedPublicKey(fioOwnerKey:string, fioKey:string){
         const publicKey = Ecc.privateToPublic(fioKey)
@@ -51,6 +77,8 @@ export class FIOSDK{
         if (fioOwnerKey) {
           ownerPublicKey = Ecc.privateToPublic(fioOwnerKey)
         }
+        console.error('derivedPublicKey publicKey' + publicKey)
+        console.error('derivedPublicKey publicKey' + ownerPublicKey)
         return { publicKey, ownerPublicKey }
     }
 
