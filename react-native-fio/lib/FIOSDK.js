@@ -45,26 +45,26 @@ class FIOSDK {
     }
     //let entropy = Buffer.from(this.io.random(32)).toString('hex')
     // HDKey.fromMasterSeed(sha512(secret_buffer))
-    static createPrivateKeyPair2(entropy, entropy2) {
+    static createPrivateKeyPair2(entropy) {
         const hdkey = require('hdkey');
         const wif = require('wif');
-        const ecc = require('eosjs-ecc');
+        //const ecc = require('eosjs-ecc')
         var sha512 = require('js-sha512').sha512;
         // const bip39 = require('bip39')
         // const mnemonic = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
         // const seed = bip39.mnemonicToSeedHex(mnemonic)
         // const master = hdkey.fromMasterSeed(Buffer(seed, 'hex'))
-        let master = hdkey.fromMasterSeed(sha512(entropy));
-        let node = master.derive("m/44'/235'/0'/0/0");
-        console.error("fioOwnerKey: " + wif.encode(128, node._privateKey, false));
-        console.error("publicKey: " + ecc.PublicKey(node._publicKey).toString());
-        const fioOwnerKey = wif.encode(128, node._privateKey, false);
-        master = hdkey.fromMasterSeed(sha512(entropy2));
-        node = master.derive("m/44'/235'/0'/0/0");
+        /*let master = hdkey.fromMasterSeed(sha512(entropy))
+        let node = master.derive("m/44'/235'/0'/0/0")
+        console.error("fioOwnerKey: "+wif.encode(128, node._privateKey, false))
+        console.error("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
+        const fioOwnerKey = wif.encode(128, node._privateKey, false)*/
+        const master = hdkey.fromMasterSeed(sha512(entropy));
+        const node = master.derive("m/44'/235'/0'/0/0");
         console.error("fioKey: " + wif.encode(128, node._privateKey, false));
-        console.error("publicKey: " + ecc.PublicKey(node._publicKey).toString());
+        console.error("publicKey: " + Ecc.PublicKey(node._publicKey).toString());
         const fioKey = wif.encode(128, node._privateKey, false);
-        return { fioOwnerKey, fioKey };
+        return { fioKey };
     }
     static derivedPublicKey(fioOwnerKey, fioKey) {
         const publicKey = Ecc.privateToPublic(fioKey);
@@ -149,6 +149,64 @@ class FIOSDK {
     }
     getMultiplier() {
         return constants_1.Constants.multiplier;
+    }
+    genericAction(action, params) {
+        switch (action) {
+            case 'getActor':
+                return this.getActor();
+                break;
+            case 'getFioPublicKey':
+                return this.getFioPublicKey();
+                break;
+            case 'registerFioAddress':
+                return this.registerFioAddress(params.fioAddress);
+                break;
+            case 'registerFioDomain':
+                return this.registerFioDomain(params.FioDomain);
+                break;
+            case 'addPublicAddress':
+                return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
+                break;
+            case 'recordSend':
+                return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.memo, params.maxFee);
+                break;
+            case 'rejectFundsRequest':
+                return this.rejectFundsRequest(params.fioRequestId, params.maxFee);
+                break;
+            case 'requestFunds':
+                return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.metaData, params.maxFee);
+                break;
+            case 'isAvailable':
+                return this.isAvailable(params.fioName);
+                break;
+            case 'getFioBalance':
+                return this.getFioBalance();
+                break;
+            case 'getFioNames':
+                return this.getFioNames(params.fioPublicKey);
+                break;
+            case 'getPendingFioRequests':
+                return this.getPendingFioRequests(params.fioPublicKey);
+                break;
+            case 'getSentFioRequests':
+                return this.getSentFioRequests(params.fioPublicKey);
+                break;
+            case 'getPublicAddress':
+                return this.getPublicAddress(params.fioAddress, params.tokenCode);
+                break;
+            case 'transferTokens':
+                return this.transferTokens(params.payeePublicKey, params.amount, params.maxFee);
+                break;
+            case 'getAbi':
+                return this.getAbi(params.accountName);
+                break;
+            case 'getFee':
+                return this.getFee(params.endPoint, params.fioAddress);
+                break;
+            case 'getMultiplier':
+                return this.getMultiplier();
+                break;
+        }
     }
 }
 exports.FIOSDK = FIOSDK;

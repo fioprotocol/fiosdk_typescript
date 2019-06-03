@@ -292,3 +292,25 @@ test('Derived public key', async function () {
     const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioOwnerKey, privatekeys.fioKey)
     console.log("%j",publickeys)
 })
+
+test.only('GenericAction', done => {
+    fetch.resetMocks()
+    fetch.mockResponse(JSON.stringify(serverMocks.FioNames));
+
+    function callback(data) {
+        expect(data.fio_domains[0].expiration).toBe("15734567")
+        expect(fetch.mock.calls.length).toEqual(1)
+        expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_fio_names')
+        done();
+    }
+    params = {
+        fioPublicKey: 'name.brd'
+    }
+
+    fiosdk.genericAction('getFioNames',params).then(res => {
+        console.log("GetNames response: %j", res)
+        callback(res);
+    }).catch(error => {
+        console.error(error)
+    })
+})
