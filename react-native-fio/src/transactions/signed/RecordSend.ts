@@ -1,5 +1,3 @@
-import { RecordSendRequest } from '../../entities/RecordSendRequest';
-
 import { SignedTransaction } from './SignedTransaction';
 
 export class RecordSend extends SignedTransaction{
@@ -7,18 +5,54 @@ export class RecordSend extends SignedTransaction{
     ENDPOINT:string = "chain/record_send"; 
     ACTION:string = "recordsend";
     ACOUNT:string = "fio.reqobt";
-    recordSendRequest:RecordSendRequest
+    fioReqID: string = ''
+    payerFIOAddress: string
+    payeeFIOAddress: string
+    payerPublicAddress: string
+    payeePublicAddress: string
+    amount: number
+    tokenCode: string
+    obtID: string
+    memo: string
+    maxFee: number
 
-    constructor(recordSendRequest:RecordSendRequest){
+    constructor(fioReqID: string = '',
+        payerFIOAddress: string,
+        payeeFIOAddress: string,
+        payerPublicAddress: string,
+        payeePublicAddress: string,
+        amount: number,
+        tokenCode: string,
+        obtID: string,
+        memo: string,
+        maxFee: number){
         super();
-        this.recordSendRequest = recordSendRequest
+        this.fioReqID = fioReqID
+        this.payerFIOAddress = payerFIOAddress
+        this.payeeFIOAddress = payeeFIOAddress
+        this.payerPublicAddress = payerPublicAddress
+        this.payeePublicAddress = payeePublicAddress
+        this.amount = amount
+        this.tokenCode = tokenCode
+        this.obtID = obtID
+        this.memo = memo
+        this.maxFee = maxFee
     }
 
-    async getData():Promise<any>{
-        let actor = await this.getActor();
-        this.recordSendRequest.actor = actor;
+    getData():any{
+        let actor =  this.getActor();
         let data = {
-            recordsend:JSON.stringify(this.recordSendRequest)
+            fioReqID: this.fioReqID,
+            payerFIOAddress: this.payerFIOAddress,
+            payeeFIOAddress: this.payeeFIOAddress,
+            payerPublicAddress: this.payerPublicAddress,
+            payeePublicAddress: this.payeePublicAddress,
+            amount: this.amount,
+            tokenCode: this.tokenCode,
+            obtID: this.obtID,
+            memo: this.memo,
+            maxFee: this.maxFee,
+            actor: actor
         }
         return data;
     }

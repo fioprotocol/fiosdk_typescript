@@ -56,6 +56,9 @@
 		5C3E688421F67B8200797FFD /* AnyDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E688321F67B8200797FFD /* AnyDecodable.swift */; };
 		5C3E688621F67B9900797FFD /* AnyEncodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3E688521F67B9900797FFD /* AnyEncodable.swift */; };
 		5CCAB3FC21F642D7007F9F09 /* Entrypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CCAB3FB21F642D7007F9F09 /* Entrypoint.swift */; };
+		5F8F2EE6228B1C2B0038A924 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F8F2EE4228B1C2B0038A924 /* CoreFoundation.framework */; };
+		5F8F2EE7228B1C2B0038A924 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F8F2EE5228B1C2B0038A924 /* Foundation.framework */; };
+		5F8F2EEE228B1FB00038A924 /* dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F8F2EED228B1FB00038A924 /* dummy.swift */; };
 		5FACAF742264EC8600078727 /* AcountNameGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FACAF732264EC8600078727 /* AcountNameGenerator.swift */; };
 		B3E7B58A1CC2AC0600A0062D /* RNFio.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* RNFio.m */; };
 /* End PBXBuildFile section */
@@ -73,7 +76,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		134814201AA4EA6300B7C361 /* libFio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libFio.a; path = libRNFio.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		134814201AA4EA6300B7C361 /* libRNFio.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRNFio.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C3E67F321F64DE500797FFD /* RxSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C3E67F521F64DF100797FFD /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5C3E67F721F64ED300797FFD /* RxCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = RxCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +135,12 @@
 		5CCAB3FB21F642D7007F9F09 /* Entrypoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entrypoint.swift; sourceTree = "<group>"; };
 		5CCAB3FE21F645BC007F9F09 /* eosswift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = eosswift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CCAB44221F648D0007F9F09 /* AnyCodable.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AnyCodable.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F8F2EE4228B1C2B0038A924 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		5F8F2EE5228B1C2B0038A924 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5F8F2EE8228B1E390038A924 /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F8F2EEA228B1E8C0038A924 /* libcxxreact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libcxxreact.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F8F2EED228B1FB00038A924 /* dummy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dummy.swift; sourceTree = "<group>"; };
+		5F8F2EEF228B212E0038A924 /* RCTBridgeModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = RCTBridgeModule.h; path = "../node_modules/react-native/React/Base/RCTBridgeModule.h"; sourceTree = "<group>"; };
 		5FACAF732264EC8600078727 /* AcountNameGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcountNameGenerator.swift; sourceTree = "<group>"; };
 		B3E7B5881CC2AC0600A0062D /* RNFio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RNFio.h; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* RNFio.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RNFio.m; sourceTree = "<group>"; };
@@ -142,6 +151,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F8F2EE6228B1C2B0038A924 /* CoreFoundation.framework in Frameworks */,
+				5F8F2EE7228B1C2B0038A924 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,7 +162,7 @@
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				134814201AA4EA6300B7C361 /* libFio.a */,
+				134814201AA4EA6300B7C361 /* libRNFio.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -159,6 +170,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				5F8F2EED228B1FB00038A924 /* dummy.swift */,
 				5FACAF732264EC8600078727 /* AcountNameGenerator.swift */,
 				5C3E688521F67B9900797FFD /* AnyEncodable.swift */,
 				5C3E688321F67B8200797FFD /* AnyDecodable.swift */,
@@ -221,6 +233,11 @@
 		5CCAB3FD21F645BC007F9F09 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5F8F2EEF228B212E0038A924 /* RCTBridgeModule.h */,
+				5F8F2EEA228B1E8C0038A924 /* libcxxreact.a */,
+				5F8F2EE8228B1E390038A924 /* libReact.a */,
+				5F8F2EE4228B1C2B0038A924 /* CoreFoundation.framework */,
+				5F8F2EE5228B1C2B0038A924 /* Foundation.framework */,
 				5C3E687F21F67A5E00797FFD /* AnyCodable.framework */,
 				5C3E67FB21F651E900797FFD /* Pods_appEosRn.framework */,
 				5C3E67F721F64ED300797FFD /* RxCocoa.framework */,
@@ -249,7 +266,7 @@
 			);
 			name = RNFio;
 			productName = RCTDataManager;
-			productReference = 134814201AA4EA6300B7C361 /* libFio.a */;
+			productReference = 134814201AA4EA6300B7C361 /* libRNFio.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 /* End PBXNativeTarget section */
@@ -312,6 +329,7 @@
 				5C3E682321F6540500797FFD /* macros.h in Sources */,
 				5C3E684B21F658C800797FFD /* uECC.c in Sources */,
 				5FACAF742264EC8600078727 /* AcountNameGenerator.swift in Sources */,
+				5F8F2EEE228B1FB00038A924 /* dummy.swift in Sources */,
 				5C3E682421F6540500797FFD /* options.h in Sources */,
 				5C3E682521F6540500797FFD /* pbkdf2.h in Sources */,
 				5C3E682621F6540500797FFD /* rand.h in Sources */,

@@ -8,21 +8,24 @@ export class AddPublicAddress extends SignedTransaction{
     fioAddress:string
     tokenCode:string
     publicAddress:string
+    maxFee:number
 
-    constructor(fioAddress:string,tokenCode:string,publicAddress:string){
+    constructor(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number){
         super();
         this.fioAddress = fioAddress;
         this.tokenCode = tokenCode;
         this.publicAddress = publicAddress;
-    }
+        this.maxFee = maxFee
+    }   
 
-    async getData():Promise<any>{
-        let actor = await this.getActor();
+    getData():any{
+        let actor = this.getActor();
         let data = {
             fio_address:this.fioAddress,
             token_code:this.tokenCode,
             public_address:this.publicAddress,
-            actor: actor
+            actor: actor,
+            max_fee: this.maxFee
         }
         return data;
     }

@@ -1,12 +1,5 @@
-import { NativeModules } from 'react-native';
-const { RNFio } = NativeModules;
-
-let ReactNativeFio = RNFio;
-
-export default ReactNativeFio;
-
-fio = require('./lib/FIOSDK');
-const FIOSDK = fio;
-FIOSDK.ReactNativeFio = ReactNativeFio;
-
-export { FIOSDK };
+const fio = require('./lib/FIOSDK');
+const FIOSDK = fio.FIOSDK;
+const constants = require('./lib/utils/constants')
+const fioConstants = constants.constants
+export { FIOSDK, fioConstants };

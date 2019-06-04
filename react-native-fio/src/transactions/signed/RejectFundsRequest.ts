@@ -6,19 +6,21 @@ export class RejectFundsRequest extends SignedTransaction{
     ACTION:string = "rejectfndreq" 
     ACOUNT:string = "fio.reqobt"
     fioreqid:string
+    maxFee:number
 
-
-    constructor(fioreqid:string){
+    constructor(fioreqid:string,maxFee:number){
         super();
         this.fioreqid = fioreqid;
+        this.maxFee = maxFee
 
     }
 
-    async getData():Promise<any>{
-        let actor = await this.getActor();
+    getData():any{
+        let actor = this.getActor();
         let data = {
             fio_request_id:this.fioreqid,
-            actor: actor
+            actor: actor,
+            max_fee: this.maxFee
         }
         return data;
     }

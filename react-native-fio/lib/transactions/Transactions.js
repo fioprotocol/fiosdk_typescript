@@ -1,5 +1,4 @@
 "use strict";
-//import ReactNativeFio from 'react-native-fio'
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -11,64 +10,73 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 class Transactions {
     constructor() {
+        this.publicKey = '';
+        this.privateKey = '';
         this.serilizeEndpoint = "chain/serialize_json";
     }
-    getActor() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let actor = yield Transactions.ReactNativeFio.getActor(Transactions.publicKey);
-            return actor;
-        });
-    }
-    serializeJson(data, action) {
-        let body = {
-            "action": action,
-            "json": data
-        };
-        let fetchOptions = {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(body)
-        };
-        return this.executeCall(this.serilizeEndpoint, null, fetchOptions);
+    getActor(publicKey = '') {
+        const actor = Transactions.FioProvider.accountHash((publicKey == '') ? this.publicKey : publicKey);
+        return actor;
     }
     getChainInfo() {
-        return fetch(Transactions.baseUrl + 'chain/get_info', {
-            method: 'GET',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            }
-        }).then((res) => res.json());
+        return __awaiter(this, void 0, void 0, function* () {
+            let options = {
+                method: 'GET',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                }
+            };
+            const res = yield Transactions.fetchJson(Transactions.baseUrl + 'chain/get_info', options);
+            return res;
+        });
     }
     getBlock(chain) {
-        return fetch(Transactions.baseUrl + 'chain/get_block', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                block_num_or_id: chain.last_irreversible_block_num
-            })
-        }).then((res) => res.json());
-    }
-    pushToServer(serializedData, account, action, endpoint) {
         return __awaiter(this, void 0, void 0, function* () {
-            let chain = yield this.getChainInfo().catch((error) => console.error("chain"));
-            let block = yield this.getBlock(chain).catch((error) => console.error("block"));
-            let signedTransacion = yield Transactions.ReactNativeFio.getSignedTransaction(account, action, serializedData, Transactions.publicKey, Transactions.privateKey, JSON.stringify(chain), JSON.stringify(block));
-            let sigArray = new Array();
-            sigArray.push(signedTransacion.signature);
-            let data = {
-                signatures: sigArray,
-                packed_trx: signedTransacion.hex,
-                compression: "none",
-                packed_context_free_data: ""
-            };
-            return this.executeCall(endpoint, JSON.stringify(data));
+            if (chain == undefined) {
+                throw new Error("chain undefined");
+            }
+            if (chain.last_irreversible_block_num == undefined) {
+                throw new Error("chain.last_irreversible_block_num undefined");
+            }
+            const res = yield Transactions.fetchJson(Transactions.baseUrl + 'chain/get_block', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    block_num_or_id: chain.last_irreversible_block_num
+                })
+            });
+            return res;
+        });
+    }
+    pushToServer(transaction, endpoint, dryRun) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const privky = new Array();
+            privky.push(this.privateKey);
+            let chain = yield this.getChainInfo().catch((error) => console.error("chain:: " + error));
+            let block = yield this.getBlock(chain).catch((error) => console.error("block: " + error));
+            transaction.ref_block_num = block.block_num & 0xFFFF;
+            transaction.ref_block_prefix = block.ref_block_prefix;
+            let expiration = new Date(block.timestamp + "Z");
+            expiration.setSeconds(expiration.getSeconds() + 120);
+            let expirationStr = expiration.toISOString();
+            transaction.expiration = expirationStr.substr(0, expirationStr.length - 1);
+            if (dryRun) {
+                return Transactions.FioProvider.prepareTransaction({
+                    transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+                    textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
+                });
+            }
+            else {
+                const signedTransaction = yield Transactions.FioProvider.prepareTransaction({
+                    transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+                    textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
+                });
+                return this.executeCall(endpoint, JSON.stringify(signedTransaction));
+            }
         });
     }
     executeCall(endPoint, body, fetchOptions) {
@@ -89,19 +97,9 @@ class Transactions {
                 body: body
             };
         }
-        return fetch(Transactions.baseUrl + endPoint, options).then(response => {
-            let statusCode = response.status;
-            let data = response.json();
-            return Promise.all([statusCode, data]);
-        })
-            .then(([status, data]) => {
-            if (status < 200 || status > 300) {
-                throw new Error(JSON.stringify({ errorCode: status, msg: data }));
-            }
-            else {
-                return data;
-            }
-        });
+        const res = Transactions.fetchJson(Transactions.baseUrl + endPoint, options);
+        return res;
     }
 }
+Transactions.abiMap = new Map();
 exports.Transactions = Transactions;

@@ -10,10 +10,11 @@ export class RequestNewFunds extends SignedTransaction{
     payeeFioAddress:string
     payeePublicAddress:string
     tokenCode:string
-    amount: Number; 
+    amount: number; 
     metaData:string
+    maxFee:number
 
-    constructor(payerFioAddress:string,payeeFioAddress:string,payeePublicAddress:string,tokenCode:string,amount:Number,metaData:string){
+    constructor(payerFioAddress:string,payeeFioAddress:string,payeePublicAddress:string,tokenCode:string,amount:number,metaData:string, maxFee:number){
         super();
         this.payerFioAddress = payerFioAddress;
         this.payeeFioAddress = payeeFioAddress;
@@ -21,10 +22,11 @@ export class RequestNewFunds extends SignedTransaction{
         this.tokenCode = tokenCode;
         this.amount = amount;
         this.metaData = metaData;
+        this.maxFee = maxFee
     }
 
-    async getData():Promise<any>{
-        let actor = await this.getActor();
+    getData():any{
+        let actor = this.getActor();
         let data = {
             payer_fio_address:this.payerFioAddress,
             payee_fio_address:this.payeeFioAddress,
@@ -32,7 +34,8 @@ export class RequestNewFunds extends SignedTransaction{
             amount:this.amount,
             token_code:this.tokenCode,
             metadata:this.metaData,
-            actor: actor
+            actor: actor,
+            max_fee: this.maxFee
         }
         return data;
     }

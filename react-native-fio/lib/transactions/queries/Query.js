@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Transactions_1 = require("../Transactions");
 class Query extends Transactions_1.Transactions {
-    execute() {
+    execute(publicKey) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.publicKey = publicKey;
             return this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()));
         });
     }

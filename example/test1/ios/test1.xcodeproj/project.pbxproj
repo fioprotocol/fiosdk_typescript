@@ -36,7 +36,7 @@
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* test1Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* test1Tests.m */; };
 		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
-		5F44FF8C226D86CC0093D7FC /* libFio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F44FF8A226D83060093D7FC /* libFio.a */; };
+		5F44FF8C226D86CC0093D7FC /* libRNFio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F44FF8A226D83060093D7FC /* libRNFio.a */; };
 		5FACAF722264E61500078727 /* react_native_bridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FACAF712264E61500078727 /* react_native_bridge.swift */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
@@ -376,7 +376,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F44FF8C226D86CC0093D7FC /* libFio.a in Frameworks */,
+				5F44FF8C226D86CC0093D7FC /* libRNFio.a in Frameworks */,
 				ED297163215061F000B7C4FE /* JavaScriptCore.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
@@ -560,7 +560,7 @@
 		5F44FF86226D83060093D7FC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5F44FF8A226D83060093D7FC /* libFio.a */,
+				5F44FF8A226D83060093D7FC /* libRNFio.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1036,10 +1036,9 @@
 			remoteRef = 5E9157341DD0AC6500FF2AA8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5F44FF8A226D83060093D7FC /* libFio.a */ = {
+		5F44FF8A226D83060093D7FC /* libRNFio.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
-			name = libFio.a;
 			path = libRNFio.a;
 			remoteRef = 5F44FF89226D83060093D7FC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
@@ -1525,6 +1524,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -1570,6 +1570,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 4.2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

@@ -9,12 +9,24 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Transactions_1 = require("../Transactions");
+const Autorization_1 = require("../../entities/Autorization");
+const RawAction_1 = require("../../entities/RawAction");
+const RawTransaction_1 = require("../../entities/RawTransaction");
 class SignedTransaction extends Transactions_1.Transactions {
-    execute() {
+    execute(privateKey, publicKey, dryRun = false) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.getData().then((res) => { return this.serializeJson(res, this.getAction()); })
-                .then((jsonData) => { return jsonData.serialized_json; })
-                .then((serializedData) => { return this.pushToServer(serializedData, this.getAcount(), this.getAction(), this.getEndPoint()); });
+            this.privateKey = privateKey;
+            this.publicKey = publicKey;
+            const rawTransaction = new RawTransaction_1.RawTransaction();
+            const rawaction = new RawAction_1.RawAction();
+            rawaction.account = this.getAcount();
+            const actor = yield this.getActor();
+            rawaction.authorization.push(new Autorization_1.Autorization(actor));
+            rawaction.account = this.getAcount();
+            rawaction.name = this.getAction();
+            rawaction.data = this.getData();
+            rawTransaction.actions.push(rawaction);
+            return this.pushToServer(rawTransaction, this.getEndPoint(), dryRun);
         });
     }
     getAction() {

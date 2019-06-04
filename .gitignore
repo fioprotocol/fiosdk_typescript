@@ -1,1 +1,5 @@
 .DS_Store
+/example/react-native-fio
+/react-native-fio/test/fails.tst.js
+/.vscode
+/react-native-fio/package-lock.json

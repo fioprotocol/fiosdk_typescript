@@ -34,5 +34,9 @@ RCT_EXTERN_METHOD(
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject
                   )
-RCT_EXTERN_METHOD(test:(nonnull NSString *)banana nothing:(nonnull NSString *)nothing resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) 
+RCT_EXTERN_METHOD(
+    generatePrivatePubKeyPair:(nonnull NSString *)mnemonic
+    resolver:(RCTPromiseResolveBlock)resolve  
+    rejecter:(RCTPromiseRejectBlock)reject
+) 
 @end

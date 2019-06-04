@@ -10,5 +10,6 @@ export interface RecordSendRequest{
         obt_id:string,
         metadata:string,
         fio_request_id:string,
+        max_fee:number,
         actor:string
 }
