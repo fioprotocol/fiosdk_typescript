@@ -288,8 +288,8 @@ test('createKeys', async function () {
 
 
 test('Derived public key', async function () {
-    const privatekeys = {fioOwnerKey: "5JmN1Nbr2nwhZm9C2Kj6WYRJTFmfYt51zumhrLBY2UdsCvUWYwU",fioKey:"5JmN1Nbr2nwhZm9C2Kj6WYRJTFmfYt51zumhrLBY2UdsCvUWYwU"}
-    const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioOwnerKey, privatekeys.fioKey)
+    const privatekeys = {fioKey:"5JmN1Nbr2nwhZm9C2Kj6WYRJTFmfYt51zumhrLBY2UdsCvUWYwU"}
+    const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioKey)
     console.log("%j",publickeys)
 })
 
