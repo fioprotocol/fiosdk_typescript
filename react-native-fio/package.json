@@ -48,6 +48,7 @@
         "text-encoding": "^0.7.0"
     },
     "dependencies": {
+        "bip39": "^3.0.2",
         "eosjs-ecc": "^4.0.4",
         "fiojs": "file:../../jimmyFiojs/fiojs",
         "hdkey": "^1.1.1",
