@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Transactions_1 = require("./transactions/Transactions");
 const queries = require("./transactions/queries");
@@ -34,36 +26,28 @@ class FIOSDK {
             });
         }
     }
-    static createPrivateKeyPair() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const privateOwnerKey = yield Ecc.PrivateKey.randomKey();
-            const fioOwnerKey = privateOwnerKey.toString();
-            const privateActiveKey = yield Ecc.PrivateKey.randomKey();
-            const fioKey = privateActiveKey.toString();
-            return { fioOwnerKey, fioKey };
-        });
-    }
-    //let entropy = Buffer.from(this.io.random(32)).toString('hex')
-    // HDKey.fromMasterSeed(sha512(secret_buffer))
-    static createPrivateKeyPair2(entropy) {
+    static createPrivateKey(entropy) {
         const hdkey = require('hdkey');
         const wif = require('wif');
-        //const ecc = require('eosjs-ecc')
         var sha512 = require('js-sha512').sha512;
-        // const bip39 = require('bip39')
-        // const mnemonic = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-        // const seed = bip39.mnemonicToSeedHex(mnemonic)
-        // const master = hdkey.fromMasterSeed(Buffer(seed, 'hex'))
-        /*let master = hdkey.fromMasterSeed(sha512(entropy))
-        let node = master.derive("m/44'/235'/0'/0/0")
-        console.error("fioOwnerKey: "+wif.encode(128, node._privateKey, false))
-        console.error("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-        const fioOwnerKey = wif.encode(128, node._privateKey, false)*/
         const master = hdkey.fromMasterSeed(sha512(entropy));
         const node = master.derive("m/44'/235'/0'/0/0");
         console.error("fioKey: " + wif.encode(128, node._privateKey, false));
         console.error("publicKey: " + Ecc.PublicKey(node._publicKey).toString());
         const fioKey = wif.encode(128, node._privateKey, false);
+        return { fioKey };
+    }
+    // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
+    static createPrivateKeyMnemonic(mnemonic) {
+        const hdkey = require('hdkey');
+        const wif = require('wif');
+        const bip39 = require('bip39');
+        const seed = bip39.mnemonicToSeedHex(mnemonic);
+        const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
+        const node = master.derive("m/44'/235'/0'/0/0");
+        const fioKey = wif.encode(128, node._privateKey, false);
+        // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
+        // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
         return { fioKey };
     }
     static derivedPublicKey(fioOwnerKey, fioKey) {
