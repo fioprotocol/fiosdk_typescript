@@ -65,15 +65,9 @@ export class FIOSDK{
 
 
 
-    static derivedPublicKey(fioOwnerKey:string, fioKey:string){
+    static derivedPublicKey(fioKey:string){
         const publicKey = Ecc.privateToPublic(fioKey)
-        let ownerPublicKey
-        if (fioOwnerKey) {
-          ownerPublicKey = Ecc.privateToPublic(fioOwnerKey)
-        }
-        console.error('derivedPublicKey publicKey' + publicKey)
-        console.error('derivedPublicKey publicKey' + ownerPublicKey)
-        return { publicKey, ownerPublicKey }
+        return { publicKey }
     }
 
     getActor():string{
