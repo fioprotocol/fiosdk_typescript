@@ -50,15 +50,9 @@ class FIOSDK {
         // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
         return { fioKey };
     }
-    static derivedPublicKey(fioOwnerKey, fioKey) {
+    static derivedPublicKey(fioKey) {
         const publicKey = Ecc.privateToPublic(fioKey);
-        let ownerPublicKey;
-        if (fioOwnerKey) {
-            ownerPublicKey = Ecc.privateToPublic(fioOwnerKey);
-        }
-        console.error('derivedPublicKey publicKey' + publicKey);
-        console.error('derivedPublicKey publicKey' + ownerPublicKey);
-        return { publicKey, ownerPublicKey };
+        return { publicKey };
     }
     getActor() {
         return Transactions_1.Transactions.FioProvider.accountHash(this.publicKey);

@@ -280,8 +280,9 @@ test('RequestNewFunds', done => {
 })
 
 test('createKeys', async function () {
-    const privatekeys = await FIOSDK.FIOSDK.createPrivateKeyPair()
-    const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioOwnerKey, privatekeys.fioKey)
+    const entropy = Buffer.from('abcdefghijklmnopqrstuv0123456789');
+    const privatekeys = await FIOSDK.FIOSDK.createPrivateKey(entropy)
+    const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioKey)
     console.log("%j",privatekeys)
     console.log("%j",publickeys)
 })
