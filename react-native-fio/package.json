@@ -50,7 +50,7 @@
     "dependencies": {
         "bip39": "^3.0.2",
         "eosjs-ecc": "^4.0.4",
-        "fiojs": "file:../../jimmyFiojs/fiojs",
+        "fiojs": "file:../../fiojs",
         "hdkey": "^1.1.1",
         "js-sha512": "^0.8.0",
         "wif": "^2.0.6"
