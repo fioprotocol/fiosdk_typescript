@@ -193,9 +193,9 @@ export class FIOSDK{
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
                 break    
             case 'recordsend':
-                return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, 
+                return this.recordSend(params.fioRequestId, params.payerFioAddress, params.payeeFioAddress, 
                     params.payerPublicAddress,params.payeePublicAddress, params.amount, params.tokenCode, 
-                    params.obtID, params.memo, params.maxFee)
+                    params.obtId, params.memo, params.maxFee)
                 break
             case 'rejectfundsrequest':
                 return this.rejectFundsRequest(params.fioRequestId,params.maxFee)
