@@ -72,8 +72,8 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee) {
-        let recordSend = new SignedTransactions.RecordSend(fioReqID, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee);
+    recordSend(fioRequestId = '', payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, memo, maxFee) {
+        let recordSend = new SignedTransactions.RecordSend(fioRequestId, payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, memo, maxFee);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
     rejectFundsRequest(fioRequestId, maxFee) {
@@ -129,59 +129,59 @@ class FIOSDK {
         return constants_1.Constants.multiplier;
     }
     genericAction(action, params) {
-        switch (action) {
-            case 'getActor':
+        switch (action.toLowerCase()) {
+            case 'getactor':
                 return this.getActor();
                 break;
-            case 'getFioPublicKey':
+            case 'getfiopublickey':
                 return this.getFioPublicKey();
                 break;
-            case 'registerFioAddress':
+            case 'registerfioaddress':
                 return this.registerFioAddress(params.fioAddress);
                 break;
-            case 'registerFioDomain':
+            case 'registerfiodomain':
                 return this.registerFioDomain(params.FioDomain);
                 break;
-            case 'addPublicAddress':
+            case 'addpublicaddress':
                 return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
                 break;
-            case 'recordSend':
+            case 'recordsend':
                 return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.memo, params.maxFee);
                 break;
-            case 'rejectFundsRequest':
+            case 'rejectfundsrequest':
                 return this.rejectFundsRequest(params.fioRequestId, params.maxFee);
                 break;
-            case 'requestFunds':
+            case 'requestfunds':
                 return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.metaData, params.maxFee);
                 break;
-            case 'isAvailable':
+            case 'isavailable':
                 return this.isAvailable(params.fioName);
                 break;
-            case 'getFioBalance':
+            case 'getfiobalance':
                 return this.getFioBalance();
                 break;
-            case 'getFioNames':
+            case 'getfionames':
                 return this.getFioNames(params.fioPublicKey);
                 break;
-            case 'getPendingFioRequests':
+            case 'getpendingfiorequests':
                 return this.getPendingFioRequests(params.fioPublicKey);
                 break;
-            case 'getSentFioRequests':
+            case 'getsentfiorequests':
                 return this.getSentFioRequests(params.fioPublicKey);
                 break;
-            case 'getPublicAddress':
+            case 'getpublicaddress':
                 return this.getPublicAddress(params.fioAddress, params.tokenCode);
                 break;
-            case 'transferTokens':
+            case 'transfertokens':
                 return this.transferTokens(params.payeePublicKey, params.amount, params.maxFee);
                 break;
-            case 'getAbi':
+            case 'getabi':
                 return this.getAbi(params.accountName);
                 break;
-            case 'getFee':
+            case 'getfee':
                 return this.getFee(params.endPoint, params.fioAddress);
                 break;
-            case 'getMultiplier':
+            case 'getmultiplier':
                 return this.getMultiplier();
                 break;
         }

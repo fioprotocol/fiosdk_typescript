@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
 class RecordSend extends SignedTransaction_1.SignedTransaction {
-    constructor(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee) {
+    constructor(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee, status = 'sent_to_blockchain') {
         super();
         this.ENDPOINT = "chain/record_send";
         this.ACTION = "recordsend";
@@ -18,21 +18,23 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
         this.obtID = obtID;
         this.memo = memo;
         this.maxFee = maxFee;
+        this.status = status;
     }
     getData() {
         let actor = this.getActor();
         let data = {
-            fioReqID: this.fioReqID,
-            payerFIOAddress: this.payerFIOAddress,
-            payeeFIOAddress: this.payeeFIOAddress,
-            payerPublicAddress: this.payerPublicAddress,
-            payeePublicAddress: this.payeePublicAddress,
+            fio_request_id: this.fioReqID,
+            payer_fio_address: this.payerFIOAddress,
+            payee_fio_address: this.payeeFIOAddress,
+            payer_public_address: this.payerPublicAddress,
+            payee_public_address: this.payeePublicAddress,
             amount: this.amount,
-            tokenCode: this.tokenCode,
-            obtID: this.obtID,
+            token_code: this.tokenCode,
+            obt_id: this.obtID,
             memo: this.memo,
             maxFee: this.maxFee,
-            actor: actor
+            actor: actor,
+            status: this.status
         };
         return data;
     }
