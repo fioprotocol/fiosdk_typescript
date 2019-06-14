@@ -72,8 +72,8 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(fioRequestId = '', payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, memo, maxFee) {
-        let recordSend = new SignedTransactions.RecordSend(fioRequestId, payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, memo, maxFee);
+    recordSend(fioRequestId = '', payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, metadata, maxFee, tpid, status = 'sent_to_blockchain') {
+        let recordSend = new SignedTransactions.RecordSend(fioRequestId, payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, metadata, maxFee, tpid, status);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
     rejectFundsRequest(fioRequestId, maxFee) {
@@ -146,7 +146,7 @@ class FIOSDK {
                 return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
                 break;
             case 'recordsend':
-                return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.memo, params.maxFee);
+                return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.metadata, params.maxFee, params.tpid, params.status);
                 break;
             case 'rejectfundsrequest':
                 return this.rejectFundsRequest(params.fioRequestId, params.maxFee);

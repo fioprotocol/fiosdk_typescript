@@ -13,10 +13,10 @@ export class RecordSend extends SignedTransaction{
     amount: number
     tokenCode: string
     obtID: string
-    memo: string
+    metadata: string
     maxFee: number
     status: string
-
+    tpid: string
     constructor(fioReqID: string = '',
         payerFIOAddress: string,
         payeeFIOAddress: string,
@@ -25,8 +25,9 @@ export class RecordSend extends SignedTransaction{
         amount: number,
         tokenCode: string,
         obtID: string,
-        memo: string,
+        metadata: string,
         maxFee: number,
+        tpid: string,
         status:string = 'sent_to_blockchain'){
         super();
         this.fioReqID = fioReqID
@@ -37,9 +38,15 @@ export class RecordSend extends SignedTransaction{
         this.amount = amount
         this.tokenCode = tokenCode
         this.obtID = obtID
-        this.memo = memo
+        this.metadata = metadata
         this.maxFee = maxFee
-        this.status = status
+        if(status){
+            this.status = status
+        }else{
+            this.status = 'sent_to_blockchain'
+        }
+        
+        this.tpid = tpid
     }
 
     getData():any{
@@ -53,10 +60,11 @@ export class RecordSend extends SignedTransaction{
             amount: this.amount,
             token_code: this.tokenCode,
             obt_id: this.obtID,
-            memo: this.memo,
-            maxFee: this.maxFee,
+            metadata: this.metadata,
+            max_fee: this.maxFee,
             actor: actor,
-            status: this.status
+            status: this.status,
+            tpid: this.tpid
         }
         return data;
     }
