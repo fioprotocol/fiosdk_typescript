@@ -101,11 +101,13 @@ export class FIOSDK{
     amount: number,
     tokenCode: string,
     obtId: string,
-    memo: string,
-    maxFee: number):Promise<any>{
+    metadata: string,
+    maxFee: number,
+    tpid:string,
+    status='sent_to_blockchain'):Promise<any>{
         let recordSend = new SignedTransactions.RecordSend(fioRequestId,
         payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress,
-        amount, tokenCode, obtId, memo, maxFee);
+        amount, tokenCode, obtId, metadata, maxFee,tpid,status);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
@@ -193,9 +195,9 @@ export class FIOSDK{
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
                 break    
             case 'recordsend':
-                return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, 
+                return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, 
                     params.payerPublicAddress,params.payeePublicAddress, params.amount, params.tokenCode, 
-                    params.obtID, params.memo, params.maxFee)
+                    params.obtID, params.memo, params.maxFee,params.tpid,params.status)
                 break
             case 'rejectfundsrequest':
                 return this.rejectFundsRequest(params.fioRequestId,params.maxFee)
