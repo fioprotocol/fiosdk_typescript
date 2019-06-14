@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
 class RecordSend extends SignedTransaction_1.SignedTransaction {
-    constructor(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee, tpid, status = 'sent_to_blockchain') {
+    constructor(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, metadata, maxFee, tpid, status = 'sent_to_blockchain') {
         super();
         this.ENDPOINT = "chain/record_send";
         this.ACTION = "recordsend";
@@ -16,7 +16,7 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
         this.amount = amount;
         this.tokenCode = tokenCode;
         this.obtID = obtID;
-        this.memo = memo;
+        this.metadata = metadata;
         this.maxFee = maxFee;
         if (status) {
             this.status = status;
@@ -37,7 +37,7 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
             amount: this.amount,
             token_code: this.tokenCode,
             obt_id: this.obtID,
-            metadata: this.memo,
+            metadata: this.metadata,
             max_fee: this.maxFee,
             actor: actor,
             status: this.status,
