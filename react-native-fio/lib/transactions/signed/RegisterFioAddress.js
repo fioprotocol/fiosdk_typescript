@@ -14,7 +14,7 @@ class RegisterFioAddress extends SignedTransaction_1.SignedTransaction {
         let data = {
             fio_address: this.fioAddress,
             owner_fio_public_key: this.publicKey,
-            max_fee: 0,
+            max_fee: 3000000000,
             actor: actor
         };
         return data;
