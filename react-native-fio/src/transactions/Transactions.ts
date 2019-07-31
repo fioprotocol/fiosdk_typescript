@@ -1,6 +1,10 @@
 import { AbiResponse } from '../entities/AbiResponse';
 import { RawTransaction } from '../entities/RawTransaction';
+import { Fio } from 'fiojs'
+
 type FetchJson = (uri: string, opts?: Object) => Object
+const textEncoder: TextEncoder = new TextEncoder();
+const textDecoder: TextDecoder = new TextDecoder();
 
 export class Transactions {
     static baseUrl:string;
@@ -99,4 +103,12 @@ export class Transactions {
         return res
     }
 
+    getCipherContent(contentType:string,content:any,privateKey:string,publicKey:string){
+        const cipher = Fio.createSharedCipher({privateKey,publicKey,textEncoder, textDecoder})
+        return cipher.encrypt(contentType,content)
+    }
+    getUnCipherContent(contentType:string,content:any,privateKey:string,publicKey:string){
+        const cipher = Fio.createSharedCipher({privateKey,publicKey,textEncoder, textDecoder})
+        return cipher.decrypt(contentType,content)
+    }
 }

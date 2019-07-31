@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Transactions_1 = require("./transactions/Transactions");
 const queries = require("./transactions/queries");
@@ -80,16 +88,25 @@ class FIOSDK {
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId, maxFee);
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
-    requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, metaData, maxFee) {
-        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, tokenCode, amount, metaData, maxFee);
-        return requestNewFunds.execute(this.privateKey, this.publicKey);
+    requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, memo, maxFee, payerFioPublicKey, tpid = '', hash, offlineUrl) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let payerKey;
+            if (!payerFioPublicKey) {
+                payerKey = yield this.getPublicAddress(payerFioAddress, 'FIO');
+            }
+            else {
+                payerKey = payerFioPublicKey;
+            }
+            let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payerKey, payeeFioAddress, tpid, maxFee, payeePublicAddress, amount, tokenCode, memo, hash, offlineUrl);
+            return requestNewFunds.execute(this.privateKey, this.publicKey);
+        });
     }
     isAvailable(fioName) {
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
         return availabilityCheck.execute(this.publicKey);
     }
-    getFioBalance() {
-        let getFioBalance = new queries.GetFioBalance();
+    getFioBalance(othersBalance) {
+        let getFioBalance = new queries.GetFioBalance(othersBalance);
         return getFioBalance.execute(this.publicKey);
     }
     getFioNames(fioPublicKey) {
@@ -152,13 +169,18 @@ class FIOSDK {
                 return this.rejectFundsRequest(params.fioRequestId, params.maxFee);
                 break;
             case 'requestFunds':
-                return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.metaData, params.maxFee);
+                return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.memo, params.maxFee, params.payerFioPublicKey, params.tpid, params.hash, params.offlineUrl);
                 break;
             case 'isAvailable':
                 return this.isAvailable(params.fioName);
                 break;
             case 'getFioBalance':
-                return this.getFioBalance();
+                if (params) {
+                    return this.getFioBalance(params.othersBalance);
+                }
+                else {
+                    return this.getFioBalance();
+                }
                 break;
             case 'getFioNames':
                 return this.getFioNames(params.fioPublicKey);

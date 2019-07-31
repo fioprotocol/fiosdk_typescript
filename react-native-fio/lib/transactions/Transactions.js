@@ -8,6 +8,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const fiojs_1 = require("fiojs");
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
 class Transactions {
     constructor() {
         this.publicKey = '';
@@ -99,6 +102,14 @@ class Transactions {
         }
         const res = Transactions.fetchJson(Transactions.baseUrl + endPoint, options);
         return res;
+    }
+    getCipherContent(contentType, content, privateKey, publicKey) {
+        const cipher = fiojs_1.Fio.createSharedCipher({ privateKey, publicKey, textEncoder, textDecoder });
+        return cipher.encrypt(contentType, content);
+    }
+    getUnCipherContent(contentType, content, privateKey, publicKey) {
+        const cipher = fiojs_1.Fio.createSharedCipher({ privateKey, publicKey, textEncoder, textDecoder });
+        return cipher.decrypt(contentType, content);
     }
 }
 Transactions.abiMap = new Map();

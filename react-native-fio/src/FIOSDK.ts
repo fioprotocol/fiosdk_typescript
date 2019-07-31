@@ -114,8 +114,14 @@ export class FIOSDK{
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
-    requestFunds(payerFioAddress: string, payeeFioAddress: string, payeePublicAddress: string, amount: number,tokenCode: string, metaData: string,maxFee:number):Promise<any>{
-        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payeeFioAddress,payeePublicAddress,tokenCode,amount,metaData,maxFee);
+    async requestFunds(payerFioAddress: string, payeeFioAddress: string,payeePublicAddress: string, amount: number,tokenCode: string, memo: string,maxFee:number, payerFioPublicKey?:string, tpid:string='', hash?:string, offlineUrl?:string):Promise<any>{
+        let payerKey
+        if(!payerFioPublicKey){
+            payerKey = await this.getPublicAddress(payerFioAddress,'FIO')
+        }else{
+            payerKey = payerFioPublicKey
+        }
+        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
 
@@ -124,8 +130,8 @@ export class FIOSDK{
         return availabilityCheck.execute(this.publicKey);
     }
     
-    getFioBalance():Promise<any>{
-        let getFioBalance = new queries.GetFioBalance();
+    getFioBalance(othersBalance?:string):Promise<any>{
+        let getFioBalance = new queries.GetFioBalance(othersBalance);
         return getFioBalance.execute(this.publicKey);
     }
 
@@ -202,13 +208,17 @@ export class FIOSDK{
                 break
             case 'requestFunds':
                 return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress,
-                    params.amount, params.tokenCode, params.metaData, params.maxFee)
+                    params.amount, params.tokenCode, params.memo, params.maxFee,params.payerFioPublicKey, params.tpid, params.hash, params.offlineUrl)
                 break                
             case 'isAvailable':
                 return this.isAvailable(params.fioName)
                 break  
             case 'getFioBalance':
-                return this.getFioBalance()
+                if(params){
+                    return this.getFioBalance(params.othersBalance)
+                }else{
+                    return this.getFioBalance()
+                }
                 break
             case 'getFioNames':
                 return this.getFioNames(params.fioPublicKey)

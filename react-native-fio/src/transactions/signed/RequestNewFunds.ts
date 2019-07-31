@@ -7,35 +7,46 @@ export class RequestNewFunds extends SignedTransaction{
     ACOUNT:string = "fio.reqobt"
  
     payerFioAddress:string
+    payerFioPublicKey:string
     payeeFioAddress:string
-    payeePublicAddress:string
     tokenCode:string
-    amount: number; 
-    metaData:string
     maxFee:number
-
-    constructor(payerFioAddress:string,payeeFioAddress:string,payeePublicAddress:string,tokenCode:string,amount:number,metaData:string, maxFee:number){
+    content:any
+    tpid:string
+    
+    constructor(payerFioAddress:string,payerFioPublicKey:string,payeeFioAddress:string,tpid:string='',maxFee:number,payeePublicAddress:string,amount:number,tokenCode:string,memo:string|null=null,hash:string|null=null,offlineUrl:string|null=null){
         super();
         this.payerFioAddress = payerFioAddress;
+        this.payerFioPublicKey = payerFioPublicKey
         this.payeeFioAddress = payeeFioAddress;
-        this.payeePublicAddress = payeePublicAddress
         this.tokenCode = tokenCode;
-        this.amount = amount;
-        this.metaData = metaData;
         this.maxFee = maxFee
+        this.content = {
+            payee_public_address:payeePublicAddress,
+            amount:amount,
+            token_code:tokenCode,
+            memo:memo,
+            hash:hash,
+            offline_url:offlineUrl
+        }
+
+        if(tpid){
+            this.tpid = tpid
+        }else{
+            this.tpid = ''
+        }
     }
 
     getData():any{
         let actor = this.getActor();
+        const cipherContent = this.getCipherContent('new_funds_content',this.content,this.privateKey,this.payerFioPublicKey)
         let data = {
             payer_fio_address:this.payerFioAddress,
             payee_fio_address:this.payeeFioAddress,
-            payee_public_address:this.payeePublicAddress,
-            amount:this.amount,
-            token_code:this.tokenCode,
-            metadata:this.metaData,
+            content:cipherContent,
+            max_fee: this.maxFee,
+            tpid:this.tpid,
             actor: actor,
-            max_fee: this.maxFee
         }
         return data;
     }
