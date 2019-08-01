@@ -5,10 +5,23 @@ class PendingFioRequests extends Query_1.Query {
     constructor(fioPublicKey) {
         super();
         this.ENDPOINT = "chain/get_pending_fio_requests";
+        this.isEncrypted = true;
         this.fioPublicKey = fioPublicKey;
     }
     getData() {
         return { fio_public_key: this.fioPublicKey };
+    }
+    decrypt(result) {
+        console.error('decrypt: ', result);
+        if (result.requests.length > 0) {
+            const pendings = [];
+            result.requests.forEach((value) => {
+                const content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key);
+                console.error("PendingFioRequests:content: ", content);
+                pendings.push(content);
+            });
+            return pendings;
+        }
     }
 }
 exports.PendingFioRequests = PendingFioRequests;

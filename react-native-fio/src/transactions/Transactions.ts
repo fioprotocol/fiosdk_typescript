@@ -1,6 +1,8 @@
 import { AbiResponse } from '../entities/AbiResponse';
 import { RawTransaction } from '../entities/RawTransaction';
 import { Fio } from 'fiojs'
+import { TextDecoder, TextEncoder } from 'text-encoding';
+
 
 type FetchJson = (uri: string, opts?: Object) => Object
 const textEncoder: TextEncoder = new TextEncoder();
@@ -99,8 +101,9 @@ export class Transactions {
                 body:body
             }
         } 
-        const res =  Transactions.fetchJson(Transactions.baseUrl + endPoint,options)
-        return res
+        /* const res =  Transactions.fetchJson(Transactions.baseUrl + endPoint,options)
+        return res*/
+        return Transactions.fetchJson(Transactions.baseUrl + endPoint,options)
     }
 
     getCipherContent(contentType:string,content:any,privateKey:string,publicKey:string){

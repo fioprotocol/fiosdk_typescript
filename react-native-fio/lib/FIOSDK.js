@@ -46,17 +46,21 @@ class FIOSDK {
         return { fioKey };
     }
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-    static createPrivateKeyMnemonic(mnemonic) {
-        const hdkey = require('hdkey');
-        const wif = require('wif');
-        const bip39 = require('bip39');
-        const seed = bip39.mnemonicToSeedHex(mnemonic);
-        const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
-        const node = master.derive("m/44'/235'/0'/0/0");
-        const fioKey = wif.encode(128, node._privateKey, false);
-        // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-        // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
-        return { fioKey };
+    static createPrivateKeyMnemonic(entropy) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const hdkey = require('hdkey');
+            const wif = require('wif');
+            const bip39 = require('bip39');
+            const mnemonic = bip39.entropyToMnemonic(entropy);
+            const seedBytes = yield bip39.mnemonicToSeed(mnemonic);
+            const seed = yield seedBytes.toString('hex');
+            const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
+            const node = master.derive("m/44'/235'/0'/0/0");
+            const fioKey = wif.encode(128, node._privateKey, false);
+            // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
+            // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
+            return { fioKey, mnemonic };
+        });
     }
     static derivedPublicKey(fioKey) {
         const publicKey = Ecc.privateToPublic(fioKey);
@@ -91,13 +95,17 @@ class FIOSDK {
     requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, memo, maxFee, payerFioPublicKey, tpid = '', hash, offlineUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             let payerKey;
+            console.error('requestFunds payerFioPublicKey: ', payerFioPublicKey);
             if (!payerFioPublicKey) {
+                console.error('requestFunds payerFioPublicKey 1');
                 payerKey = yield this.getPublicAddress(payerFioAddress, 'FIO');
             }
             else {
+                console.error('requestFunds payerFioPublicKey 2');
                 payerKey = payerFioPublicKey;
             }
-            let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payerKey, payeeFioAddress, tpid, maxFee, payeePublicAddress, amount, tokenCode, memo, hash, offlineUrl);
+            console.error('requestFunds payerKey: ', payerKey);
+            let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payerKey.public_address, payeeFioAddress, tpid, maxFee, payeePublicAddress, amount, tokenCode, memo, hash, offlineUrl);
             return requestNewFunds.execute(this.privateKey, this.publicKey);
         });
     }
@@ -115,11 +123,11 @@ class FIOSDK {
     }
     getPendingFioRequests(fioPublicKey) {
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
-        return pendingFioRequests.execute(this.publicKey);
+        return pendingFioRequests.execute(this.publicKey, this.privateKey);
     }
     getSentFioRequests(fioPublicKey) {
         let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
-        return sentFioRequest.execute(this.publicKey);
+        return sentFioRequest.execute(this.publicKey, this.privateKey);
     }
     getPublicAddress(fioAddress, tokenCode) {
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);

@@ -16,6 +16,7 @@ export abstract class SignedTransaction extends Transactions{
     async execute(privateKey:string, publicKey:string,dryRun=false):Promise<any>{
         this.privateKey = privateKey
         this.publicKey = publicKey
+
         const rawTransaction = new RawTransaction()
         const rawaction = new RawAction()
         rawaction.account = this.getAcount()

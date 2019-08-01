@@ -3,10 +3,26 @@ import { Transactions } from '../Transactions';
 export abstract class Query<T> extends Transactions{
         abstract ENDPOINT:string;
         abstract getData():any
-    
-        async execute(publicKey:string):Promise<T>{ 
+        decrypt(result:any):any{}
+        isEncrypted=false
+
+        async execute(publicKey:string,privateKey:string=''):Promise<any>{ 
             this.publicKey = publicKey
-            return this.executeCall(this.getEndPoint(),JSON.stringify(this.getData()))
+            this.privateKey = privateKey
+            if(!this.isEncrypted){
+                console.error('no Encrypted')
+                return this.executeCall(this.getEndPoint(),JSON.stringify(this.getData()))
+            }else{
+                try{
+                    console.error('Encrypted')
+                    const result = await this.executeCall(this.getEndPoint(),JSON.stringify(this.getData()))
+                    return this.decrypt(result)
+                } catch(error){
+                    throw error
+                }
+            }
+           
+            
         }
 
         getEndPoint():string {

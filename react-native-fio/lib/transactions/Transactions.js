@@ -9,8 +9,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fiojs_1 = require("fiojs");
-const textEncoder = new TextEncoder();
-const textDecoder = new TextDecoder();
+const text_encoding_1 = require("text-encoding");
+const textEncoder = new text_encoding_1.TextEncoder();
+const textDecoder = new text_encoding_1.TextDecoder();
 class Transactions {
     constructor() {
         this.publicKey = '';
@@ -70,13 +71,13 @@ class Transactions {
             if (dryRun) {
                 return Transactions.FioProvider.prepareTransaction({
                     transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
-                    textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
+                    textDecoder: new text_encoding_1.TextDecoder(), textEncoder: new text_encoding_1.TextEncoder()
                 });
             }
             else {
                 const signedTransaction = yield Transactions.FioProvider.prepareTransaction({
                     transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
-                    textDecoder: new TextDecoder(), textEncoder: new TextEncoder()
+                    textDecoder: new text_encoding_1.TextDecoder(), textEncoder: new text_encoding_1.TextEncoder()
                 });
                 return this.executeCall(endpoint, JSON.stringify(signedTransaction));
             }
@@ -100,8 +101,9 @@ class Transactions {
                 body: body
             };
         }
-        const res = Transactions.fetchJson(Transactions.baseUrl + endPoint, options);
-        return res;
+        /* const res =  Transactions.fetchJson(Transactions.baseUrl + endPoint,options)
+        return res*/
+        return Transactions.fetchJson(Transactions.baseUrl + endPoint, options);
     }
     getCipherContent(contentType, content, privateKey, publicKey) {
         const cipher = fiojs_1.Fio.createSharedCipher({ privateKey, publicKey, textEncoder, textDecoder });

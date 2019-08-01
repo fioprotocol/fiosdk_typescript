@@ -48,6 +48,7 @@
         "text-encoding": "^0.7.0"
     },
     "dependencies": {
+        "@types/text-encoding": "0.0.35",
         "bip39": "^3.0.2",
         "eosjs-ecc": "^4.0.4",
         "fiojs": "file:../../fiojs",

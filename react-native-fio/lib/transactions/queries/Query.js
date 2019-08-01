@@ -10,10 +10,29 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const Transactions_1 = require("../Transactions");
 class Query extends Transactions_1.Transactions {
-    execute(publicKey) {
+    constructor() {
+        super(...arguments);
+        this.isEncrypted = false;
+    }
+    decrypt(result) { }
+    execute(publicKey, privateKey = '') {
         return __awaiter(this, void 0, void 0, function* () {
             this.publicKey = publicKey;
-            return this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()));
+            this.privateKey = privateKey;
+            if (!this.isEncrypted) {
+                console.error('no Encrypted');
+                return this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()));
+            }
+            else {
+                try {
+                    console.error('Encrypted');
+                    const result = yield this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()));
+                    return this.decrypt(result);
+                }
+                catch (error) {
+                    throw error;
+                }
+            }
         });
     }
     getEndPoint() {

@@ -50,17 +50,19 @@ export class FIOSDK{
     }
     
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-    static createPrivateKeyMnemonic(mnemonic:string):any{        
+    static async createPrivateKeyMnemonic(entropy:Buffer):Promise<any>{        
         const hdkey = require('hdkey')
         const wif = require('wif')
         const bip39 = require('bip39')
-        const seed = bip39.mnemonicToSeedHex(mnemonic)
+        const mnemonic = bip39.entropyToMnemonic(entropy)
+        const seedBytes = await bip39.mnemonicToSeed(mnemonic)
+        const seed = await seedBytes.toString('hex')
         const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'))
         const node = master.derive("m/44'/235'/0'/0/0")
         const fioKey = wif.encode(128, node._privateKey, false)
         // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
         // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
-        return {fioKey }
+        return {fioKey, mnemonic}
     }
 
 
@@ -116,12 +118,18 @@ export class FIOSDK{
 
     async requestFunds(payerFioAddress: string, payeeFioAddress: string,payeePublicAddress: string, amount: number,tokenCode: string, memo: string,maxFee:number, payerFioPublicKey?:string, tpid:string='', hash?:string, offlineUrl?:string):Promise<any>{
         let payerKey
+        console.error('requestFunds payerFioPublicKey: ', payerFioPublicKey)
         if(!payerFioPublicKey){
+            console.error('requestFunds payerFioPublicKey 1')
+
             payerKey = await this.getPublicAddress(payerFioAddress,'FIO')
         }else{
+            console.error('requestFunds payerFioPublicKey 2')
             payerKey = payerFioPublicKey
         }
-        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
+        console.error('requestFunds payerKey: ', payerKey)
+
+        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey.public_address,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
 
@@ -143,12 +151,12 @@ export class FIOSDK{
 
     getPendingFioRequests(fioPublicKey:string):Promise<any>{
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
-        return pendingFioRequests.execute(this.publicKey)
+        return pendingFioRequests.execute(this.publicKey,this.privateKey)
     }
 
     getSentFioRequests(fioPublicKey:string):Promise<any>{
         let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
-        return sentFioRequest.execute(this.publicKey)
+        return sentFioRequest.execute(this.publicKey,this.privateKey)
     }
 
     getPublicAddress(fioAddress:string, tokenCode:string):Promise<any>{
