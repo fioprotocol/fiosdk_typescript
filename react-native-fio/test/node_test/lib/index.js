@@ -105,6 +105,6 @@ class Worker {
 }
 const worker = new Worker();
 //worker.setupSDK()
-//worker.doSomething()
-worker.doSomethingElse2();
+worker.doSomething();
+//worker.doSomethingElse2()
 //worker.decrypt().then(content => {console.error('content: ', content)})
