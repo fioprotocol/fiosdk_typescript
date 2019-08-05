@@ -78,13 +78,13 @@ export class FIOSDK{
         return this.publicKey
     }
 
-    registerFioAddress(fioAddress:string):Promise<any>{
-        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress);
+    registerFioAddress(fioAddress:string, maxFee:number):Promise<any>{
+        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress, maxFee);
         return registerFioAddress.execute(this.privateKey, this.publicKey)
     }
 
-    registerFioDomain(fioDomain:string):Promise<any>{
-        let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain);
+    registerFioDomain(fioDomain:string, maxFee:number):Promise<any>{
+        let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain, maxFee);
         return registerFioDomain.execute(this.privateKey, this.publicKey)
     }
 
@@ -186,10 +186,10 @@ export class FIOSDK{
                 return this.getFioPublicKey()
                 break
             case 'registerfioaddress':
-                return this.registerFioAddress(params.fioAddress)
+                return this.registerFioAddress(params.fioAddress, params.maxFee)
                 break
             case 'registerfiodomain':
-                return this.registerFioDomain(params.FioDomain)
+                return this.registerFioDomain(params.FioDomain,  params.maxFee)
                 break
             case 'addpublicaddress':
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    

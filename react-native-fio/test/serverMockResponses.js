@@ -17,7 +17,7 @@ const serverMocks = {
             "action_traces": [{
                 "receipt": {
                     "receiver": "fio.system",
-                    "response": "{\"expiration\":1588208960,\"status\":\"OK\"}",
+                    "response": "{\"expiration\":1588208960,\"status\":\"OK\", \"fee_collected\": 30000000000}",
                     "act_digest": "e32df88f31f909f21e08469c38c4566026264d1ee5c7fbd890d4b10b31102230",
                     "global_sequence": 2573410,
                     "recv_sequence": 2943,

@@ -211,7 +211,29 @@ test('RegisterName', done => {
     var name = "" + Date.now()
     name = name.substr(-12);
     name = name + ".brd"
-    fiosdk.registerFioAddress(name).then(res => {
+    fiosdk.registerFioAddress(name,30000000000).then(res => {
+        callback(res.transaction_id);
+    }).catch(error => {
+        console.error(error)
+    })
+})
+
+test('RegisterDomain', done => {
+    fetch.resetMocks()
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.chain))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.block))
+    fetch.mockResponse(JSON.stringify(serverMocks.registerName));
+
+    function callback(data) {
+        expect(data).toEqual(expect.stringContaining("f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a"))
+        expect(fetch.mock.calls.length).toEqual(3)
+        expect(fetch.mock.calls[2][0]).toEqual('http://34.220.57.45:8889/v1/chain/register_fio_domain')
+        done();
+    }
+    var name = "" + Date.now()
+    name = name.substr(-12);
+    name = name + ".brd"
+    fiosdk.registerFioDomain(name,30000000000).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
         console.error(error)

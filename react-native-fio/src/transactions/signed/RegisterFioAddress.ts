@@ -5,10 +5,12 @@ export class RegisterFioAddress extends SignedTransaction{
     ACTION:string = "regaddress" 
     ACOUNT:string = "fio.system"
     fioAddress:string
+    maxFee:number
 
-    constructor(fioAddress:string){
+    constructor(fioAddress:string,maxFee:number){
         super();
         this.fioAddress = fioAddress;
+        this.maxFee = maxFee
     }
 
     getData():any{
@@ -16,7 +18,7 @@ export class RegisterFioAddress extends SignedTransaction{
         let data = {
             fio_address:this.fioAddress,
             owner_fio_public_key:this.publicKey,
-            max_fee: 3000000000,
+            max_fee: this.maxFee,
             actor: actor
         }
         return data;
