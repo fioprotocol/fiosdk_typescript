@@ -34,17 +34,8 @@ class FIOSDK {
             });
         }
     }
-    static createPrivateKey(entropy) {
-        const hdkey = require('hdkey');
-        const wif = require('wif');
-        var sha512 = require('js-sha512').sha512;
-        const master = hdkey.fromMasterSeed(sha512(entropy));
-        const node = master.derive("m/44'/235'/0'/0/0");
-        const fioKey = wif.encode(128, node._privateKey, false);
-        return { fioKey };
-    }
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-    static createPrivateKeyMnemonic(entropy) {
+    static createPrivateKey(entropy) {
         return __awaiter(this, void 0, void 0, function* () {
             const hdkey = require('hdkey');
             const wif = require('wif');
@@ -80,7 +71,7 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, status, obtID, maxFee, tpid = '', payerFioPublicKey = null, fioReqID = '0', memo = null, hash = null, offLineUrl = null) {
+    recordSend(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, status, obtID, maxFee, tpid = '', payerFioPublicKey = null, fioReqID = '', memo = null, hash = null, offLineUrl = null) {
         return __awaiter(this, void 0, void 0, function* () {
             let payerKey;
             if (!payerFioPublicKey) {

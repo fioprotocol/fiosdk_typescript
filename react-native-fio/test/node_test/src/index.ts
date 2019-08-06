@@ -31,8 +31,8 @@ function makeFetchJson (): FetchJson {
 
 class Keys {
     async createKey():Promise<{privateKey:string,publicKey:string}>{
-        const buf = Buffer.from('F0000F00F0000F000F000F0000000000')
-        const key = await FIOSDK.createPrivateKeyMnemonic(buf)
+        const buf = Buffer.from('F0000F00F0000F000F000F000000000F')
+        const key = await FIOSDK.createPrivateKey(buf)
         const privateKey = key.fioKey
         
         console.log('privateKey %s',privateKey)
@@ -65,15 +65,15 @@ class Worker{
         return this.fioSDK
     }
 
-    async doSomething(){
+    async requestFunds(){
         await this.setupSDK()
-        this.fioSDK.requestFunds('faucet:fio','fire:edge',this.publicKey,8,'FIO','memo',3000000000,null)
+        this.fioSDK.requestFunds('faucet:fio','david:edge',this.publicKey,8,'FIO','memo',3000000000,null)
         .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
     }
     
     async recordSend(){
         await this.setupSDK()
-        this.fioSDK.recordSend('casey:dapix','adam:dapix','PAYERKEYOTHER','PAYEEKEYOTHER',3,'BTC','sent_to_blockchain','obtid','40000000000','adam.dapix')
+        this.fioSDK.recordSend('david:edge','fire:edge','PAYERKEYOTHER','PAYEEKEYOTHER',3,'BTC','sent_to_blockchain','obtid','40000000000','adam.dapix')
         .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
     }
 
@@ -112,7 +112,8 @@ class Worker{
 
 const worker = new Worker() 
 
-// worker.getBalance()
+ // worker.getBalance()
+ //worker.requestFunds()
  worker.recordSend()
 // worker.doSomethingElse2()
 // worker.doSomething()

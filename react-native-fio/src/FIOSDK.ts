@@ -36,19 +36,9 @@ export class FIOSDK{
             })
         }
     }
-
-    static createPrivateKey(entropy:Buffer):any{        
-        const hdkey = require('hdkey')
-        const wif = require('wif')
-        var sha512 = require('js-sha512').sha512;
-        const master = hdkey.fromMasterSeed(sha512(entropy))
-        const node = master.derive("m/44'/235'/0'/0/0")
-        const fioKey = wif.encode(128, node._privateKey, false)
-        return {fioKey }
-    }
     
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-    static async createPrivateKeyMnemonic(entropy:Buffer):Promise<any>{        
+    static async createPrivateKey(entropy:Buffer):Promise<any>{        
         const hdkey = require('hdkey')
         const wif = require('wif')
         const bip39 = require('bip39')
@@ -60,8 +50,6 @@ export class FIOSDK{
         const fioKey = wif.encode(128, node._privateKey, false)
         return {fioKey, mnemonic}
     }
-
-
 
     static derivedPublicKey(fioKey:string){
         const publicKey = Ecc.privateToPublic(fioKey)
@@ -103,7 +91,7 @@ export class FIOSDK{
     maxFee: string,
     tpid: string='',
     payerFioPublicKey: string|null = null,
-    fioReqID: string = '0',
+    fioReqID: string = '',
     memo: string|null = null,
     hash:string|null = null,
     offLineUrl:string|null = null

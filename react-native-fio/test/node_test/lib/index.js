@@ -33,8 +33,8 @@ function makeFetchJson() {
 class Keys {
     createKey() {
         return __awaiter(this, void 0, void 0, function* () {
-            const buf = Buffer.from('F0000F00F0000F000F000F0000000000');
-            const key = yield react_native_fio_1.FIOSDK.createPrivateKeyMnemonic(buf);
+            const buf = Buffer.from('F0000F00F0000F000F000F000000000F');
+            const key = yield react_native_fio_1.FIOSDK.createPrivateKey(buf);
             const privateKey = key.fioKey;
             console.log('privateKey %s', privateKey);
             const publick = react_native_fio_1.FIOSDK.derivedPublicKey(privateKey);
@@ -68,17 +68,17 @@ class Worker {
     getSDK() {
         return this.fioSDK;
     }
-    doSomething() {
+    requestFunds() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.setupSDK();
-            this.fioSDK.requestFunds('faucet:fio', 'fire:edge', this.publicKey, 8, 'FIO', 'memo', 3000000000, null)
+            this.fioSDK.requestFunds('faucet:fio', 'david:edge', this.publicKey, 8, 'FIO', 'memo', 3000000000, null)
                 .then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
         });
     }
     recordSend() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.setupSDK();
-            this.fioSDK.recordSend('casey:dapix', 'adam:dapix', 'PAYERKEYOTHER', 'PAYEEKEYOTHER', 3, 'BTC', 'sent_to_blockchain', 'obtid', '40000000000', 'adam.dapix')
+            this.fioSDK.recordSend('david:edge', 'fire:edge', 'PAYERKEYOTHER', 'PAYEEKEYOTHER', 3, 'BTC', 'sent_to_blockchain', 'obtid', '40000000000', 'adam.dapix')
                 .then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
         });
     }
@@ -122,6 +122,7 @@ class Worker {
 }
 const worker = new Worker();
 // worker.getBalance()
+//worker.requestFunds()
 worker.recordSend();
 // worker.doSomethingElse2()
 // worker.doSomething()
