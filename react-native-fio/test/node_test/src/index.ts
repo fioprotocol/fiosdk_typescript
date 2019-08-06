@@ -3,7 +3,6 @@ const fetch = require('node-fetch');
 import { Fio } from 'fiojs'
 import { TextDecoder, TextEncoder } from 'text-encoding';
 
-
 type FetchJson = (uri: string, opts?: Object) => Object
 const textEncoder: TextEncoder = new TextEncoder();
 const textDecoder: TextDecoder = new TextDecoder();
@@ -59,7 +58,11 @@ class Worker{
         const key = await this.getkeys()
         this.privateKey = key.privateKey
         this.publicKey = key.publicKey
-        this.fioSDK = await new FIOSDK(this.privateKey,this.publicKey, 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4')
+        this.fioSDK = await new FIOSDK(this.privateKey,this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4')
+    }
+
+    getSDK():any{
+        return this.fioSDK
     }
 
     async doSomething(){
@@ -68,9 +71,20 @@ class Worker{
         .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
     }
     
+    async recordSend(){
+        await this.setupSDK()
+        this.fioSDK.recordSend('casey:dapix','adam:dapix','PAYERKEYOTHER','PAYEEKEYOTHER',3,'BTC','sent_to_blockchain','obtid','40000000000','adam.dapix')
+        .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
+    }
+
     async doSomethingElse(){
         await this.setupSDK()
         this.fioSDK.getPendingFioRequests(this.publicKey)
+        .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
+    }
+    async getBalance(){
+        await this.setupSDK()
+        this.fioSDK.getFioBalance(this.publicKey)
         .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
     }
     async doSomethingElse2(){
@@ -97,7 +111,11 @@ class Worker{
 
 
 const worker = new Worker() 
-//worker.setupSDK()
-worker.doSomething()
-//worker.doSomethingElse2()
-//worker.decrypt().then(content => {console.error('content: ', content)})
+
+// worker.getBalance()
+ worker.recordSend()
+// worker.doSomethingElse2()
+// worker.doSomething()
+// worker.getBalance()
+
+// worker.decrypt().then(content => {console.error('content: ', content)})

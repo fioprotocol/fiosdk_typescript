@@ -43,8 +43,6 @@ export class FIOSDK{
         var sha512 = require('js-sha512').sha512;
         const master = hdkey.fromMasterSeed(sha512(entropy))
         const node = master.derive("m/44'/235'/0'/0/0")
-        console.error("fioKey: "+wif.encode(128, node._privateKey, false))
-        console.error("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
         const fioKey = wif.encode(128, node._privateKey, false)
         return {fioKey }
     }
@@ -60,8 +58,6 @@ export class FIOSDK{
         const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'))
         const node = master.derive("m/44'/235'/0'/0/0")
         const fioKey = wif.encode(128, node._privateKey, false)
-        // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-        // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
         return {fioKey, mnemonic}
     }
 
@@ -95,19 +91,32 @@ export class FIOSDK{
         return addPublicAddress.execute(this.privateKey, this.publicKey)
     }
 
-    recordSend(fioReqID: string = '',
+    async recordSend(
     payerFIOAddress: string,
     payeeFIOAddress: string,
     payerPublicAddress: string,
     payeePublicAddress: string,
     amount: number,
     tokenCode: string,
+    status: string,
     obtID: string,
-    memo: string,
-    maxFee: number):Promise<any>{
-        let recordSend = new SignedTransactions.RecordSend(fioReqID,
+    maxFee: string,
+    tpid: string='',
+    payerFioPublicKey: string|null = null,
+    fioReqID: string = '0',
+    memo: string|null = null,
+    hash:string|null = null,
+    offLineUrl:string|null = null
+    ):Promise<any>{
+        let payerKey
+        if(!payerFioPublicKey){
+            payerKey = await this.getPublicAddress(payerFIOAddress,'FIO')
+        }else{
+            payerKey = payerFioPublicKey
+        }
+        let recordSend = new SignedTransactions.RecordSend(
         payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress,
-        amount, tokenCode, obtID, memo, maxFee);
+        amount, tokenCode, obtID, maxFee, status, tpid, payerKey.public_address,fioReqID,memo,hash,offLineUrl);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
@@ -118,17 +127,11 @@ export class FIOSDK{
 
     async requestFunds(payerFioAddress: string, payeeFioAddress: string,payeePublicAddress: string, amount: number,tokenCode: string, memo: string,maxFee:number, payerFioPublicKey?:string, tpid:string='', hash?:string, offlineUrl?:string):Promise<any>{
         let payerKey
-        console.error('requestFunds payerFioPublicKey: ', payerFioPublicKey)
         if(!payerFioPublicKey){
-            console.error('requestFunds payerFioPublicKey 1')
-
             payerKey = await this.getPublicAddress(payerFioAddress,'FIO')
         }else{
-            console.error('requestFunds payerFioPublicKey 2')
             payerKey = payerFioPublicKey
         }
-        console.error('requestFunds payerKey: ', payerKey)
-
         let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey.public_address,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
@@ -207,9 +210,10 @@ export class FIOSDK{
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
                 break    
             case 'recordSend':
-                return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, 
+                return this.recordSend(params.payerFIOAddress, params.payeeFIOAddress, 
                     params.payerPublicAddress,params.payeePublicAddress, params.amount, params.tokenCode, 
-                    params.obtID, params.memo, params.maxFee)
+                    params.obtID, params.maxFee, params.tpid,params.payerFioPublicKey, params.fioReqID, 
+                    params.memo, params.hash, params.offLineUrl)
                 break
             case 'rejectFundsRequest':
                 return this.rejectFundsRequest(params.fioRequestId,params.maxFee)

@@ -40,8 +40,6 @@ class FIOSDK {
         var sha512 = require('js-sha512').sha512;
         const master = hdkey.fromMasterSeed(sha512(entropy));
         const node = master.derive("m/44'/235'/0'/0/0");
-        console.error("fioKey: " + wif.encode(128, node._privateKey, false));
-        console.error("publicKey: " + Ecc.PublicKey(node._publicKey).toString());
         const fioKey = wif.encode(128, node._privateKey, false);
         return { fioKey };
     }
@@ -57,8 +55,6 @@ class FIOSDK {
             const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
             const node = master.derive("m/44'/235'/0'/0/0");
             const fioKey = wif.encode(128, node._privateKey, false);
-            // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-            // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
             return { fioKey, mnemonic };
         });
     }
@@ -84,9 +80,18 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(fioReqID = '', payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee) {
-        let recordSend = new SignedTransactions.RecordSend(fioReqID, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, memo, maxFee);
-        return recordSend.execute(this.privateKey, this.publicKey);
+    recordSend(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, status, obtID, maxFee, tpid = '', payerFioPublicKey = null, fioReqID = '0', memo = null, hash = null, offLineUrl = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let payerKey;
+            if (!payerFioPublicKey) {
+                payerKey = yield this.getPublicAddress(payerFIOAddress, 'FIO');
+            }
+            else {
+                payerKey = payerFioPublicKey;
+            }
+            let recordSend = new SignedTransactions.RecordSend(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, tpid, payerKey.public_address, fioReqID, memo, hash, offLineUrl);
+            return recordSend.execute(this.privateKey, this.publicKey);
+        });
     }
     rejectFundsRequest(fioRequestId, maxFee) {
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId, maxFee);
@@ -95,16 +100,12 @@ class FIOSDK {
     requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, memo, maxFee, payerFioPublicKey, tpid = '', hash, offlineUrl) {
         return __awaiter(this, void 0, void 0, function* () {
             let payerKey;
-            console.error('requestFunds payerFioPublicKey: ', payerFioPublicKey);
             if (!payerFioPublicKey) {
-                console.error('requestFunds payerFioPublicKey 1');
                 payerKey = yield this.getPublicAddress(payerFioAddress, 'FIO');
             }
             else {
-                console.error('requestFunds payerFioPublicKey 2');
                 payerKey = payerFioPublicKey;
             }
-            console.error('requestFunds payerKey: ', payerKey);
             let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payerKey.public_address, payeeFioAddress, tpid, maxFee, payeePublicAddress, amount, tokenCode, memo, hash, offlineUrl);
             return requestNewFunds.execute(this.privateKey, this.publicKey);
         });
@@ -171,7 +172,7 @@ class FIOSDK {
                 return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
                 break;
             case 'recordSend':
-                return this.recordSend(params.fioReqID, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.memo, params.maxFee);
+                return this.recordSend(params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.maxFee, params.tpid, params.payerFioPublicKey, params.fioReqID, params.memo, params.hash, params.offLineUrl);
                 break;
             case 'rejectFundsRequest':
                 return this.rejectFundsRequest(params.fioRequestId, params.maxFee);

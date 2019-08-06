@@ -11,10 +11,9 @@ class GetFioBalance extends Query_1.Query {
         else {
             this.keyToUse = this.publicKey;
         }
-        super();
     }
     getData() {
-        return { fio_public_address: this.publicKey };
+        return { fio_public_key: this.publicKey };
     }
 }
 exports.GetFioBalance = GetFioBalance;

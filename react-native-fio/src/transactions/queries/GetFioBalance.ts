@@ -11,11 +11,10 @@ export class GetFioBalance extends Query<BalanceResponse>{
         }else{
             this.keyToUse = this.publicKey
         }
-        super();
     }
     
     getData() {
-        return {fio_public_address:this.publicKey}
+        return {fio_public_key:this.publicKey}
     }
 
 }

@@ -5,18 +5,18 @@ export class RecordSend extends SignedTransaction{
     ENDPOINT:string = "chain/record_send"; 
     ACTION:string = "recordsend";
     ACOUNT:string = "fio.reqobt";
-    fioReqID: string = ''
+
     payerFIOAddress: string
+    payerFioPublicKey: string
     payeeFIOAddress: string
+    fioReqID: string = ''
+    maxFee: string
+    tpid: string = ''
     payerPublicAddress: string
     payeePublicAddress: string
-    amount: number
-    tokenCode: string
-    obtID: string
-    memo: string
-    maxFee: number
 
-    constructor(fioReqID: string = '',
+    content:any
+    constructor(
         payerFIOAddress: string,
         payeeFIOAddress: string,
         payerPublicAddress: string,
@@ -24,35 +24,52 @@ export class RecordSend extends SignedTransaction{
         amount: number,
         tokenCode: string,
         obtID: string,
-        memo: string,
-        maxFee: number){
+        maxFee: string,
+        status: string,
+        tpid:string='',
+        payerFioPublicKey: string,
+        fioReqID: string = '',
+        memo: string|null = null,
+        hash:string|null = null,
+        offLineUrl:string|null = null){
         super();
         this.fioReqID = fioReqID
         this.payerFIOAddress = payerFIOAddress
+        this.payerFioPublicKey = payerFioPublicKey
         this.payeeFIOAddress = payeeFIOAddress
         this.payerPublicAddress = payerPublicAddress
         this.payeePublicAddress = payeePublicAddress
-        this.amount = amount
-        this.tokenCode = tokenCode
-        this.obtID = obtID
-        this.memo = memo
+        if(tpid){
+            this.tpid = tpid
+        }else{
+            this.tpid = ''
+        }
         this.maxFee = maxFee
+        this.content = {
+            payer_public_address: this.payerPublicAddress,
+            payee_public_address: this.payeePublicAddress,
+            amount: amount,
+            token_code: tokenCode,
+            status:status,
+            obt_id: obtID,
+            memo: memo,
+            hash: hash,
+            offline_url: offLineUrl
+        }
+
     }
 
     getData():any{
         let actor =  this.getActor();
+        const cipherContent = this.getCipherContent('record_send_content',this.content,this.privateKey,this.payerFioPublicKey)
         let data = {
-            fioReqID: this.fioReqID,
-            payerFIOAddress: this.payerFIOAddress,
-            payeeFIOAddress: this.payeeFIOAddress,
-            payerPublicAddress: this.payerPublicAddress,
-            payeePublicAddress: this.payeePublicAddress,
-            amount: this.amount,
-            tokenCode: this.tokenCode,
-            obtID: this.obtID,
-            memo: this.memo,
-            maxFee: this.maxFee,
-            actor: actor
+            payer_fio_address: this.payerFIOAddress,
+            payee_fio_address: this.payeeFIOAddress,
+            content: cipherContent,
+            fio_request_id: this.fioReqID,
+            max_fee: this.maxFee,
+            actor: actor,
+            tpid: this.tpid
         }
         return data;
     }

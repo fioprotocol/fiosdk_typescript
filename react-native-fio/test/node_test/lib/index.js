@@ -62,8 +62,11 @@ class Worker {
             const key = yield this.getkeys();
             this.privateKey = key.privateKey;
             this.publicKey = key.publicKey;
-            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4');
+            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4');
         });
+    }
+    getSDK() {
+        return this.fioSDK;
     }
     doSomething() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -72,10 +75,24 @@ class Worker {
                 .then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
         });
     }
+    recordSend() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.setupSDK();
+            this.fioSDK.recordSend('casey:dapix', 'adam:dapix', 'PAYERKEYOTHER', 'PAYEEKEYOTHER', 3, 'BTC', 'sent_to_blockchain', 'obtid', '40000000000', 'adam.dapix')
+                .then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
+        });
+    }
     doSomethingElse() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.setupSDK();
             this.fioSDK.getPendingFioRequests(this.publicKey)
+                .then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
+        });
+    }
+    getBalance() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.setupSDK();
+            this.fioSDK.getFioBalance(this.publicKey)
                 .then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
         });
     }
@@ -104,7 +121,9 @@ class Worker {
     }
 }
 const worker = new Worker();
-//worker.setupSDK()
-worker.doSomething();
-//worker.doSomethingElse2()
-//worker.decrypt().then(content => {console.error('content: ', content)})
+// worker.getBalance()
+worker.recordSend();
+// worker.doSomethingElse2()
+// worker.doSomething()
+// worker.getBalance()
+// worker.decrypt().then(content => {console.error('content: ', content)})
