@@ -90,21 +90,21 @@ export class FIOSDK{
     obtID: string,
     maxFee: string,
     tpid: string='',
-    payerFioPublicKey: string|null = null,
+    payeeFioPublicKey: string|null = null,
     fioReqID: string = '',
     memo: string|null = null,
     hash:string|null = null,
     offLineUrl:string|null = null
     ):Promise<any>{
-        let payerKey
-        if(!payerFioPublicKey){
-            payerKey = await this.getPublicAddress(payerFIOAddress,'FIO')
+        let payeeKey:any = {public_address:''}
+        if(!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string'){
+            payeeKey = await this.getPublicAddress(payeeFIOAddress,'FIO')
         }else{
-            payerKey = payerFioPublicKey
+            payeeKey.public_address = payeeFioPublicKey
         }
         let recordSend = new SignedTransactions.RecordSend(
         payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress,
-        amount, tokenCode, obtID, maxFee, status, tpid, payerKey.public_address,fioReqID,memo,hash,offLineUrl);
+        amount, tokenCode, obtID, maxFee, status, tpid, payeeKey.public_address,fioReqID,memo,hash,offLineUrl);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
@@ -198,10 +198,21 @@ export class FIOSDK{
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
                 break    
             case 'recordSend':
-                return this.recordSend(params.payerFIOAddress, params.payeeFIOAddress, 
-                    params.payerPublicAddress,params.payeePublicAddress, params.amount, params.tokenCode, 
-                    params.obtID, params.maxFee, params.tpid,params.payerFioPublicKey, params.fioReqID, 
-                    params.memo, params.hash, params.offLineUrl)
+                return this.recordSend(params.payerFIOAddress,
+                    params.payeeFIOAddress, 
+                    params.payerPublicAddress,
+                    params.payeePublicAddress, 
+                    params.amount, 
+                    params.tokenCode, 
+                    params.status, 
+                    params.obtID, 
+                    params.maxFee,
+                    params.tpid,
+                    params.payerFioPublicKey, 
+                    params.fioReqID, 
+                    params.memo, 
+                    params.hash, 
+                    params.offLineUrl)
                 break
             case 'rejectFundsRequest':
                 return this.rejectFundsRequest(params.fioRequestId,params.maxFee)
