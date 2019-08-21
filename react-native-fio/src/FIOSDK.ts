@@ -165,6 +165,11 @@ export class FIOSDK{
         return fioFee.execute(this.publicKey)
     }
 
+    getInfo():Promise<any>{
+        let fioInfo = new queries.GetInfo();
+        return fioInfo.execute(this.publicKey)
+    }
+
     getAbi(accountName:string):Promise<AbiResponse>{
         let abi = new queries.GetAbi(accountName);
         return abi.execute(this.publicKey)

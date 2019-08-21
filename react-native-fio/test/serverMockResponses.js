@@ -54,6 +54,9 @@ const serverMocks = {
     FioBalance: {
         balance: "1000.0000"
     },
+    GetInfo: {
+        chain_id: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
+    },
     FioNames: {
         "fio_domains": [{
             "fio_domain": "alice",

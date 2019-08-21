@@ -95,6 +95,25 @@ test('GetNames', done => {
     })
 })
 
+test('GetInfo', done => {
+    fetch.resetMocks()
+    fetch.mockResponse(JSON.stringify(serverMocks.GetInfo));
+
+    function callback(data) {
+         expect(data.chain_id).toBe(serverMocks.GetInfo.chain_id)
+         expect(fetch.mock.calls.length).toEqual(1)
+         expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_info')
+        done();
+    }
+
+    fiosdk.getInfo().then(res => {
+        console.log("GetInfo response: %j", res)
+        callback(res);
+    }).catch(error => {
+        console.error(error)
+    });
+})
+
 test('PendingFioRequest', done => {
     fetch.resetMocks()
     fetch.mockResponse(JSON.stringify(serverMocks.pendingRequest));

@@ -133,6 +133,10 @@ class FIOSDK {
         let fioFee = new queries.GetFee(endPoint, fioAddress);
         return fioFee.execute(this.publicKey);
     }
+    getInfo() {
+        let fioInfo = new queries.GetInfo();
+        return fioInfo.execute(this.publicKey);
+    }
     getAbi(accountName) {
         let abi = new queries.GetAbi(accountName);
         return abi.execute(this.publicKey);
