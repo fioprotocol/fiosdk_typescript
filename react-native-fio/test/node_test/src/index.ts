@@ -71,7 +71,7 @@ class Worker{
 
     async setupSDK2(){
         //const key = await this.getkeys()
-        this.privateKey = '5JCf4cYbp7G8ZH3tETvig7KNoXkygiPWYerY1U23CT1wZrGXg7v '//key.privateKey
+        this.privateKey = '5JCf4cYbp7G8ZH3tETvig7KNoXkygiPWYerY1U23CT1wZrGXg7v'//key.privateKey
         this.publicKey = 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP'//key.publicKey
         this.fioSDK = await new FIOSDK(this.privateKey,this.publicKey, /*'http://192.168.86.23:8888/v1/'*/  'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4')
         console.log('address: expired2:edge key: ' + this.publicKey + ' actor: ' + this.fioSDK.getActor())
@@ -91,7 +91,7 @@ class Worker{
 
     async requestFunds(){
         await this.setupSDK1()
-        this.fioSDK.requestFunds('expires:edge','test1:edge',this.publicKey,8,'FIO','memo please coins',3000000000,null)
+        this.fioSDK.requestFunds('test2:edge','test1:edge',this.publicKey,8,'FIO','memo please coins',3000000000,null)
         .then(res => {console.log('res: ', res)}).catch(error => {console.error('error: ', error)})
     }
     
@@ -103,7 +103,7 @@ class Worker{
 
     async recordSend(){
         await this.setupSDK1()
-        this.fioSDK.genericAction('recordSend', {'fioReqID': 8, 'payerFIOAddress': 'test1:edge', 'payeeFIOAddress': 'test2:edge', 'payerPublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'payeePublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'amount': '5', 'tokenCode': 'FIO', 'obtID': '7ed4b7f8ec2d67a18a4068e71141d55c90daf19837c102e756a55f909452f52e', 'memo': 'de test2 a test1', 'maxFee': '0', 'tpid': '', 'status': 'sent_to_blockchain'}).
+        this.fioSDK.genericAction('recordSend', {'fioRequestId': 8, 'payerFIOAddress': 'test1:edge', 'payeeFIOAddress': 'test2:edge', 'payerPublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'payeePublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'amount': '5', 'tokenCode': 'FIO', 'obtID': '7ed4b7f8ec2d67a18a4068e71141d55c90daf19837c102e756a55f909452f52e', 'memo': 'de test2 a test1', 'maxFee': '0', 'tpid': '', 'status': 'sent_to_blockchain'}).
         then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
 
         //this.fioSDK.recordSend('test1:edge','test2:edge','FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA','FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP','1','FIO','','1',0,'',null,1,'memo')
@@ -111,13 +111,13 @@ class Worker{
     }
 
     async getPendingFioRequests(){
-        await this.setupSDK1()
+        await this.setupSDK2()
         this.fioSDK.getPendingFioRequests(this.publicKey)
         .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
     }
 
     async getSentFioRequests(){
-        await this.setupSDK()
+        await this.setupSDK2()
         this.fioSDK.getSentFioRequests(this.publicKey)
         .then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})
     }
@@ -155,7 +155,7 @@ const worker = new Worker()
 // worker.setupSDK2()
 // worker.setupSDK3()
 //worker.getBalance()
- worker.recordSend()
+ worker.getSentFioRequests()
  //worker.transferTokens()
  //worker.getPendingFioRequests()
  //worker.getSentFioRequests()

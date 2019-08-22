@@ -65,10 +65,41 @@ const serverMocks = {
         }]
     },
     pendingRequest: {
-        "requests": [{ "fio_request_id": 86, "payer_fio_address": "76456891.brd", "payee_fio_address": "76454437.brd", "payee_public_address": "76454437.brd", "amount": "100.0", "token_code": "ETH", "metadata": "{\"memo\": \"testingWithVitor\"}", "time_stamp": 1556676465 }]
+        "requests": [
+            {
+                "fio_request_id": 22,
+                "payer_fio_address": "test2:edge",
+                "payee_fio_address": "test1:edge",
+                "payer_fio_public_key": "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
+                "payee_fio_public_key": "FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA",
+                "content": "f18baf5c5d678db8b3f07ddd65a40ac86c0c143b4f9714e6c74af77f772e3c9a2b45a77ea25d34a49ef5c29f4c70f81c41c5b023d88c97e5a49b43558ea8241151ce40bf7143d97e4fe19679e82fe80aef97cecd433c68094517a5d1e4f913cb0c0aad0bfca0fc5d21a5431e64a4b8d420ea100509a45c0536c343c0823b039a27caf2fe41634e93eda65450571551f2",
+                "time_stamp": 1566318392,
+                "payer_fio_addr": "",
+                "payee_fio_addr": ""
+            }
+        ]
     },
     publicAddressLookUp: { "public_address": "77081021.brdLTCADDRESS" },
-    sentRequests: { "requests": [{ "fio_request_id": 89, "payer_fio_address": "77634863.brd", "payee_fio_address": "77632281.brd", "payee_public_address": "77632281.brd", "amount": "100.0", "token_code": "ETH", "metadata": "{\"memo\": \"testingWithVitor\"}", "time_stamp": 1556677643, "status": "requested" }] },
+    sentRequestsDecoded:{ payee_public_address: 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP',
+           amount: '8',
+           token_code: 'FIO',
+           memo: '',
+           hash: null,
+           offline_url: null },
+    sentRequests: { 
+        "requests": [
+            {
+            "fio_request_id": 13,
+            "payer_fio_address": "faucet:fio",
+            "payee_fio_address": "test2:edge",
+            "payer_fio_public_key": "FIO5oBUYbtGTxMS66pPkjC2p8pbA3zCtc8XD4dq9fMut867GRdh82",
+            "payee_fio_public_key": "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
+            "content": "6128d999eb8afe81b91a0496629b4632cb1efbf79dbd41d559dadfd34d187f479bc39ce40a2fae8b0aa6f0dc49efdf19c9d120129ef05acb108ea0869432ea5dadf70e497784a41c368611cb0c7449cdbbb250aaafed6ee3ae69932f59b957b4c7623f0b2b2fbb5ce08997052b1e0a9c16b723891f193a6f07cdc04c852732c8",
+            "time_stamp": 1565982986,
+            "status": "sent_to_blockchain"
+            }
+        ]
+    },
     addPublicAddress: {
         "transaction_id": "0a24972725b30f526c2415cb45b7b8b3829dd9fd7db610830acb8464bc7fc13b",
         "processed": {

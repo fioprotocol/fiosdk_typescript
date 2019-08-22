@@ -1,6 +1,6 @@
 import { Query } from "./Query";
 import { SentFioRequestResponse } from "../../entities/SentFioRequestsResponse";
-import { PendingFioRequest } from "../../entities/PendingFioRequest";
+import { FioRequest } from "../../entities/FioRequest";
 
 
 export class SentFioRequests extends Query<SentFioRequestResponse>{
@@ -21,8 +21,8 @@ export class SentFioRequests extends Query<SentFioRequestResponse>{
 
     decrypt(result:any):any{
         if(result.requests.length > 0){
-            const pendings: PendingFioRequest[] = []
-            result.requests.forEach( (value:PendingFioRequest ) => {
+            const pendings: FioRequest[] = []
+            result.requests.forEach( (value:FioRequest ) => {
                 let content
                 if(value.payer_fio_public_key === this.publicKey){
                     content = this.getUnCipherContent('new_funds_content',value.content,this.privateKey,value.payee_fio_public_key)

@@ -39,10 +39,15 @@ export class FIOSDK{
     
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
     static async createPrivateKey(entropy:Buffer):Promise<any>{        
+        const bip39 = require('bip39')
+        const mnemonic = bip39.entropyToMnemonic(entropy)
+        return await FIOSDK.createPrivateKeyMnemonic(mnemonic)
+
+    }
+    static async createPrivateKeyMnemonic(mnemonic:string){
         const hdkey = require('hdkey')
         const wif = require('wif')
         const bip39 = require('bip39')
-        const mnemonic = bip39.entropyToMnemonic(entropy)
         const seedBytes = await bip39.mnemonicToSeed(mnemonic)
         const seed = await seedBytes.toString('hex')
         const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'))
@@ -80,19 +85,19 @@ export class FIOSDK{
     }
 
     async recordSend(
-    payerFIOAddress: string,
-    payeeFIOAddress: string,
-    payerPublicAddress: string,
-    payeePublicAddress: string,
-    amount: number,
-    tokenCode: string,
-    status: string,
-    obtID: string,
-    maxFee: string,
-    tpid: string='',
-    payeeFioPublicKey: string|null = null,
-    fioReqID: string = '',
-    memo: string|null = null,
+    fioRequestId:string,        
+    payerFIOAddress:string,
+    payeeFIOAddress:string,
+    payerPublicAddress:string,
+    payeePublicAddress:string,
+    amount:number,
+    tokenCode:string,
+    status:string,
+    obtId:string,
+    maxFee:number,
+    tpId:string='',
+    payeeFioPublicKey:string|null = null,
+    memo:string|null = null,
     hash:string|null = null,
     offLineUrl:string|null = null
     ):Promise<any>{
@@ -102,9 +107,9 @@ export class FIOSDK{
         }else{
             payeeKey.public_address = payeeFioPublicKey
         }
-        let recordSend = new SignedTransactions.RecordSend(
+        let recordSend = new SignedTransactions.RecordSend(fioRequestId,
         payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress,
-        amount, tokenCode, obtID, maxFee, status, tpid, payeeKey.public_address,fioReqID,memo,hash,offLineUrl);
+        amount, tokenCode, obtId, maxFee, status, tpId, payeeKey.public_address,memo,hash,offLineUrl);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
@@ -113,12 +118,17 @@ export class FIOSDK{
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
-    async requestFunds(payerFioAddress: string, payeeFioAddress: string,payeePublicAddress: string, amount: number,tokenCode: string, memo: string,maxFee:number, payerFioPublicKey?:string, tpid:string='', hash?:string, offlineUrl?:string):Promise<any>{
-        let payerKey
-        if(!payerFioPublicKey){
+    async requestFunds(payerFioAddress: string, 
+        payeeFioAddress: string,payeePublicAddress: string, 
+        amount: number,tokenCode: string, memo: string,maxFee:number, 
+        payerFioPublicKey:string|null = null,
+        tpid:string='', 
+        hash?:string, offlineUrl?:string):Promise<any>{
+        let payerKey:any = {public_address:''}
+        if(!payerFioPublicKey && typeof payerFioPublicKey !== 'string'){
             payerKey = await this.getPublicAddress(payerFioAddress,'FIO')
         }else{
-            payerKey = payerFioPublicKey
+            payerKey.public_address = payerFioPublicKey
         }
         let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey.public_address,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
@@ -162,7 +172,7 @@ export class FIOSDK{
 
     getFee(endPoint:string,fioAddress=""):Promise<any>{
         let fioFee = new queries.GetFee(endPoint,fioAddress);
-        return fioFee.execute(this.publicKey)
+        return fioFee.execute(this.publicKey)                                                    
     }
 
     getAbi(accountName:string):Promise<AbiResponse>{
@@ -198,18 +208,19 @@ export class FIOSDK{
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
                 break    
             case 'recordSend':
-                return this.recordSend(params.payerFIOAddress,
+                return this.recordSend(
+                    params.fioRequestId,
+                    params.payerFIOAddress,
                     params.payeeFIOAddress, 
                     params.payerPublicAddress,
                     params.payeePublicAddress, 
                     params.amount, 
                     params.tokenCode, 
                     params.status, 
-                    params.obtID, 
+                    params.obtId, 
                     params.maxFee,
-                    params.tpid,
-                    params.payerFioPublicKey, 
-                    params.fioReqID, 
+                    params.tpId,
+                    params.payerFioPublicKey,  
                     params.memo, 
                     params.hash, 
                     params.offLineUrl)

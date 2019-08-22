@@ -1,4 +1,4 @@
-export interface PendingFioRequest{
+export interface FioRequest{
     "fio_request_id": string,
     "payer_fio_address": string,
     "payee_fio_address": string,
