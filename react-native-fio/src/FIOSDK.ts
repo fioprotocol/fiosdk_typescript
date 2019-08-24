@@ -51,8 +51,8 @@ export class FIOSDK{
         return {fioKey, mnemonic}
     }
 
-    static derivedPublicKey(fioKey:string){
-        const publicKey = Ecc.privateToPublic(fioKey)
+    static derivedPublicKey(fioPrivateKey:string){
+        const publicKey = Ecc.privateToPublic(fioPrivateKey)
         return { publicKey }
     }
 
@@ -158,6 +158,11 @@ export class FIOSDK{
 
     getPublicAddress(fioAddress:string, tokenCode:string):Promise<any>{
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
+        return publicAddressLookUp.execute(this.publicKey);
+    }
+
+    getFioPublicAddress(fioAddress:string):Promise<any>{
+        let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, "FIO");
         return publicAddressLookUp.execute(this.publicKey);
     }
 
