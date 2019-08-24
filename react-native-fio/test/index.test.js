@@ -21,8 +21,8 @@ fiosdk = ''
     fetch.mockResponseOnce(JSON.stringify(serverMocks.abi2))
     fetch.mockResponseOnce(JSON.stringify(serverMocks.abi3))
 
-    fiosdk = new FIOSDK.FIOSDK("5KBX1dwHME4VyuUss2sYM25D5ZTDvyYrbEz37UJqwAVAsR4tGuY",
-    "EOS7isxEua78KPVbGzKemH4nj2bWE52gqj8Hkac3tc7jKNvpfWzYS",
+    fiosdk = new FIOSDK.FIOSDK("5JCf4cYbp7G8ZH3tETvig7KNoXkygiPWYerY1U23CT1wZrGXg7v",
+    "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
     "http://34.220.57.45:8889/v1/",fetchJson,fetchJson);  
     Transactions.Transactions.FioProvider = new MockFioProvider.MockFioProvider()
 });
@@ -88,7 +88,6 @@ test('GetNames', done => {
         done();
     }
     fiosdk.getFioNames("name.brd").then(res => {
-        console.log("GetNames response: %j", res)
         callback(res);
     }).catch(error => {
         console.error(error)
@@ -100,13 +99,19 @@ test('PendingFioRequest', done => {
     fetch.mockResponse(JSON.stringify(serverMocks.pendingRequest));
 
     function callback(data) {
-        expect(data).toBe(86)
+        expect(data.fio_request_id).toBe(22)
         expect(fetch.mock.calls.length).toEqual(1)
         expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_pending_fio_requests')
+        expect(data.content).toEqual({ payee_public_address: 'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',
+        amount: '8',
+        token_code: 'FIO',
+        memo: 'memo please coins',
+        hash: null,
+        offline_url: null })
         done();
     }
     fiosdk.getPendingFioRequests("name.brd").then(res => {
-        callback(res.requests[0].fio_request_id);
+        callback(res[0]);
     }).catch(error => {
         console.error(error)
     })
@@ -134,13 +139,14 @@ test('SentFioRequest', done => {
     fetch.mockResponse(JSON.stringify(serverMocks.sentRequests));
 
     function callback(data) {
-        expect(data).toBe(89)
+        expect(data.fio_request_id).toBe(13)
         expect(fetch.mock.calls.length).toEqual(1)
         expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_sent_fio_requests')
+        expect(data.content).toEqual(serverMocks.sentRequestsDecoded)
         done();
     }
     fiosdk.getSentFioRequests("77632281.brd").then(res => {
-        callback(res.requests[0].fio_request_id);
+        callback(res[0]);
     }).catch(error => {
         console.error(error)
     })
@@ -177,19 +183,20 @@ test('RecordSend', done => {
         expect(fetch.mock.calls[2][0]).toEqual('http://34.220.57.45:8889/v1/chain/record_send')
         done();
     }
-    
-    fioReqID= string = '1'
-    payerFIOAddress = "aaa"
-    payeeFIOAddress = "vvv"
-    payerPublicAddress = "xxx"
-    payeePublicAddress = "eee"
+    fioRequestId= string = '1'
+    payerFIOAddress = "test1:edge"
+    payeeFIOAddress = "test2:edge"
+    payerPublicAddress = "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP"
+    payeePublicAddress = "FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA"
     amount = 1
     tokenCode = "ETH"
+    status = "sent_to_blockchain"
     obtID = "1"
     memo = "memo"
     maxFee= "1"
-    fiosdk.recordSend(fioReqID,payerFIOAddress,payeeFIOAddress,payerPublicAddress,payeePublicAddress,amount,tokenCode,
-        obtID, memo, maxFee).then(res => {
+    tpId="aaAAAaa"
+    fiosdk.recordSend(fioRequestId,payerFIOAddress,payeeFIOAddress,payerPublicAddress,payeePublicAddress,amount,tokenCode,status,
+        obtID, maxFee,tpId,'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',memo).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
         console.error(error)
@@ -295,8 +302,8 @@ test('RequestNewFunds', done => {
         done();
     }
 
-    fiosdk.requestFunds("77632281.brd", "77081021.brd", "0xab5801a7d398351b8be11c439e05c5b3259aec9b",
-        "ETH", 100.00, "{\"memo\": \"Invoice1234\"}").then(res => {
+    fiosdk.requestFunds("test1:edge", "test2:edge", "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
+        100.00,"FIO", "memo",3000,'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA').then(res => {
         callback(res.processed.id);
     }).catch(error => {
         console.error(error)
@@ -327,15 +334,16 @@ test('createKeys', async function () {
     const entropy = Buffer.from('abcdefghijklmnopqrstuv0123456789');
     const privatekeys = await FIOSDK.FIOSDK.createPrivateKey(entropy)
     const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioKey)
-    console.log("%j",privatekeys)
-    console.log("%j",publickeys)
+    expect(privatekeys).toEqual( {"fioKey":"5KK4HrU3fVnes3RMhJ88NZbKENV62pcYu9KXn4HUfmrfg5McjSh",
+    "mnemonic":"gesture basic suit skull grid reflect pizza estate hockey hidden orange thought blame defy spike put coral maze mimic half fat breeze thought chuckle"})
+    expect(publickeys).toEqual( {"publicKey":"FIO5B3dgJnz5H73kFyxaKpgbL4mGeNjBFBEQ3AxBBC8ncL8Xcde3A"})
 })
 
 
 test('Derived public key', async function () {
-    const privatekeys = {fioKey:"5JmN1Nbr2nwhZm9C2Kj6WYRJTFmfYt51zumhrLBY2UdsCvUWYwU"}
+    const privatekeys = {fioKey:"5KK4HrU3fVnes3RMhJ88NZbKENV62pcYu9KXn4HUfmrfg5McjSh"}
     const publickeys = FIOSDK.FIOSDK.derivedPublicKey(privatekeys.fioKey)
-    console.log("%j",publickeys)
+    expect(publickeys).toEqual( {"publicKey":"FIO5B3dgJnz5H73kFyxaKpgbL4mGeNjBFBEQ3AxBBC8ncL8Xcde3A"})
 })
 
 test('GenericAction', done => {
@@ -353,7 +361,6 @@ test('GenericAction', done => {
     }
 
     fiosdk.genericAction('getFioNames',params).then(res => {
-        console.log("GetNames response: %j", res)
         callback(res);
     }).catch(error => {
         console.error(error)

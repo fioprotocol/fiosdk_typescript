@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
 class RecordSend extends SignedTransaction_1.SignedTransaction {
-    constructor(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, tpid = '', payerFioPublicKey, fioReqID = '', memo = null, hash = null, offLineUrl = null) {
+    constructor(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, tpid = '', payerFioPublicKey, memo = null, hash = null, offLineUrl = null) {
         super();
         this.ENDPOINT = "chain/record_send";
         this.ACTION = "recordsend";
         this.ACOUNT = "fio.reqobt";
-        this.fioReqID = '';
+        this.fioRequestId = '';
         this.tpid = '';
-        this.fioReqID = fioReqID;
+        this.fioRequestId = fioRequestId;
         this.payerFIOAddress = payerFIOAddress;
         this.payerFioPublicKey = payerFioPublicKey;
         this.payeeFIOAddress = payeeFIOAddress;
@@ -41,7 +41,7 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
             payer_fio_address: this.payerFIOAddress,
             payee_fio_address: this.payeeFIOAddress,
             content: cipherContent,
-            fio_request_id: this.fioReqID,
+            fio_request_id: this.fioRequestId,
             max_fee: this.maxFee,
             actor: actor,
             tpid: this.tpid

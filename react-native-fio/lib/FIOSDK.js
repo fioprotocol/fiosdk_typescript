@@ -37,10 +37,16 @@ class FIOSDK {
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
     static createPrivateKey(entropy) {
         return __awaiter(this, void 0, void 0, function* () {
+            const bip39 = require('bip39');
+            const mnemonic = bip39.entropyToMnemonic(entropy);
+            return yield FIOSDK.createPrivateKeyMnemonic(mnemonic);
+        });
+    }
+    static createPrivateKeyMnemonic(mnemonic) {
+        return __awaiter(this, void 0, void 0, function* () {
             const hdkey = require('hdkey');
             const wif = require('wif');
             const bip39 = require('bip39');
-            const mnemonic = bip39.entropyToMnemonic(entropy);
             const seedBytes = yield bip39.mnemonicToSeed(mnemonic);
             const seed = yield seedBytes.toString('hex');
             const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
@@ -71,16 +77,16 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, status, obtID, maxFee, tpid = '', payerFioPublicKey = null, fioReqID = '', memo = null, hash = null, offLineUrl = null) {
+    recordSend(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, status, obtId, maxFee, tpId = '', payeeFioPublicKey = null, memo = null, hash = null, offLineUrl = null) {
         return __awaiter(this, void 0, void 0, function* () {
-            let payerKey;
-            if (!payerFioPublicKey) {
-                payerKey = yield this.getPublicAddress(payerFIOAddress, 'FIO');
+            let payeeKey = { public_address: '' };
+            if (!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string') {
+                payeeKey = yield this.getPublicAddress(payeeFIOAddress, 'FIO');
             }
             else {
-                payerKey = payerFioPublicKey;
+                payeeKey.public_address = payeeFioPublicKey;
             }
-            let recordSend = new SignedTransactions.RecordSend(payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, tpid, payerKey.public_address, fioReqID, memo, hash, offLineUrl);
+            let recordSend = new SignedTransactions.RecordSend(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, maxFee, status, tpId, payeeKey.public_address, memo, hash, offLineUrl);
             return recordSend.execute(this.privateKey, this.publicKey);
         });
     }
@@ -88,14 +94,14 @@ class FIOSDK {
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId, maxFee);
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
-    requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, memo, maxFee, payerFioPublicKey, tpid = '', hash, offlineUrl) {
+    requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, memo, maxFee, payerFioPublicKey = null, tpid = '', hash, offlineUrl) {
         return __awaiter(this, void 0, void 0, function* () {
-            let payerKey;
-            if (!payerFioPublicKey) {
+            let payerKey = { public_address: '' };
+            if (!payerFioPublicKey && typeof payerFioPublicKey !== 'string') {
                 payerKey = yield this.getPublicAddress(payerFioAddress, 'FIO');
             }
             else {
-                payerKey = payerFioPublicKey;
+                payerKey.public_address = payerFioPublicKey;
             }
             let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payerKey.public_address, payeeFioAddress, tpid, maxFee, payeePublicAddress, amount, tokenCode, memo, hash, offlineUrl);
             return requestNewFunds.execute(this.privateKey, this.publicKey);
@@ -167,7 +173,7 @@ class FIOSDK {
                 return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
                 break;
             case 'recordSend':
-                return this.recordSend(params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.maxFee, params.tpid, params.payerFioPublicKey, params.fioReqID, params.memo, params.hash, params.offLineUrl);
+                return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.status, params.obtId, params.maxFee, params.tpId, params.payerFioPublicKey, params.memo, params.hash, params.offLineUrl);
                 break;
             case 'rejectFundsRequest':
                 return this.rejectFundsRequest(params.fioRequestId, params.maxFee);

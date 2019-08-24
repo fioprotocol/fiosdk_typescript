@@ -39,7 +39,6 @@ export class RequestNewFunds extends SignedTransaction{
 
     getData():any{
         let actor = this.getActor();
-
         const cipherContent = this.getCipherContent('new_funds_content',this.content,this.privateKey,this.payerFioPublicKey)
         let data = {
             payer_fio_address:this.payerFioAddress,

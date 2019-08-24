@@ -71,7 +71,6 @@ export class Transactions {
         expiration.setSeconds(expiration.getSeconds() + 120)
         let expirationStr = expiration.toISOString()
         transaction.expiration = expirationStr.substr(0, expirationStr.length - 1);
-        console.error("transaction:",JSON.stringify(transaction))
         if(dryRun){
             return Transactions.FioProvider.prepareTransaction({
                 transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,

@@ -9,14 +9,15 @@ export class RecordSend extends SignedTransaction{
     payerFIOAddress: string
     payerFioPublicKey: string
     payeeFIOAddress: string
-    fioReqID: string = ''
-    maxFee: string
+    fioRequestId: string = ''
+    maxFee: number
     tpid: string = ''
     payerPublicAddress: string
     payeePublicAddress: string
 
     content:any
     constructor(
+        fioRequestId: string,
         payerFIOAddress: string,
         payeeFIOAddress: string,
         payerPublicAddress: string,
@@ -24,16 +25,15 @@ export class RecordSend extends SignedTransaction{
         amount: number,
         tokenCode: string,
         obtID: string,
-        maxFee: string,
+        maxFee: number,
         status: string,
         tpid:string='',
         payerFioPublicKey: string,
-        fioReqID: string = '',
         memo: string|null = null,
         hash:string|null = null,
         offLineUrl:string|null = null){
         super();
-        this.fioReqID = fioReqID
+        this.fioRequestId = fioRequestId
         this.payerFIOAddress = payerFIOAddress
         this.payerFioPublicKey = payerFioPublicKey
         this.payeeFIOAddress = payeeFIOAddress
@@ -66,7 +66,7 @@ export class RecordSend extends SignedTransaction{
             payer_fio_address: this.payerFIOAddress,
             payee_fio_address: this.payeeFIOAddress,
             content: cipherContent,
-            fio_request_id: this.fioReqID,
+            fio_request_id: this.fioRequestId,
             max_fee: this.maxFee,
             actor: actor,
             tpid: this.tpid
