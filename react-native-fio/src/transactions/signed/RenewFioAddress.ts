@@ -1,17 +1,16 @@
 import { SignedTransaction } from './SignedTransaction';
+export class RenewFioAddress extends SignedTransaction{
 
-export class RejectFundsRequest extends SignedTransaction{
-
-    ENDPOINT:string = "chain/reject_funds_request"; 
-    ACTION:string = "rejectfndreq" 
-    ACOUNT:string = "fio.reqobt"
-    fioreqid:string
+    ENDPOINT:string = "chain/renew_fio_address"; 
+    ACTION:string = "renewaddress" 
+    ACOUNT:string = "fio.system"
+    fioAddress:string
     maxFee:number
-    tpid:string
+    tpid:String
 
-    constructor(fioreqid:string,maxFee:number,tpid:string=""){
+    constructor(fioAddress:string,maxFee:number,tpid:string=""){
         super();
-        this.fioreqid = fioreqid;
+        this.fioAddress = fioAddress;
         this.maxFee = maxFee;
         this.tpid = tpid;
     }
@@ -19,7 +18,7 @@ export class RejectFundsRequest extends SignedTransaction{
     getData():any{
         let actor = this.getActor();
         let data = {
-            fio_request_id:this.fioreqid,
+            fio_address:this.fioAddress,
             max_fee: this.maxFee,
             tpid: this.tpid,
             actor: actor

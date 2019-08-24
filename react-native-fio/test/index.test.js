@@ -95,25 +95,6 @@ test('GetNames', done => {
     })
 })
 
-test('GetInfo', done => {
-    fetch.resetMocks()
-    fetch.mockResponse(JSON.stringify(serverMocks.GetInfo));
-
-    function callback(data) {
-         expect(data.chain_id).toBe(serverMocks.GetInfo.chain_id)
-         expect(fetch.mock.calls.length).toEqual(1)
-         expect(fetch.mock.calls[0][0]).toEqual('http://34.220.57.45:8889/v1/chain/get_info')
-        done();
-    }
-
-    fiosdk.getInfo().then(res => {
-        console.log("GetInfo response: %j", res)
-        callback(res);
-    }).catch(error => {
-        console.error(error)
-    });
-})
-
 test('PendingFioRequest', done => {
     fetch.resetMocks()
     fetch.mockResponse(JSON.stringify(serverMocks.pendingRequest));
@@ -253,6 +234,28 @@ test('RegisterDomain', done => {
     name = name.substr(-12);
     name = name + ".brd"
     fiosdk.registerFioDomain(name,30000000000).then(res => {
+        callback(res.transaction_id);
+    }).catch(error => {
+        console.error(error)
+    })
+})
+
+test('RenewFioDomainName', done => {
+    fetch.resetMocks()
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.chain))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.block))
+    fetch.mockResponse(JSON.stringify(serverMocks.renewFioDomainName));
+
+    function callback(data) {
+        expect(data).toEqual(expect.stringContaining("OK"))
+        expect(fetch.mock.calls.length).toEqual(3)
+        expect(fetch.mock.calls[2][0]).toEqual('http://34.220.57.45:8889/v1/chain/renew_fio_domain')
+        done();
+    }
+    var name = "test-" + Date.now()
+    name = name.substr(-7);
+    name = name + ":brd"
+    fiosdk.renewFioAddress(name,40000000000).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
         console.error(error)

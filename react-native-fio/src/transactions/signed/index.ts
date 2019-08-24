@@ -5,5 +5,6 @@ export { RecordSend } from './RecordSend';
 export { TransferTokens } from './TransferTokens';
 export { RegisterFioAddress } from './RegisterFioAddress';
 export { RegisterFioDomain } from './RegisterFioDomain';
-export { MockRegisterFioAddress } from './MockRegisterFioAddress';
-
+export { MockRegisterFioName } from './MockRegisterFioName';
+export { RenewFioAddress } from './RenewFioAddress';
+export { RenewFioDomain } from './RenewFioDomain';
