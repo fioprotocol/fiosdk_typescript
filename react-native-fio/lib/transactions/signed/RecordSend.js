@@ -2,24 +2,24 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
 class RecordSend extends SignedTransaction_1.SignedTransaction {
-    constructor(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, tpid = '', payerFioPublicKey, memo = null, hash = null, offLineUrl = null) {
+    constructor(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, walletFioAddress = '', payerFioPublicKey, memo = null, hash = null, offLineUrl = null) {
         super();
         this.ENDPOINT = "chain/record_send";
         this.ACTION = "recordsend";
         this.ACOUNT = "fio.reqobt";
         this.fioRequestId = '';
-        this.tpid = '';
+        this.walletFioAddress = '';
         this.fioRequestId = fioRequestId;
         this.payerFIOAddress = payerFIOAddress;
         this.payerFioPublicKey = payerFioPublicKey;
         this.payeeFIOAddress = payeeFIOAddress;
         this.payerPublicAddress = payerPublicAddress;
         this.payeePublicAddress = payeePublicAddress;
-        if (tpid) {
-            this.tpid = tpid;
+        if (walletFioAddress) {
+            this.walletFioAddress = walletFioAddress;
         }
         else {
-            this.tpid = '';
+            this.walletFioAddress = '';
         }
         this.maxFee = maxFee;
         this.content = {
@@ -44,7 +44,7 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
             fio_request_id: this.fioRequestId,
             max_fee: this.maxFee,
             actor: actor,
-            tpid: this.tpid
+            tpid: this.walletFioAddress
         };
         return data;
     }

@@ -16,5 +16,3 @@ var GetFee_1 = require("./GetFee");
 exports.GetFee = GetFee_1.GetFee;
 var GetAbi_1 = require("./GetAbi");
 exports.GetAbi = GetAbi_1.GetAbi;
-var GetInfo_1 = require("./GetInfo");
-exports.GetInfo = GetInfo_1.GetInfo;

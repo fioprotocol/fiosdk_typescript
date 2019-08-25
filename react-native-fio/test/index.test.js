@@ -194,9 +194,9 @@ test('RecordSend', done => {
     obtID = "1"
     memo = "memo"
     maxFee= "1"
-    tpId="aaAAAaa"
+    walletFioAddress="aaAAAaa"
     fiosdk.recordSend(fioRequestId,payerFIOAddress,payeeFIOAddress,payerPublicAddress,payeePublicAddress,amount,tokenCode,status,
-        obtID, maxFee,tpId,'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',memo).then(res => {
+        obtID, maxFee,walletFioAddress,'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',memo).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
         console.error(error)
@@ -217,7 +217,7 @@ test('RegisterName', done => {
     }
     var name = "" + Date.now()
     name = name.substr(-12);
-    name = name + ".brd"
+    name = name + ":brd"
     fiosdk.registerFioAddress(name,30000000000).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
@@ -239,7 +239,7 @@ test('RegisterDomain', done => {
     }
     var name = "" + Date.now()
     name = name.substr(-12);
-    name = name + ".brd"
+    name = name + ":brd"
     fiosdk.registerFioDomain(name,30000000000).then(res => {
         callback(res.transaction_id);
     }).catch(error => {

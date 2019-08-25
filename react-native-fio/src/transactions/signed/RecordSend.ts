@@ -11,7 +11,7 @@ export class RecordSend extends SignedTransaction{
     payeeFIOAddress: string
     fioRequestId: string = ''
     maxFee: number
-    tpid: string = ''
+    walletFioAddress: string = ''
     payerPublicAddress: string
     payeePublicAddress: string
 
@@ -27,7 +27,7 @@ export class RecordSend extends SignedTransaction{
         obtID: string,
         maxFee: number,
         status: string,
-        tpid:string='',
+        walletFioAddress:string='',
         payerFioPublicKey: string,
         memo: string|null = null,
         hash:string|null = null,
@@ -39,10 +39,10 @@ export class RecordSend extends SignedTransaction{
         this.payeeFIOAddress = payeeFIOAddress
         this.payerPublicAddress = payerPublicAddress
         this.payeePublicAddress = payeePublicAddress
-        if(tpid){
-            this.tpid = tpid
+        if(walletFioAddress){
+            this.walletFioAddress = walletFioAddress
         }else{
-            this.tpid = ''
+            this.walletFioAddress = ''
         }
         this.maxFee = maxFee
         this.content = {
@@ -69,7 +69,7 @@ export class RecordSend extends SignedTransaction{
             fio_request_id: this.fioRequestId,
             max_fee: this.maxFee,
             actor: actor,
-            tpid: this.tpid
+            tpid: this.walletFioAddress
         }
         return data;
     }

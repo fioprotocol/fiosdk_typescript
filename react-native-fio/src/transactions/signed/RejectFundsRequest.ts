@@ -7,13 +7,13 @@ export class RejectFundsRequest extends SignedTransaction{
     ACOUNT:string = "fio.reqobt"
     fioreqid:string
     maxFee:number
-    tpid:string
+    walletFioAddress:string
 
-    constructor(fioreqid:string,maxFee:number,tpid:string=""){
+    constructor(fioreqid:string,maxFee:number,walletFioAddress:string=""){
         super();
         this.fioreqid = fioreqid;
         this.maxFee = maxFee;
-        this.tpid = tpid;
+        this.walletFioAddress = walletFioAddress;
     }
 
     getData():any{
@@ -21,7 +21,7 @@ export class RejectFundsRequest extends SignedTransaction{
         let data = {
             fio_request_id:this.fioreqid,
             max_fee: this.maxFee,
-            tpid: this.tpid,
+            tpid: this.walletFioAddress,
             actor: actor
         }
         return data;

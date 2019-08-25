@@ -6,13 +6,13 @@ export class RenewFioAddress extends SignedTransaction{
     ACOUNT:string = "fio.system"
     fioAddress:string
     maxFee:number
-    tpid:String
+    walletFioAddress:String
 
-    constructor(fioAddress:string,maxFee:number,tpid:string=""){
+    constructor(fioAddress:string,maxFee:number,walletFioAddress:string=""){
         super();
         this.fioAddress = fioAddress;
         this.maxFee = maxFee;
-        this.tpid = tpid;
+        this.walletFioAddress = walletFioAddress;
     }
 
     getData():any{
@@ -20,7 +20,7 @@ export class RenewFioAddress extends SignedTransaction{
         let data = {
             fio_address:this.fioAddress,
             max_fee: this.maxFee,
-            tpid: this.tpid,
+            tpid: this.walletFioAddress,
             actor: actor
         }
         return data;
