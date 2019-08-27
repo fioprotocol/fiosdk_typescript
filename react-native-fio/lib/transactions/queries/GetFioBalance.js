@@ -2,13 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Query_1 = require("./Query");
 class GetFioBalance extends Query_1.Query {
-    constructor() {
+    constructor(othersBalance) {
         super();
         this.ENDPOINT = "chain/get_fio_balance";
+        if (othersBalance) {
+            this.keyToUse = othersBalance;
+        }
+        else {
+            this.keyToUse = this.publicKey;
+        }
     }
     getData() {
-        const actor = this.getActor();
-        return { fio_public_address: actor };
+        return { fio_public_key: this.publicKey };
     }
 }
 exports.GetFioBalance = GetFioBalance;

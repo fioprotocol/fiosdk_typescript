@@ -1,5 +1,5 @@
-import { PendingFioRequest } from "./PendingFioRequest";
+import { FioRequest } from "./FioRequest";
 
 export interface PendingFioRequestsResponse{
-    requests:PendingFioRequest[]  
+    requests:FioRequest[]  
 }

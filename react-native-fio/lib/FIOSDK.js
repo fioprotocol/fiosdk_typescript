@@ -1,4 +1,12 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const Transactions_1 = require("./transactions/Transactions");
 const queries = require("./transactions/queries");
@@ -26,29 +34,26 @@ class FIOSDK {
             });
         }
     }
-    static createPrivateKey(entropy) {
-        const hdkey = require('hdkey');
-        const wif = require('wif');
-        var sha512 = require('js-sha512').sha512;
-        const master = hdkey.fromMasterSeed(sha512(entropy));
-        const node = master.derive("m/44'/235'/0'/0/0");
-        console.error("fioKey: " + wif.encode(128, node._privateKey, false));
-        console.error("publicKey: " + Ecc.PublicKey(node._publicKey).toString());
-        const fioKey = wif.encode(128, node._privateKey, false);
-        return { fioKey };
-    }
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
+    static createPrivateKey(entropy) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const bip39 = require('bip39');
+            const mnemonic = bip39.entropyToMnemonic(entropy);
+            return yield FIOSDK.createPrivateKeyMnemonic(mnemonic);
+        });
+    }
     static createPrivateKeyMnemonic(mnemonic) {
-        const hdkey = require('hdkey');
-        const wif = require('wif');
-        const bip39 = require('bip39');
-        const seed = bip39.mnemonicToSeedHex(mnemonic);
-        const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
-        const node = master.derive("m/44'/235'/0'/0/0");
-        const fioKey = wif.encode(128, node._privateKey, false);
-        // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-        // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
-        return { fioKey };
+        return __awaiter(this, void 0, void 0, function* () {
+            const hdkey = require('hdkey');
+            const wif = require('wif');
+            const bip39 = require('bip39');
+            const seedBytes = yield bip39.mnemonicToSeed(mnemonic);
+            const seed = yield seedBytes.toString('hex');
+            const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'));
+            const node = master.derive("m/44'/235'/0'/0/0");
+            const fioKey = wif.encode(128, node._privateKey, false);
+            return { fioKey, mnemonic };
+        });
     }
     static derivedPublicKey(fioKey) {
         const publicKey = Ecc.privateToPublic(fioKey);
@@ -72,24 +77,42 @@ class FIOSDK {
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
     }
-    recordSend(fioRequestId = '', payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, metadata, maxFee, tpid, status = 'sent_to_blockchain') {
-        let recordSend = new SignedTransactions.RecordSend(fioRequestId, payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, metadata, maxFee, tpid, status);
-        return recordSend.execute(this.privateKey, this.publicKey);
+    recordSend(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, status, obtId, maxFee, tpId = '', payeeFioPublicKey = null, memo = null, hash = null, offLineUrl = null) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let payeeKey = { public_address: '' };
+            if (!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string') {
+                payeeKey = yield this.getPublicAddress(payeeFIOAddress, 'FIO');
+            }
+            else {
+                payeeKey.public_address = payeeFioPublicKey;
+            }
+            let recordSend = new SignedTransactions.RecordSend(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtId, maxFee, status, tpId, payeeKey.public_address, memo, hash, offLineUrl);
+            return recordSend.execute(this.privateKey, this.publicKey);
+        });
     }
     rejectFundsRequest(fioRequestId, maxFee) {
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId, maxFee);
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
-    requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, metaData, maxFee) {
-        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, tokenCode, amount, metaData, maxFee);
-        return requestNewFunds.execute(this.privateKey, this.publicKey);
+    requestFunds(payerFioAddress, payeeFioAddress, payeePublicAddress, amount, tokenCode, memo, maxFee, payerFioPublicKey = null, tpid = '', hash, offlineUrl) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let payerKey = { public_address: '' };
+            if (!payerFioPublicKey && typeof payerFioPublicKey !== 'string') {
+                payerKey = yield this.getPublicAddress(payerFioAddress, 'FIO');
+            }
+            else {
+                payerKey.public_address = payerFioPublicKey;
+            }
+            let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress, payerKey.public_address, payeeFioAddress, tpid, maxFee, payeePublicAddress, amount, tokenCode, memo, hash, offlineUrl);
+            return requestNewFunds.execute(this.privateKey, this.publicKey);
+        });
     }
     isAvailable(fioName) {
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
         return availabilityCheck.execute(this.publicKey);
     }
-    getFioBalance() {
-        let getFioBalance = new queries.GetFioBalance();
+    getFioBalance(othersBalance) {
+        let getFioBalance = new queries.GetFioBalance(othersBalance);
         return getFioBalance.execute(this.publicKey);
     }
     getFioNames(fioPublicKey) {
@@ -98,11 +121,11 @@ class FIOSDK {
     }
     getPendingFioRequests(fioPublicKey) {
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
-        return pendingFioRequests.execute(this.publicKey);
+        return pendingFioRequests.execute(this.publicKey, this.privateKey);
     }
     getSentFioRequests(fioPublicKey) {
         let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
-        return sentFioRequest.execute(this.publicKey);
+        return sentFioRequest.execute(this.publicKey, this.privateKey);
     }
     getPublicAddress(fioAddress, tokenCode) {
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
@@ -129,59 +152,64 @@ class FIOSDK {
         return constants_1.Constants.multiplier;
     }
     genericAction(action, params) {
-        switch (action.toLowerCase()) {
-            case 'getactor':
+        switch (action) {
+            case 'getActor':
                 return this.getActor();
                 break;
-            case 'getfiopublickey':
+            case 'getFioPublicKey':
                 return this.getFioPublicKey();
                 break;
-            case 'registerfioaddress':
+            case 'registerFioAddress':
                 return this.registerFioAddress(params.fioAddress, params.maxFee);
                 break;
-            case 'registerfiodomain':
+            case 'registerFioDomain':
                 return this.registerFioDomain(params.FioDomain, params.maxFee);
                 break;
-            case 'addpublicaddress':
+            case 'addPublicAddress':
                 return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
                 break;
-            case 'recordsend':
-                return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.obtID, params.metadata, params.maxFee, params.tpid, params.status);
+            case 'recordSend':
+                return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, params.payerPublicAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.status, params.obtId, params.maxFee, params.tpId, params.payerFioPublicKey, params.memo, params.hash, params.offLineUrl);
                 break;
-            case 'rejectfundsrequest':
+            case 'rejectFundsRequest':
                 return this.rejectFundsRequest(params.fioRequestId, params.maxFee);
                 break;
-            case 'requestfunds':
-                return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.metaData, params.maxFee);
+            case 'requestFunds':
+                return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.memo, params.maxFee, params.payerFioPublicKey, params.tpid, params.hash, params.offlineUrl);
                 break;
-            case 'isavailable':
+            case 'isAvailable':
                 return this.isAvailable(params.fioName);
                 break;
-            case 'getfiobalance':
-                return this.getFioBalance();
+            case 'getFioBalance':
+                if (params) {
+                    return this.getFioBalance(params.othersBalance);
+                }
+                else {
+                    return this.getFioBalance();
+                }
                 break;
-            case 'getfionames':
+            case 'getFioNames':
                 return this.getFioNames(params.fioPublicKey);
                 break;
-            case 'getpendingfiorequests':
+            case 'getPendingFioRequests':
                 return this.getPendingFioRequests(params.fioPublicKey);
                 break;
-            case 'getsentfiorequests':
+            case 'getSentFioRequests':
                 return this.getSentFioRequests(params.fioPublicKey);
                 break;
-            case 'getpublicaddress':
+            case 'getPublicAddress':
                 return this.getPublicAddress(params.fioAddress, params.tokenCode);
                 break;
-            case 'transfertokens':
+            case 'transferTokens':
                 return this.transferTokens(params.payeePublicKey, params.amount, params.maxFee);
                 break;
-            case 'getabi':
+            case 'getAbi':
                 return this.getAbi(params.accountName);
                 break;
-            case 'getfee':
+            case 'getFee':
                 return this.getFee(params.endPoint, params.fioAddress);
                 break;
-            case 'getmultiplier':
+            case 'getMultiplier':
                 return this.getMultiplier();
                 break;
         }

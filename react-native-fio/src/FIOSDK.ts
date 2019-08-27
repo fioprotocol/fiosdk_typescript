@@ -36,34 +36,25 @@ export class FIOSDK{
             })
         }
     }
-
-    static createPrivateKey(entropy:Buffer):any{        
-        const hdkey = require('hdkey')
-        const wif = require('wif')
-        var sha512 = require('js-sha512').sha512;
-        const master = hdkey.fromMasterSeed(sha512(entropy))
-        const node = master.derive("m/44'/235'/0'/0/0")
-        console.error("fioKey: "+wif.encode(128, node._privateKey, false))
-        console.error("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-        const fioKey = wif.encode(128, node._privateKey, false)
-        return {fioKey }
-    }
     
     // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-    static createPrivateKeyMnemonic(mnemonic:string):any{        
+    static async createPrivateKey(entropy:Buffer):Promise<any>{        
+        const bip39 = require('bip39')
+        const mnemonic = bip39.entropyToMnemonic(entropy)
+        return await FIOSDK.createPrivateKeyMnemonic(mnemonic)
+
+    }
+    static async createPrivateKeyMnemonic(mnemonic:string){
         const hdkey = require('hdkey')
         const wif = require('wif')
         const bip39 = require('bip39')
-        const seed = bip39.mnemonicToSeedHex(mnemonic)
+        const seedBytes = await bip39.mnemonicToSeed(mnemonic)
+        const seed = await seedBytes.toString('hex')
         const master = hdkey.fromMasterSeed(new Buffer(seed, 'hex'))
         const node = master.derive("m/44'/235'/0'/0/0")
         const fioKey = wif.encode(128, node._privateKey, false)
-        // console.log("publicKey: "+Ecc.PublicKey(node._publicKey).toString())
-        // console.log("privateKey: "+wif.encode(128, node._privateKey, false))
-        return {fioKey }
+        return {fioKey, mnemonic}
     }
-
-
 
     static derivedPublicKey(fioKey:string){
         const publicKey = Ecc.privateToPublic(fioKey)
@@ -93,21 +84,32 @@ export class FIOSDK{
         return addPublicAddress.execute(this.privateKey, this.publicKey)
     }
 
-    recordSend(fioRequestId: string = '',
-    payerFioAddress: string,
-    payeeFioAddress: string,
-    payerPublicAddress: string,
-    payeePublicAddress: string,
-    amount: number,
-    tokenCode: string,
-    obtId: string,
-    metadata: string,
-    maxFee: number,
-    tpid:string,
-    status='sent_to_blockchain'):Promise<any>{
+    async recordSend(
+    fioRequestId:string,        
+    payerFIOAddress:string,
+    payeeFIOAddress:string,
+    payerPublicAddress:string,
+    payeePublicAddress:string,
+    amount:number,
+    tokenCode:string,
+    status:string,
+    obtId:string,
+    maxFee:number,
+    tpId:string='',
+    payeeFioPublicKey:string|null = null,
+    memo:string|null = null,
+    hash:string|null = null,
+    offLineUrl:string|null = null
+    ):Promise<any>{
+        let payeeKey:any = {public_address:''}
+        if(!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string'){
+            payeeKey = await this.getPublicAddress(payeeFIOAddress,'FIO')
+        }else{
+            payeeKey.public_address = payeeFioPublicKey
+        }
         let recordSend = new SignedTransactions.RecordSend(fioRequestId,
-        payerFioAddress, payeeFioAddress, payerPublicAddress, payeePublicAddress,
-        amount, tokenCode, obtId, metadata, maxFee,tpid,status);
+        payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress,
+        amount, tokenCode, obtId, maxFee, status, tpId, payeeKey.public_address,memo,hash,offLineUrl);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
@@ -116,8 +118,19 @@ export class FIOSDK{
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
-    requestFunds(payerFioAddress: string, payeeFioAddress: string, payeePublicAddress: string, amount: number,tokenCode: string, metaData: string,maxFee:number):Promise<any>{
-        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payeeFioAddress,payeePublicAddress,tokenCode,amount,metaData,maxFee);
+    async requestFunds(payerFioAddress: string, 
+        payeeFioAddress: string,payeePublicAddress: string, 
+        amount: number,tokenCode: string, memo: string,maxFee:number, 
+        payerFioPublicKey:string|null = null,
+        tpid:string='', 
+        hash?:string, offlineUrl?:string):Promise<any>{
+        let payerKey:any = {public_address:''}
+        if(!payerFioPublicKey && typeof payerFioPublicKey !== 'string'){
+            payerKey = await this.getPublicAddress(payerFioAddress,'FIO')
+        }else{
+            payerKey.public_address = payerFioPublicKey
+        }
+        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey.public_address,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
 
@@ -126,8 +139,8 @@ export class FIOSDK{
         return availabilityCheck.execute(this.publicKey);
     }
     
-    getFioBalance():Promise<any>{
-        let getFioBalance = new queries.GetFioBalance();
+    getFioBalance(othersBalance?:string):Promise<any>{
+        let getFioBalance = new queries.GetFioBalance(othersBalance);
         return getFioBalance.execute(this.publicKey);
     }
 
@@ -139,12 +152,12 @@ export class FIOSDK{
 
     getPendingFioRequests(fioPublicKey:string):Promise<any>{
         let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
-        return pendingFioRequests.execute(this.publicKey)
+        return pendingFioRequests.execute(this.publicKey,this.privateKey)
     }
 
     getSentFioRequests(fioPublicKey:string):Promise<any>{
         let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
-        return sentFioRequest.execute(this.publicKey)
+        return sentFioRequest.execute(this.publicKey,this.privateKey)
     }
 
     getPublicAddress(fioAddress:string, tokenCode:string):Promise<any>{
@@ -159,7 +172,7 @@ export class FIOSDK{
 
     getFee(endPoint:string,fioAddress=""):Promise<any>{
         let fioFee = new queries.GetFee(endPoint,fioAddress);
-        return fioFee.execute(this.publicKey)
+        return fioFee.execute(this.publicKey)                                                    
     }
 
     getAbi(accountName:string):Promise<AbiResponse>{
@@ -178,62 +191,79 @@ export class FIOSDK{
     }
 
     genericAction(action:string,params:any):any{
-        switch(action.toLowerCase()){
-            case 'getactor':
+        switch(action){
+            case 'getActor':
                 return this.getActor()
                 break
-            case 'getfiopublickey':
+            case 'getFioPublicKey':
                 return this.getFioPublicKey()
                 break
-            case 'registerfioaddress':
+            case 'registerFioAddress':
                 return this.registerFioAddress(params.fioAddress, params.maxFee)
                 break
-            case 'registerfiodomain':
+            case 'registerFioDomain':
                 return this.registerFioDomain(params.FioDomain,  params.maxFee)
                 break
-            case 'addpublicaddress':
+            case 'addPublicAddress':
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
                 break    
-            case 'recordsend':
-                return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, 
-                    params.payerPublicAddress,params.payeePublicAddress, params.amount, params.tokenCode, 
-                    params.obtID, params.metadata, params.maxFee,params.tpid,params.status)
+            case 'recordSend':
+                return this.recordSend(
+                    params.fioRequestId,
+                    params.payerFIOAddress,
+                    params.payeeFIOAddress, 
+                    params.payerPublicAddress,
+                    params.payeePublicAddress, 
+                    params.amount, 
+                    params.tokenCode, 
+                    params.status, 
+                    params.obtId, 
+                    params.maxFee,
+                    params.tpId,
+                    params.payerFioPublicKey,  
+                    params.memo, 
+                    params.hash, 
+                    params.offLineUrl)
                 break
-            case 'rejectfundsrequest':
+            case 'rejectFundsRequest':
                 return this.rejectFundsRequest(params.fioRequestId,params.maxFee)
                 break
-            case 'requestfunds':
+            case 'requestFunds':
                 return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress,
-                    params.amount, params.tokenCode, params.metaData, params.maxFee)
+                    params.amount, params.tokenCode, params.memo, params.maxFee,params.payerFioPublicKey, params.tpid, params.hash, params.offlineUrl)
                 break                
-            case 'isavailable':
+            case 'isAvailable':
                 return this.isAvailable(params.fioName)
                 break  
-            case 'getfiobalance':
-                return this.getFioBalance()
+            case 'getFioBalance':
+                if(params){
+                    return this.getFioBalance(params.othersBalance)
+                }else{
+                    return this.getFioBalance()
+                }
                 break
-            case 'getfionames':
+            case 'getFioNames':
                 return this.getFioNames(params.fioPublicKey)
                 break
-            case 'getpendingfiorequests':
+            case 'getPendingFioRequests':
                 return this.getPendingFioRequests(params.fioPublicKey)
                 break
-            case 'getsentfiorequests':
+            case 'getSentFioRequests':
                 return this.getSentFioRequests(params.fioPublicKey)
                 break                
-            case 'getpublicaddress':
+            case 'getPublicAddress':
                 return this.getPublicAddress(params.fioAddress, params.tokenCode)
                 break  
-            case 'transfertokens':
+            case 'transferTokens':
                 return this.transferTokens(params.payeePublicKey,params.amount,params.maxFee)
                 break
-            case 'getabi':
+            case 'getAbi':
                 return this.getAbi(params.accountName)
                 break
-            case 'getfee':
+            case 'getFee':
                 return this.getFee(params.endPoint,params.fioAddress)
                 break
-            case 'getmultiplier':
+            case 'getMultiplier':
                     return this.getMultiplier()
                     break                  
         }
