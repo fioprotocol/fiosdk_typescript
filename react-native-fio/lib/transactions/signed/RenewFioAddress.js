@@ -1,20 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
-class RejectFundsRequest extends SignedTransaction_1.SignedTransaction {
-    constructor(fioreqid, maxFee, walletFioAddress = "") {
+class RenewFioAddress extends SignedTransaction_1.SignedTransaction {
+    constructor(fioAddress, maxFee, walletFioAddress = "") {
         super();
-        this.ENDPOINT = "chain/reject_funds_request";
-        this.ACTION = "rejectfndreq";
-        this.ACOUNT = "fio.reqobt";
-        this.fioreqid = fioreqid;
+        this.ENDPOINT = "chain/renew_fio_address";
+        this.ACTION = "renewaddress";
+        this.ACOUNT = "fio.system";
+        this.fioAddress = fioAddress;
         this.maxFee = maxFee;
         this.walletFioAddress = walletFioAddress;
     }
     getData() {
         let actor = this.getActor();
         let data = {
-            fio_request_id: this.fioreqid,
+            fio_address: this.fioAddress,
             max_fee: this.maxFee,
             tpid: this.walletFioAddress,
             actor: actor
@@ -22,4 +22,4 @@ class RejectFundsRequest extends SignedTransaction_1.SignedTransaction {
         return data;
     }
 }
-exports.RejectFundsRequest = RejectFundsRequest;
+exports.RenewFioAddress = RenewFioAddress;

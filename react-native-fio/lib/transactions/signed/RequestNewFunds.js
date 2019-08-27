@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
 class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
-    constructor(payerFioAddress, payerFioPublicKey, payeeFioAddress, tpid = '', maxFee, payeePublicAddress, amount, tokenCode, memo = null, hash = null, offlineUrl = null) {
+    constructor(payerFioAddress, payerFioPublicKey, payeeFioAddress, walletFioAddress = '', maxFee, payeePublicAddress, amount, tokenCode, memo = null, hash = null, offlineUrl = null) {
         super();
         this.ENDPOINT = "chain/new_funds_request";
         this.ACTION = "newfundsreq";
@@ -20,11 +20,11 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
             hash: hash,
             offline_url: offlineUrl
         };
-        if (tpid) {
-            this.tpid = tpid;
+        if (walletFioAddress) {
+            this.walletFioAddress = walletFioAddress;
         }
         else {
-            this.tpid = '';
+            this.walletFioAddress = '';
         }
     }
     getData() {
@@ -35,7 +35,7 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
             payee_fio_address: this.payeeFioAddress,
             content: cipherContent,
             max_fee: this.maxFee,
-            tpid: this.tpid,
+            tpid: this.walletFioAddress,
             actor: actor,
         };
         return data;

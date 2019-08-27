@@ -12,9 +12,9 @@ export class RequestNewFunds extends SignedTransaction{
     tokenCode:string
     maxFee:number
     content:any
-    tpid:string
+    walletFioAddress:string
     
-    constructor(payerFioAddress:string,payerFioPublicKey:string,payeeFioAddress:string,tpid:string='',maxFee:number,payeePublicAddress:string,amount:number,tokenCode:string,memo:string|null=null,hash:string|null=null,offlineUrl:string|null=null){
+    constructor(payerFioAddress:string,payerFioPublicKey:string,payeeFioAddress:string,walletFioAddress:string='',maxFee:number,payeePublicAddress:string,amount:number,tokenCode:string,memo:string|null=null,hash:string|null=null,offlineUrl:string|null=null){
         super();
         this.payerFioAddress = payerFioAddress;
         this.payerFioPublicKey = payerFioPublicKey
@@ -30,10 +30,10 @@ export class RequestNewFunds extends SignedTransaction{
             offline_url:offlineUrl
         }
 
-        if(tpid){
-            this.tpid = tpid
+        if(walletFioAddress){
+            this.walletFioAddress = walletFioAddress
         }else{
-            this.tpid = ''
+            this.walletFioAddress = ''
         }
     }
 
@@ -45,7 +45,7 @@ export class RequestNewFunds extends SignedTransaction{
             payee_fio_address:this.payeeFioAddress,
             content:cipherContent,
             max_fee: this.maxFee,
-            tpid:this.tpid,
+            tpid:this.walletFioAddress,
             actor: actor,
         }
         return data;

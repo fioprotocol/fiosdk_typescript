@@ -3,7 +3,7 @@ import { Transactions } from './transactions/Transactions'
 import * as queries from './transactions/queries'
 import  * as  SignedTransactions  from './transactions/signed'
 import { Constants } from './utils/constants'
-import { MockRegisterFioAddress } from './transactions/signed/MockRegisterFioAddress'
+import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
 const { Ecc } = require('fiojs') 
 import { Fio } from 'fiojs'
 import { AbiResponse } from './entities/AbiResponse';
@@ -56,27 +56,33 @@ export class FIOSDK{
         return {fioKey, mnemonic}
     }
 
-    static derivedPublicKey(fioKey:string){
-        const publicKey = Ecc.privateToPublic(fioKey)
+    static derivedPublicKey(fioPrivateKey:string){
+        const publicKey = Ecc.privateToPublic(fioPrivateKey)
         return { publicKey }
-    }
-
-    getActor():string{
-        return Transactions.FioProvider.accountHash(this.publicKey)
     }
 
     getFioPublicKey():string{
         return this.publicKey
     }
 
-    registerFioAddress(fioAddress:string, maxFee:number):Promise<any>{
-        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress, maxFee);
+    registerFioAddress(fioAddress:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
+        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress, maxFee,walletFioAddress);
         return registerFioAddress.execute(this.privateKey, this.publicKey)
     }
 
-    registerFioDomain(fioDomain:string, maxFee:number):Promise<any>{
-        let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain, maxFee);
+    registerFioDomain(fioDomain:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
+        let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain, maxFee,walletFioAddress);
         return registerFioDomain.execute(this.privateKey, this.publicKey)
+    }
+
+    renewFioAddress(fioAddress:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
+        let renewFioAddress =  new SignedTransactions.RenewFioAddress(fioAddress, maxFee,walletFioAddress);
+        return renewFioAddress.execute(this.privateKey, this.publicKey)
+    }
+
+    renewFioDomain(fioDomain:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
+        let renewFioDomain =  new SignedTransactions.RenewFioDomain(fioDomain, maxFee,walletFioAddress);
+        return renewFioDomain.execute(this.privateKey, this.publicKey)
     }
 
     addPublicAddress(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number):Promise<any>{
@@ -88,14 +94,14 @@ export class FIOSDK{
     fioRequestId:string,        
     payerFIOAddress:string,
     payeeFIOAddress:string,
-    payerPublicAddress:string,
-    payeePublicAddress:string,
+    payerTokenPublicAddress:string,
+    payeeTokenPublicAddress:string,
     amount:number,
     tokenCode:string,
     status:string,
     obtId:string,
     maxFee:number,
-    tpId:string='',
+    walletFioAddress:string='',
     payeeFioPublicKey:string|null = null,
     memo:string|null = null,
     hash:string|null = null,
@@ -108,13 +114,13 @@ export class FIOSDK{
             payeeKey.public_address = payeeFioPublicKey
         }
         let recordSend = new SignedTransactions.RecordSend(fioRequestId,
-        payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress,
-        amount, tokenCode, obtId, maxFee, status, tpId, payeeKey.public_address,memo,hash,offLineUrl);
+        payerFIOAddress, payeeFIOAddress, payerTokenPublicAddress, payeeTokenPublicAddress,
+        amount, tokenCode, obtId, maxFee, status, walletFioAddress, payeeKey.public_address,memo,hash,offLineUrl);
         return recordSend.execute(this.privateKey, this.publicKey);
     }
 
-    rejectFundsRequest(fioRequestId: string,maxFee:number):Promise<any>{
-        let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId,maxFee)
+    rejectFundsRequest(fioRequestId: string,maxFee:number,walletFioAddress:string=""):Promise<any>{
+        let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId,maxFee,walletFioAddress)
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
@@ -122,7 +128,7 @@ export class FIOSDK{
         payeeFioAddress: string,payeePublicAddress: string, 
         amount: number,tokenCode: string, memo: string,maxFee:number, 
         payerFioPublicKey:string|null = null,
-        tpid:string='', 
+        walletFioAddress:string='', 
         hash?:string, offlineUrl?:string):Promise<any>{
         let payerKey:any = {public_address:''}
         if(!payerFioPublicKey && typeof payerFioPublicKey !== 'string'){
@@ -130,7 +136,7 @@ export class FIOSDK{
         }else{
             payerKey.public_address = payerFioPublicKey
         }
-        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey.public_address,payeeFioAddress,tpid,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
+        let requestNewFunds = new SignedTransactions.RequestNewFunds(payerFioAddress,payerKey.public_address,payeeFioAddress,walletFioAddress,maxFee,payeePublicAddress,amount,tokenCode,memo,hash,offlineUrl);
         return requestNewFunds.execute(this.privateKey, this.publicKey);
     }
 
@@ -139,8 +145,8 @@ export class FIOSDK{
         return availabilityCheck.execute(this.publicKey);
     }
     
-    getFioBalance(othersBalance?:string):Promise<any>{
-        let getFioBalance = new queries.GetFioBalance(othersBalance);
+    getFioBalance(fioPublicKey?:string):Promise<any>{
+        let getFioBalance = new queries.GetFioBalance(fioPublicKey);
         return getFioBalance.execute(this.publicKey);
     }
 
@@ -150,13 +156,13 @@ export class FIOSDK{
 
     }
 
-    getPendingFioRequests(fioPublicKey:string):Promise<any>{
-        let pendingFioRequests = new queries.PendingFioRequests(fioPublicKey);
+    getPendingFioRequests():Promise<any>{
+        let pendingFioRequests = new queries.PendingFioRequests(this.publicKey);
         return pendingFioRequests.execute(this.publicKey,this.privateKey)
     }
 
-    getSentFioRequests(fioPublicKey:string):Promise<any>{
-        let sentFioRequest = new queries.SentFioRequests(fioPublicKey);
+    getSentFioRequests():Promise<any>{
+        let sentFioRequest = new queries.SentFioRequests(this.publicKey);
         return sentFioRequest.execute(this.publicKey,this.privateKey)
     }
 
@@ -165,9 +171,14 @@ export class FIOSDK{
         return publicAddressLookUp.execute(this.publicKey);
     }
 
-    transferTokens(payeePublicKey:string,amount:number,maxFee:number,dryRun:boolean=false):Promise<any>{
-        let transferTokens = new SignedTransactions.TransferTokens(payeePublicKey,amount,maxFee);
-        return transferTokens.execute(this.privateKey, this.publicKey,dryRun)
+    getFioPublicAddress(fioAddress:string):Promise<any>{
+        let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, "FIO");
+        return publicAddressLookUp.execute(this.publicKey);
+    }
+
+    transferTokens(payeeFioPublicKey:string,amount:number,maxFee:number,walletFioAddress:string=""):Promise<any>{
+        let transferTokens = new SignedTransactions.TransferTokens(payeeFioPublicKey,amount,maxFee,walletFioAddress);
+        return transferTokens.execute(this.privateKey, this.publicKey)
     }
 
     getFee(endPoint:string,fioAddress=""):Promise<any>{
@@ -180,10 +191,10 @@ export class FIOSDK{
         return abi.execute(this.publicKey)
     }
 
-    registerFioAddressOnBehalfOfUser(fioAddress:string,publicKey:string){
+    registerFioNameOnBehalfOfUser(fioName:string,publicKey:string){
         let server = this.registerMockUrl // "mock.dapix.io/mockd/DEV2"
-        let mockRegisterFioAddress = new MockRegisterFioAddress(fioAddress,publicKey,server)
-        return mockRegisterFioAddress.execute();
+        let mockRegisterFioName = new MockRegisterFioName(fioName,publicKey,server)
+        return mockRegisterFioName.execute();
     }
 
     getMultiplier(){
@@ -192,80 +203,62 @@ export class FIOSDK{
 
     genericAction(action:string,params:any):any{
         switch(action){
-            case 'getActor':
-                return this.getActor()
-                break
             case 'getFioPublicKey':
                 return this.getFioPublicKey()
-                break
             case 'registerFioAddress':
-                return this.registerFioAddress(params.fioAddress, params.maxFee)
-                break
+                return this.registerFioAddress(params.fioAddress, params.maxFee,params.walletFioAddress || "")
             case 'registerFioDomain':
-                return this.registerFioDomain(params.FioDomain,  params.maxFee)
-                break
+                return this.registerFioDomain(params.FioDomain,  params.maxFee,params.walletFioAddress || "")
+            case 'renewFioAddress':
+                return this.renewFioAddress(params.fioAddress,  params.maxFee,params.walletFioAddress || "")
             case 'addPublicAddress':
                 return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
-                break    
             case 'recordSend':
                 return this.recordSend(
                     params.fioRequestId,
                     params.payerFIOAddress,
                     params.payeeFIOAddress, 
-                    params.payerPublicAddress,
-                    params.payeePublicAddress, 
+                    params.payerTokenPublicAddress,
+                    params.payeeTokenPublicAddress, 
                     params.amount, 
                     params.tokenCode, 
                     params.status, 
                     params.obtId, 
                     params.maxFee,
-                    params.tpId,
+                    params.walletFioAddress || "",
                     params.payerFioPublicKey,  
                     params.memo, 
                     params.hash, 
                     params.offLineUrl)
-                break
             case 'rejectFundsRequest':
-                return this.rejectFundsRequest(params.fioRequestId,params.maxFee)
-                break
+                return this.rejectFundsRequest(params.fioRequestId,params.maxFees,params.walletFioAddress || "")
             case 'requestFunds':
                 return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress,
-                    params.amount, params.tokenCode, params.memo, params.maxFee,params.payerFioPublicKey, params.tpid, params.hash, params.offlineUrl)
-                break                
+                    params.amount, params.tokenCode, params.memo, params.maxFee,params.payerFioPublicKey, params.walletFioAddress || "", params.hash, params.offlineUrl)
             case 'isAvailable':
                 return this.isAvailable(params.fioName)
-                break  
             case 'getFioBalance':
                 if(params){
-                    return this.getFioBalance(params.othersBalance)
+                    return this.getFioBalance(params.fioPublicKey)
                 }else{
                     return this.getFioBalance()
                 }
-                break
             case 'getFioNames':
                 return this.getFioNames(params.fioPublicKey)
-                break
             case 'getPendingFioRequests':
-                return this.getPendingFioRequests(params.fioPublicKey)
-                break
+                return this.getPendingFioRequests()
             case 'getSentFioRequests':
-                return this.getSentFioRequests(params.fioPublicKey)
-                break                
+                return this.getSentFioRequests()
             case 'getPublicAddress':
                 return this.getPublicAddress(params.fioAddress, params.tokenCode)
-                break  
             case 'transferTokens':
-                return this.transferTokens(params.payeePublicKey,params.amount,params.maxFee)
-                break
+                return this.transferTokens(params.payeeFioPublicKey,params.amount,params.maxFee,params.walletFioAddress || "")
             case 'getAbi':
                 return this.getAbi(params.accountName)
-                break
             case 'getFee':
                 return this.getFee(params.endPoint,params.fioAddress)
-                break
             case 'getMultiplier':
                     return this.getMultiplier()
-                    break                  
         }
     }
 }

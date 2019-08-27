@@ -6,11 +6,13 @@ export class RegisterFioDomain extends SignedTransaction{
     ACOUNT:string = "fio.system"
     fioDomain:string
     maxFee:number
+    walletFioAddress:string
 
-    constructor(fioDomain:string, maxFee:number){
+    constructor(fioDomain:string, maxFee:number,walletFioAddress:string=""){
         super();
         this.fioDomain = fioDomain;
-        this.maxFee = maxFee
+        this.maxFee = maxFee;
+        this.walletFioAddress = walletFioAddress;
     }
 
     getData():any{
@@ -19,6 +21,7 @@ export class RegisterFioDomain extends SignedTransaction{
             fio_domain:this.fioDomain,
             owner_fio_public_key:this.publicKey,
             max_fee: this.maxFee,
+            tpid: this.walletFioAddress,
             actor: actor
         }
         return data;

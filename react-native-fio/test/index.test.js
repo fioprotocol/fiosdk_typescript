@@ -194,9 +194,9 @@ test('RecordSend', done => {
     obtID = "1"
     memo = "memo"
     maxFee= "1"
-    tpId="aaAAAaa"
+    walletFioAddress="aaAAAaa"
     fiosdk.recordSend(fioRequestId,payerFIOAddress,payeeFIOAddress,payerPublicAddress,payeePublicAddress,amount,tokenCode,status,
-        obtID, maxFee,tpId,'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',memo).then(res => {
+        obtID, maxFee,walletFioAddress,'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',memo).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
         console.error(error)
@@ -217,7 +217,7 @@ test('RegisterName', done => {
     }
     var name = "" + Date.now()
     name = name.substr(-12);
-    name = name + ".brd"
+    name = name + ":brd"
     fiosdk.registerFioAddress(name,30000000000).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
@@ -239,8 +239,30 @@ test('RegisterDomain', done => {
     }
     var name = "" + Date.now()
     name = name.substr(-12);
-    name = name + ".brd"
+    name = name + ":brd"
     fiosdk.registerFioDomain(name,30000000000).then(res => {
+        callback(res.transaction_id);
+    }).catch(error => {
+        console.error(error)
+    })
+})
+
+test('RenewFioDomainName', done => {
+    fetch.resetMocks()
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.chain))
+    fetch.mockResponseOnce(JSON.stringify(serverMocks.block))
+    fetch.mockResponse(JSON.stringify(serverMocks.renewFioDomainName));
+
+    function callback(data) {
+        expect(data).toEqual(expect.stringContaining("OK"))
+        expect(fetch.mock.calls.length).toEqual(3)
+        expect(fetch.mock.calls[2][0]).toEqual('http://34.220.57.45:8889/v1/chain/renew_fio_domain')
+        done();
+    }
+    var name = "test-" + Date.now()
+    name = name.substr(-7);
+    name = name + ":brd"
+    fiosdk.renewFioAddress(name,40000000000).then(res => {
         callback(res.transaction_id);
     }).catch(error => {
         console.error(error)

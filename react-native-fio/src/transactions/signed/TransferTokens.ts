@@ -8,12 +8,12 @@ export class TransferTokens extends SignedTransaction{
     payeePublicKey:string
     amount:number
     maxFee:number
-    tpid:string
-    constructor(payeePublicKey:string,amount:number, maxFee:number,tpid=''){
+    walletFioAddress:string
+    constructor(payeePublicKey:string,amount:number, maxFee:number,walletFioAddress=''){
         super()
         this.payeePublicKey = payeePublicKey
         this.amount = amount
-        this.tpid = tpid
+        this.walletFioAddress = walletFioAddress
         this.maxFee = maxFee
     }
 
@@ -24,7 +24,7 @@ export class TransferTokens extends SignedTransaction{
             payee_public_key:this.payeePublicKey,
             amount: this.amount,
             max_fee: this.maxFee,
-            tpid:this.tpid,
+            tpid:this.walletFioAddress,
             actor: actor
         }
         return data;

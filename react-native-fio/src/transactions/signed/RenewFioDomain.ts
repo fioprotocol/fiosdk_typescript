@@ -1,16 +1,16 @@
 import { SignedTransaction } from './SignedTransaction';
-export class RegisterFioAddress extends SignedTransaction{
+export class RenewFioDomain extends SignedTransaction{
 
-    ENDPOINT:string = "chain/register_fio_address"; 
-    ACTION:string = "regaddress" 
+    ENDPOINT:string = "chain/renew_fio_domain"; 
+    ACTION:string = "renewdomain" 
     ACOUNT:string = "fio.system"
-    fioAddress:string
+    fioDomain:string
     maxFee:number
     walletFioAddress:string
 
-    constructor(fioAddress:string,maxFee:number,walletFioAddress:string=""){
+    constructor(fioDomain:string, maxFee:number,walletFioAddress:string=""){
         super();
-        this.fioAddress = fioAddress;
+        this.fioDomain = fioDomain;
         this.maxFee = maxFee;
         this.walletFioAddress = walletFioAddress;
     }
@@ -18,10 +18,9 @@ export class RegisterFioAddress extends SignedTransaction{
     getData():any{
         let actor = this.getActor();
         let data = {
-            fio_address:this.fioAddress,
-            owner_fio_public_key:this.publicKey,
+            fio_domain:this.fioDomain,
             max_fee: this.maxFee,
-            tpid: this.walletFioAddress,
+            tpid:this.walletFioAddress,
             actor: actor
         }
         return data;

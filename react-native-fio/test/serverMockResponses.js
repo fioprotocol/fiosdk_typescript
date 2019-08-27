@@ -42,6 +42,45 @@ const serverMocks = {
             "except": null
         },
     },
+    renewFioDomainName: {
+        "transaction_id": "f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a",
+        "processed": {
+            "id": "f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a",
+            "block_num": 2570159,
+            "block_time": "2019-04-30T17:57:20.000",
+            "producer_block_id": null,
+            "receipt": { "status": "executed", "cpu_usage_us": 1207, "net_usage_words": 14 },
+            "elapsed": 1207,
+            "net_usage": 112,
+            "scheduled": false,
+            "action_traces": [{
+                "receipt": {
+                    "receiver": "fio.system",
+                    "response": "{\"expiration\":1588208960,\"status\":\"OK\", \"fee_collected\": 30000000000}",
+                    "act_digest": "e32df88f31f909f21e08469c38c4566026264d1ee5c7fbd890d4b10b31102230",
+                    "global_sequence": 2573410,
+                    "recv_sequence": 2943,
+                    "auth_sequence": [
+                        ["p4hc54ppiofx", 3]
+                    ],
+                    "code_sequence": 1,
+                    "abi_sequence": 1
+                },
+                "act": { "account": "fio.system", "name": "registername", "authorization": [{ "actor": "p4hc54ppiofx", "permission": "active" }], "data": { "fio_name": "hola444.brd", "actor": "p4hc54ppiofx" }, "hex_data": "0b686f6c613434342e627264d01775b592821aa9" },
+                "context_free": false,
+                "elapsed": 1070,
+                "console": "Name hash: 4888686337384024064, Domain has: 1479432477591207936\naccount: 12185195308425484240 actor: 12185195308425484240\nPayments currently disabled.Payments currently disabled.",
+                "trx_id": "f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a",
+                "block_num": 2570159,
+                "block_time": "2019-04-30T17:57:20.000",
+                "producer_block_id": null,
+                "account_ram_deltas": [{ "account": "fio.system", "delta": 610 }],
+                "except": null,
+                "inline_traces": []
+            }],
+            "except": null
+        },
+    },
     registerNameFail: {
         "type": "invalid_input",
         "message": "An invalid request was sent in, please check the nested errors for details.",
@@ -53,6 +92,9 @@ const serverMocks = {
     },
     FioBalance: {
         balance: "1000.0000"
+    },
+    GetInfo: {
+        chain_id: "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
     },
     FioNames: {
         "fio_domains": [{

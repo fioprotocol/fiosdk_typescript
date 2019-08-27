@@ -1,21 +1,21 @@
-export class MockRegisterFioAddress{
+export class MockRegisterFioName{
 
     ENDPOINT:string = "/register_fio_name"; 
     ACTION:string = "regaddress" 
     ACOUNT:string = "fio.system"
-    fioAddress:string
+    fioName:string
     publicKey:string
     server:string
 
-    constructor(fioAddress:string,publicKey:string,server:string){
-        this.fioAddress = fioAddress;
+    constructor(fioName:string,publicKey:string,server:string){
+        this.fioName = fioName;
         this.publicKey = publicKey
         this.server = server
     }
 
     async execute():Promise<any>{
         let body = {
-            fio_name: this.fioAddress,
+            fio_name: this.fioName,
             owner_fio_public_key : this.publicKey
         } 
         let options = {

@@ -1,12 +1,12 @@
 import { SignedTransaction } from './SignedTransaction';
-export class RegisterFioAddress extends SignedTransaction{
+export class RenewFioAddress extends SignedTransaction{
 
-    ENDPOINT:string = "chain/register_fio_address"; 
-    ACTION:string = "regaddress" 
+    ENDPOINT:string = "chain/renew_fio_address"; 
+    ACTION:string = "renewaddress" 
     ACOUNT:string = "fio.system"
     fioAddress:string
     maxFee:number
-    walletFioAddress:string
+    walletFioAddress:String
 
     constructor(fioAddress:string,maxFee:number,walletFioAddress:string=""){
         super();
@@ -19,7 +19,6 @@ export class RegisterFioAddress extends SignedTransaction{
         let actor = this.getActor();
         let data = {
             fio_address:this.fioAddress,
-            owner_fio_public_key:this.publicKey,
             max_fee: this.maxFee,
             tpid: this.walletFioAddress,
             actor: actor
