@@ -28,11 +28,6 @@ fiosdk = ''
 });
 
 
-
-test('getActor, should return a string "actor"', () => {
-    fiosdk.getActor().then(res => expect(res).toBe("actor"));
-});
-
 test('signing, should be an array', () => {
     var arr = Array();
     arr['hex'] = "hexhexhex";
