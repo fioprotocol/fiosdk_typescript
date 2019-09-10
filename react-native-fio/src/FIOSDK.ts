@@ -231,7 +231,7 @@ export class FIOSDK{
                     params.hash, 
                     params.offLineUrl)
             case 'rejectFundsRequest':
-                return this.rejectFundsRequest(params.fioRequestId,params.maxFees,params.walletFioAddress || "")
+                return this.rejectFundsRequest(params.fioRequestId,params.maxFee,params.walletFioAddress || "")
             case 'requestFunds':
                 return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress,
                     params.amount, params.tokenCode, params.memo, params.maxFee,params.payerFioPublicKey, params.walletFioAddress || "", params.hash, params.offlineUrl)

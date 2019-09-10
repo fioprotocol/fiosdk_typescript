@@ -175,7 +175,7 @@ class FIOSDK {
             case 'recordSend':
                 return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, params.payerTokenPublicAddress, params.payeeTokenPublicAddress, params.amount, params.tokenCode, params.status, params.obtId, params.maxFee, params.walletFioAddress || "", params.payerFioPublicKey, params.memo, params.hash, params.offLineUrl);
             case 'rejectFundsRequest':
-                return this.rejectFundsRequest(params.fioRequestId, params.maxFees, params.walletFioAddress || "");
+                return this.rejectFundsRequest(params.fioRequestId, params.maxFee, params.walletFioAddress || "");
             case 'requestFunds':
                 return this.requestFunds(params.payerFioAddress, params.payeeFioAddress, params.payeePublicAddress, params.amount, params.tokenCode, params.memo, params.maxFee, params.payerFioPublicKey, params.walletFioAddress || "", params.hash, params.offlineUrl);
             case 'isAvailable':
