@@ -15,6 +15,6 @@ Pod::Spec.new do |s|
   s.preserve_paths = '*.js'
   s.homepage = 'http://fio.dev'
 
-  s.source_files = "react-native-fio/ios/**/*.{h,m,swift}"
+  s.source_files = "fiofoundation-io-fiosdk/ios/**/*.{h,m,swift}"
   s.dependency "React"
 end
