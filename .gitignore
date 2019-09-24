@@ -1,5 +1,7 @@
 .DS_Store
-/example/react-native-fio
-/react-native-fio/test/fails.tst.js
+/example/fiofoundation-io-fiosdk
+/fiofoundation-io-fiosdk/test/fails.tst.js
 /.vscode
-/react-native-fio/package-lock.json
+/fiofoundation-io-fiosdk/package-lock.json
+node_modules
+/fiofoundation-io-fiosdk/android/build
