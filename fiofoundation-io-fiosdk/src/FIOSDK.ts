@@ -1,24 +1,39 @@
 import { Transactions } from './transactions/Transactions'
-
 import * as queries from './transactions/queries'
 import  * as  SignedTransactions  from './transactions/signed'
 import { Constants } from './utils/constants'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
-const { Ecc } = require('fiojs') 
 import { Fio } from 'fiojs'
 import { AbiResponse } from './entities/AbiResponse';
 
+/**
+ * @ignore
+ */
+const { Ecc } = require('fiojs') 
+
+/**
+ * @ignore
+ */
 type FetchJson = (uri: string, opts?: Object) => Object
 
 
-export class FIOSDK{
+export class FIOSDK {
     static ReactNativeFio:any
     transactions:Transactions 
     io:{fetch(param:any,param2:any):any}
     registerMockUrl:string
     privateKey:string
     publicKey:string
-    constructor(privateKey:string,publicKey:string,baseUrl:string,io:any,fetchjson:FetchJson,registerMockUrl=''){
+
+    /**
+     * @param {string} privateKey the fio private key of the client sending requests to FIO API.
+     * @param {string} publicKey the fio public key of the client sending requests to FIO API.
+     * @param {string} baseUrl the url to the FIO API.
+     * @param {string} io 
+     * @param {string} fetchjson
+     * @param {string} registerMockUrl the url to the mock server
+     */
+    constructor(privateKey:string,publicKey:string,baseUrl:string,io:any,fetchjson:FetchJson,registerMockUrl='') {
         this.transactions = new Transactions()
         this.io = io
         Transactions.baseUrl = baseUrl
@@ -28,6 +43,7 @@ export class FIOSDK{
         this.registerMockUrl = registerMockUrl
         this.privateKey = privateKey
         this.publicKey = publicKey
+
         for (let accountName of Constants.rawAbiAccountName) {
             this.getAbi(accountName).then(response => {
                 Transactions.abiMap.set(response.account_name, response)
@@ -37,14 +53,25 @@ export class FIOSDK{
         }
     }
     
-    // mnemonic exanple = 'real flame win provide layer trigger soda erode upset rate beef wrist fame design merit'
-    static async createPrivateKey(entropy:Buffer):Promise<any>{        
+    /**
+     * @ignore
+     */
+    static async createPrivateKey(entropy:Buffer):Promise<any> {        
         const bip39 = require('bip39')
         const mnemonic = bip39.entropyToMnemonic(entropy)
         return await FIOSDK.createPrivateKeyMnemonic(mnemonic)
 
     }
-    static async createPrivateKeyMnemonic(mnemonic:string){
+
+    /**
+     * Create a FIO private key.
+     *
+     * @param mnemonic mnemonic used to generate a random unique private key.
+     * @example real flame win provide layer trigger soda erode upset rate beef wrist fame design merit
+     * 
+     * @returns New FIO private key
+     */
+    static async createPrivateKeyMnemonic(mnemonic:string) {
         const hdkey = require('hdkey')
         const wif = require('wif')
         const bip39 = require('bip39')
@@ -56,12 +83,22 @@ export class FIOSDK{
         return {fioKey, mnemonic}
     }
 
-    static derivedPublicKey(fioPrivateKey:string){
+    /**
+     * Create a FIO public key.
+     *
+     * @param fioPrivateKey FIO private key.
+     * 
+     * @returns FIO public key derived from the FIO private key.
+     */
+    static derivedPublicKey(fioPrivateKey:string) {
         const publicKey = Ecc.privateToPublic(fioPrivateKey)
         return { publicKey }
     }
 
-    getFioPublicKey():string{
+    /**
+     * Retrieves the FIO public key assigned to the FIOSDK instance.
+     */
+    getFioPublicKey():string {
         return this.publicKey
     }
 
