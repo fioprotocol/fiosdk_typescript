@@ -18,19 +18,36 @@ type FetchJson = (uri: string, opts?: Object) => Object
 
 
 export class FIOSDK {
+    /**
+     * @ignore
+     */
     static ReactNativeFio:any
+
     transactions:Transactions 
+
     io:{fetch(param:any,param2:any):any}
+
+    /**
+     * @ignore
+     */
     registerMockUrl:string
+
+    /**
+     * the fio private key of the client sending requests to FIO API.
+     */
     privateKey:string
+
+    /**
+     * the fio public key of the client sending requests to FIO API.
+     */
     publicKey:string
 
     /**
-     * @param  privateKey the fio private key of the client sending requests to FIO API.
-     * @param  publicKey the fio public key of the client sending requests to FIO API.
-     * @param  baseUrl the url to the FIO API.
-     * @param  io 
-     * @param fetchjson
+     * @param privateKey the fio private key of the client sending requests to FIO API.
+     * @param publicKey the fio public key of the client sending requests to FIO API.
+     * @param baseUrl the url to the FIO API.
+     * @param io 
+     * @param fetchjson 
      * @param registerMockUrl the url to the mock server
      */
     constructor(privateKey:string,publicKey:string,baseUrl:string,io:any,fetchjson:FetchJson,registerMockUrl='') {
@@ -161,8 +178,8 @@ export class FIOSDK {
      * sender and receiver have FIO Addresses. OBT stands for Other Blockchain Transaction
      *
      * @param fioRequestId ID of funds request, if this Record Send transaction is in response to a previously received funds request.  Send empty if no FIO Request ID
-     * @param payerFioAddress FIO Address of the payer. This address initiated payment.
-     * @param payeeFioAddress FIO Address of the payee. This address is receiving payment.
+     * @param payerFIOAddress FIO Address of the payer. This address initiated payment.
+     * @param payeeFIOAddress FIO Address of the payee. This address is receiving payment.
      * @param payerTokenPublicAddress Public address on other blockchain of user sending funds.
      * @param payeeTokenPublicAddress Public address on other blockchain of user receiving funds.
      * @param amount Amount sent.
@@ -217,6 +234,21 @@ export class FIOSDK {
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
 
+    /**
+     * Create a new funds request on the FIO chain.
+     *
+     * @param payerFioAddress FIO Address of the payer. This address will receive the request and will initiate payment.
+     * @param payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
+     * @param payeePublicAddress Payee's public address where they want funds sent.
+     * @param amount Amount requested.
+     * @param tokenCode Code of the token represented in amount requested.
+     * @param memo
+     * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by [getFee] for correct value.
+     * @param payerFioPublicKey
+     * @param walletFioAddress FIO Address of the wallet which generates this transaction.
+     * @param hash
+     * @param offlineUrl 
+     */
     async requestFunds(payerFioAddress: string, 
         payeeFioAddress: string,payeePublicAddress: string, 
         amount: number,tokenCode: string, memo: string,maxFee:number, 
@@ -330,12 +362,18 @@ export class FIOSDK {
         return fioFee.execute(this.publicKey)                                                    
     }
 
+    /**
+     * @ignore
+     */
     registerFioNameOnBehalfOfUser(fioName:string,publicKey:string){
         let server = this.registerMockUrl // "mock.dapix.io/mockd/DEV2"
         let mockRegisterFioName = new MockRegisterFioName(fioName,publicKey,server)
         return mockRegisterFioName.execute();
     }
 
+    /**
+     * @ignore
+     */
     getMultiplier(){
         return Constants.multiplier;
     }
