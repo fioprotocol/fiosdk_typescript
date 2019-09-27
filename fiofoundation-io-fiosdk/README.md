@@ -1,11 +1,13 @@
 # FIO Foundation TypeScript SDK
 
-<!--
-
 # Generating Documentation
-TypeDoc is installed as a dev dependency.  After running npm install, 
-cd into fiofoundation-io-sdk folder and simply run 
-"typedoc --out documentation ./src/FIOSDK.ts --mode file --excludeExternals" at the root of the project.
+TypeDoc is installed as a dev dependency.
+cd into fiofoundation-io-sdk folder and simply run: 
+yarn
+./build_doc.sh
 
-The documentation will appear in a folder called "documentation" in the the root of the project.
--->
+The documentation will appear in this folder: "documentation" in the the root of the project.
+
+#Issues installing TypeDoc
+If typedoc command is not found, install typedoc using the npm global command:
+npm install --global typedoc
