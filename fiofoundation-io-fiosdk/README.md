@@ -2,7 +2,7 @@
 
 # Generating Documentation
 TypeDoc is installed as a dev dependency.
-cd into fiofoundation-io-sdk folder and simply run: 
+cd into fiofoundation-io-sdk folder and run: 
 yarn
 ./build_doc.sh
 
