@@ -58,7 +58,7 @@ class Worker {
             const publicKey = key.publicKey;
             console.error('keys.privateKey', privateKey);
             console.error('keys.publicKey', publicKey);
-            this.fioSDK = new react_native_fio_1.FIOSDK(privateKey, publicKey, 'http://54.184.39.43:8889/v1/', null, fetchJson, 'http://mock.dapix.io/mockd/DEV4');
+            this.fioSDK = new react_native_fio_1.FIOSDK(privateKey, publicKey, 'http://34.220.61.65:8889/v1/', null, fetchJson, 'http://mock.dapix.io/mockd/DEV1');
         });
     }
     doSomething() {

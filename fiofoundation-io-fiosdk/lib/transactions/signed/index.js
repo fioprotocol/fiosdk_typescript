@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var AddPublicAddress_1 = require("./AddPublicAddress");
 exports.AddPublicAddress = AddPublicAddress_1.AddPublicAddress;
+var SetFioDomainVisibility_1 = require("./SetFioDomainVisibility");
+exports.SetFioDomainVisibility = SetFioDomainVisibility_1.SetFioDomainVisibility;
 var RequestNewFunds_1 = require("./RequestNewFunds");
 exports.RequestNewFunds = RequestNewFunds_1.RequestNewFunds;
 var RejectFundsRequest_1 = require("./RejectFundsRequest");

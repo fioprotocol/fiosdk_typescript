@@ -6,10 +6,10 @@ export class TransferTokens extends SignedTransaction{
     ACTION:string = "trnsfiopubky" 
     ACOUNT:string = "fio.token"
     payeePublicKey:string
-    amount:number
+    amount:string
     maxFee:number
     walletFioAddress:string
-    constructor(payeePublicKey:string,amount:number, maxFee:number,walletFioAddress=''){
+    constructor(payeePublicKey:string, amount:string, maxFee:number, walletFioAddress:string=''){
         super()
         this.payeePublicKey = payeePublicKey
         this.amount = amount
@@ -21,10 +21,10 @@ export class TransferTokens extends SignedTransaction{
         let actor = this.getActor();
          
         let data = {
-            payee_public_key:this.payeePublicKey,
+            payee_public_key: this.payeePublicKey,
             amount: this.amount,
             max_fee: this.maxFee,
-            tpid:this.walletFioAddress,
+            tpid: this.walletFioAddress,
             actor: actor
         }
         return data;

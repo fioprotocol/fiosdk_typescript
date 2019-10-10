@@ -1,4 +1,5 @@
 export interface FioDomain{
     fio_domain: string,
-    expiration: string
+    expiration: string,
+    is_public?: number
 }

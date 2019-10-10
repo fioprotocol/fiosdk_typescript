@@ -23,7 +23,7 @@ fiosdk = ''
 
     fiosdk = new FIOSDK.FIOSDK("5JCf4cYbp7G8ZH3tETvig7KNoXkygiPWYerY1U23CT1wZrGXg7v",
     "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
-    "http://dev4.fio.dev:8889/v1/",fetchJson,fetchJson);  
+    "http://dev1.fio.dev:8889/v1/",fetchJson,fetchJson);  
     Transactions.Transactions.FioProvider = new MockFioProvider.MockFioProvider()
 });
 
@@ -40,9 +40,9 @@ test('Availabilitycheck, available', done => {
     fetch.mockResponse(JSON.stringify(serverMocks.nameAvailable));
 
     function callback(data) {
-        expect(data).toBe(false)
+        expect(data).toBe(0)
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/avail_check')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/avail_check')
         done();
     }
     var name = "" + Date.now()
@@ -62,7 +62,7 @@ test('GetFioBalance', done => {
     function callback(data) {
         expect(data.balance).toBe("1000.0000")
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/get_fio_balance')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/get_fio_balance')
         done();
     }
     fiosdk.getFioBalance("name.brd").then(res => {
@@ -79,7 +79,7 @@ test('GetNames', done => {
     function callback(data) {
         expect(data.fio_domains[0].expiration).toBe("15734567")
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/get_fio_names')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/get_fio_names')
         done();
     }
     fiosdk.getFioNames("name.brd").then(res => {
@@ -96,7 +96,7 @@ test('PendingFioRequest', done => {
     function callback(data) {
         expect(data.fio_request_id).toBe(22)
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/get_pending_fio_requests')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/get_pending_fio_requests')
         expect(data.content).toEqual({ payee_public_address: 'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA',
         amount: '8',
         token_code: 'FIO',
@@ -119,7 +119,7 @@ test('PublicAddresssLookUp', done => {
     function callback(data) {
         expect(data).toBe("77081021.brdLTCADDRESS")
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/pub_address_lookup')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/pub_address_lookup')
         done();
     }
     fiosdk.getPublicAddress("77081021.brd", "LTC").then(res => {
@@ -136,7 +136,7 @@ test('SentFioRequest', done => {
     function callback(data) {
         expect(data.fio_request_id).toBe(13)
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/get_sent_fio_requests')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/get_sent_fio_requests')
         expect(data.content).toEqual(serverMocks.sentRequestsDecoded)
         done();
     }
@@ -156,7 +156,7 @@ test('AddPublicAddress', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("0a24972725b30f526c2415cb45b7b8b3829dd9fd7db610830acb8464bc7fc13b"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/add_pub_address')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/add_pub_address')
         done();
     }
     fiosdk.addPublicAddress("78177992.brd", "ETH", "78177992.brd").then(res => {
@@ -175,7 +175,7 @@ test('RecordSend', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("0a24972725b30f526c2415cb45b7b8b3829dd9fd7db610830acb8464bc7fc13b"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/record_send')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/record_send')
         done();
     }
     fioRequestId= string = '1'
@@ -207,7 +207,7 @@ test('RegisterName', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/register_fio_address')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/register_fio_address')
         done();
     }
     var name = "" + Date.now()
@@ -229,7 +229,7 @@ test('RegisterDomain', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/register_fio_domain')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/register_fio_domain')
         done();
     }
     var name = "" + Date.now()
@@ -251,7 +251,7 @@ test('RenewFioDomainName', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/renew_fio_domain')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/renew_fio_domain')
         done();
     }
     var name = "test-" + Date.now()
@@ -273,7 +273,7 @@ test('RejectFundsRequest', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("437e1fb2e717d25289c61258794abc475200a70a2133a036255ee43f570ffa7c"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/reject_funds_request')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/reject_funds_request')
         done();
     }
 
@@ -293,7 +293,7 @@ test('RequestNewFunds', done => {
     function callback(data) {
         expect(data).toEqual(expect.stringContaining("c4c0482faf743064367c660251e0f43e6a7eb9918eaef40303b1e41a53a0322b"))
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/new_funds_request')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/new_funds_request')
         done();
     }
 
@@ -315,7 +315,7 @@ test('RequestNewFunds', done => {
     function callback(data) {
         expect(data).toBe("{\"status\": \"OK\",\"fee_collected\": 0}")
         expect(fetch.mock.calls.length).toEqual(3)
-        expect(fetch.mock.calls[2][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/transfer_tokens_pub_key')
+        expect(fetch.mock.calls[2][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/transfer_tokens_pub_key')
         done();
     }
     fiosdk.transferTokens("EOS8PRe4WRZJj5mkem6qVGKyvNFgPsNnjNN6kPhh6EaCpzCVin5Jj", "1.0",1).then(res => {
@@ -348,7 +348,7 @@ test('GenericAction', done => {
     function callback(data) {
         expect(data.fio_domains[0].expiration).toBe("15734567")
         expect(fetch.mock.calls.length).toEqual(1)
-        expect(fetch.mock.calls[0][0]).toEqual('http://dev4.fio.dev:8889/v1/chain/get_fio_names')
+        expect(fetch.mock.calls[0][0]).toEqual('http://dev1.fio.dev:8889/v1/chain/get_fio_names')
         done();
     }
     params = {

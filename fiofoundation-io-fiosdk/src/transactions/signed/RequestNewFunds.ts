@@ -14,7 +14,7 @@ export class RequestNewFunds extends SignedTransaction{
     content:any
     walletFioAddress:string
     
-    constructor(payerFioAddress:string,payerFioPublicKey:string,payeeFioAddress:string,walletFioAddress:string='',maxFee:number,payeePublicAddress:string,amount:number,tokenCode:string,memo:string|null=null,hash:string|null=null,offlineUrl:string|null=null){
+    constructor(payerFioAddress:string,payerFioPublicKey:string,payeeFioAddress:string,walletFioAddress:string='',maxFee:number,payeePublicAddress:string,amount:string,tokenCode:string,memo:string|null=null,hash:string|null=null,offlineUrl:string|null=null){
         super();
         this.payerFioAddress = payerFioAddress;
         this.payerFioPublicKey = payerFioPublicKey

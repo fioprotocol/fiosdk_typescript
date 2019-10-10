@@ -22,7 +22,7 @@ export class RecordSend extends SignedTransaction{
         payeeFIOAddress: string,
         payerPublicAddress: string,
         payeePublicAddress: string,
-        amount: number,
+        amount: string,
         tokenCode: string,
         obtID: string,
         maxFee: number,

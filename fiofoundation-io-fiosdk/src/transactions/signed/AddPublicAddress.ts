@@ -9,13 +9,15 @@ export class AddPublicAddress extends SignedTransaction{
     tokenCode:string
     publicAddress:string
     maxFee:number
+    walletFioAddress:string
 
-    constructor(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number){
+    constructor(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number,walletFioAddress:string=""){
         super();
         this.fioAddress = fioAddress;
         this.tokenCode = tokenCode;
         this.publicAddress = publicAddress;
         this.maxFee = maxFee
+        this.walletFioAddress = walletFioAddress
     }   
 
     getData():any{
@@ -25,6 +27,7 @@ export class AddPublicAddress extends SignedTransaction{
             token_code:this.tokenCode,
             public_address:this.publicAddress,
             actor: actor,
+            tpid: this.walletFioAddress,
             max_fee: this.maxFee
         }
         return data;

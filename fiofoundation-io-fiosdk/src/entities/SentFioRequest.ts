@@ -6,6 +6,6 @@ export interface SentFioRequest{
     amount: string,
     token_code: string,
     metadata: string,
-    time_stamp: number,
+    time_stamp: string,
     status: string
 }

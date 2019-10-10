@@ -1,3 +1,3 @@
 export interface BalanceResponse{
-        balance: string
+        balance: number
 }

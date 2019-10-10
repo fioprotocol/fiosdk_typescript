@@ -4,7 +4,7 @@ import  * as  SignedTransactions  from './transactions/signed'
 import { Constants } from './utils/constants'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
 import { Fio } from 'fiojs'
-import { AbiResponse } from './entities/AbiResponse';
+import { AbiResponse } from './entities/AbiResponse'
 
 /**
  * @ignore
@@ -126,8 +126,8 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    registerFioAddress(fioAddress:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
-        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress, maxFee,walletFioAddress);
+    registerFioAddress(fioAddress:string, maxFee:number, walletFioAddress:string=""):Promise<any>{
+        let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress, maxFee, walletFioAddress);
         return registerFioAddress.execute(this.privateKey, this.publicKey)
     }
 
@@ -150,8 +150,8 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    renewFioAddress(fioAddress:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
-        let renewFioAddress =  new SignedTransactions.RenewFioAddress(fioAddress, maxFee,walletFioAddress);
+    renewFioAddress(fioAddress:string, maxFee:number, walletFioAddress:string=""):Promise<any>{
+        let renewFioAddress =  new SignedTransactions.RenewFioAddress(fioAddress, maxFee, walletFioAddress);
         return renewFioAddress.execute(this.privateKey, this.publicKey)
     }
 
@@ -167,9 +167,31 @@ export class FIOSDK {
         return renewFioDomain.execute(this.privateKey, this.publicKey)
     }
 
-    addPublicAddress(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number):Promise<any>{
-        let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress,tokenCode,publicAddress,maxFee);
+    /**
+     * This call allows a public address of the specific blockchain type to be added to the FIO Address.
+     *
+     * @param fioAddress FIO Address which will be mapped to public address.
+     * @param tokenCode	Token code to be used with that public address.
+     * @param publicAddress The public address to be added to the FIO Address for the specified token.
+     * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+     * @param walletFioAddress FIO Address of the wallet which generates this transaction.
+     */
+    addPublicAddress(fioAddress:string, tokenCode:string, publicAddress:string, maxFee:number, walletFioAddress:string = ''):Promise<any>{
+        let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee, walletFioAddress);
         return addPublicAddress.execute(this.privateKey, this.publicKey)
+    }
+
+    /**
+     * By default all FIO Domains are non-public, meaning only the owner can register FIO Addresses on that domain. Setting them to public allows anyone to register a FIO Address on that domain.
+     *
+     * @param fioDomain FIO Domain to change visibility.
+     * @param isPublic 1 - allows anyone to register FIO Address, 0 - only owner of domain can register FIO Address.
+     * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+     * @param walletFioAddress FIO Address of the wallet which generates this transaction.
+     */
+    setFioDomainVisibility(fioDomain:string, isPublic:number, maxFee:number, walletFioAddress:string = ''):Promise<any> {
+        let SetFioDomainVisibility = new SignedTransactions.SetFioDomainVisibility(fioDomain, isPublic, maxFee, walletFioAddress);
+        return SetFioDomainVisibility.execute(this.privateKey, this.publicKey)
     }
 
     /**
@@ -199,7 +221,7 @@ export class FIOSDK {
     payeeFIOAddress:string,
     payerTokenPublicAddress:string,
     payeeTokenPublicAddress:string,
-    amount:number,
+    amount:string,
     tokenCode:string,
     status:string,
     obtId:string,
@@ -251,7 +273,7 @@ export class FIOSDK {
      */
     async requestFunds(payerFioAddress: string, 
         payeeFioAddress: string,payeePublicAddress: string, 
-        amount: number,tokenCode: string, memo: string,maxFee:number, 
+        amount: string,tokenCode: string, memo: string,maxFee:number,
         payerFioPublicKey:string|null = null,
         walletFioAddress:string='', 
         hash?:string, offlineUrl?:string):Promise<any>{
@@ -343,7 +365,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    transferTokens(payeeFioPublicKey:string,amount:number,maxFee:number,walletFioAddress:string=""):Promise<any>{
+    transferTokens(payeeFioPublicKey:string,amount:string,maxFee:number,walletFioAddress:string=""):Promise<any>{
         let transferTokens = new SignedTransactions.TransferTokens(payeeFioPublicKey,amount,maxFee,walletFioAddress);
         return transferTokens.execute(this.privateKey, this.publicKey)
     }
@@ -388,11 +410,13 @@ export class FIOSDK {
             case 'registerFioAddress':
                 return this.registerFioAddress(params.fioAddress, params.maxFee,params.walletFioAddress || "")
             case 'registerFioDomain':
-                return this.registerFioDomain(params.FioDomain,  params.maxFee,params.walletFioAddress || "")
+                return this.registerFioDomain(params.FioDomain, params.maxFee,params.walletFioAddress || "")
             case 'renewFioAddress':
-                return this.renewFioAddress(params.fioAddress,  params.maxFee,params.walletFioAddress || "")
+                return this.renewFioAddress(params.fioAddress, params.maxFee,params.walletFioAddress || "")
             case 'addPublicAddress':
-                return this.addPublicAddress(params.fioAddress,params.tokenCode,params.publicAddress,params.maxFee)    
+                return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee, params.walletFioAddress)
+            case 'setFioDomainVisibility':
+                return this.setFioDomainVisibility(params.fioDomain, params.isPublic, params.maxFee, params.walletFioAddress)
             case 'recordSend':
                 return this.recordSend(
                     params.fioRequestId,

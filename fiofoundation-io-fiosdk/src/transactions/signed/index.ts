@@ -1,4 +1,5 @@
 export { AddPublicAddress } from './AddPublicAddress';
+export { SetFioDomainVisibility } from './SetFioDomainVisibility';
 export { RequestNewFunds } from './RequestNewFunds';
 export { RejectFundsRequest } from './RejectFundsRequest';
 export { RecordSend } from './RecordSend';

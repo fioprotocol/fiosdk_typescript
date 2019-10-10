@@ -1,8 +1,8 @@
 const serverMocks = {
     block: { "timestamp": "2019-04-30T17:51:35.000", "producer": "eosio", "confirmed": 0, "previous": "002734fc36072c6666579227d4e1536d80b874c29dee31c6f5175d23a509f755", "transaction_mroot": "0000000000000000000000000000000000000000000000000000000000000000", "action_mroot": "f60c55bb7f5fdf265ea8e0467ecc53ffd9cc418cec3181e694dedf1f80525aa5", "schedule_version": 0, "new_producers": null, "header_extensions": [], "producer_signature": "SIG_K1_K6AsK9RmBc4JghoZXPhXxuEmTvTPXANSMe5T3pdKa5iQWSTomB7YJtpTDLhZ7gRgDjuBoiujAYTGiL47ucxKMVFMVzErYz", "transactions": [], "block_extensions": [], "id": "002734fd1d05b9dce6c5df7bb63b958989fcf9d12325e3a7103e0ab8137dade1", "block_num": 2569469, "ref_block_prefix": 2078262758 },
     chain: { "server_version": "269c661e", "chain_id": "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f", "head_block_num": 2569470, "last_irreversible_block_num": 2569469, "last_irreversible_block_id": "002734fd1d05b9dce6c5df7bb63b958989fcf9d12325e3a7103e0ab8137dade1", "head_block_id": "002734fee994b0d480c4e4eb711c99ea53acc53a8b42e452307380c159c7716e", "head_block_time": "2019-04-30T17:51:35.500", "head_block_producer": "eosio", "virtual_block_cpu_limit": 200000000, "virtual_block_net_limit": 1048576000, "block_cpu_limit": 199900, "block_net_limit": 1048576, "server_version_string": "v1.2.1-1301-g269c661e7" },
-    nameNotAvailable: { "is_registered": true },
-    nameAvailable: { "is_registered": false },
+    nameNotAvailable: { "is_registered": 1 },
+    nameAvailable: { "is_registered": 0 },
     registerName: {
         "transaction_id": "f525f5513addc737a181d462a1312d1923e1d5c97cc43a9c77d846051e19d30a",
         "processed": {
@@ -115,7 +115,7 @@ const serverMocks = {
                 "payer_fio_public_key": "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
                 "payee_fio_public_key": "FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA",
                 "content": "f18baf5c5d678db8b3f07ddd65a40ac86c0c143b4f9714e6c74af77f772e3c9a2b45a77ea25d34a49ef5c29f4c70f81c41c5b023d88c97e5a49b43558ea8241151ce40bf7143d97e4fe19679e82fe80aef97cecd433c68094517a5d1e4f913cb0c0aad0bfca0fc5d21a5431e64a4b8d420ea100509a45c0536c343c0823b039a27caf2fe41634e93eda65450571551f2",
-                "time_stamp": 1566318392,
+                "time_stamp": "2019-04-30T17:57:20.000",
                 "payer_fio_addr": "",
                 "payee_fio_addr": ""
             }
@@ -137,7 +137,7 @@ const serverMocks = {
             "payer_fio_public_key": "FIO5oBUYbtGTxMS66pPkjC2p8pbA3zCtc8XD4dq9fMut867GRdh82",
             "payee_fio_public_key": "FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP",
             "content": "6128d999eb8afe81b91a0496629b4632cb1efbf79dbd41d559dadfd34d187f479bc39ce40a2fae8b0aa6f0dc49efdf19c9d120129ef05acb108ea0869432ea5dadf70e497784a41c368611cb0c7449cdbbb250aaafed6ee3ae69932f59b957b4c7623f0b2b2fbb5ce08997052b1e0a9c16b723891f193a6f07cdc04c852732c8",
-            "time_stamp": 1565982986,
+            "time_stamp": "2019-04-30T17:57:20.000",
             "status": "sent_to_blockchain"
             }
         ]

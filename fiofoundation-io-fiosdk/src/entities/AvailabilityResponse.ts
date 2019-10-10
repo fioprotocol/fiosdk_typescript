@@ -1,3 +1,3 @@
 export interface AvailabilityResponse{
-    is_registered:boolean
+    is_registered:number
 }

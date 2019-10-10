@@ -137,9 +137,30 @@ class FIOSDK {
         let renewFioDomain = new SignedTransactions.RenewFioDomain(fioDomain, maxFee, walletFioAddress);
         return renewFioDomain.execute(this.privateKey, this.publicKey);
     }
-    addPublicAddress(fioAddress, tokenCode, publicAddress, maxFee) {
-        let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee);
+    /**
+     * This call allows a public address of the specific blockchain type to be added to the FIO Address.
+     *
+     * @param fioAddress FIO Address which will be mapped to public address.
+     * @param tokenCode	Token code to be used with that public address.
+     * @param publicAddress The public address to be added to the FIO Address for the specified token.
+     * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+     * @param walletFioAddress FIO Address of the wallet which generates this transaction.
+     */
+    addPublicAddress(fioAddress, tokenCode, publicAddress, maxFee, walletFioAddress = '') {
+        let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee, walletFioAddress);
         return addPublicAddress.execute(this.privateKey, this.publicKey);
+    }
+    /**
+     * By default all FIO Domains are non-public, meaning only the owner can register FIO Addresses on that domain. Setting them to public allows anyone to register a FIO Address on that domain.
+     *
+     * @param fioDomain FIO Domain to change visibility.
+     * @param isPublic 1 - allows anyone to register FIO Address, 0 - only owner of domain can register FIO Address.
+     * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+     * @param walletFioAddress FIO Address of the wallet which generates this transaction.
+     */
+    setFioDomainVisibility(fioDomain, isPublic, maxFee, walletFioAddress = '') {
+        let SetFioDomainVisibility = new SignedTransactions.SetFioDomainVisibility(fioDomain, isPublic, maxFee, walletFioAddress);
+        return SetFioDomainVisibility.execute(this.privateKey, this.publicKey);
     }
     /**
      *
@@ -329,7 +350,9 @@ class FIOSDK {
             case 'renewFioAddress':
                 return this.renewFioAddress(params.fioAddress, params.maxFee, params.walletFioAddress || "");
             case 'addPublicAddress':
-                return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee);
+                return this.addPublicAddress(params.fioAddress, params.tokenCode, params.publicAddress, params.maxFee, params.walletFioAddress);
+            case 'setFioDomainVisibility':
+                return this.setFioDomainVisibility(params.fioDomain, params.isPublic, params.maxFee, params.walletFioAddress);
             case 'recordSend':
                 return this.recordSend(params.fioRequestId, params.payerFIOAddress, params.payeeFIOAddress, params.payerTokenPublicAddress, params.payeeTokenPublicAddress, params.amount, params.tokenCode, params.status, params.obtId, params.maxFee, params.walletFioAddress || "", params.payerFioPublicKey, params.memo, params.hash, params.offLineUrl);
             case 'rejectFundsRequest':

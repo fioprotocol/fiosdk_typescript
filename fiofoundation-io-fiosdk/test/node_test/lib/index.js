@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -62,7 +63,7 @@ class Worker {
             //const key = await this.getkeys()
             this.privateKey = '5KJhpazsjBuxyLhJLNufzjbkDb6st5igvFH5qSRknf2VWRD2fza'; //key.privateKey
             this.publicKey = 'FIO5SLYerShFL59VyHuKJ21ciURAWMJnCMkcMJxAgr2po2sq2eZQa'; //key.publicKey
-            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4');
+            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://34.220.61.65:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV1');
             console.log('key: ' + this.publicKey + ' actor: ' + this.fioSDK.getActor());
         });
     }
@@ -71,7 +72,7 @@ class Worker {
             //const key = await this.getkeys()
             this.privateKey = '5KftCDayJhHLigrxiM6Vx7c7jqfQM6eSPjMQbwrptMUc3w46KAm'; //key.privateKey
             this.publicKey = 'FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA'; //key.publicKey
-            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4');
+            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://34.220.61.65:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV1');
             console.log('address: expired1:edge key: ' + this.publicKey + ' privatekey: ' + this.privateKey);
         });
     }
@@ -80,7 +81,7 @@ class Worker {
             //const key = await this.getkeys()
             this.privateKey = '5JCf4cYbp7G8ZH3tETvig7KNoXkygiPWYerY1U23CT1wZrGXg7v'; //key.privateKey
             this.publicKey = 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP'; //key.publicKey
-            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4');
+            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://34.220.61.65:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV1');
             console.log('address: expired2:edge key: ' + this.publicKey + ' actor: ' + this.fioSDK.getActor());
         });
     }
@@ -89,7 +90,7 @@ class Worker {
             //const key = await this.getkeys()
             this.privateKey = '5JMmK1ViJwTCyfguQFi3B9eKZT2bz7JT4PXVYw9pzChNUo7oPhi '; //key.privateKey
             this.publicKey = 'FIO6enwFUMcFmudTmM8YPAVurik3gWZ76DL8JuVhFyMD7yPN97vSU'; //key.publicKey
-            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://54.184.39.43:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV4');
+            this.fioSDK = yield new react_native_fio_1.FIOSDK(this.privateKey, this.publicKey, /*'http://192.168.86.23:8888/v1/'*/ 'http://34.220.61.65:8889/v1/', null, this.fetchJson, 'http://mock.dapix.io/mockd/DEV1');
             console.log('address: expired3:edge key: ' + this.publicKey + ' actor: ' + this.fioSDK.getActor());
         });
     }
@@ -113,7 +114,7 @@ class Worker {
     recordSend() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.setupSDK1();
-            this.fioSDK.genericAction('recordSend', { 'fioReqID': 8, 'payerFIOAddress': 'test1:edge', 'payeeFIOAddress': 'test2:edge', 'payerPublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'payeePublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'amount': '5', 'tokenCode': 'FIO', 'obtID': '7ed4b7f8ec2d67a18a4068e71141d55c90daf19837c102e756a55f909452f52e', 'memo': 'de test2 a test1', 'maxFee': '0', 'tpid': '', 'status': 'sent_to_blockchain' }).
+            this.fioSDK.genericAction('recordSend', { 'fioRequestId': 8, 'payerFIOAddress': 'test1:edge', 'payeeFIOAddress': 'test2:edge', 'payerPublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'payeePublicAddress': 'FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP', 'amount': '5', 'tokenCode': 'FIO', 'obtID': '7ed4b7f8ec2d67a18a4068e71141d55c90daf19837c102e756a55f909452f52e', 'memo': 'de test2 a test1', 'maxFee': '0', 'tpid': '', 'status': 'sent_to_blockchain' }).
                 then(res => { console.log('res: ', res); }).catch(error => { console.log('error: ', error); });
             //this.fioSDK.recordSend('test1:edge','test2:edge','FIO8kdrXrYcrf7nvqhTzKr24P2xpKt5UVNZ3sDgz2q4sVVV2Kz4KA','FIO8HNTa4xXf4jiM3da5Q8kv6AuoT2Kh6NZmzFabK3vhwisvyotuP','1','FIO','','1',0,'',null,1,'memo')
             //.then(res => {console.log('res: ', res)}).catch(error => {console.log('error: ', error)})

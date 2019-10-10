@@ -1,5 +1,5 @@
-import { FioRequest } from "./FioRequest";
+import { FioSentRequestsItem } from "./FioSentRequestsItem";
 
 export interface SentFioRequestResponse{
-    requests:FioRequest[]  
+    requests:FioSentRequestsItem[]
 }
