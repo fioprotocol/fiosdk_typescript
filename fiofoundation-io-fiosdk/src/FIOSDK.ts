@@ -4,7 +4,26 @@ import  * as  SignedTransactions  from './transactions/signed'
 import { Constants } from './utils/constants'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
 import { Fio } from 'fiojs'
-import { AbiResponse } from './entities/AbiResponse'
+import {
+    AbiResponse,
+    AvailabilityResponse,
+    BalanceResponse,
+    FioFeeResponse,
+    FioNamesResponse,
+    PendingFioRequestsResponse,
+    SentFioRequestResponse,
+    PublicAddressResponse,
+    RegisterFioAddressResponse,
+    RegisterFioDomainResponse,
+    RenewFioDomainResponse,
+    RenewFioAddressResponse,
+    AddPublicAddressResponse,
+    SetFioDomainVisibilityResponse,
+    RequestFundsResponse,
+    RejectFundsResponse,
+    RecordSendResponse,
+    TransferTokensResponse,
+} from './entities/responses';
 
 /**
  * @ignore
@@ -126,7 +145,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    registerFioAddress(fioAddress:string, maxFee:number, walletFioAddress:string=""):Promise<any>{
+    registerFioAddress(fioAddress:string, maxFee:number, walletFioAddress:string=""):Promise<RegisterFioAddressResponse>{
         let registerFioAddress =  new SignedTransactions.RegisterFioAddress(fioAddress, maxFee, walletFioAddress);
         return registerFioAddress.execute(this.privateKey, this.publicKey)
     }
@@ -138,7 +157,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    registerFioDomain(fioDomain:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
+    registerFioDomain(fioDomain:string, maxFee:number,walletFioAddress:string=""):Promise<RegisterFioDomainResponse>{
         let registerFioDomain =  new SignedTransactions.RegisterFioDomain(fioDomain, maxFee,walletFioAddress);
         return registerFioDomain.execute(this.privateKey, this.publicKey)
     }
@@ -150,7 +169,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    renewFioAddress(fioAddress:string, maxFee:number, walletFioAddress:string=""):Promise<any>{
+    renewFioAddress(fioAddress:string, maxFee:number, walletFioAddress:string=""):Promise<RenewFioAddressResponse>{
         let renewFioAddress =  new SignedTransactions.RenewFioAddress(fioAddress, maxFee, walletFioAddress);
         return renewFioAddress.execute(this.privateKey, this.publicKey)
     }
@@ -162,7 +181,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    renewFioDomain(fioDomain:string, maxFee:number,walletFioAddress:string=""):Promise<any>{
+    renewFioDomain(fioDomain:string, maxFee:number,walletFioAddress:string=""):Promise<RenewFioDomainResponse>{
         let renewFioDomain =  new SignedTransactions.RenewFioDomain(fioDomain, maxFee,walletFioAddress);
         return renewFioDomain.execute(this.privateKey, this.publicKey)
     }
@@ -176,7 +195,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    addPublicAddress(fioAddress:string, tokenCode:string, publicAddress:string, maxFee:number, walletFioAddress:string = ''):Promise<any>{
+    addPublicAddress(fioAddress:string, tokenCode:string, publicAddress:string, maxFee:number, walletFioAddress:string = ''):Promise<AddPublicAddressResponse>{
         let addPublicAddress = new SignedTransactions.AddPublicAddress(fioAddress, tokenCode, publicAddress, maxFee, walletFioAddress);
         return addPublicAddress.execute(this.privateKey, this.publicKey)
     }
@@ -189,7 +208,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    setFioDomainVisibility(fioDomain:string, isPublic:number, maxFee:number, walletFioAddress:string = ''):Promise<any> {
+    setFioDomainVisibility(fioDomain:string, isPublic:number, maxFee:number, walletFioAddress:string = ''):Promise<SetFioDomainVisibilityResponse> {
         let SetFioDomainVisibility = new SignedTransactions.SetFioDomainVisibility(fioDomain, isPublic, maxFee, walletFioAddress);
         return SetFioDomainVisibility.execute(this.privateKey, this.publicKey)
     }
@@ -231,7 +250,7 @@ export class FIOSDK {
     memo:string|null = null,
     hash:string|null = null,
     offLineUrl:string|null = null
-    ):Promise<any>{
+    ):Promise<RecordSendResponse>{
         let payeeKey:any = {public_address:''}
         if(!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string'){
             payeeKey = await this.getPublicAddress(payeeFIOAddress,'FIO')
@@ -251,7 +270,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by [getFee] for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    rejectFundsRequest(fioRequestId: string,maxFee:number,walletFioAddress:string=""):Promise<any>{
+    rejectFundsRequest(fioRequestId: string,maxFee:number,walletFioAddress:string=""):Promise<RejectFundsResponse>{
         let rejectFundsRequest = new SignedTransactions.RejectFundsRequest(fioRequestId,maxFee,walletFioAddress)
         return rejectFundsRequest.execute(this.privateKey, this.publicKey);
     }
@@ -276,7 +295,7 @@ export class FIOSDK {
         amount: string,tokenCode: string, memo: string,maxFee:number,
         payerFioPublicKey:string|null = null,
         walletFioAddress:string='', 
-        hash?:string, offlineUrl?:string):Promise<any>{
+        hash?:string, offlineUrl?:string):Promise<RequestFundsResponse>{
         let payerKey:any = {public_address:''}
         if(!payerFioPublicKey && typeof payerFioPublicKey !== 'string'){
             payerKey = await this.getPublicAddress(payerFioAddress,'FIO')
@@ -292,7 +311,7 @@ export class FIOSDK {
      *
      * @param fioName FIO Address or FIO Domain to check.
      */
-    isAvailable(fioName:string):Promise<any>{
+    isAvailable(fioName:string):Promise<AvailabilityResponse>{
         let availabilityCheck = new queries.AvailabilityCheck(fioName);
         return availabilityCheck.execute(this.publicKey);
     }
@@ -302,7 +321,7 @@ export class FIOSDK {
      *
      * @param fioPublicKey FIO public key.
      */
-    getFioBalance(fioPublicKey?:string):Promise<any>{
+    getFioBalance(fioPublicKey?:string):Promise<BalanceResponse>{
         let getFioBalance = new queries.GetFioBalance(fioPublicKey);
         return getFioBalance.execute(this.publicKey);
     }
@@ -312,7 +331,7 @@ export class FIOSDK {
      *
      * @param fioPublicKey FIO public key of owner.
      */
-    getFioNames(fioPublicKey:string):Promise<any>{
+    getFioNames(fioPublicKey:string):Promise<FioNamesResponse>{
         let getNames = new queries.GetNames(fioPublicKey);
         return getNames.execute(this.publicKey)
 
@@ -321,7 +340,7 @@ export class FIOSDK {
     /**
      * Polls for any pending requests sent to public key associated with the FIO SDK instance.
      */
-    getPendingFioRequests():Promise<any>{
+    getPendingFioRequests():Promise<PendingFioRequestsResponse>{
         let pendingFioRequests = new queries.PendingFioRequests(this.publicKey);
         return pendingFioRequests.execute(this.publicKey,this.privateKey)
     }
@@ -329,7 +348,7 @@ export class FIOSDK {
     /**
      * Polls for any sent requests sent by public key associated with the FIO SDK instance.
      */
-    getSentFioRequests():Promise<any>{
+    getSentFioRequests():Promise<SentFioRequestResponse>{
         let sentFioRequest = new queries.SentFioRequests(this.publicKey);
         return sentFioRequest.execute(this.publicKey,this.privateKey)
     }
@@ -340,7 +359,7 @@ export class FIOSDK {
      * @param fioAddress FIO Address for which the token public address is to be returned.
      * @param tokenCode Token code for which public address is to be returned.
      */
-    getPublicAddress(fioAddress:string, tokenCode:string):Promise<any>{
+    getPublicAddress(fioAddress:string, tokenCode:string):Promise<PublicAddressResponse>{
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, tokenCode);
         return publicAddressLookUp.execute(this.publicKey);
     }
@@ -350,7 +369,7 @@ export class FIOSDK {
      *
      * @param fioAddress FIO Address for which fio token public address is to be returned.
      */
-    getFioPublicAddress(fioAddress:string):Promise<any>{
+    getFioPublicAddress(fioAddress:string):Promise<PublicAddressResponse>{
         let publicAddressLookUp = new queries.PublicAddressLookUp(fioAddress, "FIO");
         return publicAddressLookUp.execute(this.publicKey);
     }
@@ -365,7 +384,7 @@ export class FIOSDK {
      * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
      * @param walletFioAddress FIO Address of the wallet which generates this transaction.
      */
-    transferTokens(payeeFioPublicKey:string,amount:string,maxFee:number,walletFioAddress:string=""):Promise<any>{
+    transferTokens(payeeFioPublicKey:string,amount:string,maxFee:number,walletFioAddress:string=""):Promise<TransferTokensResponse>{
         let transferTokens = new SignedTransactions.TransferTokens(payeeFioPublicKey,amount,maxFee,walletFioAddress);
         return transferTokens.execute(this.privateKey, this.publicKey)
     }
@@ -379,7 +398,7 @@ export class FIOSDK {
      *        if endPointName is RenewFioDomain, FIO Domain incurring the fee and owned by signer.
      *        if endPointName is RecordSend, Payee FIO Address incurring the fee and owned by signer.
      */
-    getFee(endPoint:string,fioAddress=""):Promise<any>{
+    getFee(endPoint:string,fioAddress=""):Promise<FioFeeResponse>{
         let fioFee = new queries.GetFee(endPoint,fioAddress);
         return fioFee.execute(this.publicKey)                                                    
     }
