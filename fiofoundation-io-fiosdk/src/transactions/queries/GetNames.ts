@@ -1,17 +1,16 @@
-import { Query } from "./Query";
-import { FioNamesResponse } from "../../entities/FioNamesResponse";
+import { FioNamesResponse } from '../../entities/FioNamesResponse'
+import { Query } from './Query'
 
+export class GetNames extends Query<FioNamesResponse> {
+  public ENDPOINT: string = 'chain/get_fio_names'
+  public fioPublicKey: string
 
-export class GetNames extends Query<FioNamesResponse>{
-    ENDPOINT:string = "chain/get_fio_names";
-    fioPublicKey:string;
+  constructor(fioPublicKey: string) {
+    super()
+    this.fioPublicKey = fioPublicKey
+  }
 
-    constructor(fioPublicKey:string){
-        super();
-        this.fioPublicKey = fioPublicKey
-    }
-
-    getData() {
-        return {fio_public_key:this.fioPublicKey};
-    }
+  public getData() {
+    return { fio_public_key: this.fioPublicKey }
+  }
 }

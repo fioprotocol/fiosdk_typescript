@@ -4,7 +4,7 @@ export class RecordSend extends SignedTransaction{
 
     ENDPOINT:string = "chain/record_send"; 
     ACTION:string = "recordsend";
-    ACOUNT:string = "fio.reqobt";
+    ACCOUNT:string = "fio.reqobt";
 
     payerFIOAddress: string
     payerFioPublicKey: string

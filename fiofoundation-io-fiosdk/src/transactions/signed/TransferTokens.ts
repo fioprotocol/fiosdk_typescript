@@ -4,7 +4,7 @@ export class TransferTokens extends SignedTransaction{
 
     ENDPOINT:string = "chain/transfer_tokens_pub_key"
     ACTION:string = "trnsfiopubky" 
-    ACOUNT:string = "fio.token"
+    ACCOUNT:string = "fio.token"
     payeePublicKey:string
     amount:string
     maxFee:number

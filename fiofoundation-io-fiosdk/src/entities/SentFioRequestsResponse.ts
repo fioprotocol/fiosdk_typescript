@@ -1,5 +1,6 @@
-import { FioSentRequestsItem } from "./FioSentRequestsItem";
+import { FioSentRequestsItem } from './FioSentRequestsItem'
 
-export interface SentFioRequestResponse{
-    requests:FioSentRequestsItem[]
+export interface SentFioRequestResponse {
+  requests: FioSentRequestsItem[],
+  more: number
 }

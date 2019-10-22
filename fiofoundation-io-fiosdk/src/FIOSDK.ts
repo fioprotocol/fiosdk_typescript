@@ -33,7 +33,7 @@ const { Ecc } = require('fiojs')
 /**
  * @ignore
  */
-type FetchJson = (uri: string, opts?: Object) => Object
+type FetchJson = (uri: string, opts?: object) => object
 
 export class FIOSDK {
   /**
@@ -229,7 +229,7 @@ export class FIOSDK {
    * This call allows a public address of the specific blockchain type to be added to the FIO Address.
    *
    * @param fioAddress FIO Address which will be mapped to public address.
-   * @param tokenCode	Token code to be used with that public address.
+   * @param tokenCode Token code to be used with that public address.
    * @param publicAddress The public address to be added to the FIO Address for the specified token.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
    * @param walletFioAddress FIO Address of the wallet which generates this transaction.
@@ -440,17 +440,23 @@ export class FIOSDK {
 
   /**
    * Polls for any pending requests sent to public key associated with the FIO SDK instance.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
    */
-  public getPendingFioRequests(): Promise<PendingFioRequestsResponse> {
-    const pendingFioRequests = new queries.PendingFioRequests(this.publicKey)
+  public getPendingFioRequests(limit?: number, offset?: number): Promise<PendingFioRequestsResponse> {
+    const pendingFioRequests = new queries.PendingFioRequests(this.publicKey, limit, offset)
     return pendingFioRequests.execute(this.publicKey, this.privateKey)
   }
 
   /**
    * Polls for any sent requests sent by public key associated with the FIO SDK instance.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
    */
-  public getSentFioRequests(): Promise<SentFioRequestResponse> {
-    const sentFioRequest = new queries.SentFioRequests(this.publicKey)
+  public getSentFioRequests(limit?: number, offset?: number): Promise<SentFioRequestResponse> {
+    const sentFioRequest = new queries.SentFioRequests(this.publicKey, limit, offset)
     return sentFioRequest.execute(this.publicKey, this.privateKey)
   }
 

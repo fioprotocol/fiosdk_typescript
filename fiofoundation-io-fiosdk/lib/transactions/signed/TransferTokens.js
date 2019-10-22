@@ -6,7 +6,7 @@ class TransferTokens extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/transfer_tokens_pub_key";
         this.ACTION = "trnsfiopubky";
-        this.ACOUNT = "fio.token";
+        this.ACCOUNT = "fio.token";
         this.payeePublicKey = payeePublicKey;
         this.amount = amount;
         this.walletFioAddress = walletFioAddress;

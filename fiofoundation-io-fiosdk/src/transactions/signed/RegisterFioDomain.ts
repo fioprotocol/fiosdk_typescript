@@ -3,7 +3,7 @@ export class RegisterFioDomain extends SignedTransaction{
 
     ENDPOINT:string = "chain/register_fio_domain"; 
     ACTION:string = "regdomain" 
-    ACOUNT:string = "fio.system"
+    ACCOUNT:string = "fio.system"
     fioDomain:string
     maxFee:number
     walletFioAddress:string

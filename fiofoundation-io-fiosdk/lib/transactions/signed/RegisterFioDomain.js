@@ -6,7 +6,7 @@ class RegisterFioDomain extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/register_fio_domain";
         this.ACTION = "regdomain";
-        this.ACOUNT = "fio.system";
+        this.ACCOUNT = "fio.system";
         this.fioDomain = fioDomain;
         this.maxFee = maxFee;
         this.walletFioAddress = walletFioAddress;

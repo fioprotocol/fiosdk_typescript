@@ -3,7 +3,7 @@ export class RenewFioDomain extends SignedTransaction{
 
     ENDPOINT:string = "chain/renew_fio_domain"; 
     ACTION:string = "renewdomain" 
-    ACOUNT:string = "fio.system"
+    ACCOUNT:string = "fio.system"
     fioDomain:string
     maxFee:number
     walletFioAddress:string

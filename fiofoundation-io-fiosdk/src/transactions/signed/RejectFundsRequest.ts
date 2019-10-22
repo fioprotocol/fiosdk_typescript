@@ -4,7 +4,7 @@ export class RejectFundsRequest extends SignedTransaction{
 
     ENDPOINT:string = "chain/reject_funds_request"; 
     ACTION:string = "rejectfndreq" 
-    ACOUNT:string = "fio.reqobt"
+    ACCOUNT:string = "fio.reqobt"
     fioreqid:string
     maxFee:number
     walletFioAddress:string

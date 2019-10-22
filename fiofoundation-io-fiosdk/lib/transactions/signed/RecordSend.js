@@ -6,7 +6,7 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/record_send";
         this.ACTION = "recordsend";
-        this.ACOUNT = "fio.reqobt";
+        this.ACCOUNT = "fio.reqobt";
         this.fioRequestId = '';
         this.walletFioAddress = '';
         this.fioRequestId = fioRequestId;

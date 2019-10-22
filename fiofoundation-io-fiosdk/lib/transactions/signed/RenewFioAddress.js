@@ -6,7 +6,7 @@ class RenewFioAddress extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/renew_fio_address";
         this.ACTION = "renewaddress";
-        this.ACOUNT = "fio.system";
+        this.ACCOUNT = "fio.system";
         this.fioAddress = fioAddress;
         this.maxFee = maxFee;
         this.walletFioAddress = walletFioAddress;

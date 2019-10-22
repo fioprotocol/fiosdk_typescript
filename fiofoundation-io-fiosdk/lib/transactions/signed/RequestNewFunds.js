@@ -6,7 +6,7 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/new_funds_request";
         this.ACTION = "newfundsreq";
-        this.ACOUNT = "fio.reqobt";
+        this.ACCOUNT = "fio.reqobt";
         this.payerFioAddress = payerFioAddress;
         this.payerFioPublicKey = payerFioPublicKey;
         this.payeeFioAddress = payeeFioAddress;

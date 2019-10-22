@@ -19,10 +19,10 @@ class SignedTransaction extends Transactions_1.Transactions {
             this.publicKey = publicKey;
             const rawTransaction = new RawTransaction_1.RawTransaction();
             const rawaction = new RawAction_1.RawAction();
-            rawaction.account = this.getAcount();
+            rawaction.account = this.getAccount();
             const actor = yield this.getActor();
             rawaction.authorization.push(new Autorization_1.Autorization(actor));
-            rawaction.account = this.getAcount();
+            rawaction.account = this.getAccount();
             rawaction.name = this.getAction();
             rawaction.data = this.getData();
             rawTransaction.actions.push(rawaction);
@@ -33,7 +33,7 @@ class SignedTransaction extends Transactions_1.Transactions {
         return this.ACTION;
     }
     getAcount() {
-        return this.ACOUNT;
+        return this.ACCOUNT;
     }
     getEndPoint() {
         return this.ENDPOINT;

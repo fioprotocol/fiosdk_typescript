@@ -1,38 +1,43 @@
-import { Query } from "./Query";
-import { SentFioRequestResponse } from "../../entities/SentFioRequestsResponse";
-import { FioRequest } from "../../entities/FioRequest";
+import { FioRequest } from '../../entities/FioRequest'
+import { SentFioRequestResponse } from '../../entities/SentFioRequestsResponse'
+import { Query } from './Query'
 
+export class SentFioRequests extends Query<SentFioRequestResponse> {
+  public ENDPOINT: string = 'chain/get_sent_fio_requests'
+  public fioPublicKey: string
+  public limit: number | null
+  public offset: number | null
+  public isEncrypted = true
 
-export class SentFioRequests extends Query<SentFioRequestResponse>{
-    ENDPOINT:string = "chain/get_sent_fio_requests";
-    fioPublicKey:string;
-    isEncrypted=true
+  constructor(fioPublicKey: string, limit: number | null = null, offset: number | null = null) {
+    super()
+    this.fioPublicKey = fioPublicKey
+    this.limit = limit
+    this.offset = offset
+  }
 
-    constructor(fioPublicKey:string){
-        super();
-        this.fioPublicKey = fioPublicKey;
-    }
+  public getData() {
+    const data = { fio_public_key: this.fioPublicKey }
+    if (this.limit !== null) { data.limit = this.limit }
+    if (this.offset !== null) { data.offset = this.offset }
 
-    getData() {
-        return {
-            fio_public_key:this.fioPublicKey,
-        };
-    }
+    return data
+  }
 
-    decrypt(result:any):any{
-        if(result.requests.length > 0){
-            const pendings: FioRequest[] = []
-            result.requests.forEach( (value:FioRequest ) => {
-                let content
-                if(value.payer_fio_public_key === this.publicKey){
-                    content = this.getUnCipherContent('new_funds_content',value.content,this.privateKey,value.payee_fio_public_key)
-                }else{
-                    content = this.getUnCipherContent('new_funds_content',value.content,this.privateKey,value.payer_fio_public_key)
-                }
-                value.content = content                
-                pendings.push(value)                
-            })
-            return pendings
+  public decrypt(result: any): any {
+    if (result.requests.length > 0) {
+      const pendings: FioRequest[] = []
+      result.requests.forEach((value: FioRequest) => {
+        let content
+        if (value.payer_fio_public_key === this.publicKey) {
+          content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payee_fio_public_key)
+        } else {
+          content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key)
         }
+        value.content = content
+        pendings.push(value)
+      })
+      return pendings
     }
+  }
 }

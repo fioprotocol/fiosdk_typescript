@@ -6,7 +6,7 @@ class RejectFundsRequest extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/reject_funds_request";
         this.ACTION = "rejectfndreq";
-        this.ACOUNT = "fio.reqobt";
+        this.ACCOUNT = "fio.reqobt";
         this.fioreqid = fioreqid;
         this.maxFee = maxFee;
         this.walletFioAddress = walletFioAddress;

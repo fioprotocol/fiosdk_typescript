@@ -6,7 +6,7 @@ class AddPublicAddress extends SignedTransaction_1.SignedTransaction {
         super();
         this.ENDPOINT = "chain/add_pub_address";
         this.ACTION = "addaddress";
-        this.ACOUNT = "fio.system";
+        this.ACCOUNT = "fio.system";
         this.fioAddress = fioAddress;
         this.tokenCode = tokenCode;
         this.publicAddress = publicAddress;
