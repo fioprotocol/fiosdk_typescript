@@ -38,7 +38,10 @@
         "jest": "^23.6.0",
         "jest-fetch-mock": "^2.1.2",
         "text-encoding": "^0.7.0",
-        "typedoc": "^0.15.0"
+        "tslint": "^5.20.0",
+        "tslint-plugin-prettier": "^2.0.1",
+        "typedoc": "^0.15.0",
+        "typescript": "^3.6.4"
     },
     "dependencies": {
         "@types/text-encoding": "0.0.35",
