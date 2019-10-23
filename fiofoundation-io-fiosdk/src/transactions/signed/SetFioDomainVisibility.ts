@@ -1,33 +1,33 @@
-import { SignedTransaction } from './SignedTransaction';
+import { SignedTransaction } from './SignedTransaction'
 
-export class SetFioDomainVisibility extends SignedTransaction{
+export class SetFioDomainVisibility extends SignedTransaction {
 
-    ENDPOINT:string = "chain/set_fio_domain_public";
-    ACTION:string = "addaddress" 
-    ACOUNT:string = "fio.system"
-    fioAddress:string
-    isPublic:number
-    maxFee:number
-    walletFioAddress:string
+    public ENDPOINT: string = 'chain/set_fio_domain_public'
+    public ACTION: string = 'addaddress'
+    public ACOUNT: string = 'fio.system'
+    public fioAddress: string
+    public isPublic: number
+    public maxFee: number
+    public walletFioAddress: string
 
-    constructor(fioAddress:string, isPublic:number, maxFee:number, walletFioAddress:string="") {
-        super();
-        this.fioAddress = fioAddress;
-        this.isPublic = isPublic;
+    constructor(fioAddress: string, isPublic: boolean, maxFee: number, walletFioAddress: string= '') {
+        super()
+        this.fioAddress = fioAddress
+        this.isPublic = isPublic ? 1 : 0
         this.maxFee = maxFee
         this.walletFioAddress = walletFioAddress
-    }   
+    }
 
-    getData():any {
-        let actor = this.getActor();
-        let data = {
+    public getData(): any {
+        const actor = this.getActor()
+        const data = {
             fio_address: this.fioAddress,
             is_public: this.isPublic,
             max_fee: this.maxFee,
             tpid: this.walletFioAddress,
-            actor: actor
+            actor,
         }
-        return data;
+        return data
     }
-    
+
 }
