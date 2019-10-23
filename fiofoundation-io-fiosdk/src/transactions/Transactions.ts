@@ -90,12 +90,7 @@ export class Transactions {
 
   public executeCall(endPoint: string, body: string, fetchOptions?: any): any {
     let options: any
-    if (this.validationRules) {
-      const validation = validate(this.validationData, this.validationRules)
-      if (!validation.isValid) {
-        throw new Error(`Validation error: ${JSON.stringify(validation.errors)}`)
-      }
-    }
+    this.validate()
     if (fetchOptions != null) {
       options = fetchOptions
       if (body != null) {
@@ -124,5 +119,14 @@ export class Transactions {
   public getUnCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
     const cipher = Fio.createSharedCipher({ privateKey, publicKey, textEncoder, textDecoder })
     return cipher.decrypt(contentType, content)
+  }
+
+  public validate() {
+    if (this.validationRules) {
+      const validation = validate(this.validationData, this.validationRules)
+      if (!validation.isValid) {
+        throw new Error(`Validation error: ${JSON.stringify(validation.errors)}`)
+      }
+    }
   }
 }

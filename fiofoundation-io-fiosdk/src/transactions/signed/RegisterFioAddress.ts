@@ -1,11 +1,12 @@
 import { SignedTransaction } from './SignedTransaction'
 import { validationRules } from '../../utils/validation'
+import { Constants } from '../../utils/constants'
 
 export class RegisterFioAddress extends SignedTransaction {
 
   public ENDPOINT: string = 'chain/register_fio_address'
   public ACTION: string = 'regaddress'
-  public ACCOUNT: string = 'fio.system'
+  public ACCOUNT: string = Constants.defaultAccount
   public fioAddress: string
   public maxFee: number
   public walletFioAddress: string

@@ -1,10 +1,11 @@
 import { SignedTransaction } from './SignedTransaction'
+import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
 
 export class AddPublicAddress extends SignedTransaction {
   public ENDPOINT: string = 'chain/add_pub_address'
   public ACTION: string = 'addaddress'
-  public ACCOUNT: string = 'fio.system'
+  public ACCOUNT: string = Constants.defaultAccount
   public fioAddress: string
   public tokenCode: string
   public publicAddress: string

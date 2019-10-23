@@ -19,11 +19,13 @@ export class Constants {
   ]
 
   public static rawAbiAccountName: string[] = [
-    'fio.system',
+    'fio.address',
     'fio.reqobt',
     'fio.token',
   ]
 
   public static multiplier = 1000000000
+
+  public static defaultAccount: string = 'fio.address'
 
 }
