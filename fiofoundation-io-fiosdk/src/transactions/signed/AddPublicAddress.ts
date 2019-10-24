@@ -20,7 +20,7 @@ export class AddPublicAddress extends SignedTransaction {
     this.maxFee = maxFee
     this.walletFioAddress = walletFioAddress
 
-    this.validationData = { fioAddress, tokenCode, publicAddress }
+    this.validationData = { fioAddress, tokenCode, publicAddress, tpid: walletFioAddress }
     this.validationRules = validationRules.addPublicAddressRules
   }
 

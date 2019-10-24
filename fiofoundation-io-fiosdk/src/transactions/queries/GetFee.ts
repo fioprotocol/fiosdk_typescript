@@ -1,6 +1,7 @@
 import { FioFeeResponse } from '../../entities/FioFeeResponse'
 import { Constants } from '../../utils/constants'
 import { Query } from './Query'
+import { validationRules } from '../../utils/validation'
 
 export class GetFee extends Query<FioFeeResponse> {
   public ENDPOINT: string = 'chain/get_fee'
@@ -15,6 +16,9 @@ export class GetFee extends Query<FioFeeResponse> {
     if (Constants.feeNoAddressOperation.findIndex((element) => element === endPoint) > -1 && fioAddress.length > 0) {
       throw new Error('End point ' + endPoint + ' should not have any fio address, when requesting fee')
     }
+
+    this.validationData = { fioAddress }
+    this.validationRules = validationRules.getFee
   }
 
   public getData() {

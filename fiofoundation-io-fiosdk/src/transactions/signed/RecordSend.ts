@@ -1,4 +1,5 @@
 import { SignedTransaction } from './SignedTransaction';
+import { validationRules } from '../../utils/validation'
 
 export class RecordSend extends SignedTransaction{
 
@@ -56,6 +57,9 @@ export class RecordSend extends SignedTransaction{
             hash: hash,
             offline_url: offLineUrl
         }
+
+        this.validationData = { payerFIOAddress, payeeFIOAddress, tpid: walletFioAddress, tokenCode }
+        this.validationRules = validationRules.recordSend
 
     }
 

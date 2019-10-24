@@ -1,5 +1,6 @@
 import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
+import { validationRules } from '../../utils/validation'
 
 export class RenewFioAddress extends SignedTransaction {
 
@@ -15,6 +16,9 @@ export class RenewFioAddress extends SignedTransaction {
     this.fioAddress = fioAddress
     this.maxFee = maxFee
     this.walletFioAddress = walletFioAddress
+
+    this.validationData = { fioAddress: fioAddress, tpid: walletFioAddress }
+    this.validationRules = validationRules.renewFioAddress
   }
 
   getData(): any {

@@ -16,11 +16,12 @@ export class RegisterFioAddress extends SignedTransaction {
     this.fioAddress = fioAddress
     this.maxFee = maxFee
     this.walletFioAddress = walletFioAddress
+
+    this.validationData = { fioAddress: fioAddress, tpid: walletFioAddress }
+    this.validationRules = validationRules.registerFioAddress
   }
 
   public getData(): any {
-    this.validationData = { fioAddress: this.fioAddress, tpid: this.walletFioAddress }
-    this.validationRules = validationRules.registerFioAddress
     const actor = this.getActor()
     const data = {
       fio_address: this.fioAddress,

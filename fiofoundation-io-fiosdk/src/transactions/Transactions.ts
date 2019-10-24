@@ -2,6 +2,7 @@ import { Fio } from 'fiojs'
 import { TextDecoder, TextEncoder } from 'text-encoding'
 import { AbiResponse } from '../entities/AbiResponse'
 import { RawTransaction } from '../entities/RawTransaction'
+import { ValidationError } from '../entities/ValidationError'
 import { validate } from '../utils/validation'
 
 type FetchJson = (uri: string, opts?: Object) => Object
@@ -125,7 +126,7 @@ export class Transactions {
     if (this.validationRules) {
       const validation = validate(this.validationData, this.validationRules)
       if (!validation.isValid) {
-        throw new Error(`Validation error: ${JSON.stringify(validation.errors)}`)
+        throw new ValidationError(validation.errors, `Validation error`)
       }
     }
   }
