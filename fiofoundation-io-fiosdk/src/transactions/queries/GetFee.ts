@@ -22,8 +22,7 @@ export class GetFee extends Query<FioFeeResponse> {
   }
 
   public getData() {
-    const data = { end_point: this.endPoint }
-    if (this.fioAddress) { data.fio_address = this.fioAddress }
+    const data = { end_point: this.endPoint, fio_address: this.fioAddress || null }
     return data
   }
 }

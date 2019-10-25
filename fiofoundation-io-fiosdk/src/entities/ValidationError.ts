@@ -1,7 +1,7 @@
 export class ValidationError extends Error {
   public list: object[] = []
 
-  constructor(list: object, ...params: any) {
+  constructor(list: any, ...params: any) {
     super(...params)
 
     if (Error.captureStackTrace) {

@@ -1,12 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const validation_1 = require("../../utils/validation");
 const SignedTransaction_1 = require("./SignedTransaction");
 class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
     constructor(payerFioAddress, payerFioPublicKey, payeeFioAddress, walletFioAddress = '', maxFee, payeePublicAddress, amount, tokenCode, memo = null, hash = null, offlineUrl = null) {
         super();
-        this.ENDPOINT = "chain/new_funds_request";
-        this.ACTION = "newfundsreq";
-        this.ACCOUNT = "fio.reqobt";
+        this.ENDPOINT = 'chain/new_funds_request';
+        this.ACTION = 'newfundsreq';
+        this.ACCOUNT = 'fio.reqobt';
+        this.validationData = { payerFioAddress, payerFioPublicKey, tokenCode, walletFioAddress };
+        this.validationRules = validation_1.validationRules.newFundsRequest;
         this.payerFioAddress = payerFioAddress;
         this.payerFioPublicKey = payerFioPublicKey;
         this.payeeFioAddress = payeeFioAddress;
@@ -14,11 +17,11 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
         this.maxFee = maxFee;
         this.content = {
             payee_public_address: payeePublicAddress,
-            amount: amount,
+            amount,
             token_code: tokenCode,
-            memo: memo,
-            hash: hash,
-            offline_url: offlineUrl
+            memo,
+            hash,
+            offline_url: offlineUrl,
         };
         if (walletFioAddress) {
             this.walletFioAddress = walletFioAddress;
@@ -28,15 +31,15 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
         }
     }
     getData() {
-        let actor = this.getActor();
+        const actor = this.getActor();
         const cipherContent = this.getCipherContent('new_funds_content', this.content, this.privateKey, this.payerFioPublicKey);
-        let data = {
+        const data = {
             payer_fio_address: this.payerFioAddress,
             payee_fio_address: this.payeeFioAddress,
             content: cipherContent,
             max_fee: this.maxFee,
             tpid: this.walletFioAddress,
-            actor: actor,
+            actor,
         };
         return data;
     }

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const SignedTransaction_1 = require("./SignedTransaction");
+const validation_1 = require("../../utils/validation");
 class RecordSend extends SignedTransaction_1.SignedTransaction {
     constructor(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, walletFioAddress = '', payerFioPublicKey, memo = null, hash = null, offLineUrl = null) {
         super();
@@ -33,6 +34,8 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
             hash: hash,
             offline_url: offLineUrl
         };
+        this.validationData = { payerFIOAddress, payeeFIOAddress, tpid: walletFioAddress, tokenCode };
+        this.validationRules = validation_1.validationRules.recordSend;
     }
     getData() {
         let actor = this.getActor();

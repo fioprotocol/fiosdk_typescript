@@ -17,9 +17,7 @@ export class SentFioRequests extends Query<SentFioRequestResponse> {
   }
 
   public getData() {
-    const data = { fio_public_key: this.fioPublicKey }
-    if (this.limit !== null) { data.limit = this.limit }
-    if (this.offset !== null) { data.offset = this.offset }
+    const data = { fio_public_key: this.fioPublicKey, limit: this.limit || null, offset: this.offset || null }
 
     return data
   }

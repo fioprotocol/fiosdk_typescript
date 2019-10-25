@@ -2,14 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Query_1 = require("./Query");
 class PendingFioRequests extends Query_1.Query {
-    constructor(fioPublicKey) {
+    constructor(fioPublicKey, limit = null, offset = null) {
         super();
-        this.ENDPOINT = "chain/get_pending_fio_requests";
+        this.ENDPOINT = 'chain/get_pending_fio_requests';
         this.isEncrypted = true;
         this.fioPublicKey = fioPublicKey;
+        this.limit = limit;
+        this.offset = offset;
     }
     getData() {
-        return { fio_public_key: this.fioPublicKey };
+        const data = { fio_public_key: this.fioPublicKey, limit: this.limit || null, offset: this.offset || null };
+        return data;
     }
     decrypt(result) {
         if (result.requests.length > 0) {
