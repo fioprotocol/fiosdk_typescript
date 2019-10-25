@@ -29,7 +29,7 @@ export class RequestNewFunds extends SignedTransaction {
     offlineUrl: string | null = null,
   ) {
     super()
-    this.validationData = { payerFioAddress, payerFioPublicKey, tokenCode, walletFioAddress }
+    this.validationData = { payerFioAddress, payeeFioAddress, tokenCode, walletFioAddress }
     this.validationRules = validationRules.newFundsRequest
 
     this.payerFioAddress = payerFioAddress

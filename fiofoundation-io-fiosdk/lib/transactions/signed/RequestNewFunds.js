@@ -8,7 +8,7 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
         this.ENDPOINT = 'chain/new_funds_request';
         this.ACTION = 'newfundsreq';
         this.ACCOUNT = 'fio.reqobt';
-        this.validationData = { payerFioAddress, payerFioPublicKey, tokenCode, walletFioAddress };
+        this.validationData = { payerFioAddress, payeeFioAddress, tokenCode, walletFioAddress };
         this.validationRules = validation_1.validationRules.newFundsRequest;
         this.payerFioAddress = payerFioAddress;
         this.payerFioPublicKey = payerFioPublicKey;

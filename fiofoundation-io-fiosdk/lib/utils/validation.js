@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// @ts-ignore
-const livr_1 = require("livr");
+const LIVR = require('livr');
 const allRules = {
     chain: ['string', 'to_lc', { length_between: [1, 10], like: '^[a-z0-9]+$' }],
     fioAddress: ['string', 'to_lc', {
@@ -41,7 +40,7 @@ exports.validationRules = {
     },
     newFundsRequest: {
         payerFioAddress: allRules.fioAddress,
-        payerFioPublicKey: allRules.fioAddress,
+        payeeFioAddress: allRules.fioAddress,
         tokenCode: allRules.chain,
         walletFioAddress: allRules.fioAddress,
     },
@@ -62,7 +61,7 @@ exports.validationRules = {
     },
 };
 function validate(data, rules) {
-    const validator = new livr_1.LIVR.Validator(rules);
+    const validator = new LIVR.Validator(rules);
     const validData = validator.validate(data);
     const validationResult = { isValid: true, errors: {} };
     if (!validData) {

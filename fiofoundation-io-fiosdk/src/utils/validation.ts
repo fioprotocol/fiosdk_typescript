@@ -1,5 +1,4 @@
-// @ts-ignore
-import { LIVR } from 'livr'
+const LIVR = require('livr')
 
 const allRules = {
   chain: ['string', 'to_lc', { length_between: [1, 10], like: '^[a-z0-9]+$' }],
@@ -41,7 +40,7 @@ export const validationRules = {
   },
   newFundsRequest: {
     payerFioAddress: allRules.fioAddress,
-    payerFioPublicKey: allRules.fioAddress,
+    payeeFioAddress: allRules.fioAddress,
     tokenCode: allRules.chain,
     walletFioAddress: allRules.fioAddress,
   },
