@@ -7,7 +7,7 @@ class SetFioDomainVisibility extends SignedTransaction_1.SignedTransaction {
     constructor(fioDomain, isPublic, maxFee, walletFioAddress = '') {
         super();
         this.ENDPOINT = 'chain/set_fio_domain_public';
-        this.ACTION = 'addaddress';
+        this.ACTION = 'setdomainpub';
         this.ACCOUNT = constants_1.Constants.defaultAccount;
         this.fioDomain = fioDomain;
         this.isPublic = isPublic ? 1 : 0;

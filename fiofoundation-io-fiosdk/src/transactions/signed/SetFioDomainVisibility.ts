@@ -5,7 +5,7 @@ import { Constants } from '../../utils/constants'
 export class SetFioDomainVisibility extends SignedTransaction {
 
   public ENDPOINT: string = 'chain/set_fio_domain_public'
-  public ACTION: string = 'addaddress'
+  public ACTION: string = 'setdomainpub'
   public ACCOUNT: string = Constants.defaultAccount
   public fioDomain: string
   public isPublic: number

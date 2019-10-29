@@ -27,7 +27,10 @@ class SignedTransaction extends Transactions_1.Transactions {
             rawaction.name = this.getAction();
             rawaction.data = this.getData();
             rawTransaction.actions.push(rawaction);
-            return this.pushToServer(rawTransaction, this.getEndPoint(), dryRun);
+            const result = yield this.pushToServer(rawTransaction, this.getEndPoint(), dryRun);
+            if (result.processed)
+                return JSON.parse(result.processed.action_traces[0].receipt.response);
+            return result;
         });
     }
     getAction() {

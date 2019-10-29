@@ -1,3 +1,3 @@
-export interface FioFeeResponse{
-    fee:number
+export interface FioFeeResponse {
+  fee: number
 }

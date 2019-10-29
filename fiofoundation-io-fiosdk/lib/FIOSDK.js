@@ -380,9 +380,9 @@ class FIOSDK {
             case 'getFioNames':
                 return this.getFioNames(params.fioPublicKey);
             case 'getPendingFioRequests':
-                return this.getPendingFioRequests();
+                return this.getPendingFioRequests(params.limit, params.offset);
             case 'getSentFioRequests':
-                return this.getSentFioRequests();
+                return this.getSentFioRequests(params.limit, params.offset);
             case 'getPublicAddress':
                 return this.getPublicAddress(params.fioAddress, params.tokenCode);
             case 'transferTokens':

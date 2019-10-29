@@ -15,7 +15,8 @@ class Query extends Transactions_1.Transactions {
         super(...arguments);
         this.isEncrypted = false;
     }
-    decrypt(result) { }
+    decrypt(result) {
+    }
     execute(publicKey, privateKey = '') {
         return __awaiter(this, void 0, void 0, function* () {
             this.publicKey = publicKey;

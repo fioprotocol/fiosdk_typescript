@@ -16,7 +16,7 @@ class SentFioRequests extends Query_1.Query {
     }
     decrypt(result) {
         if (result.requests.length > 0) {
-            const pendings = [];
+            const requests = [];
             result.requests.forEach((value) => {
                 let content;
                 if (value.payer_fio_public_key === this.publicKey) {
@@ -26,9 +26,9 @@ class SentFioRequests extends Query_1.Query {
                     content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key);
                 }
                 value.content = content;
-                pendings.push(value);
+                requests.push(value);
             });
-            return pendings;
+            return { requests, more: result.more };
         }
     }
 }

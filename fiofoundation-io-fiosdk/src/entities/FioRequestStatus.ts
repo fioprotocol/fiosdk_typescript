@@ -1,3 +1,3 @@
-export enum FioRequestStatus{
-    sent_to_blockchain
+export enum FioRequestStatus {
+  sent_to_blockchain
 }

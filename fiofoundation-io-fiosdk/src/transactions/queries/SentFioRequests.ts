@@ -24,7 +24,7 @@ export class SentFioRequests extends Query<SentFioRequestResponse> {
 
   public decrypt(result: any): any {
     if (result.requests.length > 0) {
-      const pendings: FioRequest[] = []
+      const requests: FioRequest[] = []
       result.requests.forEach((value: FioRequest) => {
         let content
         if (value.payer_fio_public_key === this.publicKey) {
@@ -33,9 +33,9 @@ export class SentFioRequests extends Query<SentFioRequestResponse> {
           content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key)
         }
         value.content = content
-        pendings.push(value)
+        requests.push(value)
       })
-      return pendings
+      return { requests, more: result.more }
     }
   }
 }

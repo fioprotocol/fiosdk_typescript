@@ -1,3 +1,3 @@
-export interface PublicAddressResponse{    
-    public_address: string
+export interface PublicAddressResponse {
+  public_address: string
 }

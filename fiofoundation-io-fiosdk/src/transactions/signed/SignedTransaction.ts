@@ -24,7 +24,10 @@ export abstract class SignedTransaction extends Transactions {
     rawaction.name = this.getAction()
     rawaction.data = this.getData()
     rawTransaction.actions.push(rawaction)
-    return this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
+    const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
+    if (result.processed)
+      return JSON.parse(result.processed.action_traces[0].receipt.response)
+    return result
   }
 
   public getAction(): string {

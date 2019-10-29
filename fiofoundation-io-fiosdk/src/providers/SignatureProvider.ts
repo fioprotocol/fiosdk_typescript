@@ -1,4 +1,4 @@
-export interface SignatureProvider{
-    prepareTransaction:string
-    accountHash:string
+export interface SignatureProvider {
+  prepareTransaction: string
+  accountHash: string
 }
