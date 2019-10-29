@@ -1,27 +1,33 @@
 # FIO Foundation TypeScript SDK
-The FIO Foundation TypeScript SDK provides a JavaScript SDK, to the FIO Foundation Protocol API.  It allows wallets to generate fio private/public keys, register fio addresses and domains, and request funds (requests), view pending requests and sent requests.
+The FIO Foundation TypeScript SDK provides a JavaScript SDK, to the FIO Foundation Protocol API.  Allowing wallets to generate FIO private/public keys, register fio addresses and domains, and request funds (requests), view pending requests and sent requests.
 
-#Technology
+# Technology
 The FIO Foundation TypeScript SDK is built using tsc, to generate the JavaScript files.
 
-#Version
-Version 0.5 - Targets the FIO Protocol API Version 0.5.
+# Version 0.5 
+Targets the FIO Protocol API Version 0.5.
 
-#Building The FIO TypeScript SDK
-
-#Build Dependencies
+# Building The FIO TypeScript SDK
+## Build Dependencies
 The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.
 
-The package.json references it here: 
+	The package.json references it here: 
 	i.e.
 		../../fiojs
 
-Make sure the FIOJS project is located in the following directory structure:
+	Make sure the FIOJS project is located in the following directory structure:
 	i.e.
 		/fiojs  - FIO JS SDK files
 		/fiosdk_typescript - FIO TypeScript SDK Files
 
-Build FIOJS SDK
+### Building FIOJS and FIO TypeScript SDKs
+	Navigate to the "iofoundation-io-sdk" folder, in terminal and run the build sdks script: 
+	i.e.
+		cd fiosdk_typescript
+		cd fiofoundation-io-sdk
+		./build_sdks.sh
+
+#### Building FIOJS SDK, manually?
 	Navigate to the "fiojs" folder in terminal, and run yarn to install it's dependencies, then tsc to compile
 	i.e.
 		cd /fiojs
@@ -29,7 +35,7 @@ Build FIOJS SDK
 		tsc
 		npm test (if you would like to run the unit tests)
 
-#Build FIO TypeScript SDK
+#### Building FIO TypeScript SDK, manually?
 	Navigate to the "iofoundation-io-sdk" folder in terminal, and run yarn to install it's dependencies, then tsc to compile
 	i.e.
 		cd fiosdk_typescript
@@ -48,16 +54,19 @@ TypeDoc is installed as a dev dependency.
 
 The documentation will appear in this folder: "documentation" in the root of the project.
 
-#Issues installing TypeDoc
+## Issues Installing TypeDoc?
 If typedoc command is not found, install typedoc using the npm global command:
 npm install --global typedoc
 
-#Using the SDK.
+# Using the SDK
 The SDK uses a singleton model.  Requiring initialization in the constructor, as these parameters are referenced in subsequent SDK Calls.
 
-#Initializing the SDK
+## Base URL for TestNet
+	http://testnet.fioprotocol.io
+
+## Initializing the SDK
 	Pass in the wallet user's private/public key, 
-	the base URL to the FIO Foundation API,
+	the base URL to the FIO Foundation API - i.e. http://testnet.fioprotocol.io
 	io - the ?
 	fetchjson - a reference to fetchJSON 
 	registerMockUrl - this is the URL to the FIO Foundation API mock server and is used by the registerOnBehalfOfUser method
@@ -77,10 +86,16 @@ The SDK uses a singleton model.  Requiring initialization in the constructor, as
 		AND
 		derivedPublicKey
 
-#Workflow for using the SDK
+## Using the SDK
+### Example Usage in JavaScript
+	import { FIOSDK } from 'fiofoundation-io-fiosdk'
+
+	this.fioSDK = new FIOSDK(privateFioKey, publicFioKey, 'http://testnet.fioprotocol.io', this.io, this.fetchJson, '')
+
+# Workflow for using the SDK
 Most Signed API calls now charge fees, to make the API call.  And most Signed API Calls require that a fio address, is registered with the user making the call. 
 
-When registering a new address for the first time.  The account will not have any funds to do API calls.
+#### When registering a new address for the first time.  The account will not have any funds to do API calls.
 
 This is the order of sequence to get funds in an account for the first time.
 1. Call the registerFioNameOnBehalfOfUser method (this calls the mock server for registration), to register a fio address, for the first time (no fee charged)
@@ -88,13 +103,12 @@ This is the order of sequence to get funds in an account for the first time.
 3. wait 60 seconds (for funds to arrive)
 4. Now one will have funds available, to call Signed API calls.
 
-When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.
+#### When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.
 1. Call getFee to get the fee for the Signed API call.
 2. Call the API Signed call with the above fee found.
 
-#Creating your own FIO Private/Public Keys, rather than using the SDK?
-
---FIO Key Generation Testing--
+# Creating your own FIO Private/Public Keys?
+The SDK provides FIO Key generation.  Here are the key details, if the SDK is not used for Key Generation.
 
 FIO Keys use SLIP-235 for BIP-0044.
 https://github.com/satoshilabs/slips/blob/master/slip-0044.md
@@ -102,9 +116,10 @@ https://github.com/satoshilabs/slips/blob/master/slip-0044.md
 Following the EOS example of private and public key generation. We replace EOS slip '194' with '235'.  And 'EOS' public key prefix with 'FIO'.
 https://eosio.stackexchange.com/questions/397/generate-eos-keys-from-mnemonic-seed
 
---Testing--
-This is the Derivation Path:
+##  FIO Key Derivation Path:
 "44'/235'/0'/0/0"
+
+## FIO Key Generation Testing
 
 Using this mnemonic phrase:
 "valley alien library bread worry brother bundle hammer loyal barely dune brave"
