@@ -1,30 +1,36 @@
-import { SignedTransaction } from './SignedTransaction';
-export class RegisterFioAddress extends SignedTransaction{
+import { SignedTransaction } from './SignedTransaction'
+import { validationRules } from '../../utils/validation'
+import { Constants } from '../../utils/constants'
 
-    ENDPOINT:string = "chain/register_fio_address"; 
-    ACTION:string = "regaddress" 
-    ACOUNT:string = "fio.system"
-    fioAddress:string
-    maxFee:number
-    walletFioAddress:string
+export class RegisterFioAddress extends SignedTransaction {
 
-    constructor(fioAddress:string,maxFee:number,walletFioAddress:string=""){
-        super();
-        this.fioAddress = fioAddress;
-        this.maxFee = maxFee;
-        this.walletFioAddress = walletFioAddress;
+  public ENDPOINT: string = 'chain/register_fio_address'
+  public ACTION: string = 'regaddress'
+  public ACCOUNT: string = Constants.defaultAccount
+  public fioAddress: string
+  public maxFee: number
+  public walletFioAddress: string
+
+  constructor(fioAddress: string, maxFee: number, walletFioAddress: string = '') {
+    super()
+    this.fioAddress = fioAddress
+    this.maxFee = maxFee
+    this.walletFioAddress = walletFioAddress
+
+    this.validationData = { fioAddress: fioAddress, tpid: walletFioAddress }
+    this.validationRules = validationRules.registerFioAddress
+  }
+
+  public getData(): any {
+    const actor = this.getActor()
+    const data = {
+      fio_address: this.fioAddress,
+      owner_fio_public_key: this.publicKey,
+      max_fee: this.maxFee,
+      tpid: this.walletFioAddress,
+      actor,
     }
+    return data
+  }
 
-    getData():any{
-        let actor = this.getActor();
-        let data = {
-            fio_address:this.fioAddress,
-            owner_fio_public_key:this.publicKey,
-            max_fee: this.maxFee,
-            tpid: this.walletFioAddress,
-            actor: actor
-        }
-        return data;
-    }
-    
 }

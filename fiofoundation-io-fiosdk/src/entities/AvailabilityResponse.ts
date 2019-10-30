@@ -1,3 +1,3 @@
-export interface AvailabilityResponse{
-    is_registered:number
+export interface AvailabilityResponse {
+  is_registered: number
 }

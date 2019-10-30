@@ -4,7 +4,7 @@ const Query_1 = require("./Query");
 class GetNames extends Query_1.Query {
     constructor(fioPublicKey) {
         super();
-        this.ENDPOINT = "chain/get_fio_names";
+        this.ENDPOINT = 'chain/get_fio_names';
         this.fioPublicKey = fioPublicKey;
     }
     getData() {

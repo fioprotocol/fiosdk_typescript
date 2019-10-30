@@ -1,36 +1,39 @@
-import { SignedTransaction } from './SignedTransaction';
+import { SignedTransaction } from './SignedTransaction'
+import { Constants } from '../../utils/constants'
+import { validationRules } from '../../utils/validation'
 
-export class AddPublicAddress extends SignedTransaction{
+export class AddPublicAddress extends SignedTransaction {
+  public ENDPOINT: string = 'chain/add_pub_address'
+  public ACTION: string = 'addaddress'
+  public ACCOUNT: string = Constants.defaultAccount
+  public fioAddress: string
+  public tokenCode: string
+  public publicAddress: string
+  public maxFee: number
+  public walletFioAddress: string
 
-    ENDPOINT:string = "chain/add_pub_address"; 
-    ACTION:string = "addaddress" 
-    ACOUNT:string = "fio.system"
-    fioAddress:string
-    tokenCode:string
-    publicAddress:string
-    maxFee:number
-    walletFioAddress:string
+  constructor(fioAddress: string, tokenCode: string, publicAddress: string, maxFee: number, walletFioAddress: string = '') {
+    super()
+    this.fioAddress = fioAddress
+    this.tokenCode = tokenCode
+    this.publicAddress = publicAddress
+    this.maxFee = maxFee
+    this.walletFioAddress = walletFioAddress
 
-    constructor(fioAddress:string,tokenCode:string,publicAddress:string,maxFee:number,walletFioAddress:string=""){
-        super();
-        this.fioAddress = fioAddress;
-        this.tokenCode = tokenCode;
-        this.publicAddress = publicAddress;
-        this.maxFee = maxFee
-        this.walletFioAddress = walletFioAddress
-    }   
+    this.validationData = { fioAddress, tokenCode, publicAddress, tpid: walletFioAddress }
+    this.validationRules = validationRules.addPublicAddressRules
+  }
 
-    getData():any{
-        let actor = this.getActor();
-        let data = {
-            fio_address:this.fioAddress,
-            token_code:this.tokenCode,
-            public_address:this.publicAddress,
-            actor: actor,
-            tpid: this.walletFioAddress,
-            max_fee: this.maxFee
-        }
-        return data;
+  public getData(): any {
+    const actor = this.getActor()
+    const data = {
+      fio_address: this.fioAddress,
+      token_code: this.tokenCode,
+      public_address: this.publicAddress,
+      actor,
+      tpid: this.walletFioAddress,
+      max_fee: this.maxFee,
     }
-    
+    return data
+  }
 }

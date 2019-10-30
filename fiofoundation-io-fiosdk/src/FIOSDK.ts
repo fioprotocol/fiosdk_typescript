@@ -19,6 +19,7 @@ import {
   SetFioDomainVisibilityResponse,
   TransferTokensResponse,
 } from './entities/responses'
+import { EndPoint } from './entities/EndPoint'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
@@ -33,7 +34,7 @@ const { Ecc } = require('fiojs')
 /**
  * @ignore
  */
-type FetchJson = (uri: string, opts?: Object) => Object
+type FetchJson = (uri: string, opts?: object) => object
 
 export class FIOSDK {
   /**
@@ -229,7 +230,7 @@ export class FIOSDK {
    * This call allows a public address of the specific blockchain type to be added to the FIO Address.
    *
    * @param fioAddress FIO Address which will be mapped to public address.
-   * @param tokenCode	Token code to be used with that public address.
+   * @param tokenCode Token code to be used with that public address.
    * @param publicAddress The public address to be added to the FIO Address for the specified token.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
    * @param walletFioAddress FIO Address of the wallet which generates this transaction.
@@ -301,7 +302,7 @@ export class FIOSDK {
     payeeFIOAddress: string,
     payerTokenPublicAddress: string,
     payeeTokenPublicAddress: string,
-    amount: string,
+    amount: number,
     tokenCode: string,
     status: string,
     obtId: string,
@@ -377,7 +378,7 @@ export class FIOSDK {
     payerFioAddress: string,
     payeeFioAddress: string,
     payeePublicAddress: string,
-    amount: string,
+    amount: number,
     tokenCode: string,
     memo: string,
     maxFee: number,
@@ -440,17 +441,23 @@ export class FIOSDK {
 
   /**
    * Polls for any pending requests sent to public key associated with the FIO SDK instance.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
    */
-  public getPendingFioRequests(): Promise<PendingFioRequestsResponse> {
-    const pendingFioRequests = new queries.PendingFioRequests(this.publicKey)
+  public getPendingFioRequests(limit?: number, offset?: number): Promise<PendingFioRequestsResponse> {
+    const pendingFioRequests = new queries.PendingFioRequests(this.publicKey, limit, offset)
     return pendingFioRequests.execute(this.publicKey, this.privateKey)
   }
 
   /**
    * Polls for any sent requests sent by public key associated with the FIO SDK instance.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
    */
-  public getSentFioRequests(): Promise<SentFioRequestResponse> {
-    const sentFioRequest = new queries.SentFioRequests(this.publicKey)
+  public getSentFioRequests(limit?: number, offset?: number): Promise<SentFioRequestResponse> {
+    const sentFioRequest = new queries.SentFioRequests(this.publicKey, limit, offset)
     return sentFioRequest.execute(this.publicKey, this.privateKey)
   }
 
@@ -496,7 +503,7 @@ export class FIOSDK {
    */
   public transferTokens(
     payeeFioPublicKey: string,
-    amount: string,
+    amount: number,
     maxFee: number,
     walletFioAddress: string = '',
   ): Promise<TransferTokensResponse> {
@@ -518,7 +525,7 @@ export class FIOSDK {
    *        if endPointName is RenewFioDomain, FIO Domain incurring the fee and owned by signer.
    *        if endPointName is RecordSend, Payee FIO Address incurring the fee and owned by signer.
    */
-  public getFee(endPoint: string, fioAddress = ''): Promise<FioFeeResponse> {
+  public getFee(endPoint: EndPoint, fioAddress = ''): Promise<FioFeeResponse> {
     const fioFee = new queries.GetFee(endPoint, fioAddress)
     return fioFee.execute(this.publicKey)
   }
@@ -632,9 +639,9 @@ export class FIOSDK {
       case 'getFioNames':
         return this.getFioNames(params.fioPublicKey)
       case 'getPendingFioRequests':
-        return this.getPendingFioRequests()
+        return this.getPendingFioRequests(params.limit, params.offset)
       case 'getSentFioRequests':
-        return this.getSentFioRequests()
+        return this.getSentFioRequests(params.limit, params.offset)
       case 'getPublicAddress':
         return this.getPublicAddress(params.fioAddress, params.tokenCode)
       case 'transferTokens':

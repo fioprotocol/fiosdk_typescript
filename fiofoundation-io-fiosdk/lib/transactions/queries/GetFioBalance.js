@@ -4,7 +4,7 @@ const Query_1 = require("./Query");
 class GetFioBalance extends Query_1.Query {
     constructor(othersBalance) {
         super();
-        this.ENDPOINT = "chain/get_fio_balance";
+        this.ENDPOINT = 'chain/get_fio_balance';
         if (othersBalance) {
             this.keyToUse = othersBalance;
         }

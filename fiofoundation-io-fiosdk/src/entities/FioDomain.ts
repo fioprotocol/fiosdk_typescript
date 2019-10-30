@@ -1,5 +1,5 @@
-export interface FioDomain{
-    fio_domain: string,
-    expiration: string,
-    is_public?: number
+export interface FioDomain {
+  fio_domain: string,
+  expiration: string,
+  is_public?: number
 }

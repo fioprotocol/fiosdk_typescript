@@ -1,4 +1,4 @@
 export interface RecordSendResponse {
-    status: string,
-    fee_collected: number
+  status: string,
+  fee_collected: number
 }

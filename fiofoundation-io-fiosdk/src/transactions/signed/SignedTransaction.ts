@@ -1,44 +1,44 @@
-import { Transactions } from "../Transactions";
-import { Autorization } from '../../entities/Autorization';
-import { RawAction } from "../../entities/RawAction";
-import { RawTransaction } from "../../entities/RawTransaction";
+import { Autorization } from '../../entities/Autorization'
+import { RawAction } from '../../entities/RawAction'
+import { RawTransaction } from '../../entities/RawTransaction'
+import { Transactions } from '../Transactions'
 
-export abstract class SignedTransaction extends Transactions{
+export abstract class SignedTransaction extends Transactions {
+  public abstract ENDPOINT: string
+  public abstract ACTION: string
+  public abstract ACCOUNT: string
 
+  public abstract getData(): any
 
-    abstract ENDPOINT:string
-    abstract ACTION:string
-    abstract ACOUNT:string
-    
-    abstract getData():any
+  public async execute(privateKey: string, publicKey: string, dryRun = false): Promise<any> {
+    this.privateKey = privateKey
+    this.publicKey = publicKey
 
+    const rawTransaction = new RawTransaction()
+    const rawaction = new RawAction()
+    rawaction.account = this.getAccount()
+    const actor = await this.getActor()
 
-    async execute(privateKey:string, publicKey:string,dryRun=false):Promise<any>{
-        this.privateKey = privateKey
-        this.publicKey = publicKey
+    rawaction.authorization.push(new Autorization(actor))
+    rawaction.account = this.getAccount()
+    rawaction.name = this.getAction()
+    rawaction.data = this.getData()
+    rawTransaction.actions.push(rawaction)
+    const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
+    if (result.processed)
+      return JSON.parse(result.processed.action_traces[0].receipt.response)
+    return result
+  }
 
-        const rawTransaction = new RawTransaction()
-        const rawaction = new RawAction()
-        rawaction.account = this.getAcount()
-        const actor = await this.getActor()
-        
-        rawaction.authorization.push(new Autorization(actor))
-        rawaction.account = this.getAcount()
-        rawaction.name = this.getAction()
-        rawaction.data = this.getData()
-        rawTransaction.actions.push(rawaction)    
-        return this.pushToServer(rawTransaction,this.getEndPoint(),dryRun)
-    }
+  public getAction(): string {
+    return this.ACTION
+  }
 
-    getAction(): string {
-        return this.ACTION;
-    }
+  public getAccount(): string {
+    return this.ACCOUNT
+  }
 
-    getAcount(): string {
-       return this.ACOUNT
-    }
-
-    getEndPoint(): string {
-        return this.ENDPOINT
-    } 
+  public getEndPoint(): string {
+    return this.ENDPOINT
+  }
 }

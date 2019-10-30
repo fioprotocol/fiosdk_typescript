@@ -2,20 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const Query_1 = require("./Query");
 class SentFioRequests extends Query_1.Query {
-    constructor(fioPublicKey) {
+    constructor(fioPublicKey, limit = null, offset = null) {
         super();
-        this.ENDPOINT = "chain/get_sent_fio_requests";
+        this.ENDPOINT = 'chain/get_sent_fio_requests';
         this.isEncrypted = true;
         this.fioPublicKey = fioPublicKey;
+        this.limit = limit;
+        this.offset = offset;
     }
     getData() {
-        return {
-            fio_public_key: this.fioPublicKey,
-        };
+        const data = { fio_public_key: this.fioPublicKey, limit: this.limit || null, offset: this.offset || null };
+        return data;
     }
     decrypt(result) {
         if (result.requests.length > 0) {
-            const pendings = [];
+            const requests = [];
             result.requests.forEach((value) => {
                 let content;
                 if (value.payer_fio_public_key === this.publicKey) {
@@ -25,9 +26,9 @@ class SentFioRequests extends Query_1.Query {
                     content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key);
                 }
                 value.content = content;
-                pendings.push(value);
+                requests.push(value);
             });
-            return pendings;
+            return { requests, more: result.more };
         }
     }
 }

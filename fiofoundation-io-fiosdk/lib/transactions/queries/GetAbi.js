@@ -4,7 +4,7 @@ const Query_1 = require("./Query");
 class GetAbi extends Query_1.Query {
     constructor(accountName) {
         super();
-        this.ENDPOINT = "chain/get_raw_abi";
+        this.ENDPOINT = 'chain/get_raw_abi';
         this.accountName = accountName;
     }
     getData() {
