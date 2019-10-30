@@ -17,7 +17,7 @@ class RequestNewFunds extends SignedTransaction_1.SignedTransaction {
         this.maxFee = maxFee;
         this.content = {
             payee_public_address: payeePublicAddress,
-            amount,
+            amount: `${amount}`,
             token_code: tokenCode,
             memo,
             hash,

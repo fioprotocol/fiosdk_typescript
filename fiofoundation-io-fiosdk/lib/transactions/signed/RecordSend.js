@@ -5,9 +5,9 @@ const validation_1 = require("../../utils/validation");
 class RecordSend extends SignedTransaction_1.SignedTransaction {
     constructor(fioRequestId, payerFIOAddress, payeeFIOAddress, payerPublicAddress, payeePublicAddress, amount, tokenCode, obtID, maxFee, status, walletFioAddress = '', payerFioPublicKey, memo = null, hash = null, offLineUrl = null) {
         super();
-        this.ENDPOINT = "chain/record_send";
-        this.ACTION = "recordsend";
-        this.ACCOUNT = "fio.reqobt";
+        this.ENDPOINT = 'chain/record_send';
+        this.ACTION = 'recordsend';
+        this.ACCOUNT = 'fio.reqobt';
         this.fioRequestId = '';
         this.walletFioAddress = '';
         this.fioRequestId = fioRequestId;
@@ -26,7 +26,7 @@ class RecordSend extends SignedTransaction_1.SignedTransaction {
         this.content = {
             payer_public_address: this.payerPublicAddress,
             payee_public_address: this.payeePublicAddress,
-            amount: amount,
+            amount: `${amount}`,
             token_code: tokenCode,
             status: status,
             obt_id: obtID,

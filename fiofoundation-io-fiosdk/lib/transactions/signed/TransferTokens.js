@@ -9,7 +9,7 @@ class TransferTokens extends SignedTransaction_1.SignedTransaction {
         this.ACTION = 'trnsfiopubky';
         this.ACCOUNT = 'fio.token';
         this.payeePublicKey = payeePublicKey;
-        this.amount = amount;
+        this.amount = `${amount}`;
         this.walletFioAddress = walletFioAddress;
         this.maxFee = maxFee;
         this.validationData = { tpid: walletFioAddress };

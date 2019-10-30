@@ -1,10 +1,9 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -20,34 +19,6 @@ const constants_1 = require("./utils/constants");
  */
 const { Ecc } = require('fiojs');
 class FIOSDK {
-    /**
-     * @param privateKey the fio private key of the client sending requests to FIO API.
-     * @param publicKey the fio public key of the client sending requests to FIO API.
-     * @param baseUrl the url to the FIO API.
-     * @param io
-     * @param fetchjson
-     * @param registerMockUrl the url to the mock server
-     */
-    constructor(privateKey, publicKey, baseUrl, io, fetchjson, registerMockUrl = '') {
-        this.transactions = new Transactions_1.Transactions();
-        this.io = io;
-        Transactions_1.Transactions.baseUrl = baseUrl;
-        Transactions_1.Transactions.FioProvider = fiojs_1.Fio;
-        Transactions_1.Transactions.io = io;
-        Transactions_1.Transactions.fetchJson = fetchjson;
-        this.registerMockUrl = registerMockUrl;
-        this.privateKey = privateKey;
-        this.publicKey = publicKey;
-        for (const accountName of constants_1.Constants.rawAbiAccountName) {
-            this.getAbi(accountName)
-                .then((response) => {
-                Transactions_1.Transactions.abiMap.set(response.account_name, response);
-            })
-                .catch((error) => {
-                throw error;
-            });
-        }
-    }
     /**
      * @ignore
      */
@@ -89,6 +60,34 @@ class FIOSDK {
     static derivedPublicKey(fioPrivateKey) {
         const publicKey = Ecc.privateToPublic(fioPrivateKey);
         return { publicKey };
+    }
+    /**
+     * @param privateKey the fio private key of the client sending requests to FIO API.
+     * @param publicKey the fio public key of the client sending requests to FIO API.
+     * @param baseUrl the url to the FIO API.
+     * @param io
+     * @param fetchjson
+     * @param registerMockUrl the url to the mock server
+     */
+    constructor(privateKey, publicKey, baseUrl, io, fetchjson, registerMockUrl = '') {
+        this.transactions = new Transactions_1.Transactions();
+        this.io = io;
+        Transactions_1.Transactions.baseUrl = baseUrl;
+        Transactions_1.Transactions.FioProvider = fiojs_1.Fio;
+        Transactions_1.Transactions.io = io;
+        Transactions_1.Transactions.fetchJson = fetchjson;
+        this.registerMockUrl = registerMockUrl;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
+        for (const accountName of constants_1.Constants.rawAbiAccountName) {
+            this.getAbi(accountName)
+                .then((response) => {
+                Transactions_1.Transactions.abiMap.set(response.account_name, response);
+            })
+                .catch((error) => {
+                throw error;
+            });
+        }
     }
     /**
      * Retrieves the FIO public key assigned to the FIOSDK instance.
