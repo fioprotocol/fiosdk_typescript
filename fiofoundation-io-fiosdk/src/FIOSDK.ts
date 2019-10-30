@@ -19,6 +19,7 @@ import {
   SetFioDomainVisibilityResponse,
   TransferTokensResponse,
 } from './entities/responses'
+import { EndPoint } from './entities/EndPoint'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
@@ -524,7 +525,7 @@ export class FIOSDK {
    *        if endPointName is RenewFioDomain, FIO Domain incurring the fee and owned by signer.
    *        if endPointName is RecordSend, Payee FIO Address incurring the fee and owned by signer.
    */
-  public getFee(endPoint: string, fioAddress = ''): Promise<FioFeeResponse> {
+  public getFee(endPoint: EndPoint, fioAddress = ''): Promise<FioFeeResponse> {
     const fioFee = new queries.GetFee(endPoint, fioAddress)
     return fioFee.execute(this.publicKey)
   }
