@@ -301,7 +301,7 @@ export class FIOSDK {
     payeeFIOAddress: string,
     payerTokenPublicAddress: string,
     payeeTokenPublicAddress: string,
-    amount: string,
+    amount: number,
     tokenCode: string,
     status: string,
     obtId: string,
@@ -377,7 +377,7 @@ export class FIOSDK {
     payerFioAddress: string,
     payeeFioAddress: string,
     payeePublicAddress: string,
-    amount: string,
+    amount: number,
     tokenCode: string,
     memo: string,
     maxFee: number,
@@ -502,7 +502,7 @@ export class FIOSDK {
    */
   public transferTokens(
     payeeFioPublicKey: string,
-    amount: string,
+    amount: number,
     maxFee: number,
     walletFioAddress: string = '',
   ): Promise<TransferTokensResponse> {

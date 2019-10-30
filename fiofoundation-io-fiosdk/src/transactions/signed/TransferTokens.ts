@@ -11,10 +11,10 @@ export class TransferTokens extends SignedTransaction {
   maxFee: number
   walletFioAddress: string
 
-  constructor(payeePublicKey: string, amount: string, maxFee: number, walletFioAddress: string = '') {
+  constructor(payeePublicKey: string, amount: number, maxFee: number, walletFioAddress: string = '') {
     super()
     this.payeePublicKey = payeePublicKey
-    this.amount = amount
+    this.amount = `${amount}`
     this.walletFioAddress = walletFioAddress
     this.maxFee = maxFee
 
