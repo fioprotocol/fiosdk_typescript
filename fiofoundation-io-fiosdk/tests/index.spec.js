@@ -20,7 +20,7 @@ const mockBaseUrl = 'http://mock.dapix.io/mockd/DEV3'
 const faucetFioAddress = 'faucet:fio'
 const faucetPublicAddress = 'FIO5oBUYbtGTxMS66pPkjC2p8pbA3zCtc8XD4dq9fMut867GRdh82'
 const fioTokenCode = 'FIO'
-const fundAmount = '250000000000'
+const fundAmount = 250000000000
 const defaultFee = 30000000000
 const fundReceiveTimout = 60000
 
@@ -244,8 +244,8 @@ describe('Testing generic actions', () => {
 })
 
 describe('Request funds, approve and send', () => {
-  const fundsAmount = '3000000000'
-  let requestId = ''
+  const fundsAmount = 3000000000
+  let requestId
   const memo = 'testing fund request'
 
   it(`requestFunds`, async () => {
@@ -319,8 +319,8 @@ describe('Request funds, approve and send', () => {
 })
 
 describe('Request funds, reject', () => {
-  const fundsAmount = '4000000000'
-  let requestId = ''
+  const fundsAmount = 4000000000
+  let requestId
   const memo = 'testing fund request'
 
   it(`requestFunds`, async () => {
@@ -372,7 +372,7 @@ describe('Request funds, reject', () => {
 })
 
 describe('Transfer tokens', () => {
-  const fundsAmount = '1000000000'
+  const fundsAmount = 1000000000
   let fioBalance = 0
   let fioBalanceAfter = 0
 
