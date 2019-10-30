@@ -398,6 +398,6 @@ describe('Transfer tokens', () => {
     await timeout(10000)
     const result = await fioSdk2.genericAction('getFioBalance', {})
     fioBalanceAfter = result.balance
-    expect(fundsAmount).to.equal(`${fioBalanceAfter - fioBalance}`)
+    expect(fundsAmount).to.equal(fioBalanceAfter - fioBalance)
   })
 })
