@@ -9,30 +9,21 @@ const fetchJson = async (uri, opts = {}) => {
   return res.json()
 }
 
+/**
+ * Please set your private/public keys and existing fioAddresses
+ */
 let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
-const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
-const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
 
-/**
- * Urls required
- */
-const baseUrl = ''
-const mockBaseUrl = ''
+const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
+const mockBaseUrl = 'https://monitor.testnet.fioprotocol.io'
 
-/**
- * Address to request funds to be able make all calls with fee
- */
-const faucetFioAddress = ''
-const faucetPublicAddress = ''
-
+const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
-const fundAmount = 250000000000
 const defaultFee = 30000000000
-const fundReceiveTimout = 60000
 
 let fioSdk, fioSdk2
 
-const generateTestingFioAddress = (customDomain = 'edge') => {
+const generateTestingFioAddress = (customDomain = fioTestnetDomain) => {
   return `testing${Date.now()}:${customDomain}`
 }
 
@@ -47,10 +38,6 @@ const timeout = async (ms) => {
 }
 
 before(async () => {
-  let privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic)
-  privateKey = privateKeyRes.fioKey
-  let publicKeyRes = FIOSDK.derivedPublicKey(privateKey)
-  publicKey = publicKeyRes.publicKey
   fioSdk = new FIOSDK(
     privateKey,
     publicKey,
@@ -59,13 +46,8 @@ before(async () => {
     fetchJson,
     mockBaseUrl
   )
-  testFioAddressName = generateTestingFioAddress()
 
   await timeout(1000)
-  privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic2)
-  privateKey2 = privateKeyRes.fioKey
-  publicKeyRes = FIOSDK.derivedPublicKey(privateKey2)
-  publicKey2 = publicKeyRes.publicKey
   fioSdk2 = new FIOSDK(
     privateKey2,
     publicKey2,
@@ -74,16 +56,8 @@ before(async () => {
     fetchJson,
     mockBaseUrl
   )
-  testFioAddressName2 = generateTestingFioAddress()
 
-  try {
-    await fioSdk.registerFioNameOnBehalfOfUser(testFioAddressName, publicKey)
-    await fioSdk.registerFioNameOnBehalfOfUser(testFioAddressName2, publicKey2)
-  } catch (e) {
-    console.log(e);
-  }
-  const ress = await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
-  await timeout(fundReceiveTimout)
+  await timeout(4000)
 })
 
 describe('Testing generic actions', () => {
@@ -93,17 +67,20 @@ describe('Testing generic actions', () => {
 
   it(`Getting fio public key`, async () => {
     const result = await fioSdk.genericAction('getFioPublicKey', {})
+
     expect(result).to.equal(publicKey)
   })
 
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
+
     expect(result).to.have.all.keys('balance')
     expect(result.balance).to.be.a('number')
   })
 
   it(`Register fio domain`, async () => {
     const result = await fioSdk.genericAction('registerFioDomain', { FioDomain: newFioDomain, maxFee: defaultFee })
+
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
@@ -117,6 +94,7 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       walletFioAddress: ''
     })
+
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -127,6 +105,7 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress,
       maxFee: defaultFee
     })
+
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
@@ -135,6 +114,7 @@ describe('Testing generic actions', () => {
 
   it(`Renew fio address`, async () => {
     const result = await fioSdk.genericAction('renewFioAddress', { fioAddress: newFioAddress, maxFee: defaultFee })
+
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
@@ -162,6 +142,7 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       walletFioAddress: ''
     })
+
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')

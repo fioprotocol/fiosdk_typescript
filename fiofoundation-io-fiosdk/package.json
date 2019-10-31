@@ -30,7 +30,7 @@
     "main": "index.js",
     "name": "fiofoundation-io-fiosdk",
     "scripts": {
-        "test": "mocha -t 80000 tests"
+        "test": "mocha -t 80000 tests/testnet.spec.js"
     },
     "version": "1.0.0",
     "devDependencies": {
