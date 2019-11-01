@@ -69,7 +69,7 @@ class Transactions {
             transaction.ref_block_num = block.block_num & 0xFFFF;
             transaction.ref_block_prefix = block.ref_block_prefix;
             const expiration = new Date(block.timestamp + 'Z');
-            expiration.setSeconds(expiration.getSeconds() + 120);
+            expiration.setSeconds(expiration.getSeconds() + 1200);
             const expirationStr = expiration.toISOString();
             transaction.expiration = expirationStr.substr(0, expirationStr.length - 1);
             if (dryRun) {
