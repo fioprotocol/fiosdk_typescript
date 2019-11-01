@@ -62,11 +62,14 @@ npm install --global typedoc
 The SDK uses a singleton model.  Requiring initialization in the constructor, as these parameters are referenced in subsequent SDK Calls.
 
 ## Base URL for TestNet
-	http://testnet.fioprotocol.io
+	http://testnet.fioprotocol.io/v1/
+
+## TestNet Monitor Tool
+	https://monitor.testnet.fioprotocol.io/#home
 
 ## Initializing the SDK
 	Pass in the wallet user's private/public key, 
-	the base URL to the FIO Foundation API - i.e. http://testnet.fioprotocol.io
+	the base URL to the FIO Foundation API - i.e. http://testnet.fioprotocol.io/v1/
 	io - the ?
 	fetchjson - a reference to fetchJSON 
 	registerMockUrl - this is the URL to the FIO Foundation API mock server and is used by the registerOnBehalfOfUser method
@@ -98,7 +101,7 @@ Most Signed API calls now charge fees, to make the API call.  And most Signed AP
 #### When registering a new address for the first time.  The account will not have any funds to do API calls.
 
 This is the order of sequence to get funds in an account for the first time.
-1. Call the registerFioNameOnBehalfOfUser method (this calls the mock server for registration), to register a fio address, for the first time (no fee charged)
+1. register a fio address, for the first time (no fee charged)
 2. request funds for that newly registered fio address from this fio address: "faucet:fio" (i.e. payer)
 3. wait 60 seconds (for funds to arrive)
 4. Now one will have funds available, to call Signed API calls.
@@ -106,6 +109,58 @@ This is the order of sequence to get funds in an account for the first time.
 #### When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.
 1. Call getFee to get the fee for the Signed API call.
 2. Call the API Signed call with the above fee found.
+
+# Workflow for using the SDK with TestNet
+Most Signed API calls now charge fees, to make the API call.  And most Signed API Calls require that a fio address, is registered with the user making the call. 
+
+#### When registering a new address for the first time.  The account will not have any funds to do API calls.
+
+This is the order of sequence to get funds in an account for the first time, in order to run the unit tests. 
+1. manually create two private/public FIO key pairs 
+	A) Navigate to the website: https://monitor.testnet.fioprotocol.io/#home
+	B) Select the 'Create Keypair' button (top left of the website)
+	C) copy the keypairs 
+2. manually register a fio address for both of these FIO key pairs. 
+	A) Navigate to the website: https://monitor.testnet.fioprotocol.io/#account
+	B) Select the 'Register Address' button
+	C) type in a fio address 
+	D) paste in one of the public keys (created above)
+	E) Select the 'Create' button
+	F) do this for each public key pair (twice).  The created fio address will be in this format, "mytest:fiotestnet"
+3. manually transfer funds into these fio addresses.
+	A) Navigate to the website: https://monitor.testnet.fioprotocol.io/#home
+	B) Select the 'Faucet' button
+	C) paste in one of the public keys (created above)
+	D) Select the 'Send Coins' button
+	E) do this for each public key pair (twice)
+4. Now one will have funds available, to call Signed API calls.
+5. edit the unit test script to add these fio addresses, and the private/public FIO key pairs
+	A) Edit the testnet.spec file
+		a) testnet.spec is located here: fiosdk_typescript/fiofoundation-io-fiosdk/tests/testnet.spec
+		b) variables to edit: let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
+
+6. run the unit tests i.e. 
+	npm test
+
+#### When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.
+1. Call getFee to get the fee for the Signed API call.
+2. Call the API Signed call with the above fee found.
+
+https://monitor.testnet.fioprotocol.io/#account
+
+
+
+Create initial public/private keypairs.
+
+Register addresses with the public keys.
+
+Use the Monitor faucet to send money to the addresses.
+
+Plug the addresses and keys into the constant placeholders in the test.
+
+Then run "npm test"
+(needs more detail)
+
 
 # Creating your own FIO Private/Public Keys?
 The SDK provides FIO Key generation.  Here are the key details, if the SDK is not used for Key Generation.
@@ -129,3 +184,26 @@ This is the expected Private Key:
 
 This is the expected Public Key:
 "FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o"
+
+### Workflow using TestNet
+We need to update the README to include initial setup of the js tests. Right now they assume you have a mock server that works, but we should explain that unless you have set up a mock server you will need to do some manual steps on the Testnet Monitor to run the full tests:
+Create initial public/private keypairs.
+Register addresses with the public keys.
+Use the Monitor faucet to send money to the addresses.
+Plug the addresses and keys into the constant placeholders in the test.
+Then run "npm test"
+(needs more detail)
+I am tracking the need to document how to set up a mock/registration server in: 
+https://stealth.atlassian.net/browse/MAS-852
+
+Tracking updates to the mock server. A few possibilities:
+Change the name. Some of our wallets will want to run proxy servers that do the registration and payments for their users. Should we call it a Registration Server instead of mock server?
+We should document how to set up a registration server and give code examples on the FIO Dev Hub.
+Can we have CryptoLions set up a registration server as part of Testnet?
+Once in place, we may want to update our wallet tests to hit the Testnet server to do the initial key and address generation and to use the faucet.
+
+
+
+
+
+
