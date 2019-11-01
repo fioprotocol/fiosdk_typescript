@@ -12,12 +12,12 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '5Jhj6vhut9AwJMgEemBW59ZJukmii4tzVkr554hsGxNnCzQrKkV', 
-  publicKey = 'FIO6pqdX4aT7RGiEB8Rr9G1bbLVDshemjhJ1hp3zpFpeD9GM2bTTq', 
-  privateKey2 = '5KFDwRT7hy26Y898oDFQ6uaZ7nJCm58FY9WRcFWfFLJwyGJ3n19', 
-  publicKey2 = 'FIO7z63H3mvwVhZgVVg4xp7ukaW6NS5sb6qYj3dctipEeYFvytuo1', 
-  testFioAddressName = 'onetest:fiotestnet', 
-  testFioAddressName2 = 'twotest:fiotestnet'
+let privateKey = '', 
+  publicKey = '', 
+  privateKey2 = '', 
+  publicKey2 = '', 
+  testFioAddressName = 'myaddressname:fiotestnet', 
+  testFioAddressName2 = 'myaddressname:fiotestnet'
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 const mockBaseUrl = 'https://monitor.testnet.fioprotocol.io'
