@@ -12,7 +12,12 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
+let privateKey = '5Jhj6vhut9AwJMgEemBW59ZJukmii4tzVkr554hsGxNnCzQrKkV', 
+  publicKey = 'FIO6pqdX4aT7RGiEB8Rr9G1bbLVDshemjhJ1hp3zpFpeD9GM2bTTq', 
+  privateKey2 = '5KFDwRT7hy26Y898oDFQ6uaZ7nJCm58FY9WRcFWfFLJwyGJ3n19', 
+  publicKey2 = 'FIO7z63H3mvwVhZgVVg4xp7ukaW6NS5sb6qYj3dctipEeYFvytuo1', 
+  testFioAddressName = 'onetest:fiotestnet', 
+  testFioAddressName2 = 'twotest:fiotestnet'
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 const mockBaseUrl = 'https://monitor.testnet.fioprotocol.io'
@@ -73,7 +78,7 @@ describe('Testing generic actions', () => {
 
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
-
+    
     expect(result).to.have.all.keys('balance')
     expect(result.balance).to.be.a('number')
   })
@@ -81,6 +86,7 @@ describe('Testing generic actions', () => {
   it(`Register fio domain`, async () => {
     const result = await fioSdk.genericAction('registerFioDomain', { FioDomain: newFioDomain, maxFee: defaultFee })
 
+    console.log(result)
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
