@@ -1,85 +1,89 @@
-# FIO Foundation TypeScript SDK
-The FIO Foundation TypeScript SDK provides a JavaScript SDK, to the FIO Foundation Protocol API.  Allowing wallets to generate FIO private/public keys, register fio addresses and domains, and request funds (requests), view pending requests and sent requests.
+# FIO TypeScript SDK
+The Foundation for Interwallet Operability (FIO) is a consortium of leading blockchain wallets, exchanges and payments providers that seeks to accelerate blockchain adoption by reducing the risk, complexity, and inconvenience of sending and receiving cryptoassets.
+
+For information on FIO, visit the [FIO website](https://fio.foundation).
+
+For information on the FIO Chain, API, and SDKs visit the [FIO Protocol Developer Hub](https://developers.fioprotocol.io).
 
 # Technology
-The FIO Foundation TypeScript SDK is built using tsc, to generate the JavaScript files.
+The FIO TypeScript SDK is built using tsc, to generate the JavaScript files.
 
-# Version 0.5 
-Targets the FIO Protocol API Version 0.5.
+# Version 
+Visit the [FIO Protocol Developer Hub](https://developers.fioprotocol.io) to get information on FIO SDK versions. Only use an SDK that has a major version number that matches the current FIO Protocol blockchain major version number (e.g. 1.x.x).
 
 # Building The FIO TypeScript SDK
 ## Build Dependencies
 The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.
 
 	The package.json references it here: 
-	i.e.
+	
 		../../fiojs
 
 	Make sure the FIOJS project is located in the following directory structure:
-	i.e.
+	
 		/fiojs  - FIO JS SDK files
 		/fiosdk_typescript - FIO TypeScript SDK Files
 
-### Building FIOJS and FIO TypeScript SDKs
-	Navigate to the "iofoundation-io-sdk" folder, in terminal and run the build sdks script: 
-	i.e.
+### Building FIOJS and FIO TypeScript SDKs using build_sdks.sh
+	Navigate to the "iofoundation-io-sdk" folder and run the build_sdks.sh script: 
+	
 		cd fiosdk_typescript
 		cd fiofoundation-io-sdk
 		./build_sdks.sh
 
-#### Building FIOJS SDK, manually?
-	Navigate to the "fiojs" folder in terminal, and run yarn to install it's dependencies, then tsc to compile
-	i.e.
+#### Building FIOJS SDK, manually
+	Navigate to the "fiojs" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README. 
+	
 		cd /fiojs
 		yarn
 		tsc
 		npm test (if you would like to run the unit tests)
 
-#### Building FIO TypeScript SDK, manually?
-	Navigate to the "iofoundation-io-sdk" folder in terminal, and run yarn to install it's dependencies, then tsc to compile
-	i.e.
+#### Building FIO TypeScript SDK, manually
+	Navigate to the "iofoundation-io-sdk" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
+	
 		cd fiosdk_typescript
 		cd fiofoundation-io-fiosdk
 		yarn
 		tsc
 		npm test (if you would like to run the unit tests)
 
-### Errors with compiling the SDKs?
-#### Unable to find tsc?
+### Errors with compiling the SDKs
+#### Unable to find tsc
 	Make sure to install typescript by running, this command in terminal:
+	
 		sudo npm install -g typescript
 
 # Generating Documentation
-	TypeDoc is installed as a dev dependency.
-	Navigate to the "iofoundation-io-sdk" folder, in terminal and run: 
-	i.e.
+	TypeDoc is installed as a dev dependency. Documentation is pre-generated and included with the source code. To manually generate the documentation run: 
+	
 		cd fiosdk_typescript
 		cd fiofoundation-io-sdk
 		./build_doc.sh
 
-The documentation will appear in this folder: "documentation" in the root of the project.
+The documentation will appear in the folder "documentation" in the root of the project.
 
 ## Issues Installing TypeDoc?
 	If typedoc command is not found, install typedoc using the npm global command:
+	
 		npm install --global typedoc
 
 # Using the SDK
-The SDK uses a singleton model.  Requiring initialization in the constructor, as these parameters are referenced in subsequent SDK Calls.
+The SDK uses a singleton model requiring initialization in the constructor as these parameters are referenced in subsequent SDK Calls.
 
 ## Base URL for TestNet
 	http://testnet.fioprotocol.io/v1/
 
 ## TestNet Monitor Tool
-	https://monitor.testnet.fioprotocol.io/#home
+	https://monitor.testnet.fioprotocol.io/
 
 ## Initializing the SDK
-	Pass in the wallet user's private/public key, 
-	the base URL to the FIO Foundation API - i.e. http://testnet.fioprotocol.io/v1/
-	io - the ?
+	privateKey/publicKey - the wallet user's private/public keys
+	baseURL - the base URL to the FIO Protocol blockchain API (e.g., http://testnet.fioprotocol.io/v1/)
+	io - fetchJson
 	fetchjson - a reference to fetchJSON 
-	registerMockUrl - this is the URL to the FIO Foundation API mock server and is used by the registerOnBehalfOfUser method
-
-	i.e.
+	registerMockUrl - the URL of the server used to auto-register FIO names for wallet users. This is only used by wallets that have deployed a central server used to register names on their domain. It is used by the registerOnBehalfOfUser method
+	
 	constructor(
 	    privateKey: string,
 	    publicKey: string,
@@ -101,42 +105,45 @@ The SDK uses a singleton model.  Requiring initialization in the constructor, as
 	this.fioSDK = new FIOSDK(privateFioKey, publicFioKey, 'http://testnet.fioprotocol.io/v1/', this.io, this.fetchJson, '')
 
 # Workflow for using the SDK with TestNet
-Most Signed API calls now charge fees, to make the API call.  And most Signed API Calls require that a fio address, is registered with the user making the call. 
+Most Signed API calls charge fees and require a FIO address that is associated with the user making the call. 
 
-#### When registering a new address for the first time.  The account will not have any funds to do API calls.
+#### Creating a test account with FIO tokens
 
-This is the order of sequence to get funds in an account for the first time, on TestNet.  In order to run the unit tests. 
-1. manually create two private/public FIO key pairs 
-	A) Navigate to the website: https://monitor.testnet.fioprotocol.io/#home
-	B) Select the 'Create Keypair' button (top left of the website)
-	C) copy the keypairs 
-2. manually register a fio address for both of these FIO key pairs. 
-	A) Navigate to the website: https://monitor.testnet.fioprotocol.io/#account
-	B) Select the 'Register Address' button
-	C) type in a fio address 
-	D) paste in one of the public keys (created above)
-	E) Select the 'Create' button
-	F) do this for each public key pair (twice).  The created fio address will be in this format, "mytest:fiotestnet"
-3. manually transfer funds into these fio addresses.
-	A) Navigate to the website: https://monitor.testnet.fioprotocol.io/#home
-	B) Select the 'Faucet' button
-	C) paste in one of the public keys (created above)
-	D) Select the 'Send Coins' button
-	E) do this for each public key pair (twice)
-4. Now one will have funds available, to call Signed API calls.
-5. Edit the unit test script to add these fio addresses, and the private/public FIO key pairs
-	A) Edit the testnet.spec file
-		a) testnet.spec is located here: fiosdk_typescript/fiofoundation-io-fiosdk/tests/testnet.spec
-		b) variables to edit: let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
-6. run the unit tests i.e. 
+When running a test you will want to register addresses and transfer funds. But, registering a new address for the first time requires FIO tokens. Therefore, some manual setup is required to associate FIO tokens with a FIO public key. To set up a FIO public key with FIO tokents in a test environment:
+ 
+1. Manually create two private/public FIO key pairs 
+	1. Navigate to the website: https://monitor.testnet.fioprotocol.io
+	2. Select the 'Create Keypair' button (top left of the website)
+	3. Copy the keypairs and FIO Internal Account 
+2. Manually register a FIO address for both of these FIO key pairs. 
+	1. Navigate to the website: https://monitor.testnet.fioprotocol.io
+	2. Select the 'Register Address' button
+	3. Type in a FIO address 
+	4. Paste in one of the public keys (created above)
+	5. Select the 'Create' button
+	6. Do this for each public key pair (twice).  The created FIO address will be in this format, "mytest:fiotestnet"
+3. Manually transfer funds into these FIO addresses.
+	1. Navigate to the website: https://monitor.testnet.fioprotocol.io
+	2. Select the 'Faucet' button
+	3. Paste in one of the public keys (created above)
+	4. Select the 'Send Coins' button
+	5. Do this for each public key pair (twice)
+4. These FIO public addresses now have funds available for making Signed API calls.
+5. Edit the test script to add these FIO addresses and the private/public FIO key pairs
+	1. Edit the privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2 variables in the testnet.spec file (/fiofoundation-io-fiosdk/tests/testnet.spec)
+6. Run the tests: 
 	npm test
 
-#### When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.
-1. Call getFee to get the fee for the Signed API call.
-2. Call the API Signed call with the above fee found.
+#### When calling a Signed API call that charges FEES, 
+	Use the following steps to determine the fee and pass it to the signed call.
+
+1. Call getFee to get the fee for the Signed API call
+2. Call the API Signed call with the fee
 
 # Creating your own FIO Private/Public Keys?
-The SDK provides FIO Key generation.  Here are the key details, if the SDK is not used for Key Generation.
+The SDK provides calls to generate FIO Private/Public Key pairs.  
+
+The following information can be used to manually generate FIO keys:
 
 FIO Keys use SLIP-235 for BIP-0044.
 https://github.com/satoshilabs/slips/blob/master/slip-0044.md
