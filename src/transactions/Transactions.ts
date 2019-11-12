@@ -70,7 +70,7 @@ export class Transactions {
     transaction.ref_block_num = block.block_num & 0xFFFF
     transaction.ref_block_prefix = block.ref_block_prefix
     const expiration = new Date(chain.head_block_time + 'Z')
-    expiration.setSeconds(expiration.getSeconds() + 120)
+    expiration.setSeconds(expiration.getSeconds() + 180)
     const expirationStr = expiration.toISOString()
     transaction.expiration = expirationStr.substr(0, expirationStr.length - 1)
     if (dryRun) {
