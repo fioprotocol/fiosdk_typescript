@@ -85,8 +85,6 @@ export class FIOSDK {
 
   public transactions: Transactions
 
-  public io: { fetch(param: any, param2: any): any }
-
   /**
    * @ignore
    */
@@ -106,7 +104,6 @@ export class FIOSDK {
    * @param privateKey the fio private key of the client sending requests to FIO API.
    * @param publicKey the fio public key of the client sending requests to FIO API.
    * @param baseUrl the url to the FIO API.
-   * @param io
    * @param fetchjson
    * @param registerMockUrl the url to the mock server
    */
@@ -114,15 +111,12 @@ export class FIOSDK {
     privateKey: string,
     publicKey: string,
     baseUrl: string,
-    io: any,
     fetchjson: FetchJson,
     registerMockUrl = '',
   ) {
     this.transactions = new Transactions()
-    this.io = io
     Transactions.baseUrl = baseUrl
     Transactions.FioProvider = Fio
-    Transactions.io = io
     Transactions.fetchJson = fetchjson
     this.registerMockUrl = registerMockUrl
     this.privateKey = privateKey

@@ -56,7 +56,6 @@ before(async () => {
     publicKey,
     baseUrl,
     fetchJson,
-    fetchJson,
     mockBaseUrl
   )
   testFioAddressName = generateTestingFioAddress()
@@ -70,7 +69,6 @@ before(async () => {
     privateKey2,
     publicKey2,
     baseUrl,
-    fetchJson,
     fetchJson,
     mockBaseUrl
   )

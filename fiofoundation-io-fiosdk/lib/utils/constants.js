@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 class Constants {
 }
+exports.Constants = Constants;
 Constants.endPoints = {
     AddPublicAddress: 'add_pub_address',
     SetFioDomainVisibility: 'set_fio_domain_public',
@@ -26,4 +27,3 @@ Constants.rawAbiAccountName = [
 ];
 Constants.multiplier = 1000000000;
 Constants.defaultAccount = 'fio.address';
-exports.Constants = Constants;
