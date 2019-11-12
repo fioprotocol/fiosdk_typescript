@@ -12,7 +12,6 @@ const textDecoder: TextDecoder = new TextDecoder()
 export class Transactions {
   public static baseUrl: string
   public static abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
-  public static io: { fetch(param: any, param2: any): Promise<any> }
   public static FioProvider: {
     prepareTransaction(param: any): Promise<any>;
     accountHash(pubkey: string): string
