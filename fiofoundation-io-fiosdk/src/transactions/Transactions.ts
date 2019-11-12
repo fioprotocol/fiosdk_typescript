@@ -70,8 +70,8 @@ export class Transactions {
     const block = await this.getBlock(chain).catch((error) => console.error('block: ' + error))
     transaction.ref_block_num = block.block_num & 0xFFFF
     transaction.ref_block_prefix = block.ref_block_prefix
-    const expiration = new Date(block.timestamp + 'Z')
-    expiration.setSeconds(expiration.getSeconds() + 240)
+    const expiration = new Date(chain.head_block_time + 'Z')
+    expiration.setSeconds(expiration.getSeconds() + 120)
     const expirationStr = expiration.toISOString()
     transaction.expiration = expirationStr.substr(0, expirationStr.length - 1)
     if (dryRun) {
