@@ -1,0 +1,336 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>fiofoundation-io-fiosdk</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">fiofoundation-io-fiosdk</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> fiofoundation-io-fiosdk</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#fio-foundation-typescript-sdk" id="fio-foundation-typescript-sdk" style="color: inherit; text-decoration: none;">
+					<h1>FIO Foundation TypeScript SDK</h1>
+				</a>
+				<p>The FIO Foundation TypeScript SDK provides a JavaScript SDK, to the FIO Foundation Protocol API.  Allowing wallets to generate FIO private/public keys, register fio addresses and domains, and request funds (requests), view pending requests and sent requests.</p>
+				<a href="#technology" id="technology" style="color: inherit; text-decoration: none;">
+					<h1>Technology</h1>
+				</a>
+				<p>The FIO Foundation TypeScript SDK is built using tsc, to generate the JavaScript files.</p>
+				<a href="#version-05" id="version-05" style="color: inherit; text-decoration: none;">
+					<h1>Version 0.5</h1>
+				</a>
+				<p>Targets the FIO Protocol API Version 0.5.</p>
+				<a href="#building-the-fio-typescript-sdk" id="building-the-fio-typescript-sdk" style="color: inherit; text-decoration: none;">
+					<h1>Building The FIO TypeScript SDK</h1>
+				</a>
+				<a href="#build-dependencies" id="build-dependencies" style="color: inherit; text-decoration: none;">
+					<h2>Build Dependencies</h2>
+				</a>
+				<p>The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.</p>
+				<pre><code>The package<span class="hljs-selector-class">.json</span> references it here:
+<span class="hljs-selector-tag">i</span><span class="hljs-selector-class">.e</span>.
+    ../../fiojs
+
+Make sure the FIOJS project is located <span class="hljs-keyword">in</span> the following directory structure:
+<span class="hljs-selector-tag">i</span><span class="hljs-selector-class">.e</span>.
+    /fiojs  - FIO JS SDK files
+    /fiosdk_typescript - FIO TypeScript SDK Files</code></pre>
+				<a href="#building-fiojs-and-fio-typescript-sdks" id="building-fiojs-and-fio-typescript-sdks" style="color: inherit; text-decoration: none;">
+					<h3>Building FIOJS and FIO TypeScript SDKs</h3>
+				</a>
+				<pre><code>Navigate <span class="hljs-keyword">to</span> the <span class="hljs-string">"iofoundation-io-sdk"</span> folder, in terminal <span class="hljs-built_in">and</span> run the build sdks <span class="hljs-keyword">scrip</span><span class="hljs-variable">t:</span>
+i.<span class="hljs-keyword">e</span>.
+    <span class="hljs-keyword">cd</span> fiosdk_typescript
+    <span class="hljs-keyword">cd</span> fiofoundation-io-sdk
+    ./build_sdks.<span class="hljs-keyword">sh</span></code></pre>
+				<a href="#building-fiojs-sdk-manually" id="building-fiojs-sdk-manually" style="color: inherit; text-decoration: none;">
+					<h4>Building FIOJS SDK, manually?</h4>
+				</a>
+				<pre><code>Navigate <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> <span class="hljs-string">"fiojs"</span> folder <span class="hljs-keyword">in</span> terminal, <span class="hljs-keyword">and</span> <span class="hljs-built_in">run</span> yarn <span class="hljs-keyword">to</span> install <span class="hljs-keyword">it</span>'s dependencies, <span class="hljs-keyword">then</span> tsc <span class="hljs-keyword">to</span> compile
+i.e.
+    cd /fiojs
+    yarn
+    tsc
+    npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-built_in">run</span> <span class="hljs-keyword">the</span> unit tests)</code></pre>
+				<a href="#building-fio-typescript-sdk-manually" id="building-fio-typescript-sdk-manually" style="color: inherit; text-decoration: none;">
+					<h4>Building FIO TypeScript SDK, manually?</h4>
+				</a>
+				<pre><code>Navigate <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> <span class="hljs-string">"iofoundation-io-sdk"</span> folder <span class="hljs-keyword">in</span> terminal, <span class="hljs-keyword">and</span> <span class="hljs-built_in">run</span> yarn <span class="hljs-keyword">to</span> install <span class="hljs-keyword">it</span>'s dependencies, <span class="hljs-keyword">then</span> tsc <span class="hljs-keyword">to</span> compile
+i.e.
+    cd fiosdk_typescript
+    cd fiofoundation-io-fiosdk
+    yarn
+    tsc
+    npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-built_in">run</span> <span class="hljs-keyword">the</span> unit tests)</code></pre>
+				<a href="#errors-with-compiling-the-sdks" id="errors-with-compiling-the-sdks" style="color: inherit; text-decoration: none;">
+					<h3>Errors with compiling the SDKs?</h3>
+				</a>
+				<a href="#unable-to-find-tsc" id="unable-to-find-tsc" style="color: inherit; text-decoration: none;">
+					<h4>Unable to find tsc?</h4>
+				</a>
+				<pre><code>Make sure <span class="hljs-keyword">to</span> install typescript <span class="hljs-keyword">by</span> running, <span class="hljs-keyword">this</span> command <span class="hljs-keyword">in</span> terminal:
+    sudo <span class="hljs-built_in">npm</span> install -g typescript</code></pre>
+				<a href="#generating-documentation" id="generating-documentation" style="color: inherit; text-decoration: none;">
+					<h1>Generating Documentation</h1>
+				</a>
+				<pre><code>TypeDoc is installed <span class="hljs-keyword">as</span> <span class="hljs-keyword">a</span> dev dependency.
+Navigate <span class="hljs-built_in">to</span> <span class="hljs-keyword">the</span> <span class="hljs-string">"iofoundation-io-sdk"</span> <span class="hljs-built_in">folder</span>, <span class="hljs-keyword">in</span> terminal <span class="hljs-keyword">and</span> run: 
+i.e.
+    cd fiosdk_typescript
+    cd fiofoundation-io-sdk
+    ./build_doc.sh</code></pre><p>The documentation will appear in this folder: &quot;documentation&quot; in the root of the project.</p>
+				<a href="#issues-installing-typedoc" id="issues-installing-typedoc" style="color: inherit; text-decoration: none;">
+					<h2>Issues Installing TypeDoc?</h2>
+				</a>
+				<pre><code><span class="hljs-keyword">If</span> typedoc <span class="hljs-keyword">command</span> is <span class="hljs-keyword">not</span> found, <span class="hljs-keyword">install</span> typedoc using the npm global <span class="hljs-keyword">command</span>:
+    npm <span class="hljs-keyword">install</span> --global typedoc</code></pre>
+				<a href="#using-the-sdk" id="using-the-sdk" style="color: inherit; text-decoration: none;">
+					<h1>Using the SDK</h1>
+				</a>
+				<p>The SDK uses a singleton model.  Requiring initialization in the constructor, as these parameters are referenced in subsequent SDK Calls.</p>
+				<a href="#base-url-for-testnet" id="base-url-for-testnet" style="color: inherit; text-decoration: none;">
+					<h2>Base URL for TestNet</h2>
+				</a>
+				<pre><code>http:<span class="hljs-regexp">//</span>testnet.fioprotocol.io<span class="hljs-regexp">/v1/</span></code></pre>
+				<a href="#testnet-monitor-tool" id="testnet-monitor-tool" style="color: inherit; text-decoration: none;">
+					<h2>TestNet Monitor Tool</h2>
+				</a>
+				<pre><code><span class="hljs-symbol">https:</span>//monitor.testnet.fioprotocol.io/<span class="hljs-meta">#home</span></code></pre>
+				<a href="#initializing-the-sdk" id="initializing-the-sdk" style="color: inherit; text-decoration: none;">
+					<h2>Initializing the SDK</h2>
+				</a>
+				<pre><code>Pass <span class="hljs-keyword">in</span> the wallet user<span class="hljs-symbol">'s</span> private/public key,
+the base URL <span class="hljs-keyword">to</span> the FIO Foundation API - i.e. http://testnet.fioprotocol.io/v1/
+io - the ?
+fetchjson - a reference <span class="hljs-keyword">to</span> fetchJSON 
+registerMockUrl - this <span class="hljs-keyword">is</span> the URL <span class="hljs-keyword">to</span> the FIO Foundation API mock server <span class="hljs-keyword">and</span> <span class="hljs-keyword">is</span> used by the registerOnBehalfOfUser method
+
+i.e.
+constructor(
+    privateKey: <span class="hljs-built_in">string</span>,
+    publicKey: <span class="hljs-built_in">string</span>,
+    baseUrl: <span class="hljs-built_in">string</span>,
+    io: any,
+    fetchjson: FetchJson,
+    registerMockUrl = '',
+  )
+
+The user<span class="hljs-symbol">'s</span> private/public key can be generated by calling these methods <span class="hljs-keyword">on</span> the sdk:
+    createPrivateKeyMnemonic <span class="hljs-keyword">OR</span> createPrivateKey
+    <span class="hljs-keyword">AND</span>
+    derivedPublicKey</code></pre>
+				<a href="#using-the-sdk-1" id="using-the-sdk-1" style="color: inherit; text-decoration: none;">
+					<h2>Using the SDK</h2>
+				</a>
+				<a href="#example-usage-in-javascript" id="example-usage-in-javascript" style="color: inherit; text-decoration: none;">
+					<h3>Example Usage in JavaScript</h3>
+				</a>
+				<pre><code>import { FIOSDK } from 'fiofoundation-io-fiosdk'
+
+this.fioSDK = <span class="hljs-keyword">new</span> <span class="hljs-constructor">FIOSDK(<span class="hljs-params">privateFioKey</span>, <span class="hljs-params">publicFioKey</span>, '<span class="hljs-params">http</span>:<span class="hljs-operator">/</span><span class="hljs-operator">/</span><span class="hljs-params">testnet</span>.<span class="hljs-params">fioprotocol</span>.<span class="hljs-params">io</span><span class="hljs-operator">/</span><span class="hljs-params">v1</span><span class="hljs-operator">/</span>', <span class="hljs-params">this</span>.<span class="hljs-params">io</span>, <span class="hljs-params">this</span>.<span class="hljs-params">fetchJson</span>, '')</span></code></pre>
+				<a href="#workflow-for-using-the-sdk-with-testnet" id="workflow-for-using-the-sdk-with-testnet" style="color: inherit; text-decoration: none;">
+					<h1>Workflow for using the SDK with TestNet</h1>
+				</a>
+				<p>Most Signed API calls now charge fees, to make the API call.  And most Signed API Calls require that a fio address, is registered with the user making the call. </p>
+				<a href="#when-registering-a-new-address-for-the-first-time--the-account-will-not-have-any-funds-to-do-api-calls" id="when-registering-a-new-address-for-the-first-time--the-account-will-not-have-any-funds-to-do-api-calls" style="color: inherit; text-decoration: none;">
+					<h4>When registering a new address for the first time.  The account will not have any funds to do API calls.</h4>
+				</a>
+				<p>This is the order of sequence to get funds in an account for the first time, on TestNet.  In order to run the unit tests. </p>
+				<ol>
+					<li>manually create two private/public FIO key pairs
+						A) Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io/#home">https://monitor.testnet.fioprotocol.io/#home</a>
+						B) Select the &#39;Create Keypair&#39; button (top left of the website)
+					C) copy the keypairs </li>
+					<li>manually register a fio address for both of these FIO key pairs.
+						A) Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io/#account">https://monitor.testnet.fioprotocol.io/#account</a>
+						B) Select the &#39;Register Address&#39; button
+						C) type in a fio address
+						D) paste in one of the public keys (created above)
+						E) Select the &#39;Create&#39; button
+					F) do this for each public key pair (twice).  The created fio address will be in this format, &quot;mytest:fiotestnet&quot;</li>
+					<li>manually transfer funds into these fio addresses.
+						A) Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io/#home">https://monitor.testnet.fioprotocol.io/#home</a>
+						B) Select the &#39;Faucet&#39; button
+						C) paste in one of the public keys (created above)
+						D) Select the &#39;Send Coins&#39; button
+					E) do this for each public key pair (twice)</li>
+					<li>Now one will have funds available, to call Signed API calls.</li>
+					<li>Edit the unit test script to add these fio addresses, and the private/public FIO key pairs
+						A) Edit the testnet.spec file<pre><code> a) testnet.spec is located here: fiosdk_typescript/fiofoundation-io-fiosdk/tests/testnet.spec
+ b) variables to edit: let<span class="hljs-keyword"> private</span>Key,<span class="hljs-keyword"> public</span>Key,<span class="hljs-keyword"> private</span>Key2,<span class="hljs-keyword"> public</span>Key2, testFioAddressName, testFioAddressName2</code></pre></li>
+					<li>run the unit tests i.e.
+					npm test</li>
+				</ol>
+				<a href="#when-calling-a-signed-api-call-that-charges-fees-this-is-the-sequence-to-pass-in-the-fee-to-charge" id="when-calling-a-signed-api-call-that-charges-fees-this-is-the-sequence-to-pass-in-the-fee-to-charge" style="color: inherit; text-decoration: none;">
+					<h4>When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.</h4>
+				</a>
+				<ol>
+					<li>Call getFee to get the fee for the Signed API call.</li>
+					<li>Call the API Signed call with the above fee found.</li>
+				</ol>
+				<a href="#creating-your-own-fio-privatepublic-keys" id="creating-your-own-fio-privatepublic-keys" style="color: inherit; text-decoration: none;">
+					<h1>Creating your own FIO Private/Public Keys?</h1>
+				</a>
+				<p>The SDK provides FIO Key generation.  Here are the key details, if the SDK is not used for Key Generation.</p>
+				<p>FIO Keys use SLIP-235 for BIP-0044.
+				<a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">https://github.com/satoshilabs/slips/blob/master/slip-0044.md</a></p>
+				<p>Following the EOS example of private and public key generation. We replace EOS slip &#39;194&#39; with &#39;235&#39;.  And &#39;EOS&#39; public key prefix with &#39;FIO&#39;.
+				<a href="https://eosio.stackexchange.com/questions/397/generate-eos-keys-from-mnemonic-seed">https://eosio.stackexchange.com/questions/397/generate-eos-keys-from-mnemonic-seed</a></p>
+				<a href="#fio-key-derivation-path" id="fio-key-derivation-path" style="color: inherit; text-decoration: none;">
+					<h2>FIO Key Derivation Path:</h2>
+				</a>
+				<p>&quot;44&#39;/235&#39;/0&#39;/0/0&quot;</p>
+				<a href="#fio-key-generation-testing" id="fio-key-generation-testing" style="color: inherit; text-decoration: none;">
+					<h2>FIO Key Generation Testing</h2>
+				</a>
+				<p>Using this mnemonic phrase:
+				&quot;valley alien library bread worry brother bundle hammer loyal barely dune brave&quot;</p>
+				<p>This is the expected Private Key:
+				&quot;5Kbb37EAqQgZ9vWUHoPiC2uXYhyGSFNbL6oiDp24Ea1ADxV1qnu&quot;</p>
+				<p>This is the expected Public Key:
+				&quot;FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o&quot;</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+					<li class=" tsd-kind-class">
+						<a href="classes/fiosdk.html" class="tsd-kind-icon">FIOSDK</a>
+					</li>
+					<li class=" tsd-kind-variable tsd-is-not-exported">
+						<a href="globals.html#ecc" class="tsd-kind-icon">Ecc</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>

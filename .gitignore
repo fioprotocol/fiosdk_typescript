@@ -1,8 +1,7 @@
 .DS_Store
 /example/fiofoundation-io-fiosdk
-/fiofoundation-io-fiosdk/test/fails.tst.js
 /.vscode
-/fiofoundation-io-fiosdk/package-lock.json
+package-lock.json
 node_modules
-/fiofoundation-io-fiosdk/android/build
-documentation
+/android/build
+.idea/
