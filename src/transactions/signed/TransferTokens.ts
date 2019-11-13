@@ -22,6 +22,17 @@ export class TransferTokens extends SignedTransaction {
     this.validationRules = validationRules.transferTokens
   }
 
+  public prepareResponse(result: any): any {
+    if (!result.processed) return result
+
+    const apiResponse = this.parseProcessedResult(result.processed)
+    return {
+      transaction_id: result.transaction_id,
+      block_num: result.processed.block_num,
+      ...apiResponse
+    }
+  }
+
   getData(): any {
     let actor = this.getActor()
 

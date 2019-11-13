@@ -379,8 +379,10 @@ describe('Transfer tokens', () => {
       maxFee: defaultFee,
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('status', 'fee_collected', 'transaction_id', 'block_num')
     expect(result.status).to.be.a('string')
+    expect(result.transaction_id).to.be.a('string')
+    expect(result.block_num).to.be.a('number')
     expect(result.fee_collected).to.be.a('number')
   })
 
