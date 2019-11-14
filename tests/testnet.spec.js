@@ -82,9 +82,17 @@ describe('Testing generic actions', () => {
   })
 
   it(`Register fio domain`, async () => {
-    const result = await fioSdk.genericAction('registerFioDomain', { FioDomain: newFioDomain, maxFee: defaultFee })
+    const result = await fioSdk.genericAction('registerFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
 
-    console.log(result)
+    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`Renew fio domain`, async () => {
+    const result = await fioSdk.genericAction('renewFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
+
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
