@@ -559,7 +559,13 @@ export class FIOSDK {
         )
       case 'registerFioDomain':
         return this.registerFioDomain(
-          params.FioDomain,
+          params.fioDomain,
+          params.maxFee,
+          params.walletFioAddress || '',
+        )
+      case 'renewFioDomain':
+        return this.renewFioDomain(
+          params.fioDomain,
           params.maxFee,
           params.walletFioAddress || '',
         )
