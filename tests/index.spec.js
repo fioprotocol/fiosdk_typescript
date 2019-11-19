@@ -102,6 +102,7 @@ describe('Testing generic actions', () => {
 
   it(`Register fio domain`, async () => {
     const result = await fioSdk.genericAction('registerFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
+
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
@@ -124,9 +125,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       walletFioAddress: ''
     })
-    expect(result).to.have.all.keys('status', 'fee_collected')
+
+    expect(result).to.have.all.keys('status', 'fee_collected', 'expiration')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.expiration).to.be.a('number')
   })
 
   it(`Register fio address`, async () => {
@@ -169,9 +172,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       walletFioAddress: ''
     })
-    expect(result).to.have.all.keys('status', 'fee_collected')
+
+    expect(result).to.have.all.keys('status', 'fee_collected', 'expiration')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.expiration).to.be.a('number')
   })
 
   it(`setFioDomainVisibility true`, async () => {
@@ -182,9 +187,10 @@ describe('Testing generic actions', () => {
       walletFioAddress: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('status', 'fee_collected', 'expiration')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.expiration).to.be.a('number')
   })
 
   it(`isAvailable true`, async () => {
