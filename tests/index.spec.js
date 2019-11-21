@@ -9,6 +9,8 @@ const fetchJson = async (uri, opts = {}) => {
   return res.json()
 }
 
+const BILLION = 1000000000
+
 let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
@@ -26,8 +28,8 @@ const faucetFioAddress = ''
 const faucetPublicAddress = ''
 
 const fioTokenCode = 'FIO'
-const fundAmount = 250000000000
-const defaultFee = 30000000000
+const fundAmount = 25 * BILLION
+const defaultFee = 30 * BILLION
 const fundReceiveTimout = 60000
 
 let fioSdk, fioSdk2
@@ -80,7 +82,11 @@ before(async () => {
   } catch (e) {
     console.log(e);
   }
-  const ress = await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
+
+  await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
+  await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
+  await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
+
   await timeout(fundReceiveTimout)
 })
 
@@ -263,7 +269,7 @@ describe('Testing generic actions', () => {
 })
 
 describe('Request funds, approve and send', () => {
-  const fundsAmount = 3000000000
+  const fundsAmount = 3 * BILLION
   let requestId
   const memo = 'testing fund request'
 
@@ -337,7 +343,7 @@ describe('Request funds, approve and send', () => {
 })
 
 describe('Request funds, reject', () => {
-  const fundsAmount = 4000000000
+  const fundsAmount = 4 * BILLION
   let requestId
   const memo = 'testing fund request'
 
@@ -390,7 +396,7 @@ describe('Request funds, reject', () => {
 })
 
 describe('Transfer tokens', () => {
-  const fundsAmount = 1000000000
+  const fundsAmount = BILLION
   let fioBalance = 0
   let fioBalanceAfter = 0
 

@@ -9,6 +9,8 @@ const fetchJson = async (uri, opts = {}) => {
   return res.json()
 }
 
+const BILLION = 1000000000
+
 /**
  * Please set your private/public keys and existing fioAddresses
  */
@@ -24,7 +26,7 @@ const mockBaseUrl = 'https://monitor.testnet.fioprotocol.io'
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
-const defaultFee = 30000000000
+const defaultFee = 30 * BILLION
 
 let fioSdk, fioSdk2
 
@@ -246,7 +248,7 @@ describe('Testing generic actions', () => {
 })
 
 describe('Request funds, approve and send', () => {
-  const fundsAmount = 3000000000
+  const fundsAmount = 3 * BILLION
   let requestId
   const memo = 'testing fund request'
 
@@ -320,7 +322,7 @@ describe('Request funds, approve and send', () => {
 })
 
 describe('Request funds, reject', () => {
-  const fundsAmount = 4000000000
+  const fundsAmount = 4 * BILLION
   let requestId
   const memo = 'testing fund request'
 
@@ -373,7 +375,7 @@ describe('Request funds, reject', () => {
 })
 
 describe('Transfer tokens', () => {
-  const fundsAmount = 1000000000
+  const fundsAmount = BILLION
   let fioBalance = 0
   let fioBalanceAfter = 0
 
