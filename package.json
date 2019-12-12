@@ -1,26 +1,7 @@
 {
-    "_from": "react-native-fio",
-    "_id": "react-native-fio@1.0.0",
-    "_inBundle": false,
-    "_integrity": "sha512-nE4gfLu6Y02jZkZULTVzkpn+Ck+Fadsf07WZL02VruHbgEfrCadxxg8csPaEJkvktuOHpPPCYZ8JJjxJhuia1w==",
-    "_location": "/fiofoundation-io-fiosdk",
-    "_phantomChildren": {},
-    "_requested": {
-        "type": "tag",
-        "registry": true,
-        "raw": "fiofoundation-io-fiosdk",
-        "name": "fiofoundation-io-fiosdk",
-        "escapedName": "fiofoundation-io-fiosdk",
-        "rawSpec": "",
-        "saveSpec": null,
-        "fetchSpec": "latest"
-    },
-    "_requiredBy": [
-        "#USER",
-        "/"
-    ],
-    "deprecated": false,
-    "description": "Fio TypeScript SDK",
+    "name": "fiosdk",
+    "version": "0.5.3",
+    "description": "The Foundation for Interwallet Operability (FIO) is a consortium of leading blockchain wallets, exchanges and payments providers that seeks to accelerate blockchain adoption by reducing the risk, complexity, and inconvenience of sending and receiving cryptoassets.",
     "keywords": [
         "fio",
         "native",
@@ -28,11 +9,15 @@
         "blockchain"
     ],
     "main": "index.js",
-    "name": "fiofoundation-io-fiosdk",
+    "directories": {
+        "lib": "lib",
+        "test": "tests"
+    },
     "scripts": {
         "test": "mocha -t 80000 tests/testnet.spec.js"
     },
-    "version": "1.0.0",
+    "author": "Shawn@dapix.io",
+    "license": "MIT",
     "devDependencies": {
         "@types/chai": "^4.2.4",
         "@types/mocha": "^5.2.7",
@@ -52,12 +37,9 @@
     "dependencies": {
         "@types/text-encoding": "0.0.35",
         "bip39": "^3.0.2",
-        "eosjs-ecc": "^4.0.4",
-        "fiojs": "file:../fiojs",
+        "@fioprotocol/fiojs": "0.5.1",
         "hdkey": "^1.1.1",
-        "js-sha512": "^0.8.0",
         "livr": "^2.3.0",
-        "react-native-eos": "^1.0.4",
         "wif": "^2.0.6"
     },
     "jest": {
