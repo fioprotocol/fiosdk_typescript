@@ -1,4 +1,4 @@
-import { Fio } from 'fiojs'
+import { Fio } from '@fioprotocol/fiojs'
 import {
   AbiResponse,
   AddPublicAddressResponse,
@@ -29,7 +29,7 @@ import { Constants } from './utils/constants'
 /**
  * @ignore
  */
-const { Ecc } = require('fiojs')
+const { Ecc } = require('@fioprotocol/fiojs')
 
 /**
  * @ignore
