@@ -11,12 +11,17 @@ The FIO TypeScript SDK is built using tsc, to generate the JavaScript files.
 # Version 
 Visit the [FIO Protocol Developer Hub](https://developers.fioprotocol.io) to get information on FIO SDK versions. Only use an SDK that has a major version number that matches the current FIO Protocol blockchain major version number (e.g. 1.x.x).
 
-# Building The FIO TypeScript SDK
+# Installing FIO TypeScript SDK, using npm:
+## The NPM Version is here:
+	@fioprotocol/fiosdk
+
+# Building The FIO TypeScript SDK, manually
 ## Build Dependencies
 The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.
 
-The package.json references it here: 
-	
+The package.json reference for FIOJS, must be changed to a directory path.  If building FIOJS and Typescript SDK manually (rather than using the NPM Version)
+
+	i.e : 
 	../../fiojs
 
 Make sure the FIOJS project is located in the following directory structure:
@@ -25,10 +30,9 @@ Make sure the FIOJS project is located in the following directory structure:
 	/fiosdk_typescript - FIO TypeScript SDK Files
 
 ### Building FIOJS and FIO TypeScript SDKs using build_sdks.sh
-Navigate to the "iofoundation-io-sdk" folder and run the build_sdks.sh script: 
+Navigate to the "fiosdk_typescript" folder and run the build_sdks.sh script: 
 	
 	cd fiosdk_typescript
-	cd fiofoundation-io-sdk
 	./build_sdks.sh
 
 #### Building FIOJS SDK, manually
@@ -40,10 +44,9 @@ Navigate to the "fiojs" folder, run yarn to install its dependencies, then run t
 	npm test (if you would like to run the unit tests)
 
 #### Building FIO TypeScript SDK, manually
-Navigate to the "iofoundation-io-sdk" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
+Navigate to the "fiofoundation-io-sdk" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
 	
 	cd fiosdk_typescript
-	cd fiofoundation-io-fiosdk
 	yarn
 	tsc
 	npm test (if you would like to run the unit tests)
@@ -58,7 +61,6 @@ Make sure to install typescript by running, this command in terminal:
 TypeDoc is installed as a dev dependency. Documentation is pre-generated and included with the source code. To manually generate the documentation run: 
 	
 	cd fiosdk_typescript
-	cd fiofoundation-io-sdk
 	./build_doc.sh
 
 The documentation will appear in the folder "documentation" in the root of the project.
