@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>fiofoundation-io-fiosdk</title>
+	<title>@fioprotocol/fiosdk</title>
 	<meta name="description" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
@@ -22,7 +22,7 @@
 						<li class="state loading">Preparing search index...</li>
 						<li class="state failure">The search index is not available</li>
 					</ul>
-					<a href="index.html" class="title">fiofoundation-io-fiosdk</a>
+					<a href="index.html" class="title">@fioprotocol/fiosdk</a>
 				</div>
 				<div class="table-cell" id="tsd-widgets">
 					<div id="tsd-filter">
@@ -54,7 +54,7 @@
 					<a href="globals.html">Globals</a>
 				</li>
 			</ul>
-			<h1> fiofoundation-io-fiosdk</h1>
+			<h1> @fioprotocol/fiosdk</h1>
 		</div>
 	</div>
 </header>
@@ -62,86 +62,84 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<a href="#fio-foundation-typescript-sdk" id="fio-foundation-typescript-sdk" style="color: inherit; text-decoration: none;">
-					<h1>FIO Foundation TypeScript SDK</h1>
+				<a href="#fio-typescript-sdk" id="fio-typescript-sdk" style="color: inherit; text-decoration: none;">
+					<h1>FIO TypeScript SDK</h1>
 				</a>
-				<p>The FIO Foundation TypeScript SDK provides a JavaScript SDK, to the FIO Foundation Protocol API.  Allowing wallets to generate FIO private/public keys, register fio addresses and domains, and request funds (requests), view pending requests and sent requests.</p>
+				<p>The Foundation for Interwallet Operability (FIO) is a consortium of leading blockchain wallets, exchanges and payments providers that seeks to accelerate blockchain adoption by reducing the risk, complexity, and inconvenience of sending and receiving cryptoassets.</p>
+				<p>For information on FIO, visit the <a href="https://fio.foundation">FIO website</a>.</p>
+				<p>For information on the FIO Chain, API, and SDKs visit the <a href="https://developers.fioprotocol.io">FIO Protocol Developer Hub</a>.</p>
 				<a href="#technology" id="technology" style="color: inherit; text-decoration: none;">
 					<h1>Technology</h1>
 				</a>
-				<p>The FIO Foundation TypeScript SDK is built using tsc, to generate the JavaScript files.</p>
-				<a href="#version-05" id="version-05" style="color: inherit; text-decoration: none;">
-					<h1>Version 0.5</h1>
+				<p>The FIO TypeScript SDK is built using tsc, to generate the JavaScript files.</p>
+				<a href="#version" id="version" style="color: inherit; text-decoration: none;">
+					<h1>Version</h1>
 				</a>
-				<p>Targets the FIO Protocol API Version 0.5.</p>
-				<a href="#building-the-fio-typescript-sdk" id="building-the-fio-typescript-sdk" style="color: inherit; text-decoration: none;">
-					<h1>Building The FIO TypeScript SDK</h1>
+				<p>Visit the <a href="https://developers.fioprotocol.io">FIO Protocol Developer Hub</a> to get information on FIO SDK versions. Only use an SDK that has a major version number that matches the current FIO Protocol blockchain major version number (e.g. 1.x.x).</p>
+				<a href="#installing-fio-typescript-sdk-using-npm" id="installing-fio-typescript-sdk-using-npm" style="color: inherit; text-decoration: none;">
+					<h1>Installing FIO TypeScript SDK, using npm:</h1>
+				</a>
+				<a href="#the-npm-version-is-here" id="the-npm-version-is-here" style="color: inherit; text-decoration: none;">
+					<h2>The NPM Version is here:</h2>
+				</a>
+				<pre><code>@<span class="hljs-keyword">fioprotocol</span>/<span class="hljs-keyword">fiosdk</span></code></pre>
+				<a href="#building-the-fio-typescript-sdk-manually" id="building-the-fio-typescript-sdk-manually" style="color: inherit; text-decoration: none;">
+					<h1>Building The FIO TypeScript SDK, manually</h1>
 				</a>
 				<a href="#build-dependencies" id="build-dependencies" style="color: inherit; text-decoration: none;">
 					<h2>Build Dependencies</h2>
 				</a>
 				<p>The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.</p>
-				<pre><code>The package<span class="hljs-selector-class">.json</span> references it here:
-<span class="hljs-selector-tag">i</span><span class="hljs-selector-class">.e</span>.
-    ../../fiojs
-
-Make sure the FIOJS project is located <span class="hljs-keyword">in</span> the following directory structure:
-<span class="hljs-selector-tag">i</span><span class="hljs-selector-class">.e</span>.
-    /fiojs  - FIO JS SDK files
-    /fiosdk_typescript - FIO TypeScript SDK Files</code></pre>
-				<a href="#building-fiojs-and-fio-typescript-sdks" id="building-fiojs-and-fio-typescript-sdks" style="color: inherit; text-decoration: none;">
-					<h3>Building FIOJS and FIO TypeScript SDKs</h3>
+				<p>The package.json reference for FIOJS, must be changed to a directory path.  If building FIOJS and Typescript SDK manually (rather than using the NPM Version)</p>
+				<pre><code><span class="hljs-selector-tag">i</span><span class="hljs-selector-class">.e</span> :
+../../fiojs</code></pre><p>Make sure the FIOJS project is located in the following directory structure:</p>
+				<pre><code>/fiojs  - FIO JS SDK <span class="hljs-keyword">files</span>
+/fiosdk_typescript - FIO TypeScript SDK <span class="hljs-keyword">Files</span></code></pre>
+				<a href="#building-fiojs-and-fio-typescript-sdks-using-build_sdkssh" id="building-fiojs-and-fio-typescript-sdks-using-build_sdkssh" style="color: inherit; text-decoration: none;">
+					<h3>Building FIOJS and FIO TypeScript SDKs using build_sdks.sh</h3>
 				</a>
-				<pre><code>Navigate <span class="hljs-keyword">to</span> the <span class="hljs-string">"iofoundation-io-sdk"</span> folder, in terminal <span class="hljs-built_in">and</span> run the build sdks <span class="hljs-keyword">scrip</span><span class="hljs-variable">t:</span>
-i.<span class="hljs-keyword">e</span>.
-    <span class="hljs-keyword">cd</span> fiosdk_typescript
-    <span class="hljs-keyword">cd</span> fiofoundation-io-sdk
-    ./build_sdks.<span class="hljs-keyword">sh</span></code></pre>
+				<p>Navigate to the &quot;fiosdk_typescript&quot; folder and run the build_sdks.sh script: </p>
+				<pre><code><span class="hljs-keyword">cd</span> fiosdk_typescript
+<span class="hljs-string">./build_sdks.sh</span></code></pre>
 				<a href="#building-fiojs-sdk-manually" id="building-fiojs-sdk-manually" style="color: inherit; text-decoration: none;">
-					<h4>Building FIOJS SDK, manually?</h4>
+					<h4>Building FIOJS SDK, manually</h4>
 				</a>
-				<pre><code>Navigate <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> <span class="hljs-string">"fiojs"</span> folder <span class="hljs-keyword">in</span> terminal, <span class="hljs-keyword">and</span> <span class="hljs-built_in">run</span> yarn <span class="hljs-keyword">to</span> install <span class="hljs-keyword">it</span>'s dependencies, <span class="hljs-keyword">then</span> tsc <span class="hljs-keyword">to</span> compile
-i.e.
-    cd /fiojs
-    yarn
-    tsc
-    npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-built_in">run</span> <span class="hljs-keyword">the</span> unit tests)</code></pre>
+				<p>Navigate to the &quot;fiojs&quot; folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the &quot;Workflow for using the SDK with TestNet&quot; section of this README. </p>
+				<pre><code>cd /fiojs
+yarn
+tsc
+npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-builtin-name">run</span> the unit tests)</code></pre>
 				<a href="#building-fio-typescript-sdk-manually" id="building-fio-typescript-sdk-manually" style="color: inherit; text-decoration: none;">
-					<h4>Building FIO TypeScript SDK, manually?</h4>
+					<h4>Building FIO TypeScript SDK, manually</h4>
 				</a>
-				<pre><code>Navigate <span class="hljs-keyword">to</span> <span class="hljs-keyword">the</span> <span class="hljs-string">"iofoundation-io-sdk"</span> folder <span class="hljs-keyword">in</span> terminal, <span class="hljs-keyword">and</span> <span class="hljs-built_in">run</span> yarn <span class="hljs-keyword">to</span> install <span class="hljs-keyword">it</span>'s dependencies, <span class="hljs-keyword">then</span> tsc <span class="hljs-keyword">to</span> compile
-i.e.
-    cd fiosdk_typescript
-    cd fiofoundation-io-fiosdk
-    yarn
-    tsc
-    npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-built_in">run</span> <span class="hljs-keyword">the</span> unit tests)</code></pre>
+				<p>Navigate to the &quot;fiofoundation-io-sdk&quot; folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the &quot;Workflow for using the SDK with TestNet&quot; section of this README.</p>
+				<pre><code>cd fiosdk_typescript
+yarn
+tsc
+npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-builtin-name">run</span> the unit tests)</code></pre>
 				<a href="#errors-with-compiling-the-sdks" id="errors-with-compiling-the-sdks" style="color: inherit; text-decoration: none;">
-					<h3>Errors with compiling the SDKs?</h3>
+					<h3>Errors with compiling the SDKs</h3>
 				</a>
 				<a href="#unable-to-find-tsc" id="unable-to-find-tsc" style="color: inherit; text-decoration: none;">
-					<h4>Unable to find tsc?</h4>
+					<h4>Unable to find tsc</h4>
 				</a>
-				<pre><code>Make sure <span class="hljs-keyword">to</span> install typescript <span class="hljs-keyword">by</span> running, <span class="hljs-keyword">this</span> command <span class="hljs-keyword">in</span> terminal:
-    sudo <span class="hljs-built_in">npm</span> install -g typescript</code></pre>
+				<p>Make sure to install typescript by running, this command in terminal:</p>
+				<pre><code>sudo npm <span class="hljs-keyword">install</span> -g typescript</code></pre>
 				<a href="#generating-documentation" id="generating-documentation" style="color: inherit; text-decoration: none;">
 					<h1>Generating Documentation</h1>
 				</a>
-				<pre><code>TypeDoc is installed <span class="hljs-keyword">as</span> <span class="hljs-keyword">a</span> dev dependency.
-Navigate <span class="hljs-built_in">to</span> <span class="hljs-keyword">the</span> <span class="hljs-string">"iofoundation-io-sdk"</span> <span class="hljs-built_in">folder</span>, <span class="hljs-keyword">in</span> terminal <span class="hljs-keyword">and</span> run: 
-i.e.
-    cd fiosdk_typescript
-    cd fiofoundation-io-sdk
-    ./build_doc.sh</code></pre><p>The documentation will appear in this folder: &quot;documentation&quot; in the root of the project.</p>
+				<p>TypeDoc is installed as a dev dependency. Documentation is pre-generated and included with the source code. To manually generate the documentation run: </p>
+				<pre><code><span class="hljs-keyword">cd</span> fiosdk_typescript
+<span class="hljs-string">./build_doc.sh</span></code></pre><p>The documentation will appear in the folder &quot;documentation&quot; in the root of the project.</p>
 				<a href="#issues-installing-typedoc" id="issues-installing-typedoc" style="color: inherit; text-decoration: none;">
 					<h2>Issues Installing TypeDoc?</h2>
 				</a>
-				<pre><code><span class="hljs-keyword">If</span> typedoc <span class="hljs-keyword">command</span> is <span class="hljs-keyword">not</span> found, <span class="hljs-keyword">install</span> typedoc using the npm global <span class="hljs-keyword">command</span>:
-    npm <span class="hljs-keyword">install</span> --global typedoc</code></pre>
+				<p>If typedoc command is not found, install typedoc using the npm global command:</p>
+				<pre><code><span class="hljs-built_in">npm</span> install --<span class="hljs-built_in">global</span> typedoc</code></pre>
 				<a href="#using-the-sdk" id="using-the-sdk" style="color: inherit; text-decoration: none;">
 					<h1>Using the SDK</h1>
 				</a>
-				<p>The SDK uses a singleton model.  Requiring initialization in the constructor, as these parameters are referenced in subsequent SDK Calls.</p>
+				<p>The SDK uses a singleton model requiring initialization in the constructor as these parameters are referenced in subsequent SDK Calls.</p>
 				<a href="#base-url-for-testnet" id="base-url-for-testnet" style="color: inherit; text-decoration: none;">
 					<h2>Base URL for TestNet</h2>
 				</a>
@@ -149,17 +147,16 @@ i.e.
 				<a href="#testnet-monitor-tool" id="testnet-monitor-tool" style="color: inherit; text-decoration: none;">
 					<h2>TestNet Monitor Tool</h2>
 				</a>
-				<pre><code><span class="hljs-symbol">https:</span>//monitor.testnet.fioprotocol.io/<span class="hljs-meta">#home</span></code></pre>
+				<pre><code><span class="hljs-symbol">https:</span><span class="hljs-comment">//monitor.testnet.fioprotocol.io/</span></code></pre>
 				<a href="#initializing-the-sdk" id="initializing-the-sdk" style="color: inherit; text-decoration: none;">
 					<h2>Initializing the SDK</h2>
 				</a>
-				<pre><code>Pass <span class="hljs-keyword">in</span> the wallet user<span class="hljs-symbol">'s</span> private/public key,
-the base URL <span class="hljs-keyword">to</span> the FIO Foundation API - i.e. http://testnet.fioprotocol.io/v1/
-io - the ?
+				<pre><code>privateKey/publicKey - the wallet user<span class="hljs-symbol">'s</span> private/public keys
+baseURL - the base URL <span class="hljs-keyword">to</span> the FIO Protocol blockchain API (e.g., http://testnet.fioprotocol.io/v1/)
+io - fetchJson
 fetchjson - a reference <span class="hljs-keyword">to</span> fetchJSON 
-registerMockUrl - this <span class="hljs-keyword">is</span> the URL <span class="hljs-keyword">to</span> the FIO Foundation API mock server <span class="hljs-keyword">and</span> <span class="hljs-keyword">is</span> used by the registerOnBehalfOfUser method
+registerMockUrl - the URL <span class="hljs-keyword">of</span> the server used <span class="hljs-keyword">to</span> auto-<span class="hljs-keyword">register</span> FIO names <span class="hljs-keyword">for</span> wallet users. This <span class="hljs-keyword">is</span> only used by wallets that have deployed a central server used <span class="hljs-keyword">to</span> <span class="hljs-keyword">register</span> names <span class="hljs-keyword">on</span> their domain. It <span class="hljs-keyword">is</span> used by the registerOnBehalfOfUser method
 
-i.e.
 constructor(
     privateKey: <span class="hljs-built_in">string</span>,
     publicKey: <span class="hljs-built_in">string</span>,
@@ -167,12 +164,10 @@ constructor(
     io: any,
     fetchjson: FetchJson,
     registerMockUrl = '',
-  )
-
-The user<span class="hljs-symbol">'s</span> private/public key can be generated by calling these methods <span class="hljs-keyword">on</span> the sdk:
-    createPrivateKeyMnemonic <span class="hljs-keyword">OR</span> createPrivateKey
-    <span class="hljs-keyword">AND</span>
-    derivedPublicKey</code></pre>
+  )</code></pre><p>The user&#39;s private/public key can be generated by calling these methods on the sdk:
+					createPrivateKeyMnemonic OR createPrivateKey
+					AND
+				derivedPublicKey</p>
 				<a href="#using-the-sdk-1" id="using-the-sdk-1" style="color: inherit; text-decoration: none;">
 					<h2>Using the SDK</h2>
 				</a>
@@ -185,47 +180,54 @@ this.fioSDK = <span class="hljs-keyword">new</span> <span class="hljs-constructo
 				<a href="#workflow-for-using-the-sdk-with-testnet" id="workflow-for-using-the-sdk-with-testnet" style="color: inherit; text-decoration: none;">
 					<h1>Workflow for using the SDK with TestNet</h1>
 				</a>
-				<p>Most Signed API calls now charge fees, to make the API call.  And most Signed API Calls require that a fio address, is registered with the user making the call. </p>
-				<a href="#when-registering-a-new-address-for-the-first-time--the-account-will-not-have-any-funds-to-do-api-calls" id="when-registering-a-new-address-for-the-first-time--the-account-will-not-have-any-funds-to-do-api-calls" style="color: inherit; text-decoration: none;">
-					<h4>When registering a new address for the first time.  The account will not have any funds to do API calls.</h4>
+				<p>Most Signed API calls charge fees and require a FIO address that is associated with the user making the call. </p>
+				<a href="#creating-a-test-account-with-fio-tokens" id="creating-a-test-account-with-fio-tokens" style="color: inherit; text-decoration: none;">
+					<h4>Creating a test account with FIO tokens</h4>
 				</a>
-				<p>This is the order of sequence to get funds in an account for the first time, on TestNet.  In order to run the unit tests. </p>
+				<p>When running a test you will want to register addresses and transfer funds. But, registering a new address for the first time requires FIO tokens. Therefore, some manual setup is required to associate FIO tokens with a FIO public key. To set up a FIO public key with FIO tokents in a test environment:</p>
 				<ol>
-					<li>manually create two private/public FIO key pairs
-						A) Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io/#home">https://monitor.testnet.fioprotocol.io/#home</a>
-						B) Select the &#39;Create Keypair&#39; button (top left of the website)
-					C) copy the keypairs </li>
-					<li>manually register a fio address for both of these FIO key pairs.
-						A) Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io/#account">https://monitor.testnet.fioprotocol.io/#account</a>
-						B) Select the &#39;Register Address&#39; button
-						C) type in a fio address
-						D) paste in one of the public keys (created above)
-						E) Select the &#39;Create&#39; button
-					F) do this for each public key pair (twice).  The created fio address will be in this format, &quot;mytest:fiotestnet&quot;</li>
-					<li>manually transfer funds into these fio addresses.
-						A) Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io/#home">https://monitor.testnet.fioprotocol.io/#home</a>
-						B) Select the &#39;Faucet&#39; button
-						C) paste in one of the public keys (created above)
-						D) Select the &#39;Send Coins&#39; button
-					E) do this for each public key pair (twice)</li>
-					<li>Now one will have funds available, to call Signed API calls.</li>
-					<li>Edit the unit test script to add these fio addresses, and the private/public FIO key pairs
-						A) Edit the testnet.spec file<pre><code> a) testnet.spec is located here: fiosdk_typescript/fiofoundation-io-fiosdk/tests/testnet.spec
- b) variables to edit: let<span class="hljs-keyword"> private</span>Key,<span class="hljs-keyword"> public</span>Key,<span class="hljs-keyword"> private</span>Key2,<span class="hljs-keyword"> public</span>Key2, testFioAddressName, testFioAddressName2</code></pre></li>
-					<li>run the unit tests i.e.
+					<li>Manually create two private/public FIO key pairs <ol>
+							<li>Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io">https://monitor.testnet.fioprotocol.io</a></li>
+							<li>Select the &#39;Create Keypair&#39; button (top left of the website)</li>
+							<li>Copy the keypairs and FIO Internal Account </li>
+						</ol>
+					</li>
+					<li>Manually register a FIO address for both of these FIO key pairs. <ol>
+							<li>Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io">https://monitor.testnet.fioprotocol.io</a></li>
+							<li>Select the &#39;Register Address&#39; button</li>
+							<li>Type in a FIO address </li>
+							<li>Paste in one of the public keys (created above)</li>
+							<li>Select the &#39;Create&#39; button</li>
+							<li>Do this for each public key pair (twice).  The created FIO address will be in this format, &quot;mytest:fiotestnet&quot;</li>
+						</ol>
+					</li>
+					<li>Manually transfer funds into these FIO addresses.<ol>
+							<li>Navigate to the website: <a href="https://monitor.testnet.fioprotocol.io">https://monitor.testnet.fioprotocol.io</a></li>
+							<li>Select the &#39;Faucet&#39; button</li>
+							<li>Paste in one of the public keys (created above)</li>
+							<li>Select the &#39;Send Coins&#39; button</li>
+							<li>Do this for each public key pair (twice)</li>
+						</ol>
+					</li>
+					<li>These FIO public addresses now have funds available for making Signed API calls.</li>
+					<li>Edit the test script to add these FIO addresses and the private/public FIO key pairs<ol>
+							<li>Edit the privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2 variables in the testnet.spec file (/fiofoundation-io-fiosdk/tests/testnet.spec)</li>
+						</ol>
+					</li>
+					<li>Run the tests:
 					npm test</li>
 				</ol>
-				<a href="#when-calling-a-signed-api-call-that-charges-fees-this-is-the-sequence-to-pass-in-the-fee-to-charge" id="when-calling-a-signed-api-call-that-charges-fees-this-is-the-sequence-to-pass-in-the-fee-to-charge" style="color: inherit; text-decoration: none;">
-					<h4>When calling a Signed API call that charges FEES, this is the sequence to pass in the FEE to charge.</h4>
+				<a href="#when-calling-a-signed-api-call-that-charges-fees" id="when-calling-a-signed-api-call-that-charges-fees" style="color: inherit; text-decoration: none;">
+					<h4>When calling a Signed API call that charges FEES,</h4>
 				</a>
-				<ol>
-					<li>Call getFee to get the fee for the Signed API call.</li>
-					<li>Call the API Signed call with the above fee found.</li>
-				</ol>
+				<p>Use the following steps to determine the fee and pass it to the signed call.</p>
+				<pre><code><span class="hljs-number">1.</span> Call getFee <span class="hljs-built_in">to</span> <span class="hljs-built_in">get</span> <span class="hljs-keyword">the</span> fee <span class="hljs-keyword">for</span> <span class="hljs-keyword">the</span> Signed API call
+<span class="hljs-number">2.</span> Call <span class="hljs-keyword">the</span> API Signed call <span class="hljs-keyword">with</span> <span class="hljs-keyword">the</span> fee</code></pre>
 				<a href="#creating-your-own-fio-privatepublic-keys" id="creating-your-own-fio-privatepublic-keys" style="color: inherit; text-decoration: none;">
 					<h1>Creating your own FIO Private/Public Keys?</h1>
 				</a>
-				<p>The SDK provides FIO Key generation.  Here are the key details, if the SDK is not used for Key Generation.</p>
+				<p>The SDK provides calls to generate FIO Private/Public Key pairs.  </p>
+				<p>The following information can be used to manually generate FIO keys:</p>
 				<p>FIO Keys use SLIP-235 for BIP-0044.
 				<a href="https://github.com/satoshilabs/slips/blob/master/slip-0044.md">https://github.com/satoshilabs/slips/blob/master/slip-0044.md</a></p>
 				<p>Following the EOS example of private and public key generation. We replace EOS slip &#39;194&#39; with &#39;235&#39;.  And &#39;EOS&#39; public key prefix with &#39;FIO&#39;.
