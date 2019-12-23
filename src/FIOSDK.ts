@@ -103,7 +103,7 @@ export class FIOSDK {
   /**
    * Default FIO Address of the wallet which generates transactions.
    */
-  public tpid: string
+  public walletFioAddress: string
 
   /**
    * @param privateKey the fio private key of the client sending requests to FIO API.
@@ -111,6 +111,7 @@ export class FIOSDK {
    * @param baseUrl the url to the FIO API.
    * @param fetchjson
    * @param registerMockUrl the url to the mock server
+   * @param walletFioAddress Default FIO Address of the wallet which generates transactions.
    */
   constructor(
     privateKey: string,
@@ -118,7 +119,7 @@ export class FIOSDK {
     baseUrl: string,
     fetchjson: FetchJson,
     registerMockUrl = '',
-    tpid: string = '',
+    walletFioAddress: string = '',
   ) {
     this.transactions = new Transactions()
     Transactions.baseUrl = baseUrl
@@ -127,7 +128,7 @@ export class FIOSDK {
     this.registerMockUrl = registerMockUrl
     this.privateKey = privateKey
     this.publicKey = publicKey
-    this.tpid = tpid
+    this.walletFioAddress = walletFioAddress
 
     for (const accountName of Constants.rawAbiAccountName) {
       this.getAbi(accountName)
@@ -148,6 +149,13 @@ export class FIOSDK {
   }
 
   /**
+   * Returns walletFioAddress or default
+   */
+  public getWalletFioAddress(walletFioAddress: string | null): string {
+    return walletFioAddress !== null ? walletFioAddress : this.walletFioAddress
+  }
+
+  /**
    * Registers a FIO Address on the FIO blockchain.  The owner will be the public key associated with the FIO SDK instance.
    *
    * @param fioAddress FIO Address to register.
@@ -162,7 +170,7 @@ export class FIOSDK {
     const registerFioAddress = new SignedTransactions.RegisterFioAddress(
       fioAddress,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return registerFioAddress.execute(this.privateKey, this.publicKey)
   }
@@ -182,7 +190,7 @@ export class FIOSDK {
     const registerFioDomain = new SignedTransactions.RegisterFioDomain(
       fioDomain,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return registerFioDomain.execute(this.privateKey, this.publicKey)
   }
@@ -202,7 +210,7 @@ export class FIOSDK {
     const renewFioAddress = new SignedTransactions.RenewFioAddress(
       fioAddress,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return renewFioAddress.execute(this.privateKey, this.publicKey)
   }
@@ -222,7 +230,7 @@ export class FIOSDK {
     const renewFioDomain = new SignedTransactions.RenewFioDomain(
       fioDomain,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return renewFioDomain.execute(this.privateKey, this.publicKey)
   }
@@ -248,7 +256,7 @@ export class FIOSDK {
       tokenCode,
       publicAddress,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return addPublicAddress.execute(this.privateKey, this.publicKey)
   }
@@ -271,7 +279,7 @@ export class FIOSDK {
       fioDomain,
       isPublic,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return SetFioDomainVisibility.execute(this.privateKey, this.publicKey)
   }
@@ -331,7 +339,7 @@ export class FIOSDK {
       obtId,
       maxFee,
       status,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
       payeeKey.public_address,
       memo,
       hash,
@@ -355,7 +363,7 @@ export class FIOSDK {
     const rejectFundsRequest = new SignedTransactions.RejectFundsRequest(
       fioRequestId,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return rejectFundsRequest.execute(this.privateKey, this.publicKey)
   }
@@ -398,7 +406,7 @@ export class FIOSDK {
       payerFioAddress,
       payerKey.public_address,
       payeeFioAddress,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
       maxFee,
       payeePublicAddress,
       amount,
@@ -512,7 +520,7 @@ export class FIOSDK {
       payeeFioPublicKey,
       amount,
       maxFee,
-      walletFioAddress !== null ? walletFioAddress : this.tpid,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return transferTokens.execute(this.privateKey, this.publicKey)
   }

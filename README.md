@@ -82,7 +82,6 @@ The SDK uses a singleton model requiring initialization in the constructor as th
 ## Initializing the SDK
 	privateKey/publicKey - the wallet user's private/public keys
 	baseURL - the base URL to the FIO Protocol blockchain API (e.g., http://testnet.fioprotocol.io/v1/)
-	io - fetchJson
 	fetchjson - a reference to fetchJSON 
 	registerMockUrl - the URL of the server used to auto-register FIO names for wallet users. This is only used by wallets that have deployed a central server used to register names on their domain. It is used by the registerOnBehalfOfUser method
 	
@@ -90,7 +89,6 @@ The SDK uses a singleton model requiring initialization in the constructor as th
 	    privateKey: string,
 	    publicKey: string,
 	    baseUrl: string,
-	    io: any,
 	    fetchjson: FetchJson,
 	    registerMockUrl = '',
 	  )
