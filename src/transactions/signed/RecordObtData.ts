@@ -1,10 +1,10 @@
 import { SignedTransaction } from './SignedTransaction'
 import { validationRules } from '../../utils/validation'
 
-export class RecordSend extends SignedTransaction {
+export class RecordObtData extends SignedTransaction {
 
-  ENDPOINT: string = 'chain/record_send'
-  ACTION: string = 'recordsend'
+  ENDPOINT: string = 'chain/record_obt_data'
+  ACTION: string = 'recordobt'
   ACCOUNT: string = 'fio.reqobt'
 
   payerFIOAddress: string
@@ -60,7 +60,7 @@ export class RecordSend extends SignedTransaction {
     }
 
     this.validationData = { payerFIOAddress, payeeFIOAddress, tpid: walletFioAddress, tokenCode }
-    this.validationRules = validationRules.recordSend
+    this.validationRules = validationRules.recordObtData
 
   }
 

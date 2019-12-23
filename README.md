@@ -61,7 +61,7 @@ Make sure to install typescript by running, this command in terminal:
 TypeDoc is installed as a dev dependency. Documentation is pre-generated and included with the source code. To manually generate the documentation run: 
 	
 	cd fiosdk_typescript
-	./build_doc.sh
+	./build_docs.sh
 
 The documentation will appear in the folder "documentation" in the root of the project.
 

@@ -1,1 +1,1 @@
-export { RecordSendRequest }  from './RecordSendRequest'
+export { RecordObtDataRequest }  from './RecordObtDataRequest'

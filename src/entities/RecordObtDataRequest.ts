@@ -1,4 +1,4 @@
-export interface RecordSendRequest {
+export interface RecordObtDataRequest {
   payer_fio_address: string,
   payee_fio_address: string,
   payer_public_address: string,
