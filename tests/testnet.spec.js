@@ -14,11 +14,11 @@ const BILLION = 1000000000
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '', 
-  publicKey = '', 
-  privateKey2 = '', 
-  publicKey2 = '', 
-  testFioAddressName = 'myaddressname:fiotestnet', 
+let privateKey = '',
+  publicKey = '',
+  privateKey2 = '',
+  publicKey2 = '',
+  testFioAddressName = 'myaddressname:fiotestnet',
   testFioAddressName2 = 'myaddressname:fiotestnet'
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
@@ -78,7 +78,7 @@ describe('Testing generic actions', () => {
 
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
-    
+
     expect(result).to.have.all.keys('balance')
     expect(result.balance).to.be.a('number')
   })
@@ -129,6 +129,23 @@ describe('Testing generic actions', () => {
 
   it(`Renew fio address`, async () => {
     const result = await fioSdk.genericAction('renewFioAddress', { fioAddress: newFioAddress, maxFee: defaultFee })
+
+    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`Push Transaction - renewaddress`, async () => {
+    const result = await fioSdk.genericAction('pushTransaction', {
+      action: 'renewaddress',
+      account: 'fio.address',
+      data: {
+        fio_address: newFioAddress,
+        max_fee: defaultFee,
+        tpid: ''
+      }
+    })
 
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
