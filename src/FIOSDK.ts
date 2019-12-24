@@ -598,6 +598,22 @@ export class FIOSDK {
   }
 
   /**
+   * Allows advance user to send their own content directly to FIO contracts
+   *
+   * @param action Name of action
+   * @param account Account name
+   * @param data JSON object with params for action
+   */
+  public pushTransaction(action: string, account: string, data: any): Promise<any> {
+    const pushTransaction = new SignedTransactions.PushTransaction(
+      action,
+      account,
+      data,
+    )
+    return pushTransaction.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
    * @ignore
    */
   public genericAction(action: string, params: any): any {
@@ -719,6 +735,8 @@ export class FIOSDK {
         return this.getFee(params.endPoint, params.fioAddress)
       case 'getMultiplier':
         return this.getMultiplier()
+      case 'pushTransaction':
+        return this.pushTransaction(params.action, params.account, params.data)
     }
   }
 

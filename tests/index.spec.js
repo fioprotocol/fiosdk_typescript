@@ -161,6 +161,23 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`Push Transaction - renewaddress`, async () => {
+    const result = await fioSdk.genericAction('pushTransaction', {
+      action: 'renewaddress',
+      account: 'fio.address',
+      data: {
+        fio_address: newFioAddress,
+        max_fee: defaultFee,
+        tpid: ''
+      }
+    })
+
+    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
   it(`Add public address`, async () => {
     const result = await fioSdk.genericAction('addPublicAddress', {
       fioAddress: newFioAddress,
