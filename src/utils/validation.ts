@@ -14,8 +14,6 @@ const allRules = {
 export const validationRules = {
   addPublicAddressRules: {
     fioAddress: allRules.fioAddress,
-    publicAddress: allRules.nativeBlockchainPublicAddress,
-    tokenCode: allRules.chain,
     tpid: allRules.fioAddress,
   },
   registerFioAddress: {
@@ -47,7 +45,7 @@ export const validationRules = {
   rejectFunds: {
     tpid: allRules.fioAddress,
   },
-  recordSend: {
+  recordObtData: {
     payerFIOAddress: allRules.fioAddress,
     payeeFIOAddress: allRules.fioAddress,
     tpid: allRules.fioAddress,

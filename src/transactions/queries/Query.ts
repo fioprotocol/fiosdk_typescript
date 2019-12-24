@@ -23,8 +23,6 @@ export abstract class Query<T> extends Transactions {
         throw error
       }
     }
-
-
   }
 
   getEndPoint(): string {
