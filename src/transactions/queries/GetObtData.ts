@@ -7,13 +7,15 @@ export class GetObtData extends Query<GetObtDataResponse> {
   public fio_public_key: string
   public limit: number | null
   public offset: number | null
+  public tokenCode: string
   public isEncrypted = true
 
-  constructor(fioPublicKey: string, limit: number = 0, offset: number = 0) {
+  constructor(fioPublicKey: string, limit: number = 0, offset: number = 0, tokenCode: string = '') {
     super()
     this.fio_public_key = fioPublicKey
     this.limit = limit
     this.offset = offset
+    this.tokenCode = tokenCode
   }
 
   public getData() {
@@ -36,7 +38,10 @@ export class GetObtData extends Query<GetObtDataResponse> {
           // UnCipherContent error
           console.log(e)
         }
-        if (content) obtDataRecord.content = content
+        if (content) {
+          if (this.tokenCode && content.token_code && content.token_code !== this.tokenCode) return
+          obtDataRecord.content = content
+        }
         obtDataRecords.push(obtDataRecord)
       })
       return { obt_data_records: obtDataRecords, more: result.more }
