@@ -16,35 +16,8 @@ Visit the [FIO Protocol Developer Hub](https://developers.fioprotocol.io) to get
 	@fioprotocol/fiosdk
 
 # Building The FIO TypeScript SDK, manually
-## Build Dependencies
-The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.
-
-The package.json reference for FIOJS, must be changed to a directory path.  If building FIOJS and Typescript SDK manually (rather than using the NPM Version)
-
-	i.e : 
-	../../fiojs
-
-Make sure the FIOJS project is located in the following directory structure:
-	
-	/fiojs  - FIO JS SDK files
-	/fiosdk_typescript - FIO TypeScript SDK Files
-
-### Building FIOJS and FIO TypeScript SDKs using build_sdks.sh
-Navigate to the "fiosdk_typescript" folder and run the build_sdks.sh script: 
-	
-	cd fiosdk_typescript
-	./build_sdks.sh
-
-#### Building FIOJS SDK, manually
-Navigate to the "fiojs" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README. 
-	
-	cd /fiojs
-	yarn
-	tsc
-	npm test (if you would like to run the unit tests)
-
 #### Building FIO TypeScript SDK, manually
-Navigate to the "fiofoundation-io-sdk" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
+Navigate to the "fiosdk_typescript" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
 	
 	cd fiosdk_typescript
 	yarn

@@ -74,6 +74,14 @@ describe('Testing generic actions', () => {
   const newFioDomain = generateTestingFioDomain()
   const newFioAddress = generateTestingFioAddress(newFioDomain)
 
+  it(`FIO Key Generation Testing`, async () => {
+    const testMnemonic = 'valley alien library bread worry brother bundle hammer loyal barely dune brave'
+    const privateKeyRes =  await FIOSDK.createPrivateKeyMnemonic(testMnemonic)
+    expect(privateKeyRes.fioKey).to.equal('5Kbb37EAqQgZ9vWUHoPiC2uXYhyGSFNbL6oiDp24Ea1ADxV1qnu')
+    const publicKeyRes = FIOSDK.derivedPublicKey(privateKeyRes.fioKey)
+    expect(publicKeyRes.publicKey).to.equal('FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o')
+  })
+
   it(`Getting fio public key`, async () => {
     const result = await fioSdk.genericAction('getFioPublicKey', {})
 
@@ -113,10 +121,9 @@ describe('Testing generic actions', () => {
       walletFioAddress: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected', 'expiration')
+    expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
-    expect(result.expiration).to.be.a('number')
   })
 
   it(`Register fio address`, async () => {
@@ -155,6 +162,15 @@ describe('Testing generic actions', () => {
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for addPublicAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForPublicAddress', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
   })
 
   it(`Add public address`, async () => {
@@ -201,10 +217,9 @@ describe('Testing generic actions', () => {
       walletFioAddress: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected', 'expiration')
+    expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
-    expect(result.expiration).to.be.a('number')
   })
 
   it(`setFioDomainVisibility true`, async () => {
@@ -215,10 +230,9 @@ describe('Testing generic actions', () => {
       walletFioAddress: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected', 'expiration')
+    expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
-    expect(result.expiration).to.be.a('number')
   })
 
   it(`isAvailable true`, async () => {
@@ -294,6 +308,15 @@ describe('Request funds, approve and send', () => {
   const fundsAmount = 3 * BILLION
   let requestId
   const memo = 'testing fund request'
+
+  it(`getFee for requestFunds`, async () => {
+    const result = await fioSdk.genericAction('getFeeForNewFundsRequest', {
+      payeeFioAddress: testFioAddressName2
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
 
   it(`requestFunds`, async () => {
     const result = await fioSdk2.genericAction('requestFunds', {
@@ -435,6 +458,15 @@ describe('Request funds, reject', () => {
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
   })
 
+  it(`getFee for rejectFundsRequest`, async () => {
+    const result = await fioSdk.genericAction('getFeeForRejectFundsRequest', {
+      payeeFioAddress: testFioAddressName2
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
   it(`rejectFundsRequest`, async () => {
     const result = await fioSdk.genericAction('rejectFundsRequest', {
       fioRequestId: requestId,
@@ -485,6 +517,15 @@ describe('Record obt data, check', () => {
   const obtId = generateObtId()
   const fundsAmount = 4500000000
 
+  it(`getFee for recordObtData`, async () => {
+    const result = await fioSdk.genericAction('getFeeForRecordObtData', {
+      payerFioAddress: testFioAddressName
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
   it(`recordObtData`, async () => {
     const result = await fioSdk.genericAction('recordObtData', {
       fioRequestId: '',
@@ -505,7 +546,7 @@ describe('Record obt data, check', () => {
 
   it(`Payer getObtData`, async () => {
     await timeout(4000)
-    const result = await fioSdk.genericAction('getObtData', {})
+    const result = await fioSdk.genericAction('getObtData', { tokenCode: fioTokenCode })
     expect(result).to.have.all.keys('obt_data_records', 'more')
     expect(result.obt_data_records).to.be.a('array')
     expect(result.more).to.be.a('number')
@@ -520,7 +561,7 @@ describe('Record obt data, check', () => {
   })
 
   it(`Payee getObtData`, async () => {
-    const result = await fioSdk2.genericAction('getObtData', {})
+    const result = await fioSdk2.genericAction('getObtData', { tokenCode: fioTokenCode })
     expect(result).to.have.all.keys('obt_data_records', 'more')
     expect(result.obt_data_records).to.be.a('array')
     expect(result.more).to.be.a('number')

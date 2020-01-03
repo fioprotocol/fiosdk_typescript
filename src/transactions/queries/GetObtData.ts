@@ -36,7 +36,7 @@ export class GetObtData extends Query<GetObtDataResponse> {
           }
         } catch (e) {
           // UnCipherContent error
-          console.log(e)
+          // console.log(e)
         }
         if (content) {
           if (this.tokenCode && content.token_code && content.token_code !== this.tokenCode) return
