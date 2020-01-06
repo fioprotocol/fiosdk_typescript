@@ -88,22 +88,31 @@
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="fiosdk.html#privatekey" class="tsd-kind-icon">private<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="fiosdk.html#publickey" class="tsd-kind-icon">public<wbr>Key</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="fiosdk.html#transactions" class="tsd-kind-icon">transactions</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="fiosdk.html#walletfioaddress" class="tsd-kind-icon">wallet<wbr>Fio<wbr>Address</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#addpublicaddress" class="tsd-kind-icon">add<wbr>Public<wbr>Address</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#addpublicaddresses" class="tsd-kind-icon">add<wbr>Public<wbr>Addresses</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfee" class="tsd-kind-icon">get<wbr>Fee</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfeefornewfundsrequest" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>New<wbr>Funds<wbr>Request</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfeeforpublicaddress" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Public<wbr>Address</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfeeforrecordobtdata" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Record<wbr>Obt<wbr>Data</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfeeforrejectfundsrequest" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Reject<wbr>Funds<wbr>Request</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfiobalance" class="tsd-kind-icon">get<wbr>Fio<wbr>Balance</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfionames" class="tsd-kind-icon">get<wbr>Fio<wbr>Names</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfiopublicaddress" class="tsd-kind-icon">get<wbr>Fio<wbr>Public<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getfiopublickey" class="tsd-kind-icon">get<wbr>Fio<wbr>Public<wbr>Key</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getobtdata" class="tsd-kind-icon">get<wbr>Obt<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getpendingfiorequests" class="tsd-kind-icon">get<wbr>Pending<wbr>Fio<wbr>Requests</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getpublicaddress" class="tsd-kind-icon">get<wbr>Public<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getsentfiorequests" class="tsd-kind-icon">get<wbr>Sent<wbr>Fio<wbr>Requests</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#getwalletfioaddress" class="tsd-kind-icon">get<wbr>Wallet<wbr>Fio<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#isavailable" class="tsd-kind-icon">is<wbr>Available</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#recordsend" class="tsd-kind-icon">record<wbr>Send</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#pushtransaction" class="tsd-kind-icon">push<wbr>Transaction</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#recordobtdata" class="tsd-kind-icon">record<wbr>Obt<wbr>Data</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#registerfioaddress" class="tsd-kind-icon">register<wbr>Fio<wbr>Address</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#registerfiodomain" class="tsd-kind-icon">register<wbr>Fio<wbr>Domain</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="fiosdk.html#rejectfundsrequest" class="tsd-kind-icon">reject<wbr>Funds<wbr>Request</a></li>
@@ -125,13 +134,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new FIOSDK<span class="tsd-signature-symbol">(</span>privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, baseUrl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fetchjson<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">FetchJson</span>, registerMockUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="fiosdk.html" class="tsd-signature-type">FIOSDK</a></li>
+						<li class="tsd-signature tsd-kind-icon">new FIOSDK<span class="tsd-signature-symbol">(</span>privateKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, baseUrl<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, fetchjson<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">FetchJson</span>, registerMockUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="fiosdk.html" class="tsd-signature-type">FIOSDK</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L101">FIOSDK.ts:101</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L108">FIOSDK.ts:108</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -173,6 +182,14 @@
 										</div>
 									</div>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<div class="lead">
+											<p>Default FIO Address of the wallet which generates transactions.</p>
+										</div>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="fiosdk.html" class="tsd-signature-type">FIOSDK</a></h4>
 						</li>
@@ -187,7 +204,7 @@
 					<div class="tsd-signature tsd-kind-icon">private<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L96">FIOSDK.ts:96</a></li>
+							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L98">FIOSDK.ts:98</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -202,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">public<wbr>Key<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L101">FIOSDK.ts:101</a></li>
+							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L103">FIOSDK.ts:103</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -217,9 +234,24 @@
 					<div class="tsd-signature tsd-kind-icon">transactions<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Transactions</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L86">FIOSDK.ts:86</a></li>
+							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L88">FIOSDK.ts:88</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="walletfioaddress" class="tsd-anchor"></a>
+					<h3>wallet<wbr>Fio<wbr>Address</h3>
+					<div class="tsd-signature tsd-kind-icon">wallet<wbr>Fio<wbr>Address<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L108">FIOSDK.ts:108</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Default FIO Address of the wallet which generates transactions.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -228,13 +260,13 @@
 					<a name="addpublicaddress" class="tsd-anchor"></a>
 					<h3>add<wbr>Public<wbr>Address</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">add<wbr>Public<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tokenCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">AddPublicAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Public<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tokenCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">AddPublicAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L232">FIOSDK.ts:232</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L249">FIOSDK.ts:249</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -269,6 +301,55 @@
 									</div>
 								</li>
 								<li>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>FIO Address of the wallet which generates this transaction.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">AddPublicAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="addpublicaddresses" class="tsd-anchor"></a>
+					<h3>add<wbr>Public<wbr>Addresses</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">add<wbr>Public<wbr>Addresses<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, publicAddresses<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">PublicAddress</span><span class="tsd-signature-symbol">[]</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">AddPublicAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L276">FIOSDK.ts:276</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This call allows a public addresses of the specific blockchain type to be added to the FIO Address.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>fioAddress: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>FIO Address which will be mapped to public addresses.</p>
+									</div>
+								</li>
+								<li>
+									<h5>publicAddresses: <span class="tsd-signature-type">PublicAddress</span><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Array of public addresses to be added to the FIO Address for the specified token.</p>
+									</div>
+								</li>
+								<li>
+									<h5>maxFee: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.</p>
+									</div>
+								</li>
+								<li>
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
@@ -289,7 +370,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L522">FIOSDK.ts:522</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L582">FIOSDK.ts:582</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -310,7 +391,122 @@
 									<div class="tsd-comment tsd-typography">
 										<pre><code>   <span class="hljs-keyword">if</span> endPointName is RenewFioAddress, FIO<span class="hljs-built_in"> Address </span>incurring the fee <span class="hljs-keyword">and</span> owned by signer.
    <span class="hljs-keyword">if</span> endPointName is RenewFioDomain, FIO Domain incurring the fee <span class="hljs-keyword">and</span> owned by signer.
-   <span class="hljs-keyword">if</span> endPointName is RecordSend, Payee FIO<span class="hljs-built_in"> Address </span>incurring the fee <span class="hljs-keyword">and</span> owned by signer.</code></pre>
+   <span class="hljs-keyword">if</span> endPointName is RecordObtData, Payee FIO<span class="hljs-built_in"> Address </span>incurring the fee <span class="hljs-keyword">and</span> owned by signer.
+
+   Omit <span class="hljs-keyword">for</span>:
+   - register_fio_domain
+   - register_fio_address
+   - transfer_tokens_pub_key
+   - transfer_tokens_fio_address</code></pre>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getfeefornewfundsrequest" class="tsd-anchor"></a>
+					<h3>get<wbr>Fee<wbr>For<wbr>New<wbr>Funds<wbr>Request</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>New<wbr>Funds<wbr>Request<span class="tsd-signature-symbol">(</span>payeeFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L599">FIOSDK.ts:599</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>payeeFioAddress: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getfeeforpublicaddress" class="tsd-anchor"></a>
+					<h3>get<wbr>Fee<wbr>For<wbr>Public<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Public<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L615">FIOSDK.ts:615</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>fioAddress: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getfeeforrecordobtdata" class="tsd-anchor"></a>
+					<h3>get<wbr>Fee<wbr>For<wbr>Record<wbr>Obt<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Record<wbr>Obt<wbr>Data<span class="tsd-signature-symbol">(</span>payerFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L591">FIOSDK.ts:591</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>payerFioAddress: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getfeeforrejectfundsrequest" class="tsd-anchor"></a>
+					<h3>get<wbr>Fee<wbr>For<wbr>Reject<wbr>Funds<wbr>Request</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Reject<wbr>Funds<wbr>Request<span class="tsd-signature-symbol">(</span>payeeFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">FioFeeResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L607">FIOSDK.ts:607</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>payeeFioAddress: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Pass payee_public_address from corresponding FIO Request</p>
 									</div>
 								</li>
 							</ul>
@@ -328,7 +524,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L421">FIOSDK.ts:421</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L475">FIOSDK.ts:475</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -359,7 +555,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L431">FIOSDK.ts:431</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L485">FIOSDK.ts:485</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -390,7 +586,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L480">FIOSDK.ts:480</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L534">FIOSDK.ts:534</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -421,7 +617,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L139">FIOSDK.ts:139</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L149">FIOSDK.ts:149</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -430,6 +626,49 @@
 								</div>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getobtdata" class="tsd-anchor"></a>
+					<h3>get<wbr>Obt<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Obt<wbr>Data<span class="tsd-signature-symbol">(</span>limit<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, offset<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span>, tokenCode<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetObtDataResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L385">FIOSDK.ts:385</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Retrives OBT metadata data stored using record send.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> limit: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Number of request to return. If omitted, all requests will be returned.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> offset: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>First request from list to return. If omitted, 0 is assumed.</p>
+									</div>
+								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> tokenCode: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Code of the token to filter results</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetObtDataResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -443,7 +682,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L442">FIOSDK.ts:442</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L496">FIOSDK.ts:496</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -480,7 +719,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L464">FIOSDK.ts:464</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L518">FIOSDK.ts:518</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -517,7 +756,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L453">FIOSDK.ts:453</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L507">FIOSDK.ts:507</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -545,6 +784,34 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getwalletfioaddress" class="tsd-anchor"></a>
+					<h3>get<wbr>Wallet<wbr>Fio<wbr>Address</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>Wallet<wbr>Fio<wbr>Address<span class="tsd-signature-symbol">(</span>walletFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L156">FIOSDK.ts:156</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns walletFioAddress or default</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="isavailable" class="tsd-anchor"></a>
 					<h3>is<wbr>Available</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -554,7 +821,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L411">FIOSDK.ts:411</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L465">FIOSDK.ts:465</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -576,16 +843,59 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="recordsend" class="tsd-anchor"></a>
-					<h3>record<wbr>Send</h3>
+					<a name="pushtransaction" class="tsd-anchor"></a>
+					<h3>push<wbr>Transaction</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">record<wbr>Send<span class="tsd-signature-symbol">(</span>fioRequestId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payerFIOAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeFIOAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payerTokenPublicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeTokenPublicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tokenCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, obtId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, payeeFioPublicKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, memo<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, hash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, offLineUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RecordSendResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">push<wbr>Transaction<span class="tsd-signature-symbol">(</span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L293">FIOSDK.ts:293</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L646">FIOSDK.ts:646</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Allows advance user to send their own content directly to FIO contracts</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>account: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Account name</p>
+									</div>
+								</li>
+								<li>
+									<h5>action: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Name of action</p>
+									</div>
+								</li>
+								<li>
+									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>JSON object with params for action</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="recordobtdata" class="tsd-anchor"></a>
+					<h3>record<wbr>Obt<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">record<wbr>Obt<wbr>Data<span class="tsd-signature-symbol">(</span>fioRequestId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, payerFIOAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeFIOAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payerTokenPublicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeTokenPublicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tokenCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, status<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, obtId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, payeeFioPublicKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, memo<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, hash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, offLineUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RecordObtDataResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L335">FIOSDK.ts:335</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -597,7 +907,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>fioRequestId: <span class="tsd-signature-type">string</span></h5>
+									<h5>fioRequestId: <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>ID of funds request, if this Record Send transaction is in response to a previously received funds request.  Send empty if no FIO Request ID</p>
 									</div>
@@ -657,7 +967,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -678,7 +988,7 @@
 									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> offLineUrl: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RecordSendResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RecordObtDataResponse</span><span class="tsd-signature-symbol">&gt;</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -686,13 +996,13 @@
 					<a name="registerfioaddress" class="tsd-anchor"></a>
 					<h3>register<wbr>Fio<wbr>Address</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">register<wbr>Fio<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RegisterFioAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Fio<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RegisterFioAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L150">FIOSDK.ts:150</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L167">FIOSDK.ts:167</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -715,7 +1025,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -729,13 +1039,13 @@
 					<a name="registerfiodomain" class="tsd-anchor"></a>
 					<h3>register<wbr>Fio<wbr>Domain</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">register<wbr>Fio<wbr>Domain<span class="tsd-signature-symbol">(</span>fioDomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RegisterFioDomainResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">register<wbr>Fio<wbr>Domain<span class="tsd-signature-symbol">(</span>fioDomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RegisterFioDomainResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L170">FIOSDK.ts:170</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L187">FIOSDK.ts:187</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -758,7 +1068,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -772,13 +1082,13 @@
 					<a name="rejectfundsrequest" class="tsd-anchor"></a>
 					<h3>reject<wbr>Funds<wbr>Request</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">reject<wbr>Funds<wbr>Request<span class="tsd-signature-symbol">(</span>fioRequestId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RejectFundsResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">reject<wbr>Funds<wbr>Request<span class="tsd-signature-symbol">(</span>fioRequestId<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RejectFundsResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L343">FIOSDK.ts:343</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L397">FIOSDK.ts:397</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -789,7 +1099,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>fioRequestId: <span class="tsd-signature-type">string</span></h5>
+									<h5>fioRequestId: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Existing funds request Id</p>
 									</div>
@@ -801,7 +1111,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -815,13 +1125,13 @@
 					<a name="renewfioaddress" class="tsd-anchor"></a>
 					<h3>renew<wbr>Fio<wbr>Address</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">renew<wbr>Fio<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RenewFioAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">renew<wbr>Fio<wbr>Address<span class="tsd-signature-symbol">(</span>fioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RenewFioAddressResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L190">FIOSDK.ts:190</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L207">FIOSDK.ts:207</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -844,7 +1154,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -858,13 +1168,13 @@
 					<a name="renewfiodomain" class="tsd-anchor"></a>
 					<h3>renew<wbr>Fio<wbr>Domain</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">renew<wbr>Fio<wbr>Domain<span class="tsd-signature-symbol">(</span>fioDomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RenewFioDomainResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">renew<wbr>Fio<wbr>Domain<span class="tsd-signature-symbol">(</span>fioDomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RenewFioDomainResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L210">FIOSDK.ts:210</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L227">FIOSDK.ts:227</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -887,7 +1197,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -901,13 +1211,13 @@
 					<a name="requestfunds" class="tsd-anchor"></a>
 					<h3>request<wbr>Funds</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">request<wbr>Funds<span class="tsd-signature-symbol">(</span>payerFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeePublicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tokenCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, memo<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, payerFioPublicKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span>, hash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, offlineUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RequestFundsResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">request<wbr>Funds<span class="tsd-signature-symbol">(</span>payerFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeFioAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, payeeTokenPublicAddress<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, tokenCode<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, memo<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, payerFioPublicKey<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span>, hash<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span>, offlineUrl<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RequestFundsResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L371">FIOSDK.ts:371</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L425">FIOSDK.ts:425</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -930,7 +1240,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>payeePublicAddress: <span class="tsd-signature-type">string</span></h5>
+									<h5>payeeTokenPublicAddress: <span class="tsd-signature-type">string</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Payee&#39;s public address where they want funds sent.</p>
 									</div>
@@ -963,7 +1273,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -985,13 +1295,13 @@
 					<a name="setfiodomainvisibility" class="tsd-anchor"></a>
 					<h3>set<wbr>Fio<wbr>Domain<wbr>Visibility</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">set<wbr>Fio<wbr>Domain<wbr>Visibility<span class="tsd-signature-symbol">(</span>fioDomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isPublic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SetFioDomainVisibilityResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Fio<wbr>Domain<wbr>Visibility<span class="tsd-signature-symbol">(</span>fioDomain<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isPublic<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SetFioDomainVisibilityResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L257">FIOSDK.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L299">FIOSDK.ts:299</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1020,7 +1330,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -1034,13 +1344,13 @@
 					<a name="transfertokens" class="tsd-anchor"></a>
 					<h3>transfer<wbr>Tokens</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">transfer<wbr>Tokens<span class="tsd-signature-symbol">(</span>payeeFioPublicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TransferTokensResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">transfer<wbr>Tokens<span class="tsd-signature-symbol">(</span>payeeFioPublicKey<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, amount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, maxFee<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, walletFioAddress<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">TransferTokensResponse</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L498">FIOSDK.ts:498</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L552">FIOSDK.ts:552</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1070,7 +1380,7 @@
 									</div>
 								</li>
 								<li>
-									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot;&quot;</span></h5>
+									<h5><span class="tsd-flag ts-flagDefault value">Default value</span> walletFioAddress: <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> =&nbsp;null</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>FIO Address of the wallet which generates this transaction.</p>
 									</div>
@@ -1090,7 +1400,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L62">FIOSDK.ts:62</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L64">FIOSDK.ts:64</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1127,7 +1437,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/056195c/src/FIOSDK.ts#L81">FIOSDK.ts:81</a></li>
+									<li>Defined in <a href="https://github.com/dapixio/fiosdk_typescript/blob/c670568/src/FIOSDK.ts#L83">FIOSDK.ts:83</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1183,11 +1493,29 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="fiosdk.html#transactions" class="tsd-kind-icon">transactions</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="fiosdk.html#walletfioaddress" class="tsd-kind-icon">wallet<wbr>Fio<wbr>Address</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="fiosdk.html#addpublicaddress" class="tsd-kind-icon">add<wbr>Public<wbr>Address</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#addpublicaddresses" class="tsd-kind-icon">add<wbr>Public<wbr>Addresses</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="fiosdk.html#getfee" class="tsd-kind-icon">get<wbr>Fee</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#getfeefornewfundsrequest" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>New<wbr>Funds<wbr>Request</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#getfeeforpublicaddress" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Public<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#getfeeforrecordobtdata" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Record<wbr>Obt<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#getfeeforrejectfundsrequest" class="tsd-kind-icon">get<wbr>Fee<wbr>For<wbr>Reject<wbr>Funds<wbr>Request</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="fiosdk.html#getfiobalance" class="tsd-kind-icon">get<wbr>Fio<wbr>Balance</a>
@@ -1202,6 +1530,9 @@
 								<a href="fiosdk.html#getfiopublickey" class="tsd-kind-icon">get<wbr>Fio<wbr>Public<wbr>Key</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#getobtdata" class="tsd-kind-icon">get<wbr>Obt<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="fiosdk.html#getpendingfiorequests" class="tsd-kind-icon">get<wbr>Pending<wbr>Fio<wbr>Requests</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -1211,10 +1542,16 @@
 								<a href="fiosdk.html#getsentfiorequests" class="tsd-kind-icon">get<wbr>Sent<wbr>Fio<wbr>Requests</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#getwalletfioaddress" class="tsd-kind-icon">get<wbr>Wallet<wbr>Fio<wbr>Address</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="fiosdk.html#isavailable" class="tsd-kind-icon">is<wbr>Available</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="fiosdk.html#recordsend" class="tsd-kind-icon">record<wbr>Send</a>
+								<a href="fiosdk.html#pushtransaction" class="tsd-kind-icon">push<wbr>Transaction</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="fiosdk.html#recordobtdata" class="tsd-kind-icon">record<wbr>Obt<wbr>Data</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="fiosdk.html#registerfioaddress" class="tsd-kind-icon">register<wbr>Fio<wbr>Address</a>

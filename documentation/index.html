@@ -86,33 +86,10 @@
 				<a href="#building-the-fio-typescript-sdk-manually" id="building-the-fio-typescript-sdk-manually" style="color: inherit; text-decoration: none;">
 					<h1>Building The FIO TypeScript SDK, manually</h1>
 				</a>
-				<a href="#build-dependencies" id="build-dependencies" style="color: inherit; text-decoration: none;">
-					<h2>Build Dependencies</h2>
-				</a>
-				<p>The FIO TypeScript SDK has a dependency on the FIOJS SDK.  This must be built first.</p>
-				<p>The package.json reference for FIOJS, must be changed to a directory path.  If building FIOJS and Typescript SDK manually (rather than using the NPM Version)</p>
-				<pre><code><span class="hljs-selector-tag">i</span><span class="hljs-selector-class">.e</span> :
-../../fiojs</code></pre><p>Make sure the FIOJS project is located in the following directory structure:</p>
-				<pre><code>/fiojs  - FIO JS SDK <span class="hljs-keyword">files</span>
-/fiosdk_typescript - FIO TypeScript SDK <span class="hljs-keyword">Files</span></code></pre>
-				<a href="#building-fiojs-and-fio-typescript-sdks-using-build_sdkssh" id="building-fiojs-and-fio-typescript-sdks-using-build_sdkssh" style="color: inherit; text-decoration: none;">
-					<h3>Building FIOJS and FIO TypeScript SDKs using build_sdks.sh</h3>
-				</a>
-				<p>Navigate to the &quot;fiosdk_typescript&quot; folder and run the build_sdks.sh script: </p>
-				<pre><code><span class="hljs-keyword">cd</span> fiosdk_typescript
-<span class="hljs-string">./build_sdks.sh</span></code></pre>
-				<a href="#building-fiojs-sdk-manually" id="building-fiojs-sdk-manually" style="color: inherit; text-decoration: none;">
-					<h4>Building FIOJS SDK, manually</h4>
-				</a>
-				<p>Navigate to the &quot;fiojs&quot; folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the &quot;Workflow for using the SDK with TestNet&quot; section of this README. </p>
-				<pre><code>cd /fiojs
-yarn
-tsc
-npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-keyword">to</span> <span class="hljs-builtin-name">run</span> the unit tests)</code></pre>
 				<a href="#building-fio-typescript-sdk-manually" id="building-fio-typescript-sdk-manually" style="color: inherit; text-decoration: none;">
 					<h4>Building FIO TypeScript SDK, manually</h4>
 				</a>
-				<p>Navigate to the &quot;fiofoundation-io-sdk&quot; folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the &quot;Workflow for using the SDK with TestNet&quot; section of this README.</p>
+				<p>Navigate to the &quot;fiosdk_typescript&quot; folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the &quot;Workflow for using the SDK with TestNet&quot; section of this README.</p>
 				<pre><code>cd fiosdk_typescript
 yarn
 tsc
@@ -130,7 +107,7 @@ npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-
 				</a>
 				<p>TypeDoc is installed as a dev dependency. Documentation is pre-generated and included with the source code. To manually generate the documentation run: </p>
 				<pre><code><span class="hljs-keyword">cd</span> fiosdk_typescript
-<span class="hljs-string">./build_doc.sh</span></code></pre><p>The documentation will appear in the folder &quot;documentation&quot; in the root of the project.</p>
+<span class="hljs-string">./build_docs.sh</span></code></pre><p>The documentation will appear in the folder &quot;documentation&quot; in the root of the project.</p>
 				<a href="#issues-installing-typedoc" id="issues-installing-typedoc" style="color: inherit; text-decoration: none;">
 					<h2>Issues Installing TypeDoc?</h2>
 				</a>
@@ -153,7 +130,6 @@ npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-
 				</a>
 				<pre><code>privateKey/publicKey - the wallet user<span class="hljs-symbol">'s</span> private/public keys
 baseURL - the base URL <span class="hljs-keyword">to</span> the FIO Protocol blockchain API (e.g., http://testnet.fioprotocol.io/v1/)
-io - fetchJson
 fetchjson - a reference <span class="hljs-keyword">to</span> fetchJSON 
 registerMockUrl - the URL <span class="hljs-keyword">of</span> the server used <span class="hljs-keyword">to</span> auto-<span class="hljs-keyword">register</span> FIO names <span class="hljs-keyword">for</span> wallet users. This <span class="hljs-keyword">is</span> only used by wallets that have deployed a central server used <span class="hljs-keyword">to</span> <span class="hljs-keyword">register</span> names <span class="hljs-keyword">on</span> their domain. It <span class="hljs-keyword">is</span> used by the registerOnBehalfOfUser method
 
@@ -161,7 +137,6 @@ constructor(
     privateKey: <span class="hljs-built_in">string</span>,
     publicKey: <span class="hljs-built_in">string</span>,
     baseUrl: <span class="hljs-built_in">string</span>,
-    io: any,
     fetchjson: FetchJson,
     registerMockUrl = '',
   )</code></pre><p>The user&#39;s private/public key can be generated by calling these methods on the sdk:
