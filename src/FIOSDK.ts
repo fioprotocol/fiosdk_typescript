@@ -740,7 +740,7 @@ export class FIOSDK {
           params.tokenCode,
           params.memo,
           params.maxFee,
-          params.payeeFioPublicKey,
+          params.payerFioPublicKey,
           params.walletFioAddress,
           params.hash,
           params.offlineUrl,
