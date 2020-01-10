@@ -19,23 +19,22 @@ const mnemonic2 = 'round work clump little air glue lemon gravity shed charge as
  * Urls required
  */
 const baseUrl = ''
-const mockBaseUrl = ''
 
 /**
- * Address to request funds to be able make all calls with fee
+ * Keys to transfer funds to be able make all calls with fee
  */
-const faucetFioAddress = ''
-const faucetPublicAddress = ''
+const faucetPub = '';
+const faucetPriv = '';
 
 const fioTokenCode = 'FIO'
 const fundAmount = 25 * BILLION
-const defaultFee = 30 * BILLION
-const fundReceiveTimout = 60000
+const defaultFee = 40 * BILLION
+const receiveTransferTimout = 5000
 
 let fioSdk, fioSdk2
 
 const generateTestingFioAddress = (customDomain = 'edge') => {
-  return `testing${Date.now()}:${customDomain}`
+  return `testing${Date.now()}@${customDomain}`
 }
 
 const generateTestingFioDomain = () => {
@@ -61,8 +60,7 @@ before(async () => {
     privateKey,
     publicKey,
     baseUrl,
-    fetchJson,
-    mockBaseUrl
+    fetchJson
   )
   testFioAddressName = generateTestingFioAddress()
 
@@ -75,23 +73,44 @@ before(async () => {
     privateKey2,
     publicKey2,
     baseUrl,
-    fetchJson,
-    mockBaseUrl
+    fetchJson
   )
   testFioAddressName2 = generateTestingFioAddress()
 
+  const fioSdkFaucet = new FIOSDK(
+    faucetPriv,
+    faucetPub,
+    baseUrl,
+    fetchJson
+  )
+  await fioSdkFaucet.transferTokens(publicKey, fundAmount * 4, defaultFee)
+  await fioSdkFaucet.transferTokens(publicKey2, fundAmount, defaultFee)
+  await timeout(receiveTransferTimout)
+
   try {
-    await fioSdk.registerFioNameOnBehalfOfUser(testFioAddressName, publicKey)
-    await fioSdk.registerFioNameOnBehalfOfUser(testFioAddressName2, publicKey2)
+    const isAvailableResult = await fioSdk.genericAction('isAvailable', {
+      fioName: testFioAddressName
+    })
+    if (!isAvailableResult.is_registered) {
+      await fioSdk.genericAction('registerFioAddress', {
+        fioAddress: testFioAddressName,
+        maxFee: defaultFee
+      })
+    }
+
+    const isAvailableResult2 = await fioSdk2.genericAction('isAvailable', {
+      fioName: testFioAddressName2
+    })
+    if (!isAvailableResult2.is_registered) {
+      await fioSdk2.genericAction('registerFioAddress', {
+        fioAddress: testFioAddressName2,
+        maxFee: defaultFee
+      })
+    }
+
   } catch (e) {
     console.log(e);
   }
-
-  await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
-  await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
-  await fioSdk.requestFunds(faucetFioAddress, testFioAddressName, testFioAddressName, fundAmount, fioTokenCode, '', defaultFee, publicKey)
-
-  await timeout(fundReceiveTimout)
 })
 
 describe('Testing generic actions', () => {

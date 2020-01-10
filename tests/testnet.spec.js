@@ -26,12 +26,12 @@ const mockBaseUrl = 'https://monitor.testnet.fioprotocol.io'
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
-const defaultFee = 30 * BILLION
+const defaultFee = 40 * BILLION
 
 let fioSdk, fioSdk2
 
 const generateTestingFioAddress = (customDomain = fioTestnetDomain) => {
-  return `testing${Date.now()}:${customDomain}`
+  return `testing${Date.now()}@${customDomain}`
 }
 
 const generateTestingFioDomain = () => {
