@@ -7,6 +7,6 @@ export enum EndPoint {
   addPubAddress = 'add_pub_address',
   setFioDomainPublic = 'set_fio_domain_public',
   rejectFundsRequest = 'reject_funds_request',
-  recordSend = 'record_send',
+  recordObtData = 'record_obt_data',
   transferTokens = 'transfer_tokens_pub_key',
 }

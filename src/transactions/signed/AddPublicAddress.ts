@@ -1,3 +1,4 @@
+import { PublicAddress } from '../../entities/PublicAddress'
 import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
@@ -7,20 +8,18 @@ export class AddPublicAddress extends SignedTransaction {
   public ACTION: string = 'addaddress'
   public ACCOUNT: string = Constants.defaultAccount
   public fioAddress: string
-  public tokenCode: string
-  public publicAddress: string
+  public publicAddresses: PublicAddress[]
   public maxFee: number
   public walletFioAddress: string
 
-  constructor(fioAddress: string, tokenCode: string, publicAddress: string, maxFee: number, walletFioAddress: string = '') {
+  constructor(fioAddress: string, publicAddresses: PublicAddress[], maxFee: number, walletFioAddress: string = '') {
     super()
     this.fioAddress = fioAddress
-    this.tokenCode = tokenCode
-    this.publicAddress = publicAddress
+    this.publicAddresses = publicAddresses
     this.maxFee = maxFee
     this.walletFioAddress = walletFioAddress
 
-    this.validationData = { fioAddress, tokenCode, publicAddress, tpid: walletFioAddress }
+    this.validationData = { fioAddress, tpid: walletFioAddress }
     this.validationRules = validationRules.addPublicAddressRules
   }
 
@@ -28,8 +27,7 @@ export class AddPublicAddress extends SignedTransaction {
     const actor = this.getActor()
     const data = {
       fio_address: this.fioAddress,
-      token_code: this.tokenCode,
-      public_address: this.publicAddress,
+      public_addresses: this.publicAddresses,
       actor,
       tpid: this.walletFioAddress,
       max_fee: this.maxFee,

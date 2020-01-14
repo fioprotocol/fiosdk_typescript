@@ -21,7 +21,7 @@ export class RequestNewFunds extends SignedTransaction {
     payeeFioAddress: string,
     walletFioAddress: string = '',
     maxFee: number,
-    payeePublicAddress: string,
+    payeeTokenPublicAddress: string,
     amount: number,
     tokenCode: string,
     memo: string | null = null,
@@ -38,7 +38,7 @@ export class RequestNewFunds extends SignedTransaction {
     this.tokenCode = tokenCode
     this.maxFee = maxFee
     this.content = {
-      payee_public_address: payeePublicAddress,
+      payee_public_address: payeeTokenPublicAddress,
       amount: `${amount}`,
       token_code: tokenCode,
       memo,

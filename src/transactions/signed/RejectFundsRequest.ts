@@ -6,11 +6,11 @@ export class RejectFundsRequest extends SignedTransaction {
   ENDPOINT: string = 'chain/reject_funds_request'
   ACTION: string = 'rejectfndreq'
   ACCOUNT: string = 'fio.reqobt'
-  fioreqid: string
+  fioreqid: number
   maxFee: number
   walletFioAddress: string
 
-  constructor(fioreqid: string, maxFee: number, walletFioAddress: string = '') {
+  constructor(fioreqid: number, maxFee: number, walletFioAddress: string = '') {
     super()
     this.fioreqid = fioreqid
     this.maxFee = maxFee

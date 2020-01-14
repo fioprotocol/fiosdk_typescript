@@ -2,7 +2,7 @@ export class Constants {
   public static endPoints: any = {
     AddPublicAddress: 'add_pub_address',
     SetFioDomainVisibility: 'set_fio_domain_public',
-    RecordSend: 'record_send',
+    RecordObtData: 'record_obt_data',
     RegisterFioAddress: 'register_fio_address',
     RegisterFioDomain: 'register_fio_domain',
     RejectFundsRequest: 'reject_funds_request',

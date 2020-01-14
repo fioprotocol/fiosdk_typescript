@@ -2,8 +2,8 @@ import { Query } from './Query'
 import { PublicAddressResponse } from '../../entities/PublicAddressResponse'
 
 
-export class PublicAddressLookUp extends Query<PublicAddressResponse> {
-  ENDPOINT: string = 'chain/pub_address_lookup'
+export class GetPublicAddress extends Query<PublicAddressResponse> {
+  ENDPOINT: string = 'chain/get_pub_address'
   fioAddress: string
   tokenCode: string
 

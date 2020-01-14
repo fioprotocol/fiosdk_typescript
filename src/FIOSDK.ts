@@ -8,7 +8,7 @@ import {
   FioNamesResponse,
   PendingFioRequestsResponse,
   PublicAddressResponse,
-  RecordSendResponse,
+  RecordObtDataResponse,
   RegisterFioAddressResponse,
   RegisterFioDomainResponse,
   RejectFundsResponse,
@@ -18,8 +18,10 @@ import {
   SentFioRequestResponse,
   SetFioDomainVisibilityResponse,
   TransferTokensResponse,
+  GetObtDataResponse,
 } from './entities/responses'
 import { EndPoint } from './entities/EndPoint'
+import { PublicAddress } from './entities/PublicAddress'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
@@ -101,11 +103,17 @@ export class FIOSDK {
   public publicKey: string
 
   /**
+   * Default FIO Address of the wallet which generates transactions.
+   */
+  public walletFioAddress: string
+
+  /**
    * @param privateKey the fio private key of the client sending requests to FIO API.
    * @param publicKey the fio public key of the client sending requests to FIO API.
    * @param baseUrl the url to the FIO API.
    * @param fetchjson
    * @param registerMockUrl the url to the mock server
+   * @param walletFioAddress Default FIO Address of the wallet which generates transactions.
    */
   constructor(
     privateKey: string,
@@ -113,6 +121,7 @@ export class FIOSDK {
     baseUrl: string,
     fetchjson: FetchJson,
     registerMockUrl = '',
+    walletFioAddress: string = '',
   ) {
     this.transactions = new Transactions()
     Transactions.baseUrl = baseUrl
@@ -121,6 +130,7 @@ export class FIOSDK {
     this.registerMockUrl = registerMockUrl
     this.privateKey = privateKey
     this.publicKey = publicKey
+    this.walletFioAddress = walletFioAddress
 
     for (const accountName of Constants.rawAbiAccountName) {
       this.getAbi(accountName)
@@ -141,6 +151,13 @@ export class FIOSDK {
   }
 
   /**
+   * Returns walletFioAddress or default
+   */
+  public getWalletFioAddress(walletFioAddress: string | null): string {
+    return walletFioAddress !== null ? walletFioAddress : this.walletFioAddress
+  }
+
+  /**
    * Registers a FIO Address on the FIO blockchain.  The owner will be the public key associated with the FIO SDK instance.
    *
    * @param fioAddress FIO Address to register.
@@ -150,12 +167,12 @@ export class FIOSDK {
   public registerFioAddress(
     fioAddress: string,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<RegisterFioAddressResponse> {
     const registerFioAddress = new SignedTransactions.RegisterFioAddress(
       fioAddress,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return registerFioAddress.execute(this.privateKey, this.publicKey)
   }
@@ -170,12 +187,12 @@ export class FIOSDK {
   public registerFioDomain(
     fioDomain: string,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<RegisterFioDomainResponse> {
     const registerFioDomain = new SignedTransactions.RegisterFioDomain(
       fioDomain,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return registerFioDomain.execute(this.privateKey, this.publicKey)
   }
@@ -190,12 +207,12 @@ export class FIOSDK {
   public renewFioAddress(
     fioAddress: string,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<RenewFioAddressResponse> {
     const renewFioAddress = new SignedTransactions.RenewFioAddress(
       fioAddress,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return renewFioAddress.execute(this.privateKey, this.publicKey)
   }
@@ -210,12 +227,12 @@ export class FIOSDK {
   public renewFioDomain(
     fioDomain: string,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<RenewFioDomainResponse> {
     const renewFioDomain = new SignedTransactions.RenewFioDomain(
       fioDomain,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return renewFioDomain.execute(this.privateKey, this.publicKey)
   }
@@ -234,14 +251,39 @@ export class FIOSDK {
     tokenCode: string,
     publicAddress: string,
     maxFee: number,
+    walletFioAddress: string | null = null,
+  ): Promise<AddPublicAddressResponse> {
+    const addPublicAddress = new SignedTransactions.AddPublicAddress(
+      fioAddress,
+      [{
+        token_code: tokenCode,
+        public_address: publicAddress
+      }],
+      maxFee,
+      this.getWalletFioAddress(walletFioAddress),
+    )
+    return addPublicAddress.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
+   * This call allows a public addresses of the specific blockchain type to be added to the FIO Address.
+   *
+   * @param fioAddress FIO Address which will be mapped to public addresses.
+   * @param publicAddresses Array of public addresses to be added to the FIO Address for the specified token.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param walletFioAddress FIO Address of the wallet which generates this transaction.
+   */
+  public addPublicAddresses(
+    fioAddress: string,
+    publicAddresses: PublicAddress[],
+    maxFee: number,
     walletFioAddress: string = '',
   ): Promise<AddPublicAddressResponse> {
     const addPublicAddress = new SignedTransactions.AddPublicAddress(
       fioAddress,
-      tokenCode,
-      publicAddress,
+      publicAddresses,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return addPublicAddress.execute(this.privateKey, this.publicKey)
   }
@@ -258,13 +300,13 @@ export class FIOSDK {
     fioDomain: string,
     isPublic: boolean,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<SetFioDomainVisibilityResponse> {
     const SetFioDomainVisibility = new SignedTransactions.SetFioDomainVisibility(
       fioDomain,
       isPublic,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return SetFioDomainVisibility.execute(this.privateKey, this.publicKey)
   }
@@ -290,8 +332,8 @@ export class FIOSDK {
    * @param hash
    * @param offlineUrl
    */
-  public async recordSend(
-    fioRequestId: string,
+  public async recordObtData(
+    fioRequestId: number | null,
     payerFIOAddress: string,
     payeeFIOAddress: string,
     payerTokenPublicAddress: string,
@@ -301,19 +343,19 @@ export class FIOSDK {
     status: string,
     obtId: string,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
     payeeFioPublicKey: string | null = null,
     memo: string | null = null,
     hash: string | null = null,
     offLineUrl: string | null = null,
-  ): Promise<RecordSendResponse> {
+  ): Promise<RecordObtDataResponse> {
     let payeeKey: any = { public_address: '' }
     if (!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string') {
       payeeKey = await this.getPublicAddress(payeeFIOAddress, 'FIO')
     } else {
       payeeKey.public_address = payeeFioPublicKey
     }
-    const recordSend = new SignedTransactions.RecordSend(
+    const recordObtData = new SignedTransactions.RecordObtData(
       fioRequestId,
       payerFIOAddress,
       payeeFIOAddress,
@@ -324,13 +366,25 @@ export class FIOSDK {
       obtId,
       maxFee,
       status,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
       payeeKey.public_address,
       memo,
       hash,
       offLineUrl,
     )
-    return recordSend.execute(this.privateKey, this.publicKey)
+    return recordObtData.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
+   * Retrives OBT metadata data stored using record send.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param tokenCode Code of the token to filter results
+   */
+  public getObtData(limit?: number, offset?: number, tokenCode?: string): Promise<GetObtDataResponse> {
+    const getObtDataRequest = new queries.GetObtData(this.publicKey, limit, offset, tokenCode)
+    return getObtDataRequest.execute(this.publicKey, this.privateKey)
   }
 
   /**
@@ -341,14 +395,14 @@ export class FIOSDK {
    * @param walletFioAddress FIO Address of the wallet which generates this transaction.
    */
   public rejectFundsRequest(
-    fioRequestId: string,
+    fioRequestId: number,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<RejectFundsResponse> {
     const rejectFundsRequest = new SignedTransactions.RejectFundsRequest(
       fioRequestId,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return rejectFundsRequest.execute(this.privateKey, this.publicKey)
   }
@@ -358,7 +412,7 @@ export class FIOSDK {
    *
    * @param payerFioAddress FIO Address of the payer. This address will receive the request and will initiate payment.
    * @param payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
-   * @param payeePublicAddress Payee's public address where they want funds sent.
+   * @param payeeTokenPublicAddress Payee's public address where they want funds sent.
    * @param amount Amount requested.
    * @param tokenCode Code of the token represented in amount requested.
    * @param memo
@@ -371,13 +425,13 @@ export class FIOSDK {
   public async requestFunds(
     payerFioAddress: string,
     payeeFioAddress: string,
-    payeePublicAddress: string,
+    payeeTokenPublicAddress: string,
     amount: number,
     tokenCode: string,
     memo: string,
     maxFee: number,
     payerFioPublicKey: string | null = null,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
     hash?: string,
     offlineUrl?: string,
   ): Promise<RequestFundsResponse> {
@@ -391,9 +445,9 @@ export class FIOSDK {
       payerFioAddress,
       payerKey.public_address,
       payeeFioAddress,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
       maxFee,
-      payeePublicAddress,
+      payeeTokenPublicAddress,
       amount,
       tokenCode,
       memo,
@@ -465,7 +519,7 @@ export class FIOSDK {
     fioAddress: string,
     tokenCode: string,
   ): Promise<PublicAddressResponse> {
-    const publicAddressLookUp = new queries.PublicAddressLookUp(
+    const publicAddressLookUp = new queries.GetPublicAddress(
       fioAddress,
       tokenCode,
     )
@@ -478,7 +532,7 @@ export class FIOSDK {
    * @param fioAddress FIO Address for which fio token public address is to be returned.
    */
   public getFioPublicAddress(fioAddress: string): Promise<PublicAddressResponse> {
-    const publicAddressLookUp = new queries.PublicAddressLookUp(
+    const publicAddressLookUp = new queries.GetPublicAddress(
       fioAddress,
       'FIO',
     )
@@ -499,13 +553,13 @@ export class FIOSDK {
     payeeFioPublicKey: string,
     amount: number,
     maxFee: number,
-    walletFioAddress: string = '',
+    walletFioAddress: string | null = null,
   ): Promise<TransferTokensResponse> {
     const transferTokens = new SignedTransactions.TransferTokens(
       payeeFioPublicKey,
       amount,
       maxFee,
-      walletFioAddress,
+      this.getWalletFioAddress(walletFioAddress),
     )
     return transferTokens.execute(this.privateKey, this.publicKey)
   }
@@ -517,11 +571,49 @@ export class FIOSDK {
    * @param fioAddress
    *        if endPointName is RenewFioAddress, FIO Address incurring the fee and owned by signer.
    *        if endPointName is RenewFioDomain, FIO Domain incurring the fee and owned by signer.
-   *        if endPointName is RecordSend, Payee FIO Address incurring the fee and owned by signer.
+   *        if endPointName is RecordObtData, Payee FIO Address incurring the fee and owned by signer.
+   *
+   *        Omit for:
+   *        - register_fio_domain
+   *        - register_fio_address
+   *        - transfer_tokens_pub_key
+   *        - transfer_tokens_fio_address
    */
-  public getFee(endPoint: EndPoint, fioAddress = ''): Promise<FioFeeResponse> {
+  public getFee(endPoint: EndPoint, fioAddress: string = ''): Promise<FioFeeResponse> {
     const fioFee = new queries.GetFee(endPoint, fioAddress)
     return fioFee.execute(this.publicKey)
+  }
+
+  /**
+   *
+   * @param payerFioAddress
+   */
+  public getFeeForRecordObtData(payerFioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.recordObtData, payerFioAddress)
+  }
+
+  /**
+   *
+   * @param payeeFioAddress
+   */
+  public getFeeForNewFundsRequest(payeeFioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.newFundsRequest, payeeFioAddress)
+  }
+
+  /**
+   *
+   * @param payeeFioAddress Pass payee_public_address from corresponding FIO Request
+   */
+  public getFeeForRejectFundsRequest(payeeFioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.newFundsRequest, payeeFioAddress)
+  }
+
+  /**
+   *
+   * @param fioAddress
+   */
+  public getFeeForPublicAddress(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.addPubAddress, fioAddress)
   }
 
   /**
@@ -545,6 +637,22 @@ export class FIOSDK {
   }
 
   /**
+   * Allows advance user to send their own content directly to FIO contracts
+   *
+   * @param account Account name
+   * @param action Name of action
+   * @param data JSON object with params for action
+   */
+  public pushTransaction(account: string, action: string, data: any): Promise<any> {
+    const pushTransaction = new SignedTransactions.PushTransaction(
+      action,
+      account,
+      data,
+    )
+    return pushTransaction.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
    * @ignore
    */
   public genericAction(action: string, params: any): any {
@@ -555,31 +663,38 @@ export class FIOSDK {
         return this.registerFioAddress(
           params.fioAddress,
           params.maxFee,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
         )
       case 'registerFioDomain':
         return this.registerFioDomain(
           params.fioDomain,
           params.maxFee,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
         )
       case 'renewFioDomain':
         return this.renewFioDomain(
           params.fioDomain,
           params.maxFee,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
         )
       case 'renewFioAddress':
         return this.renewFioAddress(
           params.fioAddress,
           params.maxFee,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
         )
       case 'addPublicAddress':
         return this.addPublicAddress(
           params.fioAddress,
           params.tokenCode,
           params.publicAddress,
+          params.maxFee,
+          params.walletFioAddress,
+        )
+      case 'addPublicAddresses':
+        return this.addPublicAddresses(
+          params.fioAddress,
+          params.publicAddresses,
           params.maxFee,
           params.walletFioAddress,
         )
@@ -590,41 +705,43 @@ export class FIOSDK {
           params.maxFee,
           params.walletFioAddress,
         )
-      case 'recordSend':
-        return this.recordSend(
-          params.fioRequestId,
+      case 'recordObtData':
+        return this.recordObtData(
+          params.fioRequestId || null,
           params.payerFIOAddress,
           params.payeeFIOAddress,
           params.payerTokenPublicAddress,
           params.payeeTokenPublicAddress,
           params.amount,
           params.tokenCode,
-          params.status,
+          params.status || '',
           params.obtId,
           params.maxFee,
-          params.walletFioAddress || '',
-          params.payerFioPublicKey,
+          params.walletFioAddress,
+          params.payeeFioPublicKey,
           params.memo,
           params.hash,
           params.offLineUrl,
         )
+      case 'getObtData':
+        return this.getObtData(params.limit, params.offset, params.tokenCode)
       case 'rejectFundsRequest':
         return this.rejectFundsRequest(
           params.fioRequestId,
           params.maxFee,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
         )
       case 'requestFunds':
         return this.requestFunds(
           params.payerFioAddress,
           params.payeeFioAddress,
-          params.payeePublicAddress,
+          params.payeeTokenPublicAddress,
           params.amount,
           params.tokenCode,
           params.memo,
           params.maxFee,
           params.payerFioPublicKey,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
           params.hash,
           params.offlineUrl,
         )
@@ -649,14 +766,24 @@ export class FIOSDK {
           params.payeeFioPublicKey,
           params.amount,
           params.maxFee,
-          params.walletFioAddress || '',
+          params.walletFioAddress,
         )
       case 'getAbi':
         return this.getAbi(params.accountName)
       case 'getFee':
         return this.getFee(params.endPoint, params.fioAddress)
+      case 'getFeeForRecordObtData':
+        return this.getFeeForRecordObtData(params.payerFioAddress)
+      case 'getFeeForNewFundsRequest':
+        return this.getFeeForNewFundsRequest(params.payeeFioAddress)
+      case 'getFeeForRejectFundsRequest':
+        return this.getFeeForRejectFundsRequest(params.payeeFioAddress)
+      case 'getFeeForPublicAddress':
+        return this.getFeeForPublicAddress(params.fioAddress)
       case 'getMultiplier':
         return this.getMultiplier()
+      case 'pushTransaction':
+        return this.pushTransaction(params.account, params.action, params.data)
     }
   }
 
