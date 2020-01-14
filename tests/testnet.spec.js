@@ -14,12 +14,12 @@ const BILLION = 1000000000
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '',
-  publicKey = '',
-  privateKey2 = '',
-  publicKey2 = '',
-  testFioAddressName = 'myaddressname:fiotestnet',
-  testFioAddressName2 = 'myaddressname:fiotestnet'
+let privateKey = '5KDHKnToQVa6L76tCHHZL2PfRd42s4tJCBdApxeSxN8K1uk7cxN',
+  publicKey = 'FIO8cVBPS7idtjXDa3onSSCwdaMB4f4HUTBt1bNuctTho5bkJmiy6',
+  privateKey2 = '5JbCsRDtTgwk4LiiNK99eVcPNw4miTauBzwoqv3tfEKNGz8J6wQ',
+  publicKey2 = 'FIO7VdQB1qd8LHEUtp3Guci6iiaFLSuJ3TTiETN66WmSa8MEcQ9X2',
+  testFioAddressName = 'shawna:fiotestnet',
+  testFioAddressName2 = 'shawnb:fiotestnet'
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 const mockBaseUrl = 'https://monitor.testnet.fioprotocol.io'
