@@ -188,6 +188,7 @@ describe('Testing generic actions', () => {
   })
 
   it(`Push Transaction - renewaddress`, async () => {
+    await timeout(2000)
     const result = await fioSdk.genericAction('pushTransaction', {
       action: 'renewaddress',
       account: 'fio.address',
