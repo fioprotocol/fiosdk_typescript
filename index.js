@@ -1,5 +1,8 @@
-const fio = require('./lib/FIOSDK');
-const FIOSDK = fio.FIOSDK;
-const constants = require('./lib/utils/constants')
-const fioConstants = constants.constants
-export { FIOSDK, fioConstants };
+"use strict";
+exports.__esModule = true;
+var fio = require('./lib/FIOSDK');
+var FIOSDK = fio.FIOSDK;
+exports.FIOSDK = FIOSDK;
+var constants = require('./lib/utils/constants');
+var fioConstants = constants.constants;
+exports.fioConstants = fioConstants;
