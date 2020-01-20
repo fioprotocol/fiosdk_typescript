@@ -26,14 +26,18 @@ export class SentFioRequests extends Query<SentFioRequestResponse> {
     if (result.requests.length > 0) {
       const requests: FioRequest[] = []
       result.requests.forEach((value: FioRequest) => {
-        let content
-        if (value.payer_fio_public_key === this.publicKey) {
-          content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payee_fio_public_key)
-        } else {
-          content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key)
+        try {
+          let content
+          if (value.payer_fio_public_key === this.publicKey) {
+            content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payee_fio_public_key)
+          } else {
+            content = this.getUnCipherContent('new_funds_content', value.content, this.privateKey, value.payer_fio_public_key)
+          }
+          value.content = content
+          requests.push(value)
+        } catch (e) {
+          //
         }
-        value.content = content
-        requests.push(value)
       })
       return { requests, more: result.more }
     }
