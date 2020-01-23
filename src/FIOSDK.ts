@@ -605,7 +605,7 @@ export class FIOSDK {
    * @param payeeFioAddress Pass payee_public_address from corresponding FIO Request
    */
   public getFeeForRejectFundsRequest(payeeFioAddress: string): Promise<FioFeeResponse> {
-    return this.getFee(EndPoint.newFundsRequest, payeeFioAddress)
+    return this.getFee(EndPoint.rejectFundsRequest, payeeFioAddress)
   }
 
   /**
