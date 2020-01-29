@@ -22,6 +22,7 @@ export class Constants {
     'fio.address',
     'fio.reqobt',
     'fio.token',
+    'eosio'
   ]
 
   public static multiplier = 1000000000
