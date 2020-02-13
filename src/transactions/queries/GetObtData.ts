@@ -27,7 +27,7 @@ export class GetObtData extends Query<GetObtDataResponse> {
       const obtDataRecords: GetObtDataRecord[] = []
       result.obt_data_records.forEach((obtDataRecord: GetObtDataRecord) => {
         let content
-        const contentType = 'record_send_content'
+        const contentType = 'record_obt_data_content'
         try {
           if (obtDataRecord.payer_fio_public_key === this.publicKey) {
             content = this.getUnCipherContent(contentType, obtDataRecord.content, this.privateKey, obtDataRecord.payee_fio_public_key)

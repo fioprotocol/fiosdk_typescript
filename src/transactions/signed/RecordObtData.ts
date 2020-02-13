@@ -27,6 +27,7 @@ export class RecordObtData extends SignedTransaction {
     payerPublicAddress: string,
     payeePublicAddress: string,
     amount: number,
+    chainCode: string,
     tokenCode: string,
     obtID: string,
     maxFee: number,
@@ -53,6 +54,7 @@ export class RecordObtData extends SignedTransaction {
       payer_public_address: this.payerPublicAddress,
       payee_public_address: this.payeePublicAddress,
       amount: `${amount}`,
+      chain_code: chainCode,
       token_code: tokenCode,
       status: status || this.defaultStatus,
       obt_id: obtID,
@@ -68,7 +70,7 @@ export class RecordObtData extends SignedTransaction {
 
   getData(): any {
     let actor = this.getActor()
-    const cipherContent = this.getCipherContent('record_send_content', this.content, this.privateKey, this.payeeFioPublicKey)
+    const cipherContent = this.getCipherContent('record_obt_data_content', this.content, this.privateKey, this.payeeFioPublicKey)
     let data = {
       payer_fio_address: this.payerFIOAddress,
       payee_fio_address: this.payeeFIOAddress,

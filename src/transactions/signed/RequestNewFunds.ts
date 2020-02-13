@@ -10,6 +10,7 @@ export class RequestNewFunds extends SignedTransaction {
   public payerFioAddress: string
   public payerFioPublicKey: string
   public payeeFioAddress: string
+  public chainCode: string
   public tokenCode: string
   public maxFee: number
   public content: any
@@ -23,6 +24,7 @@ export class RequestNewFunds extends SignedTransaction {
     maxFee: number,
     payeeTokenPublicAddress: string,
     amount: number,
+    chainCode: string,
     tokenCode: string,
     memo: string | null = null,
     hash: string | null = null,
@@ -35,11 +37,13 @@ export class RequestNewFunds extends SignedTransaction {
     this.payerFioAddress = payerFioAddress
     this.payerFioPublicKey = payerFioPublicKey
     this.payeeFioAddress = payeeFioAddress
+    this.chainCode = chainCode
     this.tokenCode = tokenCode
     this.maxFee = maxFee
     this.content = {
       payee_public_address: payeeTokenPublicAddress,
       amount: `${amount}`,
+      chain_code: chainCode,
       token_code: tokenCode,
       memo,
       hash,

@@ -241,6 +241,7 @@ export class FIOSDK {
    * This call allows a public address of the specific blockchain type to be added to the FIO Address.
    *
    * @param fioAddress FIO Address which will be mapped to public address.
+   * @param chainCode Blockchain code for blockchain hosting this token.
    * @param tokenCode Token code to be used with that public address.
    * @param publicAddress The public address to be added to the FIO Address for the specified token.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
@@ -248,6 +249,7 @@ export class FIOSDK {
    */
   public addPublicAddress(
     fioAddress: string,
+    chainCode: string,
     tokenCode: string,
     publicAddress: string,
     maxFee: number,
@@ -256,6 +258,7 @@ export class FIOSDK {
     const addPublicAddress = new SignedTransactions.AddPublicAddress(
       fioAddress,
       [{
+        chain_code: chainCode,
         token_code: tokenCode,
         public_address: publicAddress
       }],
@@ -322,6 +325,7 @@ export class FIOSDK {
    * @param payerTokenPublicAddress Public address on other blockchain of user sending funds.
    * @param payeeTokenPublicAddress Public address on other blockchain of user receiving funds.
    * @param amount Amount sent.
+   * @param chainCode Blockchain code for blockchain hosting this token.
    * @param tokenCode Code of the token represented in Amount requested, i.e. BTC.
    * @param status Status of this OBT. Allowed statuses are: sent_to_blockchain.
    * @param obtId Other Blockchain Transaction ID (OBT ID), i.e Bitcoin transaction ID.
@@ -339,6 +343,7 @@ export class FIOSDK {
     payerTokenPublicAddress: string,
     payeeTokenPublicAddress: string,
     amount: number,
+    chainCode: string,
     tokenCode: string,
     status: string,
     obtId: string,
@@ -351,7 +356,7 @@ export class FIOSDK {
   ): Promise<RecordObtDataResponse> {
     let payeeKey: any = { public_address: '' }
     if (!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string') {
-      payeeKey = await this.getPublicAddress(payeeFIOAddress, 'FIO')
+      payeeKey = await this.getFioPublicAddress(payeeFIOAddress)
     } else {
       payeeKey.public_address = payeeFioPublicKey
     }
@@ -362,6 +367,7 @@ export class FIOSDK {
       payerTokenPublicAddress,
       payeeTokenPublicAddress,
       amount,
+      chainCode,
       tokenCode,
       obtId,
       maxFee,
@@ -414,6 +420,7 @@ export class FIOSDK {
    * @param payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
    * @param payeeTokenPublicAddress Payee's public address where they want funds sent.
    * @param amount Amount requested.
+   * @param chainCode Blockchain code for blockchain hosting this token.
    * @param tokenCode Code of the token represented in amount requested.
    * @param memo
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by [getFee] for correct value.
@@ -427,6 +434,7 @@ export class FIOSDK {
     payeeFioAddress: string,
     payeeTokenPublicAddress: string,
     amount: number,
+    chainCode: string,
     tokenCode: string,
     memo: string,
     maxFee: number,
@@ -437,7 +445,7 @@ export class FIOSDK {
   ): Promise<RequestFundsResponse> {
     let payerKey: any = { public_address: '' }
     if (!payerFioPublicKey && typeof payerFioPublicKey !== 'string') {
-      payerKey = await this.getPublicAddress(payerFioAddress, 'FIO')
+      payerKey = await this.getFioPublicAddress(payerFioAddress)
     } else {
       payerKey.public_address = payerFioPublicKey
     }
@@ -449,6 +457,7 @@ export class FIOSDK {
       maxFee,
       payeeTokenPublicAddress,
       amount,
+      chainCode,
       tokenCode,
       memo,
       hash,
@@ -513,14 +522,17 @@ export class FIOSDK {
    * Returns a token public address for specified token code and FIO Address.
    *
    * @param fioAddress FIO Address for which the token public address is to be returned.
+   * @param chainCode Blockchain code for which public address is to be returned.
    * @param tokenCode Token code for which public address is to be returned.
    */
   public getPublicAddress(
     fioAddress: string,
+    chainCode: string,
     tokenCode: string,
   ): Promise<PublicAddressResponse> {
     const publicAddressLookUp = new queries.GetPublicAddress(
       fioAddress,
+      chainCode,
       tokenCode,
     )
     return publicAddressLookUp.execute(this.publicKey)
@@ -532,11 +544,7 @@ export class FIOSDK {
    * @param fioAddress FIO Address for which fio token public address is to be returned.
    */
   public getFioPublicAddress(fioAddress: string): Promise<PublicAddressResponse> {
-    const publicAddressLookUp = new queries.GetPublicAddress(
-      fioAddress,
-      'FIO',
-    )
-    return publicAddressLookUp.execute(this.publicKey)
+    return this.getPublicAddress(fioAddress, 'FIO', 'FIO')
   }
 
   /**
@@ -686,6 +694,7 @@ export class FIOSDK {
       case 'addPublicAddress':
         return this.addPublicAddress(
           params.fioAddress,
+          params.chainCode,
           params.tokenCode,
           params.publicAddress,
           params.maxFee,
@@ -713,6 +722,7 @@ export class FIOSDK {
           params.payerTokenPublicAddress,
           params.payeeTokenPublicAddress,
           params.amount,
+          params.chainCode,
           params.tokenCode,
           params.status || '',
           params.obtId,
@@ -737,6 +747,7 @@ export class FIOSDK {
           params.payeeFioAddress,
           params.payeeTokenPublicAddress,
           params.amount,
+          params.chainCode,
           params.tokenCode,
           params.memo,
           params.maxFee,
@@ -760,7 +771,7 @@ export class FIOSDK {
       case 'getSentFioRequests':
         return this.getSentFioRequests(params.limit, params.offset)
       case 'getPublicAddress':
-        return this.getPublicAddress(params.fioAddress, params.tokenCode)
+        return this.getPublicAddress(params.fioAddress, params.chainCode, params.tokenCode)
       case 'transferTokens':
         return this.transferTokens(
           params.payeeFioPublicKey,
