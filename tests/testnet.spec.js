@@ -5,8 +5,7 @@ const { FIOSDK } = require('../lib/FIOSDK')
 fetch = require('node-fetch')
 
 const fetchJson = async (uri, opts = {}) => {
-  const res = await fetch(uri, opts)
-  return res.json()
+  return fetch(uri, opts)
 }
 
 const BILLION = 1000000000

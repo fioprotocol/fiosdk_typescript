@@ -5,7 +5,7 @@ import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 import { validate } from '../utils/validation'
 
-type FetchJson = (uri: string, opts?: Object) => Object
+type FetchJson = (uri: string, opts?: Object) => any
 const textEncoder: TextEncoder = new TextEncoder()
 const textDecoder: TextDecoder = new TextDecoder()
 
@@ -39,7 +39,7 @@ export class Transactions {
       },
     }
     const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_info', options)
-    return res
+    return await res.json()
   }
 
   public async getBlock(chain: any): Promise<any> {
@@ -59,7 +59,7 @@ export class Transactions {
         block_num_or_id: chain.last_irreversible_block_num,
       }),
     })
-    return res
+    return await res.json()
   }
 
   public async pushToServer(transaction: RawTransaction, endpoint: string, dryRun: boolean): Promise<any> {
@@ -88,7 +88,7 @@ export class Transactions {
 
   }
 
-  public executeCall(endPoint: string, body: string, fetchOptions?: any): any {
+  public async executeCall(endPoint: string, body: string, fetchOptions?: any): Promise<any> {
     let options: any
     this.validate()
     if (fetchOptions != null) {
@@ -106,9 +106,14 @@ export class Transactions {
         body,
       }
     }
-    /* const res =  Transactions.fetchJson(Transactions.baseUrl + endPoint,options)
-    return res*/
-    return Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
+    const res = await Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
+    if (!res.ok) {
+      const error: Error & { json?: Object, errorCode?: string } = new Error(`Error ${res.status} while fetching ${Transactions.baseUrl + endPoint}`)
+      error.json = await res.json()
+      error.errorCode = res.status
+      throw error
+    }
+    return res.json()
   }
 
   public getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
