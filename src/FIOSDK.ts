@@ -36,7 +36,7 @@ const { Ecc } = require('@fioprotocol/fiojs')
 /**
  * @ignore
  */
-type FetchJson = (uri: string, opts?: object) => object
+type FetchJson = (uri: string, opts?: object) => Promise<object>
 
 export class FIOSDK {
   /**
