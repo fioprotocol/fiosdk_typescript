@@ -27,8 +27,9 @@ const faucetPub = '';
 const faucetPriv = '';
 
 const fioTokenCode = 'FIO'
-const fundAmount = 25 * BILLION
-const defaultFee = 40 * BILLION
+const fioChainCode = 'FIO'
+const fundAmount = 800 * BILLION
+const defaultFee = 800 * BILLION
 const receiveTransferTimout = 5000
 
 let fioSdk, fioSdk2
@@ -217,6 +218,7 @@ describe('Testing generic actions', () => {
   it(`Add public address`, async () => {
     const result = await fioSdk.genericAction('addPublicAddress', {
       fioAddress: newFioAddress,
+      chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       publicAddress: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAs',
       maxFee: defaultFee,
@@ -233,12 +235,14 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress,
       publicAddresses: [
         {
+          chain_code: fioChainCode,
           token_code: fioTokenCode,
           public_address: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAg',
         },
         {
+          chain_code: fioChainCode,
           token_code: fioTokenCode,
-          public_address: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAw',
+          public_address: publicKey,
         }
       ],
       maxFee: defaultFee,
@@ -311,7 +315,7 @@ describe('Testing generic actions', () => {
 
   it(`getPublicAddress`, async () => {
     const result = await fioSdk.genericAction('getPublicAddress', {
-      fioAddress: newFioAddress, tokenCode: fioTokenCode
+      fioAddress: newFioAddress, chainCode: fioChainCode, tokenCode: fioTokenCode
     })
 
     expect(result.public_address).to.be.a('string')
@@ -365,6 +369,7 @@ describe('Request funds, approve and send', () => {
       payeeFioAddress: testFioAddressName2,
       payeePublicAddress: testFioAddressName2,
       amount: fundsAmount,
+      chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       memo,
       maxFee: defaultFee,
@@ -401,6 +406,7 @@ describe('Request funds, approve and send', () => {
       payerTokenPublicAddress: publicKey,
       payeeTokenPublicAddress: publicKey2,
       amount: fundsAmount,
+      chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       status: 'sent_to_blockchain',
       obtId: '',
@@ -470,6 +476,7 @@ describe('Request funds, reject', () => {
       payeeFioAddress: testFioAddressName2,
       payeePublicAddress: testFioAddressName2,
       amount: fundsAmount,
+      chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       memo,
       maxFee: defaultFee,
@@ -575,6 +582,7 @@ describe('Record obt data, check', () => {
       payerTokenPublicAddress: publicKey,
       payeeTokenPublicAddress: publicKey2,
       amount: fundsAmount,
+      chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       status: 'sent_to_blockchain',
       obtId,
