@@ -63,14 +63,28 @@ before(async () => {
   )
 
   try {
-    await fioSdk.genericAction('registerFioAddress', {
-      fioAddress: testFioAddressName,
-      maxFee: defaultFee
+    const isAvailableResult = await fioSdk.genericAction('isAvailable', {
+      fioName: testFioAddressName
     })
-    await fioSdk2.genericAction('registerFioAddress', {
-      fioAddress: testFioAddressName2,
-      maxFee: defaultFee
+    if (!isAvailableResult.is_registered) {
+      await fioSdk.genericAction('registerFioAddress', {
+        fioAddress: testFioAddressName,
+        maxFee: defaultFee
+      })
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  try {
+    const isAvailableResult2 = await fioSdk2.genericAction('isAvailable', {
+      fioName: testFioAddressName2
     })
+    if (!isAvailableResult2.is_registered) {
+      await fioSdk2.genericAction('registerFioAddress', {
+        fioAddress: testFioAddressName2,
+        maxFee: defaultFee
+      })
+    }
   } catch (e) {
     console.log(e);
   }
