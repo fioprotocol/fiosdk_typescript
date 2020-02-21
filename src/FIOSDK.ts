@@ -320,8 +320,8 @@ export class FIOSDK {
    * sender and receiver have FIO Addresses. OBT stands for Other Blockchain Transaction
    *
    * @param fioRequestId ID of funds request, if this Record Send transaction is in response to a previously received funds request.  Send empty if no FIO Request ID
-   * @param payerFIOAddress FIO Address of the payer. This address initiated payment.
-   * @param payeeFIOAddress FIO Address of the payee. This address is receiving payment.
+   * @param payerFioAddress FIO Address of the payer. This address initiated payment.
+   * @param payeeFioAddress FIO Address of the payee. This address is receiving payment.
    * @param payerTokenPublicAddress Public address on other blockchain of user sending funds.
    * @param payeeTokenPublicAddress Public address on other blockchain of user receiving funds.
    * @param amount Amount sent.
@@ -338,8 +338,8 @@ export class FIOSDK {
    */
   public async recordObtData(
     fioRequestId: number | null,
-    payerFIOAddress: string,
-    payeeFIOAddress: string,
+    payerFioAddress: string,
+    payeeFioAddress: string,
     payerTokenPublicAddress: string,
     payeeTokenPublicAddress: string,
     amount: number,
@@ -356,14 +356,14 @@ export class FIOSDK {
   ): Promise<RecordObtDataResponse> {
     let payeeKey: any = { public_address: '' }
     if (!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string') {
-      payeeKey = await this.getFioPublicAddress(payeeFIOAddress)
+      payeeKey = await this.getFioPublicAddress(payeeFioAddress)
     } else {
       payeeKey.public_address = payeeFioPublicKey
     }
     const recordObtData = new SignedTransactions.RecordObtData(
       fioRequestId,
-      payerFIOAddress,
-      payeeFIOAddress,
+      payerFioAddress,
+      payeeFioAddress,
       payerTokenPublicAddress,
       payeeTokenPublicAddress,
       amount,
@@ -717,8 +717,8 @@ export class FIOSDK {
       case 'recordObtData':
         return this.recordObtData(
           params.fioRequestId || null,
-          params.payerFIOAddress,
-          params.payeeFIOAddress,
+          params.payerFioAddress,
+          params.payeeFioAddress,
           params.payerTokenPublicAddress,
           params.payeeTokenPublicAddress,
           params.amount,

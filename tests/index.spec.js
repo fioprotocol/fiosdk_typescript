@@ -400,8 +400,8 @@ describe('Request funds, approve and send', () => {
   it(`recordObtData`, async () => {
     const result = await fioSdk.genericAction('recordObtData', {
       fioRequestId: requestId,
-      payerFIOAddress: testFioAddressName,
-      payeeFIOAddress: testFioAddressName2,
+      payerFioAddress: testFioAddressName,
+      payeeFioAddress: testFioAddressName2,
       payerTokenPublicAddress: publicKey,
       payeeTokenPublicAddress: publicKey2,
       amount: fundsAmount,
@@ -576,8 +576,8 @@ describe('Record obt data, check', () => {
   it(`recordObtData`, async () => {
     const result = await fioSdk.genericAction('recordObtData', {
       fioRequestId: '',
-      payerFIOAddress: testFioAddressName,
-      payeeFIOAddress: testFioAddressName2,
+      payerFioAddress: testFioAddressName,
+      payeeFioAddress: testFioAddressName2,
       payerTokenPublicAddress: publicKey,
       payeeTokenPublicAddress: publicKey2,
       amount: fundsAmount,

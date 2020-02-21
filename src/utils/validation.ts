@@ -46,8 +46,8 @@ export const validationRules = {
     tpid: allRules.fioAddress,
   },
   recordObtData: {
-    payerFIOAddress: allRules.fioAddress,
-    payeeFIOAddress: allRules.fioAddress,
+    payerFioAddress: allRules.fioAddress,
+    payeeFioAddress: allRules.fioAddress,
     tpid: allRules.fioAddress,
     tokenCode: allRules.chain,
   },

@@ -7,9 +7,9 @@ export class RecordObtData extends SignedTransaction {
   ACTION: string = 'recordobt'
   ACCOUNT: string = 'fio.reqobt'
 
-  payerFIOAddress: string
+  payerFioAddress: string
   payeeFioPublicKey: string
-  payeeFIOAddress: string
+  payeeFioAddress: string
   fioRequestId: number | null = null
   maxFee: number
   walletFioAddress: string = ''
@@ -22,8 +22,8 @@ export class RecordObtData extends SignedTransaction {
 
   constructor(
     fioRequestId: number | null,
-    payerFIOAddress: string,
-    payeeFIOAddress: string,
+    payerFioAddress: string,
+    payeeFioAddress: string,
     payerPublicAddress: string,
     payeePublicAddress: string,
     amount: number,
@@ -39,9 +39,9 @@ export class RecordObtData extends SignedTransaction {
     offLineUrl: string | null = null) {
     super()
     this.fioRequestId = fioRequestId
-    this.payerFIOAddress = payerFIOAddress
+    this.payerFioAddress = payerFioAddress
     this.payeeFioPublicKey = payeeFioPublicKey
-    this.payeeFIOAddress = payeeFIOAddress
+    this.payeeFioAddress = payeeFioAddress
     this.payerPublicAddress = payerPublicAddress
     this.payeePublicAddress = payeePublicAddress
     if (walletFioAddress) {
@@ -63,7 +63,7 @@ export class RecordObtData extends SignedTransaction {
       offline_url: offLineUrl
     }
 
-    this.validationData = { payerFIOAddress, payeeFIOAddress, tpid: walletFioAddress, tokenCode }
+    this.validationData = { payerFioAddress: payerFioAddress, payeeFioAddress: payeeFioAddress, tpid: walletFioAddress, tokenCode }
     this.validationRules = validationRules.recordObtData
 
   }
@@ -72,8 +72,8 @@ export class RecordObtData extends SignedTransaction {
     let actor = this.getActor()
     const cipherContent = this.getCipherContent('record_obt_data_content', this.content, this.privateKey, this.payeeFioPublicKey)
     let data = {
-      payer_fio_address: this.payerFIOAddress,
-      payee_fio_address: this.payeeFIOAddress,
+      payer_fio_address: this.payerFioAddress,
+      payee_fio_address: this.payeeFioAddress,
       content: cipherContent,
       fio_request_id: this.fioRequestId || '',
       max_fee: this.maxFee,
