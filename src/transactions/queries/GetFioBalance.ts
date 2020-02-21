@@ -15,7 +15,7 @@ export class GetFioBalance extends Query<BalanceResponse> {
   }
 
   getData() {
-    return { fio_public_key: this.publicKey }
+    return { fio_public_key: this.keyToUse }
   }
 
 }
