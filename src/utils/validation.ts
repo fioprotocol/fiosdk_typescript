@@ -1,72 +1,101 @@
-const LIVR = require('livr')
+import { SchemaDefinition } from 'validate'
+const Schema = require('validate')
+import { ErrObj } from '../entities/ValidationError'
 
-const allRules = {
-  chain: ['string', 'to_lc', { length_between: [1, 10], like: '^[a-z0-9]+$' }],
-  fioAddress: ['string', 'to_lc', {
-    length_between: [3, 64],
-    like: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))$)',
-  }],
-  fioDomain: ['string', 'to_lc', { length_between: [1, 62], like: '^[a-z0-9\\-]+$' }],
-  fioPublicKey: ['string', { like: '^FIO.+$' }],
-  nativeBlockchainPublicAddress: ['string', { length_between: [1, 128] }],
+export const allRules = {
+  chain: {
+    required: true,
+    type: String,
+    length: { min: 1, max: 10 },
+    match: /^[a-z0-9]+$/i
+  },
+  fioAddress: {
+    required: true,
+    type: String,
+    length: { min: 3, max: 64 },
+    match: /^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))$)/i
+  },
+  tpid: {
+    type: String,
+    length: { min: 3, max: 64 },
+    match: /^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))$)/i
+  },
+  fioDomain: {
+    required: true,
+    type: String,
+    length: { min: 1, max: 62 },
+    match: /^[a-z0-9\-]+$/i
+  },
+  fioPublicKey: {
+    required: true,
+    type: String,
+    length: { min: 1, max: 62 },
+    match: /^FIO.+$/
+  },
+  nativeBlockchainPublicAddress: {
+    required: true,
+    type: String,
+    length: { min: 1, max: 128 },
+    match: /^FIO.+$/
+  },
 }
 
 export const validationRules = {
   addPublicAddressRules: {
     fioAddress: allRules.fioAddress,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   registerFioAddress: {
     fioAddress: allRules.fioAddress,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   registerFioDomain: {
     fioDomain: allRules.fioDomain,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   renewFioAddress: {
     fioAddress: allRules.fioAddress,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   renewFioDomain: {
     fioDomain: allRules.fioDomain,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   setFioDomainVisibility: {
     fioDomain: allRules.fioDomain,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   newFundsRequest: {
     payerFioAddress: allRules.fioAddress,
     payeeFioAddress: allRules.fioAddress,
     tokenCode: allRules.chain,
-    walletFioAddress: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   rejectFunds: {
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   recordObtData: {
     payerFioAddress: allRules.fioAddress,
     payeeFioAddress: allRules.fioAddress,
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
     tokenCode: allRules.chain,
   },
   transferTokens: {
-    tpid: allRules.fioAddress,
+    tpid: allRules.tpid,
   },
   getFee: {
     fioAddress: allRules.fioAddress,
   },
 }
 
-export function validate(data: object, rules: object): { isValid: boolean, errors: object } {
-  const validator = new LIVR.Validator(rules)
-  const validData = validator.validate(data)
-  const validationResult = { isValid: true, errors: {} }
+export function validate(data: object, rules: SchemaDefinition): { isValid: boolean, errors: ErrObj[] } {
+  const validator = new Schema(rules)
+  const errors: { path: string, message: string }[] = validator.validate(data)
+  const validationResult: { isValid: boolean, errors: ErrObj[] } = { isValid: true, errors: [] }
 
-  if (!validData) {
+  if (errors.length) {
     validationResult.isValid = false
-    validationResult.errors = validator.getErrors()
+    validationResult.errors = errors.map(err => ({ field: err.path, message: err.message }))
   }
 
   return validationResult

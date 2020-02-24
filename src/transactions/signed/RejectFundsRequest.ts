@@ -8,15 +8,15 @@ export class RejectFundsRequest extends SignedTransaction {
   ACCOUNT: string = 'fio.reqobt'
   fioreqid: number
   maxFee: number
-  walletFioAddress: string
+  technologyProviderId: string
 
-  constructor(fioreqid: number, maxFee: number, walletFioAddress: string = '') {
+  constructor(fioreqid: number, maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioreqid = fioreqid
     this.maxFee = maxFee
-    this.walletFioAddress = walletFioAddress
+    this.technologyProviderId = technologyProviderId
 
-    this.validationData = { tpid: walletFioAddress }
+    this.validationData = { tpid: technologyProviderId || null }
     this.validationRules = validationRules.rejectFunds
   }
 
@@ -25,7 +25,7 @@ export class RejectFundsRequest extends SignedTransaction {
     let data = {
       fio_request_id: this.fioreqid,
       max_fee: this.maxFee,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       actor: actor
     }
     return data

@@ -1,7 +1,12 @@
-export class ValidationError extends Error {
-  public list: object[] = []
+export type ErrObj = {
+  field: string,
+  message: string
+}
 
-  constructor(list: any, ...params: any) {
+export class ValidationError extends Error {
+  public list: ErrObj[] = []
+
+  constructor(list: ErrObj[], ...params: any) {
     super(...params)
 
     if (Error.captureStackTrace) {
@@ -9,6 +14,6 @@ export class ValidationError extends Error {
     }
 
     this.name = 'ValidationError'
-    this.list = Object.keys(list).map(key => ({ field: key, message: list[key] }))
+    this.list = list
   }
 }

@@ -10,16 +10,16 @@ export class AddPublicAddress extends SignedTransaction {
   public fioAddress: string
   public publicAddresses: PublicAddress[]
   public maxFee: number
-  public walletFioAddress: string
+  public technologyProviderId: string
 
-  constructor(fioAddress: string, publicAddresses: PublicAddress[], maxFee: number, walletFioAddress: string = '') {
+  constructor(fioAddress: string, publicAddresses: PublicAddress[], maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioAddress = fioAddress
     this.publicAddresses = publicAddresses
     this.maxFee = maxFee
-    this.walletFioAddress = walletFioAddress
+    this.technologyProviderId = technologyProviderId
 
-    this.validationData = { fioAddress, tpid: walletFioAddress }
+    this.validationData = { fioAddress, tpid: technologyProviderId || null }
     this.validationRules = validationRules.addPublicAddressRules
   }
 
@@ -29,7 +29,7 @@ export class AddPublicAddress extends SignedTransaction {
       fio_address: this.fioAddress,
       public_addresses: this.publicAddresses,
       actor,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       max_fee: this.maxFee,
     }
     return data

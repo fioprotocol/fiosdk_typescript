@@ -14,13 +14,13 @@ export class RequestNewFunds extends SignedTransaction {
   public tokenCode: string
   public maxFee: number
   public content: any
-  public walletFioAddress: string
+  public technologyProviderId: string
 
   constructor(
     payerFioAddress: string,
     payerFioPublicKey: string,
     payeeFioAddress: string,
-    walletFioAddress: string = '',
+    technologyProviderId: string = '',
     maxFee: number,
     payeeTokenPublicAddress: string,
     amount: number,
@@ -31,7 +31,7 @@ export class RequestNewFunds extends SignedTransaction {
     offlineUrl: string | null = null,
   ) {
     super()
-    this.validationData = { payerFioAddress, payeeFioAddress, tokenCode, walletFioAddress }
+    this.validationData = { payerFioAddress, payeeFioAddress, tokenCode, tpid: technologyProviderId || null }
     this.validationRules = validationRules.newFundsRequest
 
     this.payerFioAddress = payerFioAddress
@@ -50,10 +50,10 @@ export class RequestNewFunds extends SignedTransaction {
       offline_url: offlineUrl,
     }
 
-    if (walletFioAddress) {
-      this.walletFioAddress = walletFioAddress
+    if (technologyProviderId) {
+      this.technologyProviderId = technologyProviderId
     } else {
-      this.walletFioAddress = ''
+      this.technologyProviderId = ''
     }
   }
 
@@ -65,7 +65,7 @@ export class RequestNewFunds extends SignedTransaction {
       payee_fio_address: this.payeeFioAddress,
       content: cipherContent,
       max_fee: this.maxFee,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       actor,
     }
     return data

@@ -10,25 +10,25 @@ export class SetFioDomainVisibility extends SignedTransaction {
   public fioDomain: string
   public isPublic: number
   public maxFee: number
-  public walletFioAddress: string
+  public technologyProviderId: string
 
-  constructor(fioDomain: string, isPublic: boolean, maxFee: number, walletFioAddress: string = '') {
+  constructor(fioDomain: string, isPublic: boolean, maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioDomain = fioDomain
     this.isPublic = isPublic ? 1 : 0
     this.maxFee = maxFee
-    this.walletFioAddress = walletFioAddress
+    this.technologyProviderId = technologyProviderId
   }
 
   public getData(): any {
-    this.validationData = { fioDomain: this.fioDomain, tpid: this.walletFioAddress }
-    this.validationRules = validationRules.registerFioAddress
+    this.validationData = { fioDomain: this.fioDomain, tpid: this.technologyProviderId || null }
+    this.validationRules = validationRules.registerFioDomain
     const actor = this.getActor()
     const data = {
       fio_domain: this.fioDomain,
       is_public: this.isPublic,
       max_fee: this.maxFee,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       actor,
     }
     return data
