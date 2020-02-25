@@ -7,15 +7,11 @@ export class GetFioBalance extends Query<BalanceResponse> {
 
   constructor(othersBalance?: string) {
     super()
-    if (othersBalance) {
-      this.keyToUse = othersBalance
-    } else {
-      this.keyToUse = this.publicKey
-    }
+    this.keyToUse = othersBalance || ''
   }
 
   getData() {
-    return { fio_public_key: this.keyToUse }
+    return { fio_public_key: this.keyToUse || this.publicKey }
   }
 
 }
