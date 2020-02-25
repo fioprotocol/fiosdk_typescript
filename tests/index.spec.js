@@ -255,7 +255,7 @@ describe('Testing generic actions', () => {
   })
 
   it(`getFee for addPublicAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForPublicAddress', {
+    const result = await fioSdk.genericAction('getFeeForAddPublicAddress', {
       fioAddress: newFioAddress
     })
 
@@ -388,7 +388,7 @@ describe('Testing generic actions', () => {
 })
 
 describe('Request funds, approve and send', () => {
-  const fundsAmount = 3 * FIOSDK.SUFUnit
+  const fundsAmount = 3
   let requestId
   const memo = 'testing fund request'
 
@@ -504,7 +504,7 @@ describe('Request funds, approve and send', () => {
 })
 
 describe('Request funds, reject', () => {
-  const fundsAmount = 4 * FIOSDK.SUFUnit
+  const fundsAmount = 4
   let requestId
   const memo = 'testing fund request'
 
@@ -601,7 +601,7 @@ describe('Transfer tokens', () => {
 
 describe('Record obt data, check', () => {
   const obtId = generateObtId()
-  const fundsAmount = 4500000000
+  const fundsAmount = 4.5
 
   it(`getFee for recordObtData`, async () => {
     const result = await fioSdk.genericAction('getFeeForRecordObtData', {
