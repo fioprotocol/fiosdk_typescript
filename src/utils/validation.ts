@@ -30,13 +30,13 @@ export const allRules = {
     required: true,
     type: String,
     length: { min: 1, max: 62 },
-    match: /^FIO.+$/
+    match: /^FIO\w+$/
   },
   nativeBlockchainPublicAddress: {
     required: true,
     type: String,
     length: { min: 1, max: 128 },
-    match: /^FIO.+$/
+    match: /^\w+$/
   },
 }
 
