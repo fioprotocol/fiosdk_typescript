@@ -8,8 +8,6 @@ const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
 }
 
-const BILLION = 1000000000
-
 let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
@@ -27,8 +25,8 @@ const faucetPriv = '';
 
 const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
-const fundAmount = 800 * BILLION
-const defaultFee = 800 * BILLION
+const fundAmount = 800 * FIOSDK.SUFUnit
+const defaultFee = 800 * FIOSDK.SUFUnit
 const receiveTransferTimout = 5000
 
 let fioSdk, fioSdk2
@@ -390,7 +388,7 @@ describe('Testing generic actions', () => {
 })
 
 describe('Request funds, approve and send', () => {
-  const fundsAmount = 3 * BILLION
+  const fundsAmount = 3 * FIOSDK.SUFUnit
   let requestId
   const memo = 'testing fund request'
 
@@ -506,7 +504,7 @@ describe('Request funds, approve and send', () => {
 })
 
 describe('Request funds, reject', () => {
-  const fundsAmount = 4 * BILLION
+  const fundsAmount = 4 * FIOSDK.SUFUnit
   let requestId
   const memo = 'testing fund request'
 
@@ -569,7 +567,7 @@ describe('Request funds, reject', () => {
 })
 
 describe('Transfer tokens', () => {
-  const fundsAmount = BILLION
+  const fundsAmount = FIOSDK.SUFUnit
   let fioBalance = 0
   let fioBalanceAfter = 0
 

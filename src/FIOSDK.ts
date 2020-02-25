@@ -164,6 +164,14 @@ export class FIOSDK {
     return true
   }
 
+  public static amountToSUF(amount: number): number {
+    return amount * this.SUFUnit
+  }
+
+  public static SUFToAmount(suf: number): number {
+    return parseInt(`${suf}`) / this.SUFUnit
+  }
+
   public transactions: Transactions
 
   /**
@@ -185,6 +193,11 @@ export class FIOSDK {
    * Default FIO Address of the wallet which generates transactions.
    */
   public technologyProviderId: string
+
+  /**
+   * Smallest Units of FIO
+   */
+  public static SUFUnit: number = 1000000000
 
   /**
    * @param privateKey the fio private key of the client sending requests to FIO API.
