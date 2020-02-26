@@ -9,16 +9,16 @@ export class TransferTokens extends SignedTransaction {
   payeePublicKey: string
   amount: string
   maxFee: number
-  walletFioAddress: string
+  technologyProviderId: string
 
-  constructor(payeePublicKey: string, amount: number, maxFee: number, walletFioAddress: string = '') {
+  constructor(payeePublicKey: string, amount: number, maxFee: number, technologyProviderId: string = '') {
     super()
     this.payeePublicKey = payeePublicKey
     this.amount = `${amount}`
-    this.walletFioAddress = walletFioAddress
+    this.technologyProviderId = technologyProviderId
     this.maxFee = maxFee
 
-    this.validationData = { tpid: walletFioAddress }
+    this.validationData = { tpid: technologyProviderId || null }
     this.validationRules = validationRules.transferTokens
   }
 
@@ -40,7 +40,7 @@ export class TransferTokens extends SignedTransaction {
       payee_public_key: this.payeePublicKey,
       amount: this.amount,
       max_fee: this.maxFee,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       actor: actor
     }
     return data

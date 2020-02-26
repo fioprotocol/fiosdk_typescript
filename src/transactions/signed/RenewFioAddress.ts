@@ -9,15 +9,15 @@ export class RenewFioAddress extends SignedTransaction {
   ACCOUNT: string = Constants.defaultAccount
   fioAddress: string
   maxFee: number
-  walletFioAddress: String
+  technologyProviderId: String
 
-  constructor(fioAddress: string, maxFee: number, walletFioAddress: string = '') {
+  constructor(fioAddress: string, maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioAddress = fioAddress
     this.maxFee = maxFee
-    this.walletFioAddress = walletFioAddress
+    this.technologyProviderId = technologyProviderId
 
-    this.validationData = { fioAddress: fioAddress, tpid: walletFioAddress }
+    this.validationData = { fioAddress: fioAddress, tpid: technologyProviderId || null }
     this.validationRules = validationRules.renewFioAddress
   }
 
@@ -26,7 +26,7 @@ export class RenewFioAddress extends SignedTransaction {
     let data = {
       fio_address: this.fioAddress,
       max_fee: this.maxFee,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       actor: actor
     }
     return data

@@ -4,6 +4,7 @@ import { AbiResponse } from '../entities/AbiResponse'
 import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 import { validate } from '../utils/validation'
+import { SchemaDefinition } from 'validate'
 
 type FetchJson = (uri: string, opts?: Object) => any
 const textEncoder: TextEncoder = new TextEncoder()
@@ -23,7 +24,7 @@ export class Transactions {
   public serilizeEndpoint: string = 'chain/serialize_json'
 
   public validationData: object = {}
-  public validationRules: object | null = null
+  public validationRules: SchemaDefinition | null = null
 
   public getActor(publicKey: string = ''): string {
     const actor = Transactions.FioProvider.accountHash((publicKey == '') ? this.publicKey : publicKey)

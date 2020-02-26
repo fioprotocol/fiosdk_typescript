@@ -8,8 +8,6 @@ const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
 }
 
-const BILLION = 1000000000
-
 let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
@@ -27,8 +25,8 @@ const faucetPriv = '';
 
 const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
-const fundAmount = 800 * BILLION
-const defaultFee = 800 * BILLION
+const fundAmount = 800 * FIOSDK.SUFUnit
+const defaultFee = 800 * FIOSDK.SUFUnit
 const receiveTransferTimout = 5000
 
 let fioSdk, fioSdk2
@@ -120,10 +118,61 @@ describe('Testing generic actions', () => {
 
   it(`FIO Key Generation Testing`, async () => {
     const testMnemonic = 'valley alien library bread worry brother bundle hammer loyal barely dune brave'
-    const privateKeyRes =  await FIOSDK.createPrivateKeyMnemonic(testMnemonic)
+    const privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(testMnemonic)
     expect(privateKeyRes.fioKey).to.equal('5Kbb37EAqQgZ9vWUHoPiC2uXYhyGSFNbL6oiDp24Ea1ADxV1qnu')
     const publicKeyRes = FIOSDK.derivedPublicKey(privateKeyRes.fioKey)
     expect(publicKeyRes.publicKey).to.equal('FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o')
+  })
+
+  it(`Validation methods`, async () => {
+    try {
+      FIOSDK.isChainCodeValid('$%34')
+    } catch (e) {
+      expect(e.list[0].message).to.equal('chainCode must match /^[a-z0-9]+$/i.')
+    }
+    try {
+      FIOSDK.isTokenCodeValid('')
+    } catch (e) {
+      expect(e.list[0].message).to.equal('tokenCode is required.')
+    }
+    try {
+      FIOSDK.isFioAddressValid('f')
+    } catch (e) {
+      expect(e.list[0].message).to.equal('fioAddress must have a length between 3 and 64.')
+    }
+    try {
+      FIOSDK.isFioDomainValid('$%FG%')
+    } catch (e) {
+      expect(e.list[0].message).to.equal('fioDomain must match /^[a-z0-9\\-]+$/i.')
+    }
+    try {
+      FIOSDK.isFioPublicKeyValid('dfsd')
+    } catch (e) {
+      expect(e.list[0].message).to.equal('fioPublicKey must match /^FIO.+$/.')
+    }
+    try {
+      FIOSDK.isPublicAddressValid('')
+    } catch (e) {
+      expect(e.list[0].message).to.equal('publicAddress is required.')
+    }
+
+    const chainCodeIsValid = FIOSDK.isChainCodeValid('FIO')
+    expect(chainCodeIsValid).to.equal(true)
+
+    const tokenCodeIsValid = FIOSDK.isTokenCodeValid('FIO')
+    expect(tokenCodeIsValid).to.equal(true)
+
+    const fioAddressIsValid = FIOSDK.isFioAddressValid(newFioAddress)
+    expect(fioAddressIsValid).to.equal(true)
+
+    const fioDomainIsValid = FIOSDK.isFioDomainValid(newFioDomain)
+    expect(fioDomainIsValid).to.equal(true)
+
+    const privateKeyIsValid = FIOSDK.isFioPublicKeyValid(publicKey)
+    expect(privateKeyIsValid).to.equal(true)
+
+    const publicKeyIsValid = FIOSDK.isPublicAddressValid(publicKey)
+    expect(publicKeyIsValid).to.equal(true)
   })
 
   it(`Getting fio public key`, async () => {
@@ -160,7 +209,7 @@ describe('Testing generic actions', () => {
       fioDomain: newFioDomain,
       isPublic: true,
       maxFee: defaultFee,
-      walletFioAddress: ''
+      technologyProviderId: ''
     })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
@@ -206,7 +255,7 @@ describe('Testing generic actions', () => {
   })
 
   it(`getFee for addPublicAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForPublicAddress', {
+    const result = await fioSdk.genericAction('getFeeForAddPublicAddress', {
       fioAddress: newFioAddress
     })
 
@@ -221,7 +270,7 @@ describe('Testing generic actions', () => {
       tokenCode: fioTokenCode,
       publicAddress: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAs',
       maxFee: defaultFee,
-      walletFioAddress: ''
+      technologyProviderId: ''
     })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
@@ -245,7 +294,7 @@ describe('Testing generic actions', () => {
         }
       ],
       maxFee: defaultFee,
-      walletFioAddress: ''
+      technologyProviderId: ''
     })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
@@ -258,7 +307,7 @@ describe('Testing generic actions', () => {
       fioDomain: newFioDomain,
       isPublic: false,
       maxFee: defaultFee,
-      walletFioAddress: ''
+      technologyProviderId: ''
     })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
@@ -271,7 +320,7 @@ describe('Testing generic actions', () => {
       fioDomain: newFioDomain,
       isPublic: true,
       maxFee: defaultFee,
-      walletFioAddress: ''
+      technologyProviderId: ''
     })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
@@ -320,16 +369,6 @@ describe('Testing generic actions', () => {
     expect(result.public_address).to.be.a('string')
   })
 
-  it(`getAbi`, async () => {
-    const result = await fioSdk.genericAction('getAbi', { accountName: 'fio.address' })
-
-    expect(result).to.have.all.keys('account_name', 'code_hash', 'abi_hash', 'abi')
-    expect(result.account_name).to.be.a('string')
-    expect(result.code_hash).to.be.a('string')
-    expect(result.abi_hash).to.be.a('string')
-    expect(result.abi).to.be.a('string')
-  })
-
   it(`getFee`, async () => {
     const result = await fioSdk.genericAction('getFee', {
       endPoint: 'register_fio_address',
@@ -349,7 +388,7 @@ describe('Testing generic actions', () => {
 })
 
 describe('Request funds, approve and send', () => {
-  const fundsAmount = 3 * BILLION
+  const fundsAmount = 3
   let requestId
   const memo = 'testing fund request'
 
@@ -465,7 +504,7 @@ describe('Request funds, approve and send', () => {
 })
 
 describe('Request funds, reject', () => {
-  const fundsAmount = 4 * BILLION
+  const fundsAmount = 4
   let requestId
   const memo = 'testing fund request'
 
@@ -528,7 +567,7 @@ describe('Request funds, reject', () => {
 })
 
 describe('Transfer tokens', () => {
-  const fundsAmount = BILLION
+  const fundsAmount = FIOSDK.SUFUnit
   let fioBalance = 0
   let fioBalanceAfter = 0
 
@@ -562,7 +601,7 @@ describe('Transfer tokens', () => {
 
 describe('Record obt data, check', () => {
   const obtId = generateObtId()
-  const fundsAmount = 4500000000
+  const fundsAmount = 4.5
 
   it(`getFee for recordObtData`, async () => {
     const result = await fioSdk.genericAction('getFeeForRecordObtData', {

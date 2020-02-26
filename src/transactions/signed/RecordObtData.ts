@@ -12,7 +12,7 @@ export class RecordObtData extends SignedTransaction {
   payeeFioAddress: string
   fioRequestId: number | null = null
   maxFee: number
-  walletFioAddress: string = ''
+  technologyProviderId: string = ''
   payerPublicAddress: string
   payeePublicAddress: string
 
@@ -32,7 +32,7 @@ export class RecordObtData extends SignedTransaction {
     obtID: string,
     maxFee: number,
     status: string,
-    walletFioAddress: string = '',
+    technologyProviderId: string = '',
     payeeFioPublicKey: string,
     memo: string | null = null,
     hash: string | null = null,
@@ -44,10 +44,10 @@ export class RecordObtData extends SignedTransaction {
     this.payeeFioAddress = payeeFioAddress
     this.payerPublicAddress = payerPublicAddress
     this.payeePublicAddress = payeePublicAddress
-    if (walletFioAddress) {
-      this.walletFioAddress = walletFioAddress
+    if (technologyProviderId) {
+      this.technologyProviderId = technologyProviderId
     } else {
-      this.walletFioAddress = ''
+      this.technologyProviderId = ''
     }
     this.maxFee = maxFee
     this.content = {
@@ -63,7 +63,7 @@ export class RecordObtData extends SignedTransaction {
       offline_url: offLineUrl
     }
 
-    this.validationData = { payerFioAddress: payerFioAddress, payeeFioAddress: payeeFioAddress, tpid: walletFioAddress, tokenCode }
+    this.validationData = { payerFioAddress: payerFioAddress, payeeFioAddress: payeeFioAddress, tpid: technologyProviderId || null, tokenCode }
     this.validationRules = validationRules.recordObtData
 
   }
@@ -78,7 +78,7 @@ export class RecordObtData extends SignedTransaction {
       fio_request_id: this.fioRequestId || '',
       max_fee: this.maxFee,
       actor: actor,
-      tpid: this.walletFioAddress
+      tpid: this.technologyProviderId
     }
     return data
   }

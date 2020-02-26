@@ -17,8 +17,10 @@ export class GetFee extends Query<FioFeeResponse> {
       throw new Error('End point ' + endPoint + ' should not have any fio address, when requesting fee')
     }
 
-    this.validationData = { fioAddress }
-    this.validationRules = validationRules.getFee
+    if (fioAddress) {
+      this.validationData = { fioAddress }
+      this.validationRules = validationRules.getFee
+    }
   }
 
   public getData() {

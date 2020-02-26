@@ -9,15 +9,15 @@ export class RegisterFioAddress extends SignedTransaction {
   public ACCOUNT: string = Constants.defaultAccount
   public fioAddress: string
   public maxFee: number
-  public walletFioAddress: string
+  public technologyProviderId: string
 
-  constructor(fioAddress: string, maxFee: number, walletFioAddress: string = '') {
+  constructor(fioAddress: string, maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioAddress = fioAddress
     this.maxFee = maxFee
-    this.walletFioAddress = walletFioAddress
+    this.technologyProviderId = technologyProviderId
 
-    this.validationData = { fioAddress: fioAddress, tpid: walletFioAddress }
+    this.validationData = { fioAddress: fioAddress, tpid: technologyProviderId || null }
     this.validationRules = validationRules.registerFioAddress
   }
 
@@ -27,7 +27,7 @@ export class RegisterFioAddress extends SignedTransaction {
       fio_address: this.fioAddress,
       owner_fio_public_key: this.publicKey,
       max_fee: this.maxFee,
-      tpid: this.walletFioAddress,
+      tpid: this.technologyProviderId,
       actor,
     }
     return data
