@@ -130,7 +130,7 @@ describe('Testing generic actions', () => {
     try {
       FIOSDK.isFioPublicKeyValid('dfsd')
     } catch (e) {
-      expect(e.list[0].message).to.equal('fioPublicKey must match /^FIO.+$/.')
+      expect(e.list[0].message).to.equal('fioPublicKey must match /^FIO\\w+$/.')
     }
     try {
       FIOSDK.isPublicAddressValid('')
