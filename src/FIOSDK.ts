@@ -88,8 +88,11 @@ export class FIOSDK {
   }
 
   /**
-   *
+   * Is the Chain Code Valid?
+   * 
    * @param chainCode
+   * 
+   * @returns Chain Code is Valid
    */
   public static isChainCodeValid(chainCode: string) {
     const validation = validate({ chainCode }, { chainCode: allRules.chain })
@@ -101,8 +104,11 @@ export class FIOSDK {
   }
 
   /**
-   *
+   * Is the Token Code Valid?
+   * 
    * @param tokenCode
+   * 
+   * @returns Token Code is Valid
    */
   public static isTokenCodeValid(tokenCode: string) {
     const validation = validate({ tokenCode }, { tokenCode: allRules.chain })
@@ -114,8 +120,11 @@ export class FIOSDK {
   }
 
   /**
-   *
+   * Is the FIO Address Valid?
+   * 
    * @param fioAddress
+   * 
+   * @returns Fio Address is Valid
    */
   public static isFioAddressValid(fioAddress: string) {
     const validation = validate({ fioAddress }, { fioAddress: allRules.fioAddress })
@@ -127,7 +136,11 @@ export class FIOSDK {
   }
 
   /**
-   * isFioDomainValid
+   * Is the FIO Domain Valid?
+   * 
+   * @param fioDomain
+   * 
+   * @returns FIO Domain is Valid
    */
   public static isFioDomainValid(fioDomain: string) {
     const validation = validate({ fioDomain }, { fioDomain: allRules.fioDomain })
@@ -139,8 +152,11 @@ export class FIOSDK {
   }
 
   /**
-   *
+   * Is the FIO Public Key Valid?
+   * 
    * @param fioPublicKey
+   * 
+   * @returns FIO Public Key is Valid
    */
   public static isFioPublicKeyValid(fioPublicKey: string) {
     const validation = validate({ fioPublicKey }, { fioPublicKey: allRules.fioPublicKey })
@@ -152,8 +168,11 @@ export class FIOSDK {
   }
 
   /**
-   *
+   * Is the Public Address Valid?
+   * 
    * @param publicAddress
+   * 
+   * @returns Public Address is Valid
    */
   public static isPublicAddressValid(publicAddress: string) {
     const validation = validate({ publicAddress }, { publicAddress: allRules.nativeBlockchainPublicAddress })
@@ -164,10 +183,25 @@ export class FIOSDK {
     return true
   }
 
+
+  /**
+   * Convert a FIO Token Amount to FIO SUFs
+   * 
+   * @param amount
+   * 
+   * @returns FIO SUFs
+   */
   public static amountToSUF(amount: number): number {
     return amount * this.SUFUnit
   }
 
+  /**
+   * Convert FIO SUFs to a FIO Token amount
+   * 
+   * @param suf
+   * 
+   * @returns FIO Token amount
+   */
   public static SUFToAmount(suf: number): number {
     return parseInt(`${suf}`) / this.SUFUnit
   }
@@ -195,7 +229,7 @@ export class FIOSDK {
   public technologyProviderId: string
 
   /**
-   * Smallest Units of FIO
+   * SUFs = Smallest Units of FIO
    */
   public static SUFUnit: number = 1000000000
 
@@ -671,13 +705,12 @@ export class FIOSDK {
    * @param fioAddress
    *        if endPointName is RenewFioAddress, FIO Address incurring the fee and owned by signer.
    *        if endPointName is RenewFioDomain, FIO Domain incurring the fee and owned by signer.
-   *        if endPointName is RecordObtData, Payee FIO Address incurring the fee and owned by signer.
+   *        if endPointName is RecordObtData, Payer FIO Address incurring the fee and owned by signer.
    *
    *        Omit for:
    *        - register_fio_domain
    *        - register_fio_address
    *        - transfer_tokens_pub_key
-   *        - transfer_tokens_fio_address
    */
   public getFee(endPoint: EndPoint, fioAddress: string = ''): Promise<FioFeeResponse> {
     const fioFee = new queries.GetFee(endPoint, fioAddress)
@@ -685,32 +718,36 @@ export class FIOSDK {
   }
 
   /**
-   *
-   * @param payerFioAddress
+   * Compute and return fee amount for specific call and specific user
+   * 
+   * @param payerFioAddress, Payer FIO Address incurring the fee and owned by signer.
    */
   public getFeeForRecordObtData(payerFioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.recordObtData, payerFioAddress)
   }
 
   /**
-   *
-   * @param payeeFioAddress
+   * Compute and return fee amount for specific call and specific user
+   * 
+   * @param payeeFioAddress Payee FIO Address incurring the fee and owned by signer.
    */
   public getFeeForNewFundsRequest(payeeFioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.newFundsRequest, payeeFioAddress)
   }
 
   /**
-   *
-   * @param payeeFioAddress Pass payee_public_address from corresponding FIO Request
+   * Compute and return fee amount for specific call and specific user
+   * 
+   * @param payerFioAddress Payer FIO Address incurring the fee and owned by signer.
    */
-  public getFeeForRejectFundsRequest(payeeFioAddress: string): Promise<FioFeeResponse> {
-    return this.getFee(EndPoint.rejectFundsRequest, payeeFioAddress)
+  public getFeeForRejectFundsRequest(payerFioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.rejectFundsRequest, payerFioAddress)
   }
 
   /**
-   *
-   * @param fioAddress
+   * Compute and return fee amount for specific call and specific user
+   * 
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
    */
   public getFeeForAddPublicAddress(fioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.addPubAddress, fioAddress)
@@ -878,7 +915,7 @@ export class FIOSDK {
       case 'getFeeForNewFundsRequest':
         return this.getFeeForNewFundsRequest(params.payeeFioAddress)
       case 'getFeeForRejectFundsRequest':
-        return this.getFeeForRejectFundsRequest(params.payeeFioAddress)
+        return this.getFeeForRejectFundsRequest(params.payerFioAddress)
       case 'getFeeForAddPublicAddress':
         return this.getFeeForAddPublicAddress(params.fioAddress)
       case 'getMultiplier':

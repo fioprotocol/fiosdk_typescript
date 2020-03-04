@@ -532,7 +532,7 @@ describe('Request funds, reject', () => {
 
   it(`getFee for rejectFundsRequest`, async () => {
     const result = await fioSdk.genericAction('getFeeForRejectFundsRequest', {
-      payeeFioAddress: testFioAddressName2
+      payerFioAddress: testFioAddressName2
     })
 
     expect(result).to.have.all.keys('fee')
