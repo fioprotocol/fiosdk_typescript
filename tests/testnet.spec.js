@@ -106,6 +106,52 @@ describe('Testing generic actions', () => {
     expect(publicKeyRes.publicKey).to.equal(publicKeyExample)
   })
 
+  it(`FIO SUF Utilities - amountToSUF`, async () => {
+    const sufa = FIOSDK.amountToSUF (100)
+    expect(sufa).to.equal(100000000000)
+
+    const sufb = FIOSDK.amountToSUF (500)
+    expect(sufb).to.equal(500000000000)
+
+    const sufc = FIOSDK.amountToSUF (506)
+    expect(sufc).to.equal(506000000000)
+
+    const sufd = FIOSDK.amountToSUF (1)
+    expect(sufd).to.equal(1000000000)
+
+    const sufe = FIOSDK.amountToSUF (2)
+    expect(sufe).to.equal(2000000000)
+
+    const suff = FIOSDK.amountToSUF (2.568)
+    expect(suff).to.equal(2568000000)
+
+    const sufg = FIOSDK.amountToSUF (2.123)
+    expect(sufg).to.equal(2123000000)
+  })
+
+  it(`FIO SUF Utilities - SUFToAmount`, async () => {
+    const sufa = FIOSDK.SUFToAmount (100000000000)
+    expect(sufa).to.equal(100)
+
+    const sufb = FIOSDK.SUFToAmount (500000000000)
+    expect(sufb).to.equal(500)
+
+    const sufc = FIOSDK.SUFToAmount (506000000000)
+    expect(sufc).to.equal(506)
+
+    const sufd = FIOSDK.SUFToAmount (1000000000)
+    expect(sufd).to.equal(1)
+
+    const sufe = FIOSDK.SUFToAmount (2000000000)
+    expect(sufe).to.equal(2)
+
+    const suff = FIOSDK.SUFToAmount (2568000000)
+    expect(suff).to.equal(2.568)
+
+    const sufg = FIOSDK.SUFToAmount (2123000000)
+    expect(sufg).to.equal(2.123)
+  })
+
   it(`Validation methods`, async () => {
     try {
       FIOSDK.isChainCodeValid('$%34')
