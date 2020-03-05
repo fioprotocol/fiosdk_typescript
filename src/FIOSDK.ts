@@ -189,10 +189,23 @@ export class FIOSDK {
    * 
    * @param amount
    * 
+   * 2.568 FIO should be 2568000000 SUFs
+   * 
    * @returns FIO SUFs
    */
   public static amountToSUF(amount: number): number {
-    return amount * this.SUFUnit
+
+    // get integer part
+    var floor = Math.floor(amount)
+    var tempResult = floor * this.SUFUnit
+    
+    // get remainder
+    var remainder = (amount % 1)
+    var remainderResult = remainder * (this.SUFUnit) 
+    var floorRemainder = Math.floor(remainderResult)
+    
+    // add integer and remainder
+    return tempResult + floorRemainder
   }
 
   /**
