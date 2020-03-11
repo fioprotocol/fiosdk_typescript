@@ -1,0 +1,15 @@
+{
+  "name": "GenerateFioKeys",
+  "version": "1.0.0",
+  "description": "Example of how to generate FIO Private/Public Keys using a mnemonic",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dapix, Inc. Copyright(c) 2020",
+  "license": "MIT",
+  "dependencies": {
+    "@fioprotocol/fiojs": "^0.9.0",
+    "@fioprotocol/fiosdk": "^0.9.0"
+  }
+}
