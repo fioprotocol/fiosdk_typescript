@@ -146,9 +146,9 @@ constructor(
 				<a href="#example-usage-in-javascript" id="example-usage-in-javascript" style="color: inherit; text-decoration: none;">
 					<h3>Example Usage in JavaScript</h3>
 				</a>
-				<pre><code>import { FIOSDK } from 'fiofoundation-io-fiosdk'
+				<pre><code>const fio = require('@fioprotocol/fiosdk');
 
-this.fioSDK = <span class="hljs-keyword">new</span> <span class="hljs-constructor">FIOSDK(<span class="hljs-params">privateFioKey</span>, <span class="hljs-params">publicFioKey</span>, '<span class="hljs-params">http</span>:<span class="hljs-operator">/</span><span class="hljs-operator">/</span><span class="hljs-params">testnet</span>.<span class="hljs-params">fioprotocol</span>.<span class="hljs-params">io</span><span class="hljs-operator">/</span><span class="hljs-params">v1</span><span class="hljs-operator">/</span>', <span class="hljs-params">this</span>.<span class="hljs-params">io</span>, <span class="hljs-params">this</span>.<span class="hljs-params">fetchJson</span>, '')</span></code></pre>
+this.fioSDK = <span class="hljs-keyword">new</span> fio.<span class="hljs-constructor">FIOSDK(<span class="hljs-params">privateFioKey</span>, <span class="hljs-params">publicFioKey</span>, '<span class="hljs-params">http</span>:<span class="hljs-operator">/</span><span class="hljs-operator">/</span><span class="hljs-params">testnet</span>.<span class="hljs-params">fioprotocol</span>.<span class="hljs-params">io</span><span class="hljs-operator">/</span><span class="hljs-params">v1</span><span class="hljs-operator">/</span>', <span class="hljs-params">this</span>.<span class="hljs-params">fetchJson</span>, '')</span></code></pre>
 				<a href="#workflow-for-using-the-sdk-with-testnet" id="workflow-for-using-the-sdk-with-testnet" style="color: inherit; text-decoration: none;">
 					<h1>Workflow for using the SDK with TestNet</h1>
 				</a>
@@ -206,6 +206,42 @@ this.fioSDK = <span class="hljs-keyword">new</span> <span class="hljs-constructo
 				<pre><code>createPrivateKeyMnemonic <span class="hljs-keyword">OR</span> createPrivateKey
 <span class="hljs-keyword">AND</span>
 derivedPublicKey</code></pre>
+				<a href="#example-usage" id="example-usage" style="color: inherit; text-decoration: none;">
+					<h1>Example Usage</h1>
+				</a>
+				<pre><code>For <span class="hljs-keyword">an</span> example <span class="hljs-keyword">of</span> how <span class="hljs-built_in">to</span> generate <span class="hljs-built_in">keys</span> <span class="hljs-keyword">using</span> <span class="hljs-keyword">the</span> SDK, see <span class="hljs-keyword">the</span> sample project here:
+
+\examples
+    \GenerateFioKeys</code></pre>
+				<a href="#example-key-generation-code" id="example-key-generation-code" style="color: inherit; text-decoration: none;">
+					<h3>Example Key Generation Code</h3>
+				</a>
+				<pre><code>using <span class="hljs-built_in">npm</span>, create a javascript file (<span class="hljs-string">'index.js), and run "node index.js"
+
+i.e. JavaScript code ('</span>index.js):
+
+<span class="hljs-keyword">const</span> fio = <span class="hljs-built_in">require</span>(<span class="hljs-string">'@fioprotocol/fiosdk'</span>);
+<span class="hljs-keyword">const</span> mnemonic = <span class="hljs-string">'valley alien library bread worry brother bundle hammer loyal barely dune brave'</span>
+
+async <span class="hljs-keyword">function</span> genKeysFromMnemonic () {
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">""</span>)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"From This Mnemonic:"</span>)
+    <span class="hljs-built_in">console</span>.log(mnemonic)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">""</span>)
+
+    <span class="hljs-keyword">const</span> privateKeyRes = await fio.FIOSDK.createPrivateKeyMnemonic(mnemonic)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"private key generated:"</span>)
+    <span class="hljs-built_in">console</span>.log((privateKeyRes.fioKey))
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">""</span>)
+
+    <span class="hljs-keyword">const</span> publicKeyRes = fio.FIOSDK.derivedPublicKey(privateKeyRes.fioKey)
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"public key generated"</span>)
+    <span class="hljs-built_in">console</span>.log((publicKeyRes.publicKey))
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">""</span>)
+}
+
+genKeysFromMnemonic()</code></pre>
 				<a href="#manually-creating-keys-without-using-the-fio-typescript-sdk" id="manually-creating-keys-without-using-the-fio-typescript-sdk" style="color: inherit; text-decoration: none;">
 					<h3>Manually Creating Keys without using the FIO Typescript SDK?</h3>
 				</a>
