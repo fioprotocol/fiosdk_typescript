@@ -174,3 +174,11 @@ This is the expected Private Key:
 
 This is the expected Public Key:
 "FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o"
+
+## Version 1.0.0
+Added additional Unit Tests for Encryption.  Comparing and Validating results across the kotlin, iOS and typescript SDKs.
+No changes to the SDK code base.
+
+## Version 0.9.2
+Updated and cleaned up SDK code base.
+Finalization of method names and parameter names and order
