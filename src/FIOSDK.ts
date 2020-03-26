@@ -318,7 +318,7 @@ export class FIOSDK {
   }
 
   /**
-   * Registers a FIO Address on the FIO blockchain.
+   * Registers a Fio Address on behalf of the owner FIO Public key parameter. Owner FIO Public key owns the FIO address
    *
    * @param fioAddress FIO Address to register.
    * @param ownerPublicKey Owner FIO Public Key.
