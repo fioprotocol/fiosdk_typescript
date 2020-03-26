@@ -89,9 +89,9 @@ export class FIOSDK {
 
   /**
    * Is the Chain Code Valid?
-   * 
+   *
    * @param chainCode
-   * 
+   *
    * @returns Chain Code is Valid
    */
   public static isChainCodeValid(chainCode: string) {
@@ -105,9 +105,9 @@ export class FIOSDK {
 
   /**
    * Is the Token Code Valid?
-   * 
+   *
    * @param tokenCode
-   * 
+   *
    * @returns Token Code is Valid
    */
   public static isTokenCodeValid(tokenCode: string) {
@@ -121,9 +121,9 @@ export class FIOSDK {
 
   /**
    * Is the FIO Address Valid?
-   * 
+   *
    * @param fioAddress
-   * 
+   *
    * @returns Fio Address is Valid
    */
   public static isFioAddressValid(fioAddress: string) {
@@ -137,9 +137,9 @@ export class FIOSDK {
 
   /**
    * Is the FIO Domain Valid?
-   * 
+   *
    * @param fioDomain
-   * 
+   *
    * @returns FIO Domain is Valid
    */
   public static isFioDomainValid(fioDomain: string) {
@@ -153,9 +153,9 @@ export class FIOSDK {
 
   /**
    * Is the FIO Public Key Valid?
-   * 
+   *
    * @param fioPublicKey
-   * 
+   *
    * @returns FIO Public Key is Valid
    */
   public static isFioPublicKeyValid(fioPublicKey: string) {
@@ -169,9 +169,9 @@ export class FIOSDK {
 
   /**
    * Is the Public Address Valid?
-   * 
+   *
    * @param publicAddress
-   * 
+   *
    * @returns Public Address is Valid
    */
   public static isPublicAddressValid(publicAddress: string) {
@@ -186,11 +186,11 @@ export class FIOSDK {
 
   /**
    * Convert a FIO Token Amount to FIO SUFs
-   * 
+   *
    * @param amount
-   * 
+   *
    * 2.568 FIO should be 2568000000 SUFs
-   * 
+   *
    * @returns FIO SUFs
    */
   public static amountToSUF(amount: number): number {
@@ -198,21 +198,21 @@ export class FIOSDK {
     // get integer part
     var floor = Math.floor(amount)
     var tempResult = floor * this.SUFUnit
-    
+
     // get remainder
     var remainder = (amount % 1)
-    var remainderResult = remainder * (this.SUFUnit) 
+    var remainderResult = remainder * (this.SUFUnit)
     var floorRemainder = Math.floor(remainderResult)
-    
+
     // add integer and remainder
     return tempResult + floorRemainder
   }
 
   /**
    * Convert FIO SUFs to a FIO Token amount
-   * 
+   *
    * @param suf
-   * 
+   *
    * @returns FIO Token amount
    */
   public static SUFToAmount(suf: number): number {
@@ -297,7 +297,7 @@ export class FIOSDK {
   }
 
   /**
-   * Registers a FIO Address on the FIO blockchain.  The owner will be the public key associated with the FIO SDK instance.
+   * Registers a FIO Address on the FIO blockchain. The owner will be the public key associated with the FIO SDK instance.
    *
    * @param fioAddress FIO Address to register.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
@@ -310,6 +310,30 @@ export class FIOSDK {
   ): Promise<RegisterFioAddressResponse> {
     const registerFioAddress = new SignedTransactions.RegisterFioAddress(
       fioAddress,
+      null,
+      maxFee,
+      this.getTechnologyProviderId(technologyProviderId),
+    )
+    return registerFioAddress.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
+   * Registers a FIO Address on the FIO blockchain.
+   *
+   * @param fioAddress FIO Address to register.
+   * @param ownerPublicKey Owner FIO Public Key.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public registerOwnerFioAddress(
+    fioAddress: string,
+    ownerPublicKey: string,
+    maxFee: number,
+    technologyProviderId: string | null = null,
+  ): Promise<RegisterFioAddressResponse> {
+    const registerFioAddress = new SignedTransactions.RegisterFioAddress(
+      fioAddress,
+      ownerPublicKey,
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
@@ -732,7 +756,7 @@ export class FIOSDK {
 
   /**
    * Compute and return fee amount for specific call and specific user
-   * 
+   *
    * @param payerFioAddress, Payer FIO Address incurring the fee and owned by signer.
    */
   public getFeeForRecordObtData(payerFioAddress: string): Promise<FioFeeResponse> {
@@ -741,7 +765,7 @@ export class FIOSDK {
 
   /**
    * Compute and return fee amount for specific call and specific user
-   * 
+   *
    * @param payeeFioAddress Payee FIO Address incurring the fee and owned by signer.
    */
   public getFeeForNewFundsRequest(payeeFioAddress: string): Promise<FioFeeResponse> {
@@ -750,7 +774,7 @@ export class FIOSDK {
 
   /**
    * Compute and return fee amount for specific call and specific user
-   * 
+   *
    * @param payerFioAddress Payer FIO Address incurring the fee and owned by signer.
    */
   public getFeeForRejectFundsRequest(payerFioAddress: string): Promise<FioFeeResponse> {
@@ -759,7 +783,7 @@ export class FIOSDK {
 
   /**
    * Compute and return fee amount for specific call and specific user
-   * 
+   *
    * @param fioAddress FIO Address incurring the fee and owned by signer.
    */
   public getFeeForAddPublicAddress(fioAddress: string): Promise<FioFeeResponse> {
@@ -810,8 +834,24 @@ export class FIOSDK {
       case 'getFioPublicKey':
         return this.getFioPublicKey()
       case 'registerFioAddress':
-        return this.registerFioAddress(
+        if (params.ownerPublicKey) {
+          return this.registerOwnerFioAddress(
+            params.fioAddress,
+            params.ownerPublicKey,
+            params.maxFee,
+            params.technologyProviderId,
+          )
+        } else {
+          return this.registerFioAddress(
+            params.fioAddress,
+            params.maxFee,
+            params.technologyProviderId,
+          )
+        }
+      case 'registerOwnerFioAddress':
+        return this.registerOwnerFioAddress(
           params.fioAddress,
+          params.ownerPublicKey,
           params.maxFee,
           params.technologyProviderId,
         )
