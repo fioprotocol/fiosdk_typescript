@@ -18,6 +18,10 @@
     },
     "author": "Shawn@dapix.io",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fioprotocol/fiosdk_typescript.git"
+    },
     "devDependencies": {
         "@types/chai": "^4.2.4",
         "@types/mocha": "^5.2.7",
