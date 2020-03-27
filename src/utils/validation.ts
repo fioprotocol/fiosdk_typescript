@@ -1,4 +1,3 @@
-import { SchemaDefinition } from 'validate'
 const Schema = require('validate')
 import { ErrObj } from '../entities/ValidationError'
 
@@ -7,36 +6,52 @@ export const allRules = {
     required: true,
     type: String,
     length: { min: 1, max: 10 },
-    match: /^[a-z0-9]+$/i
+    matchParams: {
+      regex: '^[a-z0-9]+$',
+      opt: 'i'
+    }
   },
   fioAddress: {
     required: true,
     type: String,
     length: { min: 3, max: 64 },
-    match: /^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))$)/i
+    matchParams: {
+      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+$)',
+      opt: 'gim'
+    }
   },
   tpid: {
     type: String,
     length: { min: 3, max: 64 },
-    match: /^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*(?:(?<!-))$)/i
+    matchParams: {
+      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+$)',
+      opt: 'gim'
+    }
   },
   fioDomain: {
     required: true,
     type: String,
     length: { min: 1, max: 62 },
-    match: /^[a-z0-9\-]+$/i
+    matchParams: {
+      regex: '^[a-z0-9\\-]+$',
+      opt: 'i'
+    }
   },
   fioPublicKey: {
     required: true,
     type: String,
     length: { min: 1, max: 62 },
-    match: /^FIO\w+$/
+    matchParams: {
+      regex: '^FIO\\w+$'
+    }
   },
   nativeBlockchainPublicAddress: {
     required: true,
     type: String,
     length: { min: 1, max: 128 },
-    match: /^\w+$/
+    matchParams: {
+      regex: '^\\w+$'
+    }
   },
 }
 
@@ -88,8 +103,15 @@ export const validationRules = {
   },
 }
 
-export function validate(data: object, rules: SchemaDefinition): { isValid: boolean, errors: ErrObj[] } {
-  const validator = new Schema(rules)
+export function validate(data: any, rules: any): { isValid: boolean, errors: ErrObj[] } {
+  const schema = { ...rules }
+  for (const ruleKey in rules) {
+    if (rules[ruleKey].matchParams && rules[ruleKey].matchParams.regex) {
+      schema[ruleKey].match = new RegExp(rules[ruleKey].matchParams.regex, rules[ruleKey].matchParams.opt);
+      delete schema[ruleKey].matchParams
+    }
+  }
+  const validator = new Schema(schema)
   const errors: { path: string, message: string }[] = validator.validate(data)
   const validationResult: { isValid: boolean, errors: ErrObj[] } = { isValid: true, errors: [] }
 
