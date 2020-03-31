@@ -8,18 +8,16 @@ const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
 }
 
-// transfers FIO tokens from privatekey to publicKey2
-
+// Transfers FIO tokens from privatekey to publicKey2
+// Can be used to fund accounts for testing purposes
 
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '5KiFV1f2hPy9RMNoYG5RzRrK83juBBQbGsjcFSPR7qWFR362R1F',
-  publicKey = 'FIO8DdUqTc2QmAaiMHrfcY3AoEsMgVars5sjpePQUpKfSZweiFneY',
-  privateKey2 = '5JJJwyg6a8aGeQhC9Yq3PRriZL463cmDyGtdAwCs3XW8uEbUh2q',
-  publicKey2 = 'FIO7FsRwGNdhQfVJ3kHgeDrP5DRHHZF4gVKsqGdpiP2eWZzppySJF',
-  testFioAddressName = 'shawnalicek@fiotestnet',
-  testFioAddressName2 = 'shawnbobk@fiotestnet'
+let privateKey = '',
+  publicKey = '',
+  privateKey2 = '',
+  publicKey2 = ''
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
