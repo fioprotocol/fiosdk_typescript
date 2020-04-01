@@ -104,8 +104,9 @@ export const validationRules = {
 }
 
 export function validate(data: any, rules: any): { isValid: boolean, errors: ErrObj[] } {
-  const schema = { ...rules }
+  const schema: any = {}
   for (const ruleKey in rules) {
+    schema[ruleKey] = { ...rules[ruleKey] }
     if (rules[ruleKey].matchParams && rules[ruleKey].matchParams.regex) {
       schema[ruleKey].match = new RegExp(rules[ruleKey].matchParams.regex, rules[ruleKey].matchParams.opt);
       delete schema[ruleKey].matchParams

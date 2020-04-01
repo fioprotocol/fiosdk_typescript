@@ -247,10 +247,18 @@ export class FIOSDK {
   public static SUFUnit: number = 1000000000
 
   /**
+   * // how to instantiate fetchJson parameter
+   * i.e.
+   * fetch = require('node-fetch')
+   *
+   * const fetchJson = async (uri, opts = {}) => {
+   *  return fetch(uri, opts)
+   * }
+   *
    * @param privateKey the fio private key of the client sending requests to FIO API.
    * @param publicKey the fio public key of the client sending requests to FIO API.
    * @param baseUrl the url to the FIO API.
-   * @param fetchjson
+   * @param fetchjson - the module to use for HTTP Post/Get calls (see above for example)
    * @param registerMockUrl the url to the mock server
    * @param technologyProviderId Default FIO Address of the wallet which generates transactions.
    */
