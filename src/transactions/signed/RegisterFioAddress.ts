@@ -8,12 +8,14 @@ export class RegisterFioAddress extends SignedTransaction {
   public ACTION: string = 'regaddress'
   public ACCOUNT: string = Constants.defaultAccount
   public fioAddress: string
+  public ownerPublicKey: string
   public maxFee: number
   public technologyProviderId: string
 
-  constructor(fioAddress: string, maxFee: number, technologyProviderId: string = '') {
+  constructor(fioAddress: string, ownerPublicKey: string | null, maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioAddress = fioAddress
+    this.ownerPublicKey = ownerPublicKey || ''
     this.maxFee = maxFee
     this.technologyProviderId = technologyProviderId
 
@@ -25,7 +27,7 @@ export class RegisterFioAddress extends SignedTransaction {
     const actor = this.getActor()
     const data = {
       fio_address: this.fioAddress,
-      owner_fio_public_key: this.publicKey,
+      owner_fio_public_key: this.ownerPublicKey || this.publicKey,
       max_fee: this.maxFee,
       tpid: this.technologyProviderId,
       actor,

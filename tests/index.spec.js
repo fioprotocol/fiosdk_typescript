@@ -275,6 +275,19 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`Register owner fio address`, async () => {
+    const newFioAddress2 = generateTestingFioAddress(newFioDomain)
+    const result = await fioSdk.genericAction('registerFioAddress', {
+      fioAddress: newFioAddress2,
+      ownerPublicKey: publicKey2,
+      maxFee: defaultFee
+    })
+    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
   it(`Renew fio address`, async () => {
     const result = await fioSdk.genericAction('renewFioAddress', { fioAddress: newFioAddress, maxFee: defaultFee })
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
