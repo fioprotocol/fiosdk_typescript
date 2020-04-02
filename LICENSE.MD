@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018-2020 Dapix, Inc and its contributors.  All rights reserved.
+Copyright (c) 2020 Foundation for Interwallet Operability
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
