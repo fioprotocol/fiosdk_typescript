@@ -451,7 +451,7 @@ export class FIOSDK {
     fioAddress: string,
     publicAddresses: PublicAddress[],
     maxFee: number,
-    technologyProviderId: string = '',
+    technologyProviderId: string | null = null,
   ): Promise<AddPublicAddressResponse> {
     const addPublicAddress = new SignedTransactions.AddPublicAddress(
       fioAddress,
