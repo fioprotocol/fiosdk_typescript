@@ -194,6 +194,9 @@ This is the expected Private Key:
 This is the expected Public Key:
 "FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o"
 
+## Version 1.0.2
+Bug Fix to method: addPublicAddresses - TechnologyProviderId (i.e. TPID), was not being set correctly for this method.
+
 ## Version 1.0.1
 Added method: registerOwnerFioAddress - allows a wallet to register a fio address owned by a different public key
 Updated Validation Methods
