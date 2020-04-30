@@ -30,6 +30,22 @@ Make sure to install typescript by running, this command in terminal:
 	
 	sudo npm install -g typescript
 
+# Publishing to Node Package Manager (npm)
+To publish to npm.  
+1. Update the version number, for this release. In 'package.json'
+2. If the fioJS library was updated in npm.  Also update the fioJS version number.  In 'package.json'
+3. Publish to npm:
+
+		cd fiosdk_typescript
+		yarn
+		tsc
+		npm test
+		npm publish --access public
+
+Further details: 
+	http://npmjs.com/ 
+	https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
+
 # Generating Documentation
 TypeDoc is installed as a dev dependency. Documentation is pre-generated and included with the source code. To manually generate the documentation run: 
 	
