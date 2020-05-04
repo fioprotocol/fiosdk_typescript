@@ -11,12 +11,12 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '',
-  publicKey = '',
-  privateKey2 = '',
-  publicKey2 = '',
-  testFioAddressName = '',
-  testFioAddressName2 = ''
+ let privateKey = '',
+   publicKey = '',
+   privateKey2 = '',
+   publicKey2 = '',
+   testFioAddressName = '',
+   testFioAddressName2 = ''
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
@@ -346,6 +346,35 @@ describe('Testing generic actions', () => {
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
   })
+
+  it(`getFee for removePublicAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForRemovePublicAddress', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Remove public address`, async () => {
+
+    const result = await fioSdk.genericAction('removePublicAddress', {
+      fioAddress: newFioAddress,
+      publicAddresses: [
+        {
+          chain_code: fioChainCode,
+          token_code: fioTokenCode,
+          public_address: 'FIO5kMPnfQw6S3eFqMwTMebYghZAfJjeur8VpvvaaFQnPRSoLxcde',
+        }
+      ],
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
 
   it(`setFioDomainVisibility false`, async () => {
     const result = await fioSdk.genericAction('setFioDomainVisibility', {
