@@ -2,6 +2,7 @@ import { Fio } from '@fioprotocol/fiojs'
 import {
   AbiResponse,
   AddPublicAddressResponse,
+  RemovePublicAddressResponse,
   AvailabilityResponse,
   BalanceResponse,
   FioFeeResponse,
@@ -440,6 +441,29 @@ export class FIOSDK {
   }
 
   /**
+   * This call allows a any number of public addresses matching the blockchain code, the token code and the public address to be removed from the FIO Address.
+   *
+   * @param fioAddress FIO Address which will be mapped to public address.
+   * @param publicAddresses a list of publicAddresses, each containing chain_code, token_code, and public_address.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public removePublicAddress(
+    fioAddress: string,
+    publicAddresses: PublicAddress[],
+    maxFee: number,
+    technologyProviderId: string | null = null,
+  ): Promise<RemovePublicAddressResponse> {
+        const removePublicAddress = new SignedTransactions.RemovePublicAddress(
+      fioAddress,
+      publicAddresses,
+      maxFee,
+      this.getTechnologyProviderId(technologyProviderId),
+    )
+    return removePublicAddress.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
    * This call allows a public addresses of the specific blockchain type to be added to the FIO Address.
    *
    * @param fioAddress FIO Address which will be mapped to public addresses.
@@ -798,6 +822,16 @@ export class FIOSDK {
     return this.getFee(EndPoint.addPubAddress, fioAddress)
   }
 
+
+/**
+   * Compute and return fee amount for specific call and specific user
+   *
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
+   */
+  public getFeeForRemovePublicAddress(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.RemovePubAddress, fioAddress)
+  }
+
   /**
    * @ignore
    */
@@ -897,6 +931,13 @@ export class FIOSDK {
           params.maxFee,
           params.technologyProviderId,
         )
+      case 'removePublicAddress':
+        return this.removePublicAddress(
+          params.fioAddress,
+          params.publicAddresses,
+          params.maxFee,
+          params.technologyProviderId,
+        )
       case 'setFioDomainVisibility':
         return this.setFioDomainVisibility(
           params.fioDomain,
@@ -979,6 +1020,8 @@ export class FIOSDK {
         return this.getFeeForRejectFundsRequest(params.payerFioAddress)
       case 'getFeeForAddPublicAddress':
         return this.getFeeForAddPublicAddress(params.fioAddress)
+      case 'getFeeForRemovePublicAddress':
+        return this.getFeeForRemovePublicAddress(params.fioAddress)
       case 'getMultiplier':
         return this.getMultiplier()
       case 'pushTransaction':

@@ -356,6 +356,34 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       technologyProviderId: ''
     })
+    
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for removePublicAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForRemovePublicAddress', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Remove public address`, async () => {
+    const result = await fioSdk.genericAction('removePublicAddress', {
+      fioAddress: newFioAddress,
+      publicAddresses: [
+        {
+          chain_code: fioChainCode,
+          token_code: fioTokenCode,
+          public_address: publicKey,
+        }
+      ]
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')

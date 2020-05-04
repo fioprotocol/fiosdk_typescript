@@ -5,6 +5,7 @@ export enum EndPoint {
   renewFioDomain = 'renew_fio_domain',
   renewFioAddress = 'renew_fio_address',
   addPubAddress = 'add_pub_address',
+  RemovePubAddress = 'remove_pub_address',
   setFioDomainPublic = 'set_fio_domain_public',
   rejectFundsRequest = 'reject_funds_request',
   recordObtData = 'record_obt_data',
