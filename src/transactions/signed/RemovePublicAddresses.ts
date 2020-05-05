@@ -3,7 +3,7 @@ import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
 
-export class RemovePublicAddress extends SignedTransaction {
+export class RemovePublicAddresses extends SignedTransaction {
   public ENDPOINT: string = 'chain/remove_pub_address'
   public ACTION: string = 'remaddress'
   public ACCOUNT: string = Constants.defaultAccount
