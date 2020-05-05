@@ -25,6 +25,8 @@ const faucetPriv = '';
 
 const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
+const ethTokenCode = 'ETH'
+const ethChainCode = 'ETH'
 const fundAmount = 800 * FIOSDK.SUFUnit
 const defaultFee = 800 * FIOSDK.SUFUnit
 const receiveTransferTimout = 5000
@@ -343,9 +345,9 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress,
       publicAddresses: [
         {
-          chain_code: fioChainCode,
-          token_code: fioTokenCode,
-          public_address: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAg',
+          chain_code: ethChainCode,
+          token_code: ethTokenCode,
+          public_address: 'xxxxxxyyyyyyzzzzzz',
         },
         {
           chain_code: fioChainCode,
@@ -353,6 +355,34 @@ describe('Testing generic actions', () => {
           public_address: publicKey,
         }
       ],
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for removePublicAddresses`, async () => {
+    const result = await fioSdk.genericAction('getFeeForRemovePublicAddresses', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Remove public addresses`, async () => {
+    const result = await fioSdk.genericAction('removePublicAddresses', {
+      fioAddress: newFioAddress,
+      publicAddresses: [
+        {
+          chain_code: ethChainCode,
+          token_code: ethTokenCode,
+          public_address: 'xxxxxxyyyyyyzzzzzz',
+        }
+      ]
       maxFee: defaultFee,
       technologyProviderId: ''
     })
