@@ -12,11 +12,11 @@ const fetchJson = async (uri, opts = {}) => {
  * Please set your private/public keys and existing fioAddresses
  */
  let privateKey = '',
-   publicKey = '',
-   privateKey2 = '',
-   publicKey2 = '',
-   testFioAddressName = '',
-   testFioAddressName2 = ''
+  publicKey = '',
+  privateKey2 = '',
+  publicKey2 = '',
+  testFioAddressName = '',
+  testFioAddressName2 = ''
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
