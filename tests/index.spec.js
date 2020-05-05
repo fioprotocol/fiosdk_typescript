@@ -352,11 +352,6 @@ describe('Testing generic actions', () => {
         {
           chain_code: fioChainCode,
           token_code: fioTokenCode,
-          public_address: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAg',
-        },
-        {
-          chain_code: fioChainCode,
-          token_code: fioTokenCode,
           public_address: publicKey,
         }
       ],

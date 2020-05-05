@@ -11,15 +11,14 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
- let privateKey = '5JyDHxvrChxEgwA3fXTqcxGBuyTrehZpcotDaqTkaYr22QmDmAj',
-   publicKey = 'FIO5kMPnfQw6S3eFqMwTMebYghZAfJjeur8VpvvaaFQnPRSoLxcde',
-   privateKey2 = '5JTWpfi7Bmk5G3NVcKCf4cCMPBdU8BVs4Foz5D7mVxN6eAAQMBV',
-   publicKey2 = 'FIO6F3HWaXJYX4KNHJ5hbj16XSTZinaSdMA7NhVXvCzinkBjxQRT3',
-   testFioAddressName = 'eddie@fiotestnet',
-   testFioAddressName2 = 'reddy@fiotestnet'
-//const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
-const baseUrl = 'http://localhost:8889/v1/'
+let privateKey = '',
+  publicKey = '',
+  privateKey2 = '',
+  publicKey2 = '',
+  testFioAddressName = '',
+  testFioAddressName2 = ''
 
+const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
@@ -334,11 +333,6 @@ describe('Testing generic actions', () => {
           chain_code: ethChainCode,
           token_code: ethTokenCode,
           public_address: 'xxxxxxyyyyyyzzzzzz',
-        },
-        {
-          chain_code: fioChainCode,
-          token_code: fioTokenCode,
-          public_address: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAg',
         },
         {
           chain_code: fioChainCode,
