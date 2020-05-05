@@ -454,7 +454,7 @@ export class FIOSDK {
     maxFee: number,
     technologyProviderId: string | null = null,
   ): Promise<RemovePublicAddressesResponse> {
-        const removePublicAddresses = new SignedTransactions.RemovePublicAddresses(
+    const removePublicAddresses = new SignedTransactions.RemovePublicAddresses(
       fioAddress,
       publicAddresses,
       maxFee,
