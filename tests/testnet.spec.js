@@ -11,15 +11,14 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
- let privateKey = '5JyDHxvrChxEgwA3fXTqcxGBuyTrehZpcotDaqTkaYr22QmDmAj',
-   publicKey = 'FIO5kMPnfQw6S3eFqMwTMebYghZAfJjeur8VpvvaaFQnPRSoLxcde',
-   privateKey2 = '5JTWpfi7Bmk5G3NVcKCf4cCMPBdU8BVs4Foz5D7mVxN6eAAQMBV',
-   publicKey2 = 'FIO6F3HWaXJYX4KNHJ5hbj16XSTZinaSdMA7NhVXvCzinkBjxQRT3',
-   testFioAddressName = 'eddie@fiotestnet',
-   testFioAddressName2 = 'reddy@fiotestnet'
+let privateKey = '',
+  publicKey = '',
+  privateKey2 = '',
+  publicKey2 = '',
+  testFioAddressName = '',
+  testFioAddressName2 = ''
 
- const baseUrl = 'http://localhost:8889/v1/'
-//const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
+const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
@@ -379,7 +378,6 @@ describe('Testing generic actions', () => {
   })
 
   it(`RE Add public addresses`, async () => {
-    try{
     const result = await fioSdk.genericAction('addPublicAddresses', {
       fioAddress: newFioAddress,
       publicAddresses: [
@@ -401,29 +399,20 @@ describe('Testing generic actions', () => {
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
-  } catch (e) {
-    console.log("eddie RE add");
-    console.log(e);
-  }
   })
 
 
   it(`getFee for removeAllPublicAddresses`, async () => {
-    try{
+
     const result = await fioSdk.genericAction('getFeeForRemoveAllPublicAddresses', {
       fioAddress: newFioAddress
     })
 
     expect(result).to.have.all.keys('fee')
     expect(result.fee).to.be.a('number')
-  } catch (e) {
-    console.log("eddie get fee remove all");
-    console.log(e);
-  }
   })
 
   it(`Remove all public addresses`, async () => {
-    try {
     const result = await fioSdk.genericAction('removeAllPublicAddresses', {
       fioAddress: newFioAddress,
       maxFee: defaultFee,
@@ -432,9 +421,6 @@ describe('Testing generic actions', () => {
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
-  } catch (e) {
-    console.log(e);
-  }
   })
 
 
