@@ -11,7 +11,7 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
- let privateKey = '',
+let privateKey = '',
   publicKey = '',
   privateKey2 = '',
   publicKey2 = '',
