@@ -347,8 +347,8 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
-  it(`getFee for removePublicAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForRemovePublicAddress', {
+  it(`getFee for removePublicAddresses`, async () => {
+    const result = await fioSdk.genericAction('getFeeForRemovePublicAddresses', {
       fioAddress: newFioAddress
     })
 
@@ -356,9 +356,9 @@ describe('Testing generic actions', () => {
     expect(result.fee).to.be.a('number')
   })
 
-  it(`Remove public address`, async () => {
+  it(`Remove public addresses`, async () => {
 
-    const result = await fioSdk.genericAction('removePublicAddress', {
+    const result = await fioSdk.genericAction('removePublicAddresses', {
       fioAddress: newFioAddress,
       publicAddresses: [
         {
