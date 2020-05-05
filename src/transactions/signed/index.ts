@@ -1,5 +1,6 @@
 export { AddPublicAddress } from './AddPublicAddress'
 export { RemovePublicAddresses } from './RemovePublicAddresses'
+export { RemoveAllPublicAddresses } from './RemoveAllPublicAddresses'
 export { SetFioDomainVisibility } from './SetFioDomainVisibility'
 export { RequestNewFunds } from './RequestNewFunds'
 export { RejectFundsRequest } from './RejectFundsRequest'
