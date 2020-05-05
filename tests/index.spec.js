@@ -25,6 +25,8 @@ const faucetPriv = '';
 
 const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
+const ethTokenCode = 'ETH'
+const ethChainCode = 'ETH'
 const fundAmount = 800 * FIOSDK.SUFUnit
 const defaultFee = 800 * FIOSDK.SUFUnit
 const receiveTransferTimout = 5000
@@ -343,6 +345,11 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress,
       publicAddresses: [
         {
+          chain_code: ethChainCode,
+          token_code: ethTokenCode,
+          public_address: 'xxxxxxyyyyyyzzzzzz',
+        },
+        {
           chain_code: fioChainCode,
           token_code: fioTokenCode,
           public_address: '1PMycacnJaSqwwJqjawXBErnLsZ7RkXUAg',
@@ -371,14 +378,14 @@ describe('Testing generic actions', () => {
     expect(result.fee).to.be.a('number')
   })
 
-  it(`Remove public address`, async () => {
+  it(`Remove public addresses`, async () => {
     const result = await fioSdk.genericAction('removePublicAddresses', {
       fioAddress: newFioAddress,
       publicAddresses: [
         {
-          chain_code: fioChainCode,
-          token_code: fioTokenCode,
-          public_address: publicKey,
+          chain_code: ethChainCode,
+          token_code: ethTokenCode,
+          public_address: 'xxxxxxyyyyyyzzzzzz',
         }
       ]
       maxFee: defaultFee,
