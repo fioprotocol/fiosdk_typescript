@@ -392,6 +392,41 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`getFee for removeAllPublicAddresses`, async () => {
+
+    const result = await fioSdk.genericAction('getFeeForRemoveAllPublicAddresses', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Remove all public addresses`, async () => {
+    await fioSdk.genericAction('addPublicAddresses', {
+      fioAddress: newFioAddress,
+      publicAddresses: [
+        {
+          chain_code: ethChainCode,
+          token_code: ethTokenCode,
+          public_address: 'xxxxxxyyyyyyzzzzzz1',
+        }
+      ],
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
+
+    const result = await fioSdk.genericAction('removeAllPublicAddresses', {
+      fioAddress: newFioAddress,
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+
   it(`setFioDomainVisibility false`, async () => {
     const result = await fioSdk.genericAction('setFioDomainVisibility', {
       fioDomain: newFioDomain,
