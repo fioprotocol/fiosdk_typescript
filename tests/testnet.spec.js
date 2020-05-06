@@ -377,8 +377,18 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
-  it(`RE Add public addresses`, async () => {
-    const result = await fioSdk.genericAction('addPublicAddresses', {
+  it(`getFee for removeAllPublicAddresses`, async () => {
+
+    const result = await fioSdk.genericAction('getFeeForRemoveAllPublicAddresses', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Remove all public addresses`, async () => {
+    await fioSdk.genericAction('addPublicAddresses', {
       fioAddress: newFioAddress,
       publicAddresses: [
         {
@@ -396,23 +406,6 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
-
-
-  it(`getFee for removeAllPublicAddresses`, async () => {
-
-    const result = await fioSdk.genericAction('getFeeForRemoveAllPublicAddresses', {
-      fioAddress: newFioAddress
-    })
-
-    expect(result).to.have.all.keys('fee')
-    expect(result.fee).to.be.a('number')
-  })
-
-  it(`Remove all public addresses`, async () => {
     const result = await fioSdk.genericAction('removeAllPublicAddresses', {
       fioAddress: newFioAddress,
       maxFee: defaultFee,
