@@ -99,6 +99,7 @@ describe('Testing generic actions', () => {
   const newFioAddress = generateTestingFioAddress(newFioDomain)
   const privateKeyExample = '5Kbb37EAqQgZ9vWUHoPiC2uXYhyGSFNbL6oiDp24Ea1ADxV1qnu'
   const publicKeyExample = 'FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o'
+  const newPublicKey = 'FIO7isxEua78KPVbGzKemH4nj2bWE52gqj8Hkac3tc7jKNvpfWzYS'
 
   it(`FIO Key Generation Testing`, async () => {
     const testMnemonic = 'valley alien library bread worry brother bundle hammer loyal barely dune brave'
@@ -271,6 +272,48 @@ describe('Testing generic actions', () => {
     expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for transferFioAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Transfer fio address`, async () => {
+    const result = await fioSdk.genericAction('transferFioAddress', {
+      fioAddress: newFioAddress,
+      newOwnerKey: newPublicKey,
+      maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for transferFioDomain`, async () => {
+    const result = await fioSdk.genericAction('getFeeForTransferFioDomain', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Transfer fio domain`, async () => {
+    const result = await fioSdk.genericAction('transferFioDomain', {
+      fioDomain: newFioDomain,
+      newOwnerKey: newPublicKey,
+      maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
   })
 
