@@ -117,7 +117,7 @@ describe('Testing generic actions', () => {
 
   const newFioDomain = generateTestingFioDomain()
   const newFioAddress = generateTestingFioAddress(newFioDomain)
-  const newPublicKey = FIOSDK.derivedPublicKey('5HvaoRV9QrbbxhLh6zZHqTzesFEG5vusVJGbUazFi5xQvKMMt6U')
+  const pubKeyForTransfer = FIOSDK.derivedPublicKey('5HvaoRV9QrbbxhLh6zZHqTzesFEG5vusVJGbUazFi5xQvKMMt6U')
 
   it(`FIO Key Generation Testing`, async () => {
     const testMnemonic = 'valley alien library bread worry brother bundle hammer loyal barely dune brave'
@@ -329,7 +329,7 @@ describe('Testing generic actions', () => {
   it(`Transfer fio address`, async () => {
     const result = await fioSdk.genericAction('transferFioAddress', {
       fioAddress: newFioAddress,
-      newOwnerKey: newPublicKey,
+      newOwnerKey: pubKeyForTransfer,
       maxFee: defaultFee
     })
 
@@ -350,7 +350,7 @@ describe('Testing generic actions', () => {
   it(`Transfer fio domain`, async () => {
     const result = await fioSdk.genericAction('transferFioDomain', {
       fioDomain: newFioDomain,
-      newOwnerKey: newPublicKey,
+      newOwnerKey: pubKeyForTransfer,
       maxFee: defaultFee
     })
 
