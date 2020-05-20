@@ -376,6 +376,7 @@ export class FIOSDK {
    * Transfers a FIO Domain on the FIO blockchain.
    *
    * @param fioDomain FIO Domain to transfer. The owner will be the public key associated with the FIO SDK instance.
+   * @param newOwnerKey FIO Public Key of the new owner.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
    * @param technologyProviderId FIO Address of the wallet which generates this transaction.
    */
@@ -398,6 +399,7 @@ export class FIOSDK {
    * Transfers a FIO Address on the FIO blockchain.
    *
    * @param fioAddress FIO Address to transfer. The owner will be the public key associated with the FIO SDK instance.
+   * @param newOwnerKey FIO Public Key of the new owner.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
    * @param technologyProviderId FIO Address of the wallet which generates this transaction.
    */
@@ -1020,7 +1022,7 @@ export class FIOSDK {
         )
       case 'transferFioDomain':
         return this.transferFioDomain(
-            params.fioAddress,
+            params.fioDomain,
             params.newOwnerKey,
             params.maxFee,
             params.technologyProviderId,
