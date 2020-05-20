@@ -4,6 +4,8 @@ import {
   AddPublicAddressResponse,
   RemovePublicAddressesResponse,
   RemoveAllPublicAddressesResponse,
+  TransferFioAddressResponse,
+  TransferFioDomainResponse,
   AvailabilityResponse,
   BalanceResponse,
   FioFeeResponse,
@@ -368,6 +370,50 @@ export class FIOSDK {
       this.getTechnologyProviderId(technologyProviderId),
     )
     return registerFioDomain.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
+   * Transfers a FIO Domain on the FIO blockchain.
+   *
+   * @param fioDomain FIO Domain to transfer. The owner will be the public key associated with the FIO SDK instance.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public transferFioDomain(
+      fioDomain: string,
+      newOwnerKey: string,
+      maxFee: number,
+      technologyProviderId: string | null = null,
+  ): Promise<TransferFioDomainResponse> {
+    const transferFioDomain = new SignedTransactions.TransferFioDomain(
+        fioDomain,
+        newOwnerKey,
+        maxFee,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return transferFioDomain.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
+   * Transfers a FIO Address on the FIO blockchain.
+   *
+   * @param fioAddress FIO Address to transfer. The owner will be the public key associated with the FIO SDK instance.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public transferFioAddress(
+      fioAddress: string,
+      newOwnerKey: string,
+      maxFee: number,
+      technologyProviderId: string | null = null,
+  ): Promise<TransferFioAddressResponse> {
+    const transferFioAddress = new SignedTransactions.TransferFioAddress(
+        fioAddress,
+        newOwnerKey,
+        maxFee,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return transferFioAddress.execute(this.privateKey, this.publicKey)
   }
 
   /**
@@ -865,6 +911,24 @@ export class FIOSDK {
   }
 
   /**
+   * Compute and return fee amount for specific call and specific user
+   *
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
+   */
+  public getFeeForTranferFioAddress(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.transferFioAddress, fioAddress)
+  }
+
+  /**
+   * Compute and return fee amount for specific call and specific user
+   *
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
+   */
+  public getFeeForTranferFioDomain(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.transferFioDomain, fioAddress)
+  }
+
+  /**
    * @ignore
    */
   public registerFioNameOnBehalfOfUser(fioName: string, publicKey: string) {
@@ -946,6 +1010,20 @@ export class FIOSDK {
           params.fioAddress,
           params.maxFee,
           params.technologyProviderId,
+        )
+      case 'transferFioAddress':
+        return this.transferFioAddress(
+            params.fioAddress,
+            params.newOwnerKey,
+            params.maxFee,
+            params.technologyProviderId,
+        )
+      case 'transferFioDomain':
+        return this.transferFioDomain(
+            params.fioAddress,
+            params.newOwnerKey,
+            params.maxFee,
+            params.technologyProviderId,
         )
       case 'addPublicAddress':
         return this.addPublicAddress(
@@ -1056,6 +1134,10 @@ export class FIOSDK {
         return this.getFeeForNewFundsRequest(params.payeeFioAddress)
       case 'getFeeForRejectFundsRequest':
         return this.getFeeForRejectFundsRequest(params.payerFioAddress)
+      case 'getFeeForTransferFioAddress':
+        return this.getFeeForTransferFioAddress(params.fioAddress)
+      case 'getFeeForTransferFioDomain':
+        return this.getFeeForTransferFioDomain(params.fioAddress)
       case 'getFeeForAddPublicAddress':
         return this.getFeeForAddPublicAddress(params.fioAddress)
       case 'getFeeForRemovePublicAddresses':
