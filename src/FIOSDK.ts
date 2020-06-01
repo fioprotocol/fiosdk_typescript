@@ -917,7 +917,7 @@ export class FIOSDK {
    *
    * @param fioAddress FIO Address incurring the fee and owned by signer.
    */
-  public getFeeForTranferFioAddress(fioAddress: string): Promise<FioFeeResponse> {
+  public getFeeForTransferFioAddress(fioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.transferFioAddress, fioAddress)
   }
 
@@ -926,7 +926,7 @@ export class FIOSDK {
    *
    * @param fioAddress FIO Address incurring the fee and owned by signer.
    */
-  public getFeeForTranferFioDomain(fioAddress: string): Promise<FioFeeResponse> {
+  public getFeeForTransferFioDomain(fioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.transferFioDomain, fioAddress)
   }
 
