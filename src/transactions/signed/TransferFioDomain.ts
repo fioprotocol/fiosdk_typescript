@@ -18,7 +18,7 @@ export class TransferFioDomain extends SignedTransaction {
         this.maxFee = maxFee
         this.technologyProviderId = technologyProviderId
 
-        this.validationData = { fioAddress, tpid: technologyProviderId || null }
+        this.validationData = { fioDomain, tpid: technologyProviderId || null }
         this.validationRules = validationRules.registerFioDomain
     }
 
