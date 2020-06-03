@@ -217,6 +217,7 @@ describe('Testing generic actions', () => {
 
     expect(result).to.have.all.keys('balance','available')
     expect(result.balance).to.be.a('number')
+    expect(result.available).to.be.a('number')
   })
 
   it(`Register fio domain`, async () => {
@@ -509,6 +510,7 @@ describe('Testing generic actions', () => {
 
     expect(result).to.have.all.keys('balance','available')
     expect(result.balance).to.be.a('number')
+    expect(result.available).to.be.a('number')
   })
 
   it(`getFioNames`, async () => {
@@ -776,7 +778,7 @@ describe('Transfer locked tokens', () => {
       let pubkey =  FIOSDK.derivedPublicKey(privKey.fioKey)
       const result = await fioSdk.genericAction('transferLockedTokens', {
         payeePublicKey: pubkey.publicKey,
-        canVote: 0,
+        canVote: false,
         periods: [
           {
             duration: 120,

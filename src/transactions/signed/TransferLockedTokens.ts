@@ -14,10 +14,10 @@ export class TransferLockedTokens extends SignedTransaction {
   public maxFee: number
   public technologyProviderId: string
 
-  constructor(payeePublicKey: string, canVote: number, periods: LockPeriod[], amount: number, maxFee: number, technologyProviderId: string = '') {
+  constructor(payeePublicKey: string, canVote: boolean, periods: LockPeriod[], amount: number, maxFee: number, technologyProviderId: string = '') {
     super()
     this.payeePublicKey = payeePublicKey
-    this.canVote = canVote
+    this.canVote = canVote ? 1 : 0
     this.periods = periods
     this.amount = amount
     this.maxFee = maxFee

@@ -552,7 +552,7 @@ export class FIOSDK {
    */
   public transferLockedTokens(
       payeePublicKey: string,
-      canVote: number,
+      canVote: boolean,
       periods: LockPeriod[],
       amount: number,
       maxFee: number,
