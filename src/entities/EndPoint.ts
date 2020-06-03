@@ -8,6 +8,7 @@ export enum EndPoint {
   transferFioDomain = 'transfer_fio_domain',
   addPubAddress = 'add_pub_address',
   removePubAddress = 'remove_pub_address',
+  transferLockedTokens = 'transfer_locked_tokens',
   removeAllPubAddresses = 'remove_all_pub_addresses',
   setFioDomainPublic = 'set_fio_domain_public',
   rejectFundsRequest = 'reject_funds_request',
