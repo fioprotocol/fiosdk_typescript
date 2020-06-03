@@ -232,8 +232,9 @@ describe('Testing generic actions', () => {
 
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance','available')
     expect(result.balance).to.be.a('number')
+    expect(result.available).to.be.a('number')
   })
 
   it(`Register fio domain`, async () => {
@@ -517,8 +518,9 @@ describe('Testing generic actions', () => {
       fioPublicKey: publicKey2
     })
 
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance','available')
     expect(result.balance).to.be.a('number')
+    expect(result.available).to.be.a('number')
   })
 
   it(`getFioNames`, async () => {
@@ -766,6 +768,49 @@ describe('Transfer tokens', () => {
     expect(fundsAmount).to.equal(fioBalanceAfter - fioBalance)
   })
 })
+
+describe('Transfer locked tokens', () => {
+  const fundsAmount = FIOSDK.SUFUnit
+  let fioBalance = 0
+  let fioBalanceAfter = 0
+
+  it(`Check balance before transfer`, async () => {
+    const result = await fioSdk2.genericAction('getFioBalance', {})
+
+    fioBalance = result.balance
+  })
+
+  it(`Transfer locked tokens`, async () => {
+    try {
+      var mnem = FIOSDK.getMnemonic()
+      var privKey = await FIOSDK.createPrivateKeyMnemonic(mnem)
+      let pubkey =  FIOSDK.derivedPublicKey(privKey.fioKey)
+      const result = await fioSdk.genericAction('transferLockedTokens', {
+        payeePublicKey: pubkey.publicKey,
+        canVote: false,
+        periods: [
+          {
+            duration: 120,
+            percent: 50,
+          },
+          {
+            duration: 240,
+            percent: 50,
+          }
+        ],
+        amount: fundsAmount,
+        maxFee: defaultFee,
+        tpid: '',
+      })
+
+
+      expect(result).to.have.all.keys('status', 'fee_collected')
+      expect(result.status).to.be.a('string')
+      expect(result.fee_collected).to.be.a('number')
+    }catch (e) {
+      console.log(e);
+    }
+  })
 
 describe('Record obt data, check', () => {
   const obtId = generateObtId()
