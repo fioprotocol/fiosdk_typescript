@@ -439,11 +439,6 @@ describe('Testing generic actions', () => {
           chain_code: ethChainCode,
           token_code: ethTokenCode,
           public_address: 'xxxxxxyyyyyyzzzzzz1',
-        },
-        {
-          chain_code: fioChainCode,
-          token_code: fioTokenCode,
-          public_address: publicKey,
         }
       ],
       maxFee: defaultFee,
