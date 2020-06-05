@@ -212,6 +212,9 @@ describe('Testing generic actions', () => {
     const tokenCodeIsValid = FIOSDK.isTokenCodeValid('FIO')
     expect(tokenCodeIsValid).to.equal(true)
 
+    const singleDigitFioAddressIsValid = FIOSDK.isFioAddressValid('f@2')
+    expect(singleDigitFioAddressIsValid).to.equal(true)
+
     const fioAddressIsValid = FIOSDK.isFioAddressValid(newFioAddress)
     expect(fioAddressIsValid).to.equal(true)
 
