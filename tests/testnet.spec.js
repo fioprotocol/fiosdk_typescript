@@ -659,6 +659,74 @@ describe('Request funds, approve and send', () => {
 
 })
 
+
+
+describe('Request funds, cancel funds request', () => {
+  const fundsAmount = 3
+  let requestId
+  const memo = 'testing fund request'
+
+  it(`requestFunds`, async () => {
+    const result = await fioSdk2.genericAction('requestFunds', {
+      payerFioAddress: testFioAddressName,
+      payeeFioAddress: testFioAddressName2,
+      payeePublicAddress: testFioAddressName2,
+      amount: fundsAmount,
+      chainCode: fioChainCode,
+      tokenCode: fioTokenCode,
+      memo,
+      maxFee: defaultFee,
+    })
+
+    requestId = result.fio_request_id
+    expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
+    expect(result.fio_request_id).to.be.a('number')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`cancel request`, async () => {
+    try{
+    const result = await fioSdk2.genericAction('cancelFundsRequest', {
+      fioRequestId: requestId,
+      maxFee: defaultFee,
+      tpid: ''
+    })
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+    } catch (e) {
+      console.log(e);
+    }
+  })
+
+
+  it(`getCancelledFioRequests`, async () => {
+    try{
+    await timeout(4000)
+    const result = await fioSdk2.genericAction('getCancelledFioRequests', {})
+    expect(result).to.have.all.keys('requests', 'more')
+    expect(result.requests).to.be.a('array')
+    expect(result.more).to.be.a('number')
+    const pendingReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
+    expect(pendingReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'time_stamp', 'content', 'status')
+    expect(pendingReq.fio_request_id).to.be.a('number')
+    expect(pendingReq.fio_request_id).to.equal(requestId)
+    expect(pendingReq.payer_fio_address).to.be.a('string')
+    expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
+    expect(pendingReq.payee_fio_address).to.be.a('string')
+    expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+  } catch (e) {
+    console.log(e);
+  }
+  })
+
+})
+
+
+
+
+
 describe('Request funds, reject', () => {
   const fundsAmount = 4
   let requestId

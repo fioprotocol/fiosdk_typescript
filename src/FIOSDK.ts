@@ -2,6 +2,7 @@ import { Fio } from '@fioprotocol/fiojs'
 import {
   AbiResponse,
   AddPublicAddressResponse,
+  CancelFundsRequestResponse,
   RemovePublicAddressesResponse,
   RemoveAllPublicAddressesResponse,
   TransferFioAddressResponse,
@@ -22,7 +23,7 @@ import {
   SentFioRequestResponse,
   SetFioDomainVisibilityResponse,
   TransferTokensResponse,
-  GetObtDataResponse,
+  GetObtDataResponse, CancelledFioRequestResponse,
 } from './entities/responses'
 import { EndPoint } from './entities/EndPoint'
 import { PublicAddress } from './entities/PublicAddress'
@@ -490,6 +491,27 @@ export class FIOSDK {
   }
 
   /**
+   * This call cancels the specified fio funds request..
+   *
+   * @param fioRequestID The id of the request.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public cancelFundsRequest(
+      fioRequestId: number,
+      maxFee: number,
+      technologyProviderId: string | null = null,
+  ): Promise<CancelFundsRequestResponse> {
+    const cancelFundsRequest = new SignedTransactions.CancelFundsRequest(
+        fioRequestId,
+        maxFee,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return cancelFundsRequest.execute(this.privateKey, this.publicKey)
+  }
+
+
+  /**
    * This call allows a any number of public addresses matching the blockchain code, the token code and the public address to be removed from the FIO Address.
    *
    * @param fioAddress FIO Address which will be mapped to public address.
@@ -785,6 +807,17 @@ export class FIOSDK {
   }
 
   /**
+   * Polls for any cancelled requests sent by public key associated with the FIO SDK instance.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   */
+  public getCancelledFioRequests(limit?: number, offset?: number): Promise<CancelledFioRequestResponse> {
+    const cancelledFioRequest = new queries.CancelledFioRequests(this.publicKey, limit, offset)
+    return cancelledFioRequest.execute(this.publicKey, this.privateKey)
+  }
+
+  /**
    * Returns a token public address for specified token code and FIO Address.
    *
    * @param fioAddress FIO Address for which the token public address is to be returned.
@@ -893,8 +926,16 @@ export class FIOSDK {
     return this.getFee(EndPoint.addPubAddress, fioAddress)
   }
 
+  /**
+   * Compute and return fee amount for specific call and specific user
+   *
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
+   */
+  public getFeeForCancelFundsRequest(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.cancelFundsRequest, fioAddress)
+  }
 
-/**
+  /**
    * Compute and return fee amount for specific call and specific user
    *
    * @param fioAddress FIO Address incurring the fee and owned by signer.
@@ -1050,6 +1091,12 @@ export class FIOSDK {
           params.maxFee,
           params.technologyProviderId,
         )
+      case 'cancelFundsRequest':
+        return this.cancelFundsRequest(
+            params.fioRequestId,
+            params.maxFee,
+            params.technologyProviderId,
+        )
       case 'removeAllPublicAddresses':
         return this.removeAllPublicAddresses(
             params.fioAddress,
@@ -1117,6 +1164,8 @@ export class FIOSDK {
         return this.getFioNames(params.fioPublicKey)
       case 'getPendingFioRequests':
         return this.getPendingFioRequests(params.limit, params.offset)
+      case 'getCancelledFioRequests':
+        return this.getCancelledFioRequests(params.limit, params.offset)
       case 'getSentFioRequests':
         return this.getSentFioRequests(params.limit, params.offset)
       case 'getPublicAddress':
@@ -1142,6 +1191,8 @@ export class FIOSDK {
         return this.getFeeForTransferFioDomain(params.fioAddress)
       case 'getFeeForAddPublicAddress':
         return this.getFeeForAddPublicAddress(params.fioAddress)
+      case 'getFeeForCancelFundsRequest':
+        return this.getFeeForCancelFundsRequest(params.fioAddress)
       case 'getFeeForRemovePublicAddresses':
         return this.getFeeForRemovePublicAddresses(params.fioAddress)
       case 'getFeeForRemoveAllPublicAddresses':
