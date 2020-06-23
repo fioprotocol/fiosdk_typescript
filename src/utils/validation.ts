@@ -60,6 +60,9 @@ export const validationRules = {
     fioAddress: allRules.fioAddress,
     tpid: allRules.tpid,
   },
+  cancelFundsRequestRules: {
+    tpid: allRules.tpid,
+  },
   registerFioAddress: {
     fioAddress: allRules.fioAddress,
     tpid: allRules.tpid,
