@@ -13,4 +13,5 @@ export enum EndPoint {
   rejectFundsRequest = 'reject_funds_request',
   recordObtData = 'record_obt_data',
   transferTokens = 'transfer_tokens_pub_key',
+  cancelFundsRequest = 'cancel_funds_request',
 }
