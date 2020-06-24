@@ -23,7 +23,7 @@ import {
   SentFioRequestResponse,
   SetFioDomainVisibilityResponse,
   TransferTokensResponse,
-  GetObtDataResponse, CancelledFioRequestResponse,
+  GetObtDataResponse, CancelledFioRequestResponse, FioAddressesResponse,
 } from './entities/responses'
 import { EndPoint } from './entities/EndPoint'
 import { PublicAddress } from './entities/PublicAddress'
@@ -785,6 +785,30 @@ export class FIOSDK {
   }
 
   /**
+   * Returns FIO Addresses  owned by this public key.
+   *
+   * @param fioPublicKey FIO public key of owner.
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   */
+  public getFioAddresses(fioPublicKey: string, limit?: number, offset?: number): Promise<FioAddressesResponse> {
+    const getNames = new queries.GetAddresses(fioPublicKey, limit, offset)
+    return getNames.execute(this.publicKey)
+  }
+
+  /**
+   * Returns FIO domains  owned by this public key.
+   *
+   * @param fioPublicKey FIO public key of owner.
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   */
+  public getFioDomains(fioPublicKey: string, limit?: number, offset?: number): Promise<FioAddressesResponse> {
+    const getNames = new queries.GetDomains(fioPublicKey, limit, offset)
+    return getNames.execute(this.publicKey)
+  }
+
+  /**
    * Polls for any pending requests sent to public key associated with the FIO SDK instance.
    *
    * @param limit Number of request to return. If omitted, all requests will be returned.
@@ -1162,6 +1186,10 @@ export class FIOSDK {
         }
       case 'getFioNames':
         return this.getFioNames(params.fioPublicKey)
+        case 'getFioDomains':
+            return this.getFioDomains(params.fioPublicKey, params.limit, params.offset)
+        case 'getFioAddresses':
+            return this.getFioAddresses(params.fioPublicKey, params.limit, params.offset)
       case 'getPendingFioRequests':
         return this.getPendingFioRequests(params.limit, params.offset)
       case 'getCancelledFioRequests':

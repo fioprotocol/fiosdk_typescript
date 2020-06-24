@@ -8,3 +8,6 @@ export { GetFee } from './GetFee'
 export { GetAbi } from './GetAbi'
 export { GetObtData } from './GetObtData'
 export { CancelledFioRequests } from './CancelledFioRequests'
+export { GetAddresses } from './GetAddresses'
+export { GetDomains } from './GetDomains'
+
