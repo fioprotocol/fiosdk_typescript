@@ -10,7 +10,7 @@ const fetchJson = async (uri, opts = {}) => {
 
 /**
  * Please set your private/public keys and existing fioAddresses
-
+ */
 let privateKey = '',
   publicKey = '',
   privateKey2 = '',
@@ -18,22 +18,7 @@ let privateKey = '',
   testFioAddressName = '',
   testFioAddressName2 = ''
 
-const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'*/
-
-/**
- * Please set your private/public keys and existing fioAddresses
- */
-let privateKey = '5JyDHxvrChxEgwA3fXTqcxGBuyTrehZpcotDaqTkaYr22QmDmAj',
-    publicKey = 'FIO5kMPnfQw6S3eFqMwTMebYghZAfJjeur8VpvvaaFQnPRSoLxcde',
-    //lsky4rocbmim
-    privateKey2 = '5JTWpfi7Bmk5G3NVcKCf4cCMPBdU8BVs4Foz5D7mVxN6eAAQMBV',
-    publicKey2 = 'FIO6F3HWaXJYX4KNHJ5hbj16XSTZinaSdMA7NhVXvCzinkBjxQRT3',
-    //mvjnyjwgkx2r
-    testFioAddressName = 'eddie@fiotestnet',
-    testFioAddressName2 = 'reddy@fiotestnet'
-
-const baseUrl = 'http://localhost:8889/v1/'
-
+const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
