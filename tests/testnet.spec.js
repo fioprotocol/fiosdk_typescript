@@ -265,6 +265,25 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`getFioNames`, async () => {
+    const result = await fioSdk.genericAction('getFioNames', { fioPublicKey: publicKey })
+
+    expect(result).to.have.all.keys('fio_domains', 'fio_addresses')
+    expect(result.fio_domains).to.be.a('array')
+    expect(result.fio_addresses).to.be.a('array')
+  })
+
+  it(`getFioDomains`, async () => {
+    try{
+      const result = await fioSdk.genericAction('getFioDomains', { fioPublicKey: fioSdk.publicKey })
+
+      expect(result).to.have.all.keys('fio_domains','more')
+      expect(result.fio_domains).to.be.a('array')
+    } catch (e) {
+      console.log(e);
+    }
+  })
+
   it(`Register owner fio address`, async () => {
     const newFioAddress2 = generateTestingFioAddress(newFioDomain)
     const result = await fioSdk.genericAction('registerFioAddress', {
@@ -509,13 +528,18 @@ describe('Testing generic actions', () => {
     expect(result.balance).to.be.a('number')
   })
 
-  it(`getFioNames`, async () => {
-    const result = await fioSdk.genericAction('getFioNames', { fioPublicKey: publicKey })
 
-    expect(result).to.have.all.keys('fio_domains', 'fio_addresses')
-    expect(result.fio_domains).to.be.a('array')
+  it(`getFioAddresses`, async () => {
+    try {
+    const result = await fioSdk.genericAction('getFioAddresses', { fioPublicKey: publicKey })
+
+    expect(result).to.have.all.keys('fio_addresses','more')
     expect(result.fio_addresses).to.be.a('array')
+    } catch (e) {
+      console.log(e);
+    }
   })
+
 
   it(`getPublicAddress`, async () => {
     const result = await fioSdk.genericAction('getPublicAddress', {

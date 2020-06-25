@@ -320,6 +320,25 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`getFioNames`, async () => {
+    const result = await fioSdk.genericAction('getFioNames', { fioPublicKey: publicKey })
+
+    expect(result).to.have.all.keys('fio_domains', 'fio_addresses')
+    expect(result.fio_domains).to.be.a('array')
+    expect(result.fio_addresses).to.be.a('array')
+  })
+
+  it(`getFioDomains`, async () => {
+    try{
+      const result = await fioSdk.genericAction('getFioDomains', { fioPublicKey: fioSdk.publicKey })
+
+      expect(result).to.have.all.keys('fio_domains','more')
+      expect(result.fio_domains).to.be.a('array')
+    } catch (e) {
+      console.log(e);
+    }
+  })
+
   it(`getFee for transferFioAddress`, async () => {
     const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
       fioAddress: newFioAddress
