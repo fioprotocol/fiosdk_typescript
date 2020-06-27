@@ -3,7 +3,9 @@ import {LockPeriod} from './entities/LockPeriod'
 import {
   AbiResponse,
   AddPublicAddressResponse,
+  CancelFundsRequestResponse,
   TransferLockedTokensResponse,
+  LocksResponse,
   RemovePublicAddressesResponse,
   RemoveAllPublicAddressesResponse,
   TransferFioAddressResponse,
@@ -788,7 +790,18 @@ export class FIOSDK {
     return getFioBalance.execute(this.publicKey)
   }
 
-  /**
+    /**
+     * Retrieves info on locks for this pub key
+     *
+     * @param fioPublicKey FIO public key.
+     */
+    public getLocks(fioPublicKey: string): Promise<LocksResponse> {
+        const getLocks = new queries.GetLocks(fioPublicKey)
+        return getLocks.execute(this.publicKey)
+    }
+
+
+    /**
    * Returns FIO Addresses and FIO Domains owned by this public key.
    *
    * @param fioPublicKey FIO public key of owner.
@@ -1167,6 +1180,8 @@ export class FIOSDK {
         } else {
           return this.getFioBalance()
         }
+      case 'getLocks':
+          return this.getLocks(params.fioPublicKey)
       case 'getFioNames':
         return this.getFioNames(params.fioPublicKey)
       case 'getPendingFioRequests':
