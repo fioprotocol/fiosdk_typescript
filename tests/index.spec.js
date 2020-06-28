@@ -235,7 +235,7 @@ describe('Testing generic actions', () => {
 
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance', 'available')
     expect(result.balance).to.be.a('number')
   })
 
@@ -539,7 +539,7 @@ describe('Testing generic actions', () => {
       fioPublicKey: publicKey2
     })
 
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance', 'available')
     expect(result.balance).to.be.a('number')
   })
 
@@ -573,6 +573,58 @@ describe('Testing generic actions', () => {
     const result = await fioSdk.genericAction('getMultiplier', {})
 
     expect(result).to.be.a('number')
+  })
+
+})
+
+describe('Transfer locked tokens', () => {
+  const fundsAmount = FIOSDK.SUFUnit
+  let privKey, pubkey, lockSdk
+
+  it(`Transfer locked tokens`, async () => {
+    try {
+      var mnem = FIOSDK.getMnemonic()
+      privKey = await FIOSDK.createPrivateKeyMnemonic(mnem)
+      pubKey =  FIOSDK.derivedPublicKey(privKey.fioKey)
+      const result = await fioSdk.genericAction('transferLockedTokens', {
+        payeePublicKey: pubKey.publicKey,
+        canVote: false,
+        periods: [
+          {
+            duration: 120,
+            percent: 50,
+          },
+          {
+            duration: 240,
+            percent: 50,
+          }
+        ],
+        amount: fundsAmount,
+        maxFee: defaultFee,
+        tpid: '',
+      })
+
+
+      expect(result).to.have.all.keys('status', 'fee_collected')
+      expect(result.status).to.be.a('string')
+      expect(result.fee_collected).to.be.a('number')
+    }catch (e) {
+      console.log(e);
+    }
+  })
+
+  it(`Get locks`, async () => {
+    lockSdk = new FIOSDK(
+        privKey,
+        pubKey,
+        baseUrl,
+        fetchJson
+    )
+
+    const result = await lockSdk.genericAction('getLocks', {fioPublicKey:pubKey.publicKey})
+
+    console.log(result)
+    fioBalance = result.balance
   })
 
 })
