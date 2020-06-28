@@ -5,6 +5,7 @@ import {
   AddPublicAddressResponse,
   CancelFundsRequestResponse,
   TransferLockedTokensResponse,
+  AccountResponse,
   LocksResponse,
   RemovePublicAddressesResponse,
   RemoveAllPublicAddressesResponse,
@@ -37,6 +38,7 @@ import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
 import { validate, allRules } from './utils/validation'
 import { ValidationError } from './entities/ValidationError'
+import { accountHash } from '@fioprotocol/fiojs/dist/AccountName'
 
 /**
  * @ignore
@@ -100,6 +102,17 @@ export class FIOSDK {
     return { publicKey }
   }
 
+  /**
+   * hash a pub key
+   *
+   * @param fiopubkey FIO private key.
+   *
+   * @returns FIO account derived from pub key.
+   */
+  public static accountHash(fiopubkey: string) {
+    const accountnm = accountHash(fiopubkey)
+    return { accountnm }
+  }
   /**
    * Is the Chain Code Valid?
    *
@@ -800,6 +813,16 @@ export class FIOSDK {
     return getLocks.execute(this.publicKey)
   }
 
+  /*
+   * Retrieves info on account for this actor
+   *
+   * @param account FIO account.
+   */
+  public getAccount(actor: string): Promise<AccountResponse> {
+    const getAccount = new queries.GetAccount(actor)
+    return getAccount.execute(this.publicKey)
+  }
+
   /**
    * Checks if a FIO Address or FIO Domain is available for registration.
    *
@@ -1093,6 +1116,8 @@ export class FIOSDK {
     switch (action) {
       case 'getFioPublicKey':
         return this.getFioPublicKey()
+      case 'getAccount':
+        return this.getAccount(params.account)
       case 'registerFioAddress':
         if (params.ownerPublicKey) {
           return this.registerOwnerFioAddress(

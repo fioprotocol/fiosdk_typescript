@@ -1,17 +1,17 @@
 import { Query } from './Query'
-import { LocksResponse } from '../../entities/LocksResponse'
+import { AccountResponse } from '../../entities/AccountResponse'
 
-export class GetLocks extends Query<LocksResponse> {
-  public ENDPOINT: string = 'chain/get_locks'
-  public keyToUse: string
+export class GetAccount extends Query<AccountResponse> {
+  public ENDPOINT: string = 'chain/get_account'
+  public accountToUse: string
 
-  constructor(fioPublicKey: string) {
+  constructor(actor: string) {
     super()
-    this.keyToUse = fioPublicKey
+    this.accountToUse = actor
   }
 
   public getData() {
-    return { fio_public_key: this.keyToUse }
+    return { account_name: this.accountToUse }
   }
 
 }

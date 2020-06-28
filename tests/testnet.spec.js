@@ -1,6 +1,10 @@
+
 require('mocha')
 const { expect } = require('chai')
 const { FIOSDK } = require('../lib/FIOSDK')
+
+const { Ecc } = require('@fioprotocol/fiojs')
+
 
 fetch = require('node-fetch')
 
@@ -866,7 +870,7 @@ describe('Transfer tokens', () => {
 
 describe('Transfer locked tokens', () => {
   const fundsAmount = FIOSDK.SUFUnit
-  let privKey, pubkey, lockSdk
+  let privKey, pubKey, lockSdk
 
   it(`Transfer locked tokens`, async () => {
     try {
@@ -913,6 +917,11 @@ describe('Transfer locked tokens', () => {
     expect(result).to.have.all.keys('lock_amount', 'remaining_lock_amount',
         'time_stamp','payouts_performed','can_vote','unlock_periods')
 
+  })
+
+  it(`Get account`, async () => {
+      let accountnm = await FIOSDK.accountHash(lockSdk.publicKey.publicKey)
+      const result = await lockSdk.genericAction('getAccount', {account:accountnm.accountnm})
   })
 
 })
