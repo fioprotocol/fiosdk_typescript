@@ -10,7 +10,7 @@ const fetchJson = async (uri, opts = {}) => {
 
 /**
  * Please set your private/public keys and existing fioAddresses
- */
+
 let privateKey = '',
   publicKey = '',
   privateKey2 = '',
@@ -19,6 +19,23 @@ let privateKey = '',
   testFioAddressName2 = ''
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
+ */
+
+/**
+ * Please set your private/public keys and existing fioAddresses
+ */
+let privateKey = '5JyDHxvrChxEgwA3fXTqcxGBuyTrehZpcotDaqTkaYr22QmDmAj',
+    publicKey = 'FIO5kMPnfQw6S3eFqMwTMebYghZAfJjeur8VpvvaaFQnPRSoLxcde',
+    //lsky4rocbmim
+    privateKey2 = '5JTWpfi7Bmk5G3NVcKCf4cCMPBdU8BVs4Foz5D7mVxN6eAAQMBV',
+    publicKey2 = 'FIO6F3HWaXJYX4KNHJ5hbj16XSTZinaSdMA7NhVXvCzinkBjxQRT3',
+    //mvjnyjwgkx2r
+    testFioAddressName = 'eddie@fiotestnet',
+    testFioAddressName2 = 'reddy@fiotestnet'
+
+const baseUrl = 'http://localhost:8889/v1/'
+
+
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
@@ -218,7 +235,7 @@ describe('Testing generic actions', () => {
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
 
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance','available')
     expect(result.balance).to.be.a('number')
   })
 
@@ -524,7 +541,7 @@ describe('Testing generic actions', () => {
       fioPublicKey: publicKey2
     })
 
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance','available')
     expect(result.balance).to.be.a('number')
   })
 
@@ -845,6 +862,58 @@ describe('Transfer tokens', () => {
     fioBalanceAfter = result.balance
     expect(fundsAmount).to.equal(fioBalanceAfter - fioBalance)
   })
+})
+
+describe('Transfer locked tokens', () => {
+  const fundsAmount = FIOSDK.SUFUnit
+  let privKey, pubkey, lockSdk
+
+  it(`Transfer locked tokens`, async () => {
+    try {
+      var mnem = FIOSDK.getMnemonic()
+      privKey = await FIOSDK.createPrivateKeyMnemonic(mnem)
+      pubKey =  FIOSDK.derivedPublicKey(privKey.fioKey)
+      const result = await fioSdk.genericAction('transferLockedTokens', {
+        payeePublicKey: pubKey.publicKey,
+        canVote: false,
+        periods: [
+          {
+            duration: 120,
+            percent: 50,
+          },
+          {
+            duration: 240,
+            percent: 50,
+          }
+        ],
+        amount: fundsAmount,
+        maxFee: defaultFee,
+        tpid: '',
+      })
+
+
+      expect(result).to.have.all.keys('status', 'fee_collected')
+      expect(result.status).to.be.a('string')
+      expect(result.fee_collected).to.be.a('number')
+    }catch (e) {
+      console.log(e);
+    }
+  })
+
+  it(`Get locks`, async () => {
+    lockSdk = new FIOSDK(
+        privKey,
+        pubKey,
+        baseUrl,
+        fetchJson
+    )
+
+    const result = await lockSdk.genericAction('getLocks', {fioPublicKey:pubKey.publicKey})
+
+    console.log(result)
+    fioBalance = result.balance
+  })
+
 })
 
 describe('Record obt data, check', () => {
