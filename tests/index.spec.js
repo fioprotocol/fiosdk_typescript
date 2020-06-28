@@ -623,8 +623,9 @@ describe('Transfer locked tokens', () => {
 
     const result = await lockSdk.genericAction('getLocks', {fioPublicKey:pubKey.publicKey})
 
-    console.log(result)
-    fioBalance = result.balance
+    expect(result).to.have.all.keys('lock_amount', 'remaining_lock_amount',
+        'time_stamp','payouts_performed','can_vote','unlock_periods')
+
   })
 
 })
