@@ -5,6 +5,7 @@ import {
   CancelFundsRequestResponse,
   RemovePublicAddressesResponse,
   RemoveAllPublicAddressesResponse,
+  BurnFioAddressResponse,
   TransferFioAddressResponse,
   TransferFioDomainResponse,
   AvailabilityResponse,
@@ -372,6 +373,26 @@ export class FIOSDK {
     )
     return registerFioDomain.execute(this.privateKey, this.publicKey)
   }
+
+    /**
+     * Burns a FIO Address on the FIO blockchain.
+     *
+     * @param fioAddress FIO Address to burn. The owner will be the public key associated with the FIO SDK instance.
+     * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+     * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+     */
+    public burnFioAddress(
+        fioAddress: string,
+        maxFee: number,
+        technologyProviderId: string | null = null,
+    ): Promise<BurnFioAddressResponse> {
+        const burnFioAddress = new SignedTransactions.BurnFioAddress(
+            fioAddress,
+            maxFee,
+            this.getTechnologyProviderId(technologyProviderId),
+        )
+        return burnFioAddress.execute(this.privateKey, this.publicKey)
+    }
 
   /**
    * Transfers a FIO Domain on the FIO blockchain.
@@ -977,6 +998,15 @@ export class FIOSDK {
     return this.getFee(EndPoint.removeAllPubAddresses, fioAddress)
   }
 
+    /**
+     * Compute and return fee amount for specific call and specific user
+     *
+     * @param fioAddress FIO Address incurring the fee and owned by signer.
+     */
+    public getFeeForBurnFioAddress(fioAddress: string): Promise<FioFeeResponse> {
+        return this.getFee(EndPoint.burnFioAddress, fioAddress)
+    }
+
   /**
    * Compute and return fee amount for specific call and specific user
    *
@@ -1074,6 +1104,12 @@ export class FIOSDK {
         )
       case 'renewFioAddress':
         return this.renewFioAddress(
+          params.fioAddress,
+          params.maxFee,
+          params.technologyProviderId,
+        )
+      case 'burnFioAddress':
+        return this.burnFioAddress(
           params.fioAddress,
           params.maxFee,
           params.technologyProviderId,
@@ -1213,6 +1249,8 @@ export class FIOSDK {
         return this.getFeeForNewFundsRequest(params.payeeFioAddress)
       case 'getFeeForRejectFundsRequest':
         return this.getFeeForRejectFundsRequest(params.payerFioAddress)
+      case 'getFeeForBurnFioAddress':
+        return this.getFeeForBurnFioAddress(params.fioAddress)
       case 'getFeeForTransferFioAddress':
         return this.getFeeForTransferFioAddress(params.fioAddress)
       case 'getFeeForTransferFioDomain':
