@@ -565,6 +565,17 @@ describe('Testing generic actions', () => {
     expect(result).to.be.a('number')
   })
 
+  it(`Burn fio address`, async () => {
+    const result = await fioSdk.genericAction('burnFioAddress', {
+        fioAddress: newFioAddress,
+        maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
 })
 
 describe('Request funds, approve and send', () => {
@@ -1094,14 +1105,4 @@ describe('Encrypting/Decrypting', () => {
     expect(result.fee).to.be.a('number')
   })
 
-  it(`Burn fio address`, async () => {
-    const result = await fioSdk.genericAction('burnFioAddress', {
-        fioAddress: newFioAddress,
-        maxFee: defaultFee
-    })
-
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
 })
