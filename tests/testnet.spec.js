@@ -565,6 +565,15 @@ describe('Testing generic actions', () => {
     expect(result).to.be.a('number')
   })
 
+  it(`getFee for BurnFioAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForBurnFioAddress', {
+        fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
   it(`Burn fio address`, async () => {
     const result = await fioSdk.genericAction('burnFioAddress', {
         fioAddress: newFioAddress,
@@ -1090,15 +1099,6 @@ describe('Encrypting/Decrypting', () => {
     const uncipherContentA = fioSDKBob.transactions.getUnCipherContent(RECORD_OBT_DATA_CONTENT, cipherContent, bobPrivateKey, alicePublicKey)
     expect(uncipherContentA.payee_public_address).to.equal(bobPublicKey)
 
-  })
-
-  it(`getFee for BurnFioAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForBurnFioAddress', {
-        fioAddress: newFioAddress
-    })
-
-    expect(result).to.have.all.keys('fee')
-    expect(result.fee).to.be.a('number')
   })
 
 })
