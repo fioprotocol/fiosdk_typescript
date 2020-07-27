@@ -367,6 +367,30 @@ export class FIOSDK {
   ): Promise<RegisterFioDomainResponse> {
     const registerFioDomain = new SignedTransactions.RegisterFioDomain(
       fioDomain,
+      null,
+      maxFee,
+      this.getTechnologyProviderId(technologyProviderId),
+    )
+    return registerFioDomain.execute(this.privateKey, this.publicKey)
+  }
+
+  /**
+   * Registers a FIO Domain on behalf of the owner FIO Public key parameter. Owner FIO Public key owns the FIO domain.
+   *
+   * @param fioDomain FIO Domain to register. The owner will be the public key associated with the FIO SDK instance.
+   * @param ownerPublicKey Owner FIO Public Key.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public registerOwnerFioDomain(
+    fioDomain: string,
+    ownerPublicKey: string,
+    maxFee: number,
+    technologyProviderId: string | null = null,
+  ): Promise<RegisterFioDomainResponse> {
+    const registerFioDomain = new SignedTransactions.RegisterFioDomain(
+      fioDomain,
+      ownerPublicKey,
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
@@ -1063,6 +1087,13 @@ export class FIOSDK {
       case 'registerFioDomain':
         return this.registerFioDomain(
           params.fioDomain,
+          params.maxFee,
+          params.technologyProviderId,
+        )
+      case 'registerOwnerFioDomain':
+        return this.registerOwnerFioDomain(
+          params.fioDomain,
+          params.ownerPublicKey,
           params.maxFee,
           params.technologyProviderId,
         )
