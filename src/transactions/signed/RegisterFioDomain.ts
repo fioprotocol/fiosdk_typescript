@@ -8,12 +8,14 @@ export class RegisterFioDomain extends SignedTransaction {
   ACTION: string = 'regdomain'
   ACCOUNT: string = Constants.defaultAccount
   fioDomain: string
+  ownerPublicKey: string
   maxFee: number
   technologyProviderId: string
 
-  constructor(fioDomain: string, maxFee: number, technologyProviderId: string = '') {
+  constructor(fioDomain: string, ownerPublicKey: string | null, maxFee: number, technologyProviderId: string = '') {
     super()
     this.fioDomain = fioDomain
+    this.ownerPublicKey = ownerPublicKey || ''
     this.maxFee = maxFee
     this.technologyProviderId = technologyProviderId
     this.validationData = { fioDomain: fioDomain, tpid: technologyProviderId || null }
@@ -24,7 +26,7 @@ export class RegisterFioDomain extends SignedTransaction {
     let actor = this.getActor()
     let data = {
       fio_domain: this.fioDomain,
-      owner_fio_public_key: this.publicKey,
+      owner_fio_public_key: this.ownerPublicKey || this.publicKey,
       max_fee: this.maxFee,
       tpid: this.technologyProviderId,
       actor: actor
