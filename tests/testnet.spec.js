@@ -585,14 +585,18 @@ describe('Request funds, approve and send', () => {
     const result = await fioSdk2.genericAction('requestFunds', {
       payerFioAddress: testFioAddressName,
       payeeFioAddress: testFioAddressName2,
-      payeePublicAddress: testFioAddressName2,
+      payeeTokenPublicAddress: publicKey2,
       amount: fundsAmount,
       chainCode: fioChainCode,
       tokenCode: fioTokenCode,
-      memo,
+      memo: '',
       maxFee: defaultFee,
+      payerFioPublicKey: publicKey,
+      technologyProviderId: '',
+      hash: '',
+      offLineUrl: ''
     })
-
+    //console.log('requestFunds: ', result)
     requestId = result.fio_request_id
     expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
