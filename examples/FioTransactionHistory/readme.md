@@ -1,22 +1,23 @@
-# FIO History Node v1 process transactions
+# Processesing transactions from FIO History v1 Node
 
-Here you can find the algorithm explanation for the transactions processing from the FIO History Node v1. As a result you would have a list of transactions that could be displayed on your client side.
+The following presents an example of how to process transactions from a FIO History v1 Node. As a result you would have a list of transactions that could be displayed on your client side.
 
-In this guide we use js snippets in examples.
+A list of API nodes running FIO History v1 can be found at `https://github.com/fioprotocol/fio.mainnet`
 
 ## Get last transaction
 
-The idea to process transactions from newest to oldest, so firstly we need to know the last sequence id to be able to paginate from the newest transaction.
+You want to process transactions from newest to oldest transaction. So, first you need to find the most recent action sequence id so you can paginate from the newest transaction.
 
-We can do it using such params for the `https://fio.greymass.com/v1/history/get_actions` endpoint:
+The following returns transactions for a FIO account:
 ```
+https://fio.greymass.com/v1/history/get_actions
 {
-  account_name: 'yout_account_name',
+  account_name: 'your_account_name',
   pos: -1,
   offset: -1
 }
 ```
-where `pos` is the sequence number from which you would start and `offset` is additional amount of transactions you want receive.
+where `pos` is the starting action sequence number and `offset` is the number of transactions you want receive.
 
 Here are the validations for the response and action object
 ```
@@ -56,21 +57,19 @@ export const asHistoryResponse = asObject({
 })
 ```
 
-We need to check response and save `lastSeqNumber`:
+Check response and save `lastSeqNumber`:
 ```
   asHistoryResponse(res)
   if (res.actions.length) {
      lastActionSeqNumber = res.actions[0].account_action_seq
   }
 ```
-If we do not have any actions in response, we can exit the algorithm
+If there are no actions in the response, exit the algorithm.
 
 ## Loop through the results
-We need to save globally the `highestTxHeight` - the highest block height of processed transaction. We use it to not process transactions which have been already processed.
+It is recommended to save previously processed transactions in a local file or database. To keep track of previously processed transactions, save the `highestTxHeight` - the highest block height of the most recently processed transaction. This is used to avoid processing transactions which have previously been processed.
 
-Also, we might have all processed transactions saved somewhere in a database.
-
-You might go through the transactions in `while` loop decreasing `pos` value and have negative `offset`.
+Iterate through the transactions in `while` loop, decreasing `pos` value and using a negative `offset`.
 For example:
 ```
 const offset = 20
@@ -104,10 +103,9 @@ while (!finish) {
 }
 ```
 
-In request params we set offset to `-offset + 1` because history node would respond with an additional amount of items along with first one. So if you set offset param to `20`
-you would receive 21 items.
+In the request params, set the offset to `-offset + 1` because history node returns an additional amount of items along with first one. So if you set the offset param to `20` you will receive 21 items.
 
-In the response you can find action objects and process each. We need to go from last item in actions because history node respond with items sorted from oldest to newest.
+The next step is to process each action object. Process the actions starting with the last item since FIO v1 History returns actions sorted from oldest to newest.
 ```
 const newHighestTxHeight = highestTxHeight
 const { actions } = res
@@ -133,10 +131,9 @@ for (let i = actions.length - 1; i > -1; i--) {
 }
 ```
 
-## Process transaction
+## Process transactions
 
-Firstly, we can check if `block_num` is higher than `highestTxHeight`.
-Then we can check type(name) of the transactions. The types we are interested in are `trnsfiopubky` and `transfer`.
+To process transactions, first check if `block_num` is higher than `highestTxHeight`. Next, check the type(name) of the transactions. The types we are interested in are `trnsfiopubky` and `transfer`.
 
 ```
 processTransaction(action: FioHistoryNodeAction, actor: string): number {
@@ -155,10 +152,11 @@ processTransaction(action: FioHistoryNodeAction, actor: string): number {
 }
 ```
 
-The `trnsfiopubky` transactions show tokens movement after user sent tokens using `transfer_tokens_pub_key` endpoint. For single sent you can see several transactions with same `trx_id`. Also, such sent creates one `transfer` transaction for the fee which also has that `trx_id`. So in most cases for such sent you would see one `transfer` and three `trnsfiopubky` transactions.
-To create one in the end we need to skip `trnsfiopubky` that already processed and update with fee amount from `transfer` transaction.
+The `trnsfiopubky` transactions show tokens transferred using the `transfer_tokens_pub_key` endpoint. For a single transfer, you will see several transactions with same `trx_id`. In addition, there will also be one `transfer` transaction for the fee which has the same `trx_id`. So, in most cases for each FIO transfer you will see one `transfer` and three `trnsfiopubky` transactions.
 
-Here what we need to do when processing `trnsfiopubky` transaction:
+To capture the FIO transfer transaction, you will need to process data from `trnsfiopubky` and update the transaction data with the fee amount from the `transfer` transaction.
+
+An example of processing a `trnsfiopubky` transaction:
 ```
 const {
   act: { name: trxName, data }
@@ -236,7 +234,7 @@ where
 * `findTransaction` - method that search for existing processed transaction from db by `trx_id`
 * `saveTransaction` - method that add/update transaction to the db
 
-Here is an example for `transfer` transaction
+Here is an example for `transfer` transaction:
 ```
 const {
   act: { name: trxName, data }
@@ -319,9 +317,9 @@ where
 * `findTransaction` - method that search for existing processed transaction from db by `trx_id`
 * `saveTransaction` - method that add/update transaction to the db
 
-### Before finish
+### Saving highestTxHeight
 
-If we processed new transactions we need to update highestTxHeight:
+If you processed new transactions you need to update highestTxHeight:
 ```
 if (newHighestTxHeight > highestTxHeight) {
   highestTxHeight = newHighestTxHeight
@@ -330,5 +328,5 @@ if (newHighestTxHeight > highestTxHeight) {
 ```
 
 
-## Using several api urls
-If you want to use pool of history node api urls, and switch/change api url if one of them is not responding, you should start the algorithm from the beginning, because each history node could have their own sequence numbers.
+## Using different History nodes
+If you want to use a pool of history node api urls and switch the api url if one of the nodes is not responding, you should start the algorithm from the beginning, because each history node could have their own sequence numbers.
