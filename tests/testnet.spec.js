@@ -195,7 +195,7 @@ describe('Testing generic actions', () => {
 
     const singleDigitFioAddressIsValid = FIOSDK.isFioAddressValid('f@2')
     expect(singleDigitFioAddressIsValid).to.equal(true)
-    
+
     const fioAddressIsValid = FIOSDK.isFioAddressValid(newFioAddress)
     expect(fioAddressIsValid).to.equal(true)
 
@@ -563,6 +563,26 @@ describe('Testing generic actions', () => {
     const result = await fioSdk.genericAction('getMultiplier', {})
 
     expect(result).to.be.a('number')
+  })
+
+  it(`getFee for BurnFioAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForBurnFioAddress', {
+        fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Burn fio address`, async () => {
+    const result = await fioSdk.genericAction('burnFioAddress', {
+        fioAddress: newFioAddress,
+        maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
   })
 
 })

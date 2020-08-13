@@ -4,6 +4,7 @@ export enum EndPoint {
   registerFioDomain = 'register_fio_domain',
   renewFioDomain = 'renew_fio_domain',
   renewFioAddress = 'renew_fio_address',
+  burnFioAddress = 'burn_fio_address',
   transferFioAddress = 'transfer_fio_address',
   transferFioDomain = 'transfer_fio_domain',
   addPubAddress = 'add_pub_address',
