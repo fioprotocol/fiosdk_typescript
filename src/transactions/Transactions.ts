@@ -70,16 +70,16 @@ export class Transactions {
       chain = await this.getChainInfo()
     } catch (error) {
       console.error('chain:: ' + error)
-      const e: Error & { errorCode?: string } = new Error(`Error while fetching chain info`)
-      e.errorCode = '800'
+      const e: Error & { errorCode?: number } = new Error(`Error while fetching chain info`)
+      e.errorCode = 800
       throw e
     }
     try {
       block = await this.getBlock(chain)
     } catch (error) {
       console.error('block: ' + error)
-      const e: Error & { errorCode?: string } = new Error(`Error while fetching block`)
-      e.errorCode = '801'
+      const e: Error & { errorCode?: number } = new Error(`Error while fetching block`)
+      e.errorCode = 801
       throw e
     }
     transaction.ref_block_num = block.block_num & 0xFFFF
