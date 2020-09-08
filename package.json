@@ -16,11 +16,11 @@
     "scripts": {
         "test": "mocha -t 80000 tests/testnet.spec.js"
     },
-    "author": "Shawn@dapix.io",
+    "author": "",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/fioprotocol/fiosdk_typescript.git"
+        "url": "https://github.com/fioprotocol/fiosdk_typescript.git"
     },
     "devDependencies": {
         "@types/chai": "^4.2.4",
