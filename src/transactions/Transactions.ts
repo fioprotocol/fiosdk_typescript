@@ -65,8 +65,23 @@ export class Transactions {
   public async pushToServer(transaction: RawTransaction, endpoint: string, dryRun: boolean): Promise<any> {
     const privky: string[] = new Array<string>()
     privky.push(this.privateKey)
-    const chain = await this.getChainInfo().catch((error) => console.error('chain:: ' + error))
-    const block = await this.getBlock(chain).catch((error) => console.error('block: ' + error))
+    let chain, block
+    try {
+      chain = await this.getChainInfo()
+    } catch (error) {
+      console.error('chain:: ' + error)
+      const e: Error & { errorCode?: number } = new Error(`Error while fetching chain info`)
+      e.errorCode = 800
+      throw e
+    }
+    try {
+      block = await this.getBlock(chain)
+    } catch (error) {
+      console.error('block: ' + error)
+      const e: Error & { errorCode?: number } = new Error(`Error while fetching block`)
+      e.errorCode = 801
+      throw e
+    }
     transaction.ref_block_num = block.block_num & 0xFFFF
     transaction.ref_block_prefix = block.ref_block_prefix
     const expiration = new Date(chain.head_block_time + 'Z')
@@ -106,14 +121,24 @@ export class Transactions {
         body,
       }
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
-    if (!res.ok) {
-      const error: Error & { json?: Object, errorCode?: string } = new Error(`Error ${res.status} while fetching ${Transactions.baseUrl + endPoint}`)
-      error.json = await res.json()
-      error.errorCode = res.status
-      throw error
+    try {
+      const res = await Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
+      if (!res.ok) {
+        const error: Error & { json?: Object, errorCode?: string, requestParams?: { endPoint: string, body: string, fetchOptions?: any } } = new Error(`Error ${res.status} while fetching ${Transactions.baseUrl + endPoint}`)
+        try {
+          error.json = await res.json()
+        } catch (e) {
+          console.log(e);
+          error.json = {}
+        }
+        error.errorCode = res.status
+        throw error
+      }
+      return res.json()
+    } catch (e) {
+      e.requestParams = { endPoint, body, fetchOptions }
+      throw e
     }
-    return res.json()
   }
 
   public getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
