@@ -25,16 +25,16 @@ export abstract class SignedTransaction extends Transactions {
     rawaction.data = this.getData()
     rawTransaction.actions.push(rawaction)
     const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
-    return this.prepareResponse(result)
+    return SignedTransaction.prepareResponse(result)
   }
 
-  public prepareResponse(result: any): any {
+  public static prepareResponse(result: { processed: { action_traces: { receipt: { response: string }}[]} } | any): any {
     if (result.processed)
-      return this.parseProcessedResult(result.processed)
+      return SignedTransaction.parseProcessedResult(result.processed)
     return result
   }
 
-  public parseProcessedResult(processed: any) {
+  public static parseProcessedResult(processed: { action_traces: { receipt: { response: string }}[]}) {
     return JSON.parse(processed.action_traces[0].receipt.response)
   }
 

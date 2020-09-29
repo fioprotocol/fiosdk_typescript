@@ -1,6 +1,7 @@
 require('mocha')
 const { expect } = require('chai')
 const { FIOSDK } = require('../lib/FIOSDK')
+const { EndPoint } = require('../lib/entities/EndPoint')
 
 fetch = require('node-fetch')
 
@@ -473,7 +474,7 @@ describe('Testing generic actions', () => {
           token_code: ethTokenCode,
           public_address: 'xxxxxxyyyyyyzzzzzz',
         }
-      ]
+      ],
       maxFee: defaultFee,
       technologyProviderId: ''
     })
@@ -935,4 +936,26 @@ describe('Record obt data, check', () => {
     expect(obtData.payee_fio_address).to.equal(testFioAddressName2)
   })
 
+})
+
+describe('Check prepared transaction', () => {
+  it(`requestFunds prepared transaction`, async () => {
+    fioSdk2.setSignedTrxReturnOption(true)
+    const preparedTrx = await fioSdk2.genericAction('requestFunds', {
+      payerFioAddress: testFioAddressName,
+      payeeFioAddress: testFioAddressName2,
+      payeePublicAddress: testFioAddressName2,
+      amount: 200000,
+      chainCode: fioChainCode,
+      tokenCode: fioTokenCode,
+      memo: 'prepared transaction',
+      maxFee: defaultFee,
+    })
+    const result = await fioSdk2.executePreparedTrx(EndPoint.newFundsRequest, preparedTrx)
+    expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
+    expect(result.fio_request_id).to.be.a('number')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+    fioSdk2.setSignedTrxReturnOption(false)
+  })
 })
