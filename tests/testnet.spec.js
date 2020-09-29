@@ -297,6 +297,32 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`setFioDomainVisibility false`, async () => {
+    const result = await fioSdk.genericAction('setFioDomainVisibility', {
+      fioDomain: newFioDomain,
+      isPublic: false,
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`setFioDomainVisibility true`, async () => {
+    const result = await fioSdk.genericAction('setFioDomainVisibility', {
+      fioDomain: newFioDomain,
+      isPublic: true,
+      maxFee: defaultFee,
+      technologyProviderId: ''
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
   it(`getFee for transferFioAddress`, async () => {
     const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
       fioAddress: newFioAddress
@@ -471,33 +497,6 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       technologyProviderId: ''
     })
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
-
-
-  it(`setFioDomainVisibility false`, async () => {
-    const result = await fioSdk.genericAction('setFioDomainVisibility', {
-      fioDomain: newFioDomain,
-      isPublic: false,
-      maxFee: defaultFee,
-      technologyProviderId: ''
-    })
-
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
-
-  it(`setFioDomainVisibility true`, async () => {
-    const result = await fioSdk.genericAction('setFioDomainVisibility', {
-      fioDomain: newFioDomain,
-      isPublic: true,
-      maxFee: defaultFee,
-      technologyProviderId: ''
-    })
-
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
