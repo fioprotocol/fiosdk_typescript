@@ -324,27 +324,6 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
-  it(`getFee for transferFioAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
-      fioAddress: newFioAddress
-    })
-
-    expect(result).to.have.all.keys('fee')
-    expect(result.fee).to.be.a('number')
-  })
-
-  it(`Transfer fio address`, async () => {
-    const result = await fioSdk.genericAction('transferFioAddress', {
-      fioAddress: newFioAddress,
-      newOwnerKey: pubKeyForTransfer,
-      maxFee: defaultFee
-    })
-
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
-
   it(`getFee for transferFioDomain`, async () => {
     const result = await fioSdk.genericAction('getFeeForTransferFioDomain', {
       fioAddress: newFioAddress
@@ -563,26 +542,6 @@ describe('Testing generic actions', () => {
     const result = await fioSdk.genericAction('getMultiplier', {})
 
     expect(result).to.be.a('number')
-  })
-
-  it(`getFee for BurnFioAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForBurnFioAddress', {
-        fioAddress: newFioAddress
-    })
-
-    expect(result).to.have.all.keys('fee')
-    expect(result.fee).to.be.a('number')
-  })
-
-  it(`Burn fio address`, async () => {
-    const result = await fioSdk.genericAction('burnFioAddress', {
-        fioAddress: newFioAddress,
-        maxFee: defaultFee
-    })
-
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
   })
 
 })
