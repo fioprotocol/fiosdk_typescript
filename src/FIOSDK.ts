@@ -1,8 +1,12 @@
 import { Fio } from '@fioprotocol/fiojs'
+import {LockPeriod} from './entities/LockPeriod'
 import {
   AbiResponse,
   AddPublicAddressResponse,
   CancelFundsRequestResponse,
+  TransferLockedTokensResponse,
+  AccountResponse,
+  LocksResponse,
   RemovePublicAddressesResponse,
   RemoveAllPublicAddressesResponse,
   BurnFioAddressResponse,
@@ -36,6 +40,7 @@ import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
 import { validate, allRules } from './utils/validation'
 import { ValidationError } from './entities/ValidationError'
+import { accountHash } from '@fioprotocol/fiojs/dist/AccountName'
 
 /**
  * @ignore
@@ -92,6 +97,18 @@ export class FIOSDK {
   public static derivedPublicKey(fioPrivateKey: string) {
     const publicKey = Ecc.privateToPublic(fioPrivateKey)
     return { publicKey }
+  }
+
+  /**
+   * hash a pub key
+   *
+   * @param fiopubkey FIO private key.
+   *
+   * @returns FIO account derived from pub key.
+   */
+  public static accountHash(fiopubkey: string) {
+    const accountnm = accountHash(fiopubkey)
+    return { accountnm }
   }
 
   /**
@@ -608,6 +625,36 @@ export class FIOSDK {
     return removePublicAddresses.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
+  /**
+   * This call allows a user to transfer locked tokens to the specified fio public key
+   *
+   * @param payeePublicKey this is the fio public key for the user to receive locked tokens.
+   * @param canVote true if these locked tokens can be voted, false if these locked tokens are not to be voted.
+   * @param periods this is an array of lockperiods defining the duration and percent of each period, must be in time order.
+   * @param amount this is the amount in SUFs to be transfered.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public transferLockedTokens(
+      payeePublicKey: string,
+      canVote: boolean,
+      periods: LockPeriod[],
+      amount: number,
+      maxFee: number,
+      technologyProviderId: string | null = null,
+  ): Promise<TransferLockedTokensResponse> {
+    const transferLockedTokens = new SignedTransactions.TransferLockedTokens(
+        payeePublicKey,
+        canVote,
+        periods,
+        amount,
+        maxFee,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return transferLockedTokens.execute(this.privateKey, this.publicKey)
+  }
+
+
 
   /**
    * This call allows a user to remove all addresses from the specified FIO Address, all addresses except the FIO address will be removed.
@@ -829,6 +876,26 @@ export class FIOSDK {
   }
 
   /**
+   * Retrieves info on locks for this pub key
+   *
+   * @param fioPublicKey FIO public key.
+   */
+  public getLocks(fioPublicKey: string): Promise<LocksResponse> {
+    const getLocks = new queries.GetLocks(fioPublicKey)
+    return getLocks.execute(this.publicKey)
+  }
+
+  /*
+   * Retrieves info on account for this actor
+   *
+   * @param account FIO account.
+   */
+  public getAccount(actor: string): Promise<AccountResponse> {
+    const getAccount = new queries.GetAccount(actor)
+    return getAccount.execute(this.publicKey)
+  }
+
+  /**
    * Checks if a FIO Address or FIO Domain is available for registration.
    *
    * @param fioName FIO Address or FIO Domain to check.
@@ -968,6 +1035,16 @@ export class FIOSDK {
     )
     return transferTokens.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
+
+  /**
+   * Compute and return fee amount for specific call and specific user
+   *
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
+   */
+  public getFeeForTransferLockedTokens(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.transferLockedTokens, fioAddress)
+  }
+
 
   /**
    * Compute and return fee amount for specific call and specific user
@@ -1122,6 +1199,8 @@ export class FIOSDK {
     switch (action) {
       case 'getFioPublicKey':
         return this.getFioPublicKey()
+      case 'getAccount':
+        return this.getAccount(params.account)
       case 'registerFioAddress':
         if (params.ownerPublicKey) {
           return this.registerOwnerFioAddress(
@@ -1143,6 +1222,15 @@ export class FIOSDK {
           params.ownerPublicKey,
           params.maxFee,
           params.technologyProviderId,
+        )
+      case 'transferLockedTokens':
+        return this.transferLockedTokens(
+            params.payeePublicKey,
+            params.canVote,
+            params.periods,
+            params.amount,
+            params.maxFee,
+            params.technologyProviderId,
         )
       case 'registerFioDomain':
         return this.registerFioDomain(
@@ -1212,6 +1300,8 @@ export class FIOSDK {
           params.maxFee,
           params.technologyProviderId,
         )
+      case 'getLocks':
+        return this.getLocks(params.fioPublicKey)
       case 'cancelFundsRequest':
         return this.cancelFundsRequest(
             params.fioRequestId,
@@ -1250,6 +1340,8 @@ export class FIOSDK {
           params.hash,
           params.offLineUrl,
         )
+      case 'getFeeForTransferLockedTokens':
+        return this.getFeeForTransferLockedTokens(params.fioAddress)
       case 'getObtData':
         return this.getObtData(params.limit, params.offset, params.tokenCode)
       case 'rejectFundsRequest':
