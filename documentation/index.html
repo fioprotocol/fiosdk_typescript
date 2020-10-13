@@ -102,6 +102,25 @@ npm test (<span class="hljs-keyword">if</span> you would like <span class="hljs-
 				</a>
 				<p>Make sure to install typescript by running, this command in terminal:</p>
 				<pre><code>sudo npm <span class="hljs-keyword">install</span> -g typescript</code></pre>
+				<a href="#publishing-to-node-package-manager-npm" id="publishing-to-node-package-manager-npm" style="color: inherit; text-decoration: none;">
+					<h1>Publishing to Node Package Manager (npm)</h1>
+				</a>
+				<p>To publish to npm.  </p>
+				<ol>
+					<li><p>Update the version number, for this release. In &#39;package.json&#39;</p>
+					</li>
+					<li><p>If the fioJS library was updated in npm.  Also update the fioJS version number.  In &#39;package.json&#39;</p>
+					</li>
+					<li><p>Publish to npm:</p>
+						<pre><code> <span class="hljs-attr">cd</span> <span class="hljs-string">fiosdk_typescript</span>
+ <span class="hljs-attr">yarn</span>
+ <span class="hljs-attr">tsc</span>
+ <span class="hljs-attr">npm</span> <span class="hljs-string">test</span>
+ <span class="hljs-attr">npm</span> <span class="hljs-string">publish --access public</span></code></pre></li>
+				</ol>
+				<p>Further details:
+					<a href="http://npmjs.com/">http://npmjs.com/</a>
+				<a href="https://docs.npmjs.com/creating-and-publishing-scoped-public-packages">https://docs.npmjs.com/creating-and-publishing-scoped-public-packages</a></p>
 				<a href="#generating-documentation" id="generating-documentation" style="color: inherit; text-decoration: none;">
 					<h1>Generating Documentation</h1>
 				</a>

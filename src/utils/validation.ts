@@ -16,7 +16,7 @@ export const allRules = {
     type: String,
     length: { min: 3, max: 64 },
     matchParams: {
-      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+$)',
+      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
       opt: 'gim'
     }
   },
@@ -24,7 +24,7 @@ export const allRules = {
     type: String,
     length: { min: 3, max: 64 },
     matchParams: {
-      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+@[a-zA-Z0-9]{1}(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+$)',
+      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
       opt: 'gim'
     }
   },
@@ -58,6 +58,9 @@ export const allRules = {
 export const validationRules = {
   addPublicAddressRules: {
     fioAddress: allRules.fioAddress,
+    tpid: allRules.tpid,
+  },
+  cancelFundsRequestRules: {
     tpid: allRules.tpid,
   },
   registerFioAddress: {

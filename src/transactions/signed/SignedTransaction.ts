@@ -28,13 +28,17 @@ export abstract class SignedTransaction extends Transactions {
     return this.prepareResponse(result)
   }
 
-  public prepareResponse(result: any): any {
+  public prepareResponse(result: { processed: { action_traces: { receipt: { response: string }}[]} } | any): any {
+    return SignedTransaction.prepareResponse(result)
+  }
+
+  public static prepareResponse(result: { processed: { action_traces: { receipt: { response: string }}[]} } | any): any {
     if (result.processed)
-      return this.parseProcessedResult(result.processed)
+      return SignedTransaction.parseProcessedResult(result.processed)
     return result
   }
 
-  public parseProcessedResult(processed: any) {
+  public static parseProcessedResult(processed: { action_traces: { receipt: { response: string }}[]}) {
     return JSON.parse(processed.action_traces[0].receipt.response)
   }
 

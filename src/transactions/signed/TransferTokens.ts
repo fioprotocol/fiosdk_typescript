@@ -25,7 +25,7 @@ export class TransferTokens extends SignedTransaction {
   public prepareResponse(result: any): any {
     if (!result.processed) return result
 
-    const apiResponse = this.parseProcessedResult(result.processed)
+    const apiResponse = SignedTransaction.parseProcessedResult(result.processed)
     return {
       transaction_id: result.transaction_id,
       block_num: result.processed.block_num,
