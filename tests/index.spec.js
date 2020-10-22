@@ -9,7 +9,7 @@ const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
 }
 
-let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
+let privateKey, publicKey, privateKey2, publicKey2, testFioDomain, testFioAddressName, testFioAddressName2
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
 
@@ -53,6 +53,8 @@ const timeout = async (ms) => {
 }
 
 before(async () => {
+  testFioDomain = generateTestingFioDomain()
+
   let privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic)
   privateKey = privateKeyRes.fioKey
   let publicKeyRes = FIOSDK.derivedPublicKey(privateKey)
@@ -63,7 +65,7 @@ before(async () => {
     baseUrl,
     fetchJson
   )
-  testFioAddressName = generateTestingFioAddress()
+  testFioAddressName = generateTestingFioAddress(testFioDomain)
 
   await timeout(1000)
   privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic2)
@@ -76,7 +78,7 @@ before(async () => {
     baseUrl,
     fetchJson
   )
-  testFioAddressName2 = generateTestingFioAddress()
+  testFioAddressName2 = generateTestingFioAddress(testFioDomain)
 
   const fioSdkFaucet = new FIOSDK(
     faucetPriv,
@@ -89,6 +91,17 @@ before(async () => {
   await timeout(receiveTransferTimout)
 
   try {
+    await fioSdkFaucet.genericAction('registerFioDomain', {
+      fioDomain: testFioDomain,
+      maxFee: defaultFee
+    })
+
+    await fioSdkFaucet.genericAction('setFioDomainVisibility', {
+      fioDomain: testFioDomain,
+      isPublic: true,
+      maxFee: defaultFee
+    })
+
     const isAvailableResult = await fioSdk.genericAction('isAvailable', {
       fioName: testFioAddressName
     })
@@ -198,7 +211,6 @@ describe('Testing generic actions', () => {
     try {
       FIOSDK.isFioPublicKeyValid('dfsd')
     } catch (e) {
-      console.log(e);
       expect(e.list[0].message).to.equal('fioPublicKey must match /^FIO\\w+$/.')
     }
     try {
