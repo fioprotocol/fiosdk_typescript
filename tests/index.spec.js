@@ -408,6 +408,28 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`getFee for addBundledTransactions`, async () => {
+    const result = await fioSdk.genericAction('getFeeForAddBundledTransactions', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`add Bundled Transactions`, async () => {
+    const result = await fioSdk.genericAction('addBundledTransactions', {
+      fioAddress: newFioAddress,
+      bundleSets: bundleSets,
+      newOwnerKey: pubKeyForTransfer,
+      maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
   it(`getFee for addPublicAddress`, async () => {
     const result = await fioSdk.genericAction('getFeeForAddPublicAddress', {
       fioAddress: newFioAddress
