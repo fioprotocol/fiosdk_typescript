@@ -3,7 +3,7 @@ import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
 
 export class AddBundledTransactions extends SignedTransaction {
-    public ENDPOINT: string = 'chain/burn_fio_address'
+    public ENDPOINT: string = 'chain/add_bundled_transactions'
     public ACTION: string = 'addbundles'
     public ACCOUNT: string = Constants.defaultAccount
     public fioAddress: string
