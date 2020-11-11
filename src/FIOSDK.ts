@@ -8,6 +8,7 @@ import {
   BurnFioAddressResponse,
   TransferFioAddressResponse,
   TransferFioDomainResponse,
+  AddBundledTransactionsResponse,
   AvailabilityResponse,
   BalanceResponse,
   FioFeeResponse,
@@ -491,6 +492,29 @@ export class FIOSDK {
         this.getTechnologyProviderId(technologyProviderId),
     )
     return transferFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+  }
+
+  /**
+   * Adds bundles of transactions to FIO Address.
+   *
+   * @param fioAddress FIO Address to transfer. The owner will be the public key associated with the FIO SDK instance.
+   * @param bundleSets Number of sets of bundles to add to FIO Address.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   */
+  public addBundledTransactions(
+      fioAddress: string,
+      bundleSets: number,
+      maxFee: number,
+      technologyProviderId: string | null = null,
+  ): Promise<AddBundledTransactionsResponse> {
+    const addBundledTransactions = new SignedTransactions.AddBundledTransactions(
+        fioAddress,
+        bundleSets,
+        maxFee,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return addBundledTransactions.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -1074,6 +1098,15 @@ export class FIOSDK {
    *
    * @param fioAddress FIO Address incurring the fee and owned by signer.
    */
+  public getFeeForAddBundledTransactions(fioAddress: string): Promise<FioFeeResponse> {
+    return this.getFee(EndPoint.addBundledTransactions, fioAddress)
+  }
+
+  /**
+   * Compute and return fee amount for specific call and specific user
+   *
+   * @param fioAddress FIO Address incurring the fee and owned by signer.
+   */
   public getFeeForTransferFioDomain(fioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.transferFioDomain, fioAddress)
   }
@@ -1186,6 +1219,13 @@ export class FIOSDK {
         return this.transferFioDomain(
             params.fioDomain,
             params.newOwnerKey,
+            params.maxFee,
+            params.technologyProviderId,
+        )
+      case 'addBundledTransactions':
+        return this.addBundledTransactions(
+            params.fioAddress,
+            params.bundleSets,
             params.maxFee,
             params.technologyProviderId,
         )
@@ -1316,6 +1356,8 @@ export class FIOSDK {
         return this.getFeeForTransferFioAddress(params.fioAddress)
       case 'getFeeForTransferFioDomain':
         return this.getFeeForTransferFioDomain(params.fioAddress)
+      case 'getFeeForAddBundledTransactions':
+        return this.getFeeForAddBundledTransactions(params.fioAddress)
       case 'getFeeForAddPublicAddress':
         return this.getFeeForAddPublicAddress(params.fioAddress)
       case 'getFeeForCancelFundsRequest':

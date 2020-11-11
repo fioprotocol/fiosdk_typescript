@@ -7,6 +7,7 @@ export enum EndPoint {
   burnFioAddress = 'burn_fio_address',
   transferFioAddress = 'transfer_fio_address',
   transferFioDomain = 'transfer_fio_domain',
+  addBundledTransactions = 'add_bundled_transactions',
   addPubAddress = 'add_pub_address',
   removePubAddress = 'remove_pub_address',
   removeAllPubAddresses = 'remove_all_pub_addresses',

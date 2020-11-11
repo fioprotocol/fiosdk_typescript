@@ -26,6 +26,7 @@ const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
 const ethTokenCode = 'ETH'
 const ethChainCode = 'ETH'
+const defaultBundledSets = 1
 const defaultFee = 800 * FIOSDK.SUFUnit
 
 let fioSdk, fioSdk2
@@ -358,6 +359,27 @@ describe('Testing generic actions', () => {
     const result = await fioSdk.genericAction('transferFioDomain', {
       fioDomain: newFioDomain,
       newOwnerKey: pubKeyForTransfer,
+      maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for addBundledTransactions`, async () => {
+    const result = await fioSdk.genericAction('getFeeForAddBundledTransactions', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`add Bundled Transactions`, async () => {
+    const result = await fioSdk.genericAction('addBundledTransactions', {
+      fioAddress: newFioAddress,
+      bundleSets: defaultBundledSets,
       maxFee: defaultFee
     })
 
