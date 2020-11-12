@@ -245,52 +245,6 @@ export class FIOSDK {
   private returnPreparedTrx: boolean = false
 
   /**
-   * // how to instantiate fetchJson parameter
-   * i.e.
-   * fetch = require('node-fetch')
-   *
-   * const fetchJson = async (uri, opts = {}) => {
-   *  return fetch(uri, opts)
-   * }
-   *
-   * @param privateKey the fio private key of the client sending requests to FIO API.
-   * @param publicKey the fio public key of the client sending requests to FIO API.
-   * @param baseUrl the url to the FIO API.
-   * @param fetchjson - the module to use for HTTP Post/Get calls (see above for example)
-   * @param registerMockUrl the url to the mock server
-   * @param technologyProviderId Default FIO Address of the wallet which generates transactions.
-   */
-  constructor(
-    privateKey: string,
-    publicKey: string,
-    baseUrl: string,
-    fetchjson: FetchJson,
-    registerMockUrl = '',
-    technologyProviderId: string = '',
-    returnPreparedTrx: boolean = false,
-  ) {
-    this.transactions = new Transactions()
-    Transactions.baseUrl = baseUrl
-    Transactions.FioProvider = Fio
-    Transactions.fetchJson = fetchjson
-    this.registerMockUrl = registerMockUrl
-    this.privateKey = privateKey
-    this.publicKey = publicKey
-    this.technologyProviderId = technologyProviderId
-    this.returnPreparedTrx = returnPreparedTrx
-
-    for (const accountName of Constants.rawAbiAccountName) {
-      this.getAbi(accountName)
-        .then((response) => {
-          Transactions.abiMap.set(response.account_name, response)
-        })
-        .catch((error) => {
-          throw error
-        })
-    }
-  }
-
-  /**
    * Allows advance user to send their own content directly to FIO contracts
    *
    * @param action Name of action
@@ -316,6 +270,52 @@ export class FIOSDK {
       options
     )
     return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx || options.returnPreparedTrx)
+  }
+
+  /**
+   * // how to instantiate fetchJson parameter
+   * i.e.
+   * fetch = require('node-fetch')
+   *
+   * const fetchJson = async (uri, opts = {}) => {
+   *  return fetch(uri, opts)
+   * }
+   *
+   * @param privateKey the fio private key of the client sending requests to FIO API.
+   * @param publicKey the fio public key of the client sending requests to FIO API.
+   * @param baseUrl the url to the FIO API.
+   * @param fetchjson - the module to use for HTTP Post/Get calls (see above for example)
+   * @param technologyProviderId Default FIO Address of the wallet which generates transactions.
+   * @param registerMockUrl the url to the mock server
+   */
+  constructor(
+    privateKey: string,
+    publicKey: string,
+    baseUrl: string,
+    fetchjson: FetchJson,
+    technologyProviderId: string = '',
+    registerMockUrl = '',
+    returnPreparedTrx: boolean = false,
+  ) {
+    this.transactions = new Transactions()
+    Transactions.baseUrl = baseUrl
+    Transactions.FioProvider = Fio
+    Transactions.fetchJson = fetchjson
+    this.registerMockUrl = registerMockUrl
+    this.privateKey = privateKey
+    this.publicKey = publicKey
+    this.technologyProviderId = technologyProviderId
+    this.returnPreparedTrx = returnPreparedTrx
+
+    for (const accountName of Constants.rawAbiAccountName) {
+      this.getAbi(accountName)
+        .then((response) => {
+          Transactions.abiMap.set(response.account_name, response)
+        })
+        .catch((error) => {
+          throw error
+        })
+    }
   }
 
   public get(
