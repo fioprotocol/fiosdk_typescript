@@ -14,10 +14,10 @@ export abstract class Query<T> extends Transactions {
     this.publicKey = publicKey
     this.privateKey = privateKey
     if (!this.isEncrypted) {
-      return this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()))
+      return this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
     } else {
       try {
-        const result = await this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()))
+        const result = await this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
         return this.decrypt(result)
       } catch (error) {
         throw error

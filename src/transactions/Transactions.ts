@@ -4,13 +4,43 @@ import { AbiResponse } from '../entities/AbiResponse'
 import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 import { validate } from '../utils/validation'
+import { asyncWaterfall, shuffleArray } from '../utils/utils';
 
 type FetchJson = (uri: string, opts?: Object) => any
 const textEncoder: TextEncoder = new TextEncoder()
 const textDecoder: TextDecoder = new TextDecoder()
 
+export const fioApiErrorCodes = [400, 403, 404, 409]
+export const FIO_CHAIN_INFO_ERROR_CODE = 800
+export const FIO_BLOCK_NUMBER_ERROR_CODE = 801
+type FioErrorJson = {
+  fields?: {
+    error: string
+  }[]
+}
+
+export class FioError extends Error {
+  list: { field: string, message: string }[] = []
+  labelCode: string = ''
+  errorCode: number = 0
+  json: any
+
+  constructor(message: string, code?: number, labelCode?: string, json?: any) {
+    super(message)
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, FioError)
+    }
+
+    this.name = 'FioError'
+    if (code) this.errorCode = code
+    if (labelCode) this.labelCode = labelCode
+    if (json) this.json = json
+  }
+}
+
 export class Transactions {
-  public static baseUrl: string
+  public static baseUrls: string[]
   public static abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
   public static FioProvider: {
     prepareTransaction(param: any): Promise<any>;
@@ -38,8 +68,7 @@ export class Transactions {
         'Content-Type': 'application/json',
       },
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_info', options)
-    return await res.json()
+    return await this.multicastServers('chain/get_info', null, options)
   }
 
   public async getBlock(chain: any): Promise<any> {
@@ -49,7 +78,7 @@ export class Transactions {
     if (chain.last_irreversible_block_num == undefined) {
       throw new Error('chain.last_irreversible_block_num undefined')
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_block', {
+    return await this.multicastServers('chain/get_block', null,{
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -59,7 +88,6 @@ export class Transactions {
         block_num_or_id: chain.last_irreversible_block_num,
       }),
     })
-    return await res.json()
   }
 
   public async pushToServer(transaction: RawTransaction, endpoint: string, dryRun: boolean): Promise<any> {
@@ -71,7 +99,7 @@ export class Transactions {
     } catch (error) {
       console.error('chain:: ' + error)
       const e: Error & { errorCode?: number } = new Error(`Error while fetching chain info`)
-      e.errorCode = 800
+      e.errorCode = FIO_CHAIN_INFO_ERROR_CODE
       throw e
     }
     try {
@@ -79,7 +107,7 @@ export class Transactions {
     } catch (error) {
       console.error('block: ' + error)
       const e: Error & { errorCode?: number } = new Error(`Error while fetching block`)
-      e.errorCode = 801
+      e.errorCode = FIO_BLOCK_NUMBER_ERROR_CODE
       throw e
     }
     transaction.ref_block_num = block.block_num & 0xFFFF
@@ -98,12 +126,11 @@ export class Transactions {
         transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
         textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
       })
-      return this.executeCall(endpoint, JSON.stringify(signedTransaction))
+      return this.multicastServers(endpoint, JSON.stringify(signedTransaction))
     }
-
   }
 
-  public async executeCall(endPoint: string, body: string, fetchOptions?: any): Promise<any> {
+  public async executeCall(baseUrl: string, endPoint: string, body: string | null, fetchOptions?: any): Promise<any> {
     let options: any
     this.validate()
     if (fetchOptions != null) {
@@ -122,11 +149,29 @@ export class Transactions {
       }
     }
     try {
-      const res = await Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
+      const res = await Transactions.fetchJson(baseUrl + endPoint, options)
       if (!res.ok) {
-        const error: Error & { json?: Object, errorCode?: string, requestParams?: { endPoint: string, body: string, fetchOptions?: any } } = new Error(`Error ${res.status} while fetching ${Transactions.baseUrl + endPoint}`)
+        const error: Error & { json?: FioErrorJson, errorCode?: string, requestParams?: { endPoint: string, body: string, fetchOptions?: any } } = new Error(`Error ${res.status} while fetching ${baseUrl + endPoint}`)
         try {
           error.json = await res.json()
+          if (fioApiErrorCodes.indexOf(res.status) > -1) {
+            if (
+              error.json &&
+              error.json.fields &&
+              error.json.fields[0] &&
+              error.json.fields[0].error
+            ) {
+              error.message = error.json.fields[0].error
+            }
+            return {
+              isError: true,
+              data: {
+                code: error.errorCode,
+                message: error.message,
+                json: error.json
+              }
+            }
+          }
         } catch (e) {
           console.log(e);
           error.json = {}
@@ -136,9 +181,30 @@ export class Transactions {
       }
       return res.json()
     } catch (e) {
-      e.requestParams = { endPoint, body, fetchOptions }
+      e.requestParams = { baseUrl, endPoint, body, fetchOptions }
       throw e
     }
+  }
+
+  public async multicastServers(endpoint: string, body: string | null, fetchOptions?: any): Promise<any> {
+    const res = await asyncWaterfall(
+      shuffleArray(
+        Transactions.baseUrls.map(apiUrl => () =>
+          this.executeCall(apiUrl, endpoint, body, fetchOptions)
+        )
+      )
+    )
+
+    if (res.isError) {
+      const error = new FioError(res.errorMessage || res.data.message)
+      error.json = res.data.json
+      error.list = res.data.list
+      error.errorCode = res.data.code
+
+      throw error
+    }
+
+    return res
   }
 
   public getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {

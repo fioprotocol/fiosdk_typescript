@@ -27,7 +27,7 @@ const mnemonic2 = 'round work clump little air glue lemon gravity shed charge as
 /**
  * Urls required
  */
-const baseUrl = ''
+const baseUrls = []
 
 /**
  * Keys to transfer funds to be able make all calls with fee
@@ -81,7 +81,7 @@ before(async () => {
   fioSdk = new FIOSDK(
     privateKey,
     publicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   testFioAddressName = generateTestingFioAddress()
@@ -94,7 +94,7 @@ before(async () => {
   fioSdk2 = new FIOSDK(
     privateKey2,
     publicKey2,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   testFioAddressName2 = generateTestingFioAddress()
@@ -102,7 +102,7 @@ before(async () => {
   const fioSdkFaucet = new FIOSDK(
     faucetPriv,
     faucetPub,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   await fioSdkFaucet.transferTokens(publicKey, fundAmount * 4, defaultFee)
@@ -156,7 +156,7 @@ describe('Record obt data, check', () => recordObt({
   generateObtId
 }))
 
-describe('Encrypting/Decrypting', () => encryptDecrypt({ baseUrl, fetchJson }))
+describe('Encrypting/Decrypting', () => encryptDecrypt({ baseUrls, fetchJson }))
 
 describe('Check prepared transaction', () => {
   it(`requestFunds prepared transaction`, async () => {

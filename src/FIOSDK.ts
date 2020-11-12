@@ -255,7 +255,7 @@ export class FIOSDK {
    *
    * @param privateKey the fio private key of the client sending requests to FIO API.
    * @param publicKey the fio public key of the client sending requests to FIO API.
-   * @param baseUrl the url to the FIO API.
+   * @param apiUrls the url to the FIO API.
    * @param fetchjson - the module to use for HTTP Post/Get calls (see above for example)
    * @param registerMockUrl the url to the mock server
    * @param technologyProviderId Default FIO Address of the wallet which generates transactions.
@@ -263,14 +263,14 @@ export class FIOSDK {
   constructor(
     privateKey: string,
     publicKey: string,
-    baseUrl: string,
+    apiUrls: string[],
     fetchjson: FetchJson,
     registerMockUrl = '',
     technologyProviderId: string = '',
     returnPreparedTrx: boolean = false,
   ) {
     this.transactions = new Transactions()
-    Transactions.baseUrl = baseUrl
+    Transactions.baseUrls = apiUrls
     Transactions.FioProvider = Fio
     Transactions.fetchJson = fetchjson
     this.registerMockUrl = registerMockUrl
@@ -373,7 +373,7 @@ export class FIOSDK {
     endPoint: string,
     preparedTrx: object
   ): Promise<any> {
-    const response = await this.transactions.executeCall(`chain/${endPoint}`, JSON.stringify(preparedTrx))
+    const response = await this.transactions.multicastServers(`chain/${endPoint}`, JSON.stringify(preparedTrx))
     return SignedTransaction.prepareResponse(response)
   }
 
