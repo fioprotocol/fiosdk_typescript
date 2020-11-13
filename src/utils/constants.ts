@@ -47,6 +47,7 @@ export class Constants {
     rejectfndreq: 'rejectfndreq',
     trnsfiopubky: 'trnsfiopubky',
     burnaddress: 'burnaddress',
+    addbundles: 'addbundles',
   }
 
   public static abiAccounts: { [key: string]: string } = {

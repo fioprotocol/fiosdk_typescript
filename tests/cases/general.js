@@ -259,6 +259,25 @@ const generalTests = ({
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`getFee for transferFioAddress`, async () => {
+    const result = await fioSdk.getFee(EndPoint.transferFioAddress, newFioAddress)
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Transfer fio address`, async () => {
+    const result = await fioSdk.pushTransaction(actionNames.xferaddress, {
+      fio_address: newFioAddress,
+      new_owner_fio_public_key: pubKeyForTransfer,
+      max_fee: defaultFee,
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
   it(`getFee for transferFioDomain`, async () => {
     const result = await fioSdk.getFee(EndPoint.transferFioDomain, newFioAddress)
 
@@ -270,6 +289,26 @@ const generalTests = ({
     const result = await fioSdk.pushTransaction(actionNames.xferdomain, {
       fio_domain: newFioDomain,
       new_owner_fio_public_key: pubKeyForTransfer,
+      max_fee: defaultFee,
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for addBundledTransactions`, async () => {
+    const result = await fioSdk.getFee(EndPoint.addBundledTransactions, newFioAddress)
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`add Bundled Transactions`, async () => {
+    const defaultBundleSets = 1
+    const result = await fioSdk.pushTransaction(actionNames.addbundles, {
+      fio_address: newFioAddress,
+      bundle_sets: defaultBundleSets,
       max_fee: defaultFee,
     })
 
@@ -426,6 +465,23 @@ const generalTests = ({
     expect(result).to.be.a('number')
   })
 
+  it(`getFee for BurnFioAddress`, async () => {
+    const result = await fioSdk.getFee(EndPoint.burnFioAddress, newFioAddress)
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Burn fio address`, async () => {
+    const result = await fioSdk.pushTransaction(actionNames.burnaddress, {
+      fio_address: newFioAddress,
+      max_fee: defaultFee,
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
 }
 
 module.exports = {
