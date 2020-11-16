@@ -152,9 +152,10 @@ Before:
 ```
 After:
 ```javascript
+  const payerFioPublicKey = 'FIO7DaqRKziahVEALTZYyp2sAHf1wsCH4eqdAsUGh7y8ZMByG4feD'
   const content = {
-    payer_fio_public_key: 'FIO7DaqRKziahVEALTZYyp2sAHf1wsCH4eqdAsUGh7y8ZMByG4feD',
-    payee_public_address: 'FIO88neEop1f5tM6GCepcAdxLpfETqBxsUhPESbUdfZu3joB4M6HB',
+    payer_fio_public_key: payerFioPublicKey,
+    payee_public_address: fioSdk.publicKey,
     amount: `${20 * FIOSDK.SUFUnit}`,
     chain_code: 'FIO',
     token_code: 'FIO',
@@ -167,7 +168,7 @@ After:
     payer_fio_address: 'testFioAddressName@fiotestnet',
     payee_fio_address: 'testFioAddressName2@fiotestnet',
     max_fee: 800 * FIOSDK.SUFUnit,
-    content: trx.getCipherContent(Constants.CipherContentTypes.new_funds_content, content, 'payee_private_key', 'FIO7DaqRKziahVEALTZYyp2sAHf1wsCH4eqdAsUGh7y8ZMByG4feD')
+    content: trx.getCipherContent(Constants.CipherContentTypes.new_funds_content, content, fioSdk.privateKey, payerFioPublicKey)
   }, {
     account: Constants.abiAccounts.fio_reqobt
   })
