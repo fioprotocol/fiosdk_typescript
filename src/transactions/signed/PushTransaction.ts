@@ -4,7 +4,7 @@ import { Constants } from '../../utils/constants'
 const encryptActions = {
   [Constants.actionNames.newfundsreq]: {
     contentType: Constants.CipherContentTypes.new_funds_content,
-    contentKeyName: 'payee_public_address'
+    contentKeyName: 'payer_fio_public_key'
   },
   [Constants.actionNames.recordobt]: {
     contentType: Constants.CipherContentTypes.record_obt_data_content,
