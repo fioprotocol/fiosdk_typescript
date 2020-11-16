@@ -1,0 +1,15 @@
+{
+  "name": "MigrationToV2",
+  "version": "1.0.0",
+  "description": "Example of how to migrate to v2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dapix, Inc. Copyright(c) 2020",
+  "license": "MIT",
+  "dependencies": {
+    "@fioprotocol/fiojs": "1.0.0",
+    "@fioprotocol/fiosdk": "1.2.0"
+  }
+}
