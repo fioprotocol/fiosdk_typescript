@@ -322,10 +322,7 @@ export class FIOSDK {
     endpoint: string,
     data: any,
     options: {
-      decrypt?: {
-        key: string,
-        contentType: string
-      }
+      customEndpoint?: boolean
     } = {}
   ): Promise<any> {
     data.tpid = this.getTechnologyProviderId(data.tpid)

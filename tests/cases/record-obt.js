@@ -1,6 +1,5 @@
 const { expect } = require('chai')
 const { EndPoint } = require('../../lib/entities/EndPoint')
-const { SignedTransaction } = require('../../lib/transactions/signed/SignedTransaction')
 const { Constants } = require('../../lib/utils/constants')
 
 const recordObt = ({
@@ -23,23 +22,21 @@ const recordObt = ({
   })
 
   it(`recordObtData`, async () => {
-    const content = {
-      payer_public_address: fioSdk.publicKey,
-      payee_public_address: fioSdk2.publicKey,
-      amount: `${fundsAmount}`,
-      chain_code: fioChainCode,
-      token_code: fioTokenCode,
-      status: Constants.TrxStatuses.sent_to_blockchain,
-      obt_id: obtId,
-      memo: '',
-      hash: '',
-      offline_url: ''
-    }
-    const trx = new SignedTransaction()
     const result = await fioSdk.pushTransaction(Constants.actionNames.recordobt, {
       payer_fio_address: testFioAddressName,
       payee_fio_address: testFioAddressName2,
-      content: trx.getCipherContent(Constants.CipherContentTypes.record_obt_data_content, content, fioSdk.privateKey, fioSdk2.publicKey),
+      content: {
+        payer_public_address: fioSdk.publicKey,
+        payee_public_address: fioSdk2.publicKey,
+        amount: `${fundsAmount}`,
+        chain_code: fioChainCode,
+        token_code: fioTokenCode,
+        status: Constants.TrxStatuses.sent_to_blockchain,
+        obt_id: obtId,
+        memo: '',
+        hash: '',
+        offline_url: ''
+      },
       fio_request_id: '',
       max_fee: defaultFee,
     }, {
@@ -56,13 +53,7 @@ const recordObt = ({
     const result = await fioSdk.get(
       EndPoint.getObtData, {
         fio_public_key: fioSdk.publicKey
-      }, {
-        decrypt: {
-          key: 'obt_data_records',
-          contentType: Constants.CipherContentTypes.record_obt_data_content
-        }
-      }
-    )
+      })
     expect(result).to.have.all.keys('obt_data_records', 'more')
     expect(result.obt_data_records).to.be.a('array')
     expect(result.more).to.be.a('number')
@@ -80,13 +71,7 @@ const recordObt = ({
     const result = await fioSdk2.get(
       EndPoint.getObtData, {
         fio_public_key: fioSdk2.publicKey
-      }, {
-        decrypt: {
-          key: 'obt_data_records',
-          contentType: Constants.CipherContentTypes.record_obt_data_content
-        }
-      }
-    )
+      })
     expect(result).to.have.all.keys('obt_data_records', 'more')
     expect(result.obt_data_records).to.be.a('array')
     expect(result.more).to.be.a('number')

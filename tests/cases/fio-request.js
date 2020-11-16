@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const { SignedTransaction } = require('../../lib/transactions/signed/SignedTransaction')
 const { EndPoint } = require('../../lib/entities/EndPoint')
 const { Constants } = require('../../lib/utils/constants')
 
@@ -23,22 +22,20 @@ const fioRequest = ({
   })
 
   it(`requestFunds`, async () => {
-    const content = {
-      payer_fio_public_key: fioSdk.publicKey,
-      payee_public_address: fioSdk2.publicKey,
-      amount: `${fundsAmount}`,
-      chain_code: fioChainCode,
-      token_code: fioTokenCode,
-      memo: '',
-      hash: '',
-      offline_url: '',
-    }
-    const trx = new SignedTransaction()
     const result = await fioSdk2.pushTransaction(Constants.actionNames.newfundsreq, {
       payer_fio_address: testFioAddressName,
       payee_fio_address: testFioAddressName2,
       max_fee: defaultFee,
-      content: trx.getCipherContent(Constants.CipherContentTypes.new_funds_content, content, fioSdk2.privateKey, fioSdk.publicKey)
+      content: {
+        payer_fio_public_key: fioSdk.publicKey,
+        payee_public_address: fioSdk2.publicKey,
+        amount: `${fundsAmount}`,
+        chain_code: fioChainCode,
+        token_code: fioTokenCode,
+        memo: '',
+        hash: '',
+        offline_url: '',
+      }
     }, {
       account: Constants.abiAccounts.fio_reqobt
     })
@@ -53,11 +50,6 @@ const fioRequest = ({
     await timeout(4000)
     const result = await fioSdk.get(EndPoint.pendingFioRequests, {
       fio_public_key: fioSdk.publicKey
-    }, {
-      decrypt: {
-        key: 'requests',
-        contentType: Constants.CipherContentTypes.new_funds_content
-      }
     })
     expect(result).to.have.all.keys('requests', 'more')
     expect(result.requests).to.be.a('array')
@@ -73,23 +65,21 @@ const fioRequest = ({
   })
 
   it(`recordObtData`, async () => {
-    const content = {
-      payer_public_address: fioSdk.publicKey,
-      payee_public_address: fioSdk2.publicKey,
-      amount: `${fundsAmount}`,
-      chain_code: fioChainCode,
-      token_code: fioTokenCode,
-      status: Constants.TrxStatuses.sent_to_blockchain,
-      obt_id: '',
-      memo: '',
-      hash: '',
-      offline_url: ''
-    }
-    const trx = new SignedTransaction()
     const result = await fioSdk.pushTransaction(Constants.actionNames.recordobt, {
       payer_fio_address: testFioAddressName,
       payee_fio_address: testFioAddressName2,
-      content: trx.getCipherContent(Constants.CipherContentTypes.record_obt_data_content, content, fioSdk.privateKey, fioSdk2.publicKey),
+      content: {
+        payer_public_address: fioSdk.publicKey,
+        payee_public_address: fioSdk2.publicKey,
+        amount: `${fundsAmount}`,
+        chain_code: fioChainCode,
+        token_code: fioTokenCode,
+        status: Constants.TrxStatuses.sent_to_blockchain,
+        obt_id: '',
+        memo: '',
+        hash: '',
+        offline_url: ''
+      },
       fio_request_id: requestId,
       max_fee: defaultFee,
     }, {
@@ -103,11 +93,6 @@ const fioRequest = ({
   it(`getSentFioRequests`, async () => {
     const result = await fioSdk2.get(EndPoint.sentFioRequests, {
       fio_public_key: fioSdk2.publicKey
-    }, {
-      decrypt: {
-        key: 'requests',
-        contentType: Constants.CipherContentTypes.new_funds_content
-      }
     })
     expect(result).to.have.all.keys('requests', 'more')
     expect(result.requests).to.be.a('array')
@@ -127,13 +112,7 @@ const fioRequest = ({
     const result = await fioSdk.get(
       EndPoint.getObtData, {
         fio_public_key: fioSdk.publicKey
-      }, {
-        decrypt: {
-          key: 'obt_data_records',
-          contentType: Constants.CipherContentTypes.record_obt_data_content
-        }
-      }
-    )
+      })
     expect(result).to.have.all.keys('obt_data_records', 'more')
     expect(result.obt_data_records).to.be.a('array')
     expect(result.more).to.be.a('number')
@@ -151,13 +130,7 @@ const fioRequest = ({
     const result = await fioSdk2.get(
       EndPoint.getObtData, {
         fio_public_key: fioSdk2.publicKey
-      }, {
-        decrypt: {
-          key: 'obt_data_records',
-          contentType: Constants.CipherContentTypes.record_obt_data_content
-        }
-      }
-    )
+      })
     expect(result).to.have.all.keys('obt_data_records', 'more')
     expect(result.obt_data_records).to.be.a('array')
     expect(result.more).to.be.a('number')

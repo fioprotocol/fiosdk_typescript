@@ -1,6 +1,17 @@
 import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 
+const encryptActions = {
+  [Constants.actionNames.newfundsreq]: {
+    contentType: Constants.CipherContentTypes.new_funds_content,
+    contentKeyName: 'payee_public_address'
+  },
+  [Constants.actionNames.recordobt]: {
+    contentType: Constants.CipherContentTypes.record_obt_data_content,
+    contentKeyName: 'payee_public_address'
+  }
+}
+
 export class PushTransaction extends SignedTransaction {
 
   ENDPOINT: string = 'chain/push_transaction'
@@ -18,13 +29,13 @@ export class PushTransaction extends SignedTransaction {
   }
 
   private getByPath(obj: any, path: string[]): any {
-      let current = obj;
-      for (let i = 0; i < path.length; i++) {
-        if (!current[path[i]]) return null;
-        current = current[path[i]];
-      }
+    let current = obj;
+    for (let i = 0; i < path.length; i++) {
+      if (!current[path[i]]) return null;
+      current = current[path[i]];
+    }
 
-      return current;
+    return current;
   }
 
   public prepareResponse(result: any): any {
@@ -41,6 +52,10 @@ export class PushTransaction extends SignedTransaction {
 
   getData(): any {
     let actor = this.getActor()
+    if (encryptActions[this.ACTION]) {
+      const { contentType, contentKeyName } = encryptActions[this.ACTION]
+      this.data.content = this.getCipherContent(contentType, this.data.content, this.privateKey, this.data.content[contentKeyName])
+    }
     let data = {
       ...this.data,
       actor: actor

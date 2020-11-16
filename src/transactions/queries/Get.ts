@@ -1,25 +1,34 @@
 import { Query } from './Query'
+import { EndPoint } from '../../entities/EndPoint';
+import { Constants } from '../../utils/constants';
 
 type Options = {
-  decrypt?: {
-    key: string,
-    contentType: string
-  },
   customEndpoint?: boolean
 }
+const encryptedEndpoints = {
+  [`${EndPoint.pendingFioRequests}`]: {
+    decryptKey: 'requests',
+    decryptContentType: Constants.CipherContentTypes.new_funds_content,
+  },
+  [`${EndPoint.sentFioRequests}`]: {
+    decryptKey: 'requests',
+    decryptContentType: Constants.CipherContentTypes.new_funds_content,
+  },
+  [`${EndPoint.getObtData}`]: {
+    decryptKey: 'obt_data_records',
+    decryptContentType: Constants.CipherContentTypes.record_obt_data_content,
+  },
+}
+
 export class Get extends Query<any> {
   public ENDPOINT: string = ''
   private data: { [key: string]: any } = {}
-  private decryptContentType: string = ''
-  private decryptKey: string = ''
 
   constructor(endpoint: string, data: { [key: string]: any }, options: Options = {}) {
     super()
     this.ENDPOINT = options.customEndpoint ? endpoint : `chain/${endpoint}`
     this.data = data
-    this.isEncrypted = !!options.decrypt
-    this.decryptContentType = options.decrypt && options.decrypt.key ? options.decrypt.contentType : ''
-    this.decryptKey = options.decrypt && options.decrypt.key ? options.decrypt.key : ''
+    this.isEncrypted = !!encryptedEndpoints[this.ENDPOINT]
   }
 
   public getData() {
@@ -27,15 +36,16 @@ export class Get extends Query<any> {
   }
 
   public decrypt(result: any): any {
-    if (result[this.decryptKey].length > 0) {
+    const { decryptKey, decryptContentType } = encryptedEndpoints[this.ENDPOINT]
+    if (result[decryptKey].length > 0) {
       const items: any[] = []
-      result[this.decryptKey].forEach((value: { content: string, payer_fio_public_key: string, payee_fio_public_key: string }) => {
+      result[decryptKey].forEach((value: { content: string, payer_fio_public_key: string, payee_fio_public_key: string }) => {
         try {
           let content
           if (value.payer_fio_public_key === this.publicKey) {
-            content = this.getUnCipherContent(this.decryptContentType, value.content, this.privateKey, value.payee_fio_public_key)
+            content = this.getUnCipherContent(decryptContentType, value.content, this.privateKey, value.payee_fio_public_key)
           } else {
-            content = this.getUnCipherContent(this.decryptContentType, value.content, this.privateKey, value.payer_fio_public_key)
+            content = this.getUnCipherContent(decryptContentType, value.content, this.privateKey, value.payer_fio_public_key)
           }
           value.content = content
           items.push(value)
@@ -43,7 +53,7 @@ export class Get extends Query<any> {
           //
         }
       })
-      return { [this.decryptKey]: items, more: result.more }
+      return { [decryptKey]: items, more: result.more }
     }
   }
 }
