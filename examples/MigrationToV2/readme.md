@@ -56,32 +56,16 @@ After:
 ```javascript
   const result = await fioSdk.get(EndPoint.pendingFioRequests, {
     fio_public_key: fioSdk.publicKey
-  }, {
-    decrypt: {
-      key: 'requests',
-      contentType: Constants.CipherContentTypes.new_funds_content
-    }
   })
   const result = await fioSdk.get(EndPoint.sentFioRequests, {
     fio_public_key: fioSdk.publicKey,
     limit: 10,
     offset: 20
-  }, {
-    decrypt: {
-      key: 'requests',
-      contentType: Constants.CipherContentTypes.new_funds_content
-    }
   })
   const result = await fioSdk.get(
     EndPoint.getObtData, {
       fio_public_key: fioSdk.publicKey
-    }, {
-      decrypt: {
-        key: 'obt_data_records',
-        contentType: Constants.CipherContentTypes.record_obt_data_content
-      }
-    }
-  )
+    })
 ```
 where `key` in `decrypt` is prop name in response for such api call.
 
@@ -140,7 +124,7 @@ where `additionalReturnKeys` - object with props you want see in the result. Val
 
 Before:
 ```javascript
-  const result = await fioSdk.genericAction('requestFunds', {
+  await fioSdk.genericAction('requestFunds', {
     payerFioAddress: 'testFioAddressName@fiotestnet',
     payeeFioAddress: 'testFioAddressName2@fiotestnet',
     payeePublicAddress: 'FIO88neEop1f5tM6GCepcAdxLpfETqBxsUhPESbUdfZu3joB4M6HB',
@@ -153,22 +137,20 @@ Before:
 After:
 ```javascript
   const payerFioPublicKey = 'FIO7DaqRKziahVEALTZYyp2sAHf1wsCH4eqdAsUGh7y8ZMByG4feD'
-  const content = {
-    payer_fio_public_key: payerFioPublicKey,
-    payee_public_address: fioSdk.publicKey,
-    amount: `${20 * FIOSDK.SUFUnit}`,
-    chain_code: 'FIO',
-    token_code: 'FIO',
-    memo: '',
-    hash: '',
-    offline_url: '',
-  }
-  const trx = new SignedTransaction()
-  const result = await fioSdk.pushTransaction(Constants.actionNames.newfundsreq, {
+  await fioSdk.pushTransaction(Constants.actionNames.newfundsreq, {
     payer_fio_address: 'testFioAddressName@fiotestnet',
     payee_fio_address: 'testFioAddressName2@fiotestnet',
     max_fee: 800 * FIOSDK.SUFUnit,
-    content: trx.getCipherContent(Constants.CipherContentTypes.new_funds_content, content, fioSdk.privateKey, payerFioPublicKey)
+    content: {
+      payer_fio_public_key: payerFioPublicKey,
+      payee_public_address: fioSdk.publicKey,
+      amount: `${20 * FIOSDK.SUFUnit}`,
+      chain_code: 'FIO',
+      token_code: 'FIO',
+      memo: '',
+      hash: '',
+      offline_url: '',
+    }
   }, {
     account: Constants.abiAccounts.fio_reqobt
   })

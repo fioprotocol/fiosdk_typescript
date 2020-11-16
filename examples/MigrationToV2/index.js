@@ -6,7 +6,6 @@ This is examples for FIOSDK v2
 
 const { FIOSDK } = require('@fioprotocol/fiosdk');
 const { EndPoint } = require('@fioprotocol/fiosdk/lib/entities/EndPoint')
-const { SignedTransaction } = require('@fioprotocol/fiosdk/lib/transactions/signed/SignedTransaction')
 const { Constants } = require('@fioprotocol/fiosdk/lib/utils/constants')
 
 fetch = require('node-fetch')
@@ -77,22 +76,20 @@ async function addAddress() {
 async function fioRequest() {
   try {
     const { fee } = await fioSdk.getFee(EndPoint.newFundsRequest, fioAddress)
-    const content = {
-      payer_fio_public_key: recipientFioAddress,
-      payee_public_address: fioSdk.publicKey,
-      amount: `${fundsAmount}`,
-      chain_code: 'FIO',
-      token_code: 'FIO',
-      memo: '',
-      hash: '',
-      offline_url: '',
-    }
-    const trx = new SignedTransaction()
     const { fio_request_id } = await fioSdk.pushTransaction(Constants.actionNames.newfundsreq, {
       payer_fio_address: recipientFioAddress,
       payee_fio_address: fioAddress,
       max_fee: fee,
-      content: trx.getCipherContent(Constants.CipherContentTypes.new_funds_content, content, privateKey, recipientPublicKey)
+      content: {
+        payer_fio_public_key: recipientFioAddress,
+        payee_public_address: fioSdk.publicKey,
+        amount: `${fundsAmount}`,
+        chain_code: 'FIO',
+        token_code: 'FIO',
+        memo: '',
+        hash: '',
+        offline_url: '',
+      }
     }, {
       account: Constants.abiAccounts.fio_reqobt
     })
