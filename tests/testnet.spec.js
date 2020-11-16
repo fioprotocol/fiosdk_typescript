@@ -30,7 +30,7 @@ let privateKey = '',
   testFioAddressName = '',
   testFioAddressName2 = ''
 
-const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
+const baseUrls = ['https://testnet.fioprotocol.io:443/v1/']
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
@@ -73,7 +73,7 @@ before(async () => {
   global.fioSdk = new FIOSDK(
     privateKey,
     publicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
 
@@ -81,7 +81,7 @@ before(async () => {
   global.fioSdk2 = new FIOSDK(
     privateKey2,
     publicKey2,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
 
@@ -148,7 +148,7 @@ describe('Record obt data, check', () => recordObt({
   generateObtId
 }))
 
-describe('Encrypting/Decrypting', () => encryptDecrypt({ baseUrl, fetchJson }))
+describe('Encrypting/Decrypting', () => encryptDecrypt({ baseUrls, fetchJson }))
 
 describe('Check prepared transaction', () => {
   it(`requestFunds prepared transaction`, async () => {

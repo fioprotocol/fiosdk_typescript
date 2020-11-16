@@ -2,7 +2,7 @@ const { expect } = require('chai')
 const { FIOSDK } = require('../../lib/FIOSDK')
 const { Constants } = require('../../lib/utils/constants')
 
-const encryptDecrypt = ({ baseUrl, fetchJson }) => {
+const encryptDecrypt = ({ baseUrls, fetchJson }) => {
   const alicePrivateKey = '5J35xdLtcPvDASxpyWhNrR2MfjSZ1xjViH5cvv15VVjqyNhiPfa'
   const alicePublicKey = 'FIO6NxZ7FLjjJuHGByJtNJQ1uN1P5X9JJnUmFW3q6Q7LE7YJD4GZs'
   const bobPrivateKey = '5J37cXw5xRJgE869B5LxC3FQ8ZJECiYnsjuontcHz5cJsz5jhb7'
@@ -14,7 +14,7 @@ const encryptDecrypt = ({ baseUrl, fetchJson }) => {
   let fioSDKBob = new FIOSDK(
     bobPrivateKey,
     bobPublicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
 
