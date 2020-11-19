@@ -55,6 +55,7 @@ export const allRules = {
   },
 }
 
+// todo: what to do with these validation rules
 export const validationRules = {
   addPublicAddressRules: {
     fioAddress: allRules.fioAddress,

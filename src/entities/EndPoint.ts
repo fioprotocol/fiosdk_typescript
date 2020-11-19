@@ -16,4 +16,17 @@ export enum EndPoint {
   recordObtData = 'record_obt_data',
   transferTokens = 'transfer_tokens_pub_key',
   cancelFundsRequest = 'cancel_funds_request',
+
+  availabilityCheck = 'avail_check',
+  cancelledFioRequests = 'get_cancelled_fio_requests',
+  getAbi = 'get_raw_abi',
+  getAddresses = 'get_fio_addresses',
+  getDomains = 'get_fio_domains',
+  getFee = 'get_fee',
+  getFioBalance = 'get_fio_balance',
+  getNames = 'get_fio_names',
+  getObtData = 'get_obt_data',
+  getPublicAddress = 'get_pub_address',
+  pendingFioRequests = 'get_pending_fio_requests',
+  sentFioRequests = 'get_sent_fio_requests',
 }
