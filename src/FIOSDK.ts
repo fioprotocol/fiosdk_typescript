@@ -336,7 +336,7 @@ export class FIOSDK {
     preparedTrx: object
   ): Promise<any> {
     const response = await this.transactions.executeCall(`chain/${endPoint}`, JSON.stringify(preparedTrx))
-    return SignedTransaction.prepareResponse(response)
+    return SignedTransaction.prepareResponse(response, true)
   }
 
   /**
