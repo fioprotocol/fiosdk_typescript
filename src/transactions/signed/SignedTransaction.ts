@@ -32,9 +32,15 @@ export abstract class SignedTransaction extends Transactions {
     return SignedTransaction.prepareResponse(result)
   }
 
-  public static prepareResponse(result: { processed: { action_traces: { receipt: { response: string }}[]} } | any): any {
-    if (result.processed)
-      return SignedTransaction.parseProcessedResult(result.processed)
+  public static prepareResponse(result: { transaction_id: string, processed: { block_num: number, action_traces: { receipt: { response: string }}[]} } | any): any {
+    if (result.processed) {
+      const processed = SignedTransaction.parseProcessedResult(result.processed)
+      return {
+        transaction_id: result.transaction_id,
+        block_num: result.processed.block_num,
+        ...processed
+      }
+    }
     return result
   }
 
