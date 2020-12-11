@@ -41,7 +41,6 @@ import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
 import { validate, allRules } from './utils/validation'
 import { ValidationError } from './entities/ValidationError'
-import { accountHash } from '@fioprotocol/fiojs/dist/AccountName'
 
 /**
  * @ignore
@@ -108,7 +107,7 @@ export class FIOSDK {
    * @returns FIO account derived from pub key.
    */
   public static accountHash(fiopubkey: string) {
-    const accountnm = accountHash(fiopubkey)
+    const accountnm = Fio.accountHash(fiopubkey)
     return { accountnm }
   }
 
