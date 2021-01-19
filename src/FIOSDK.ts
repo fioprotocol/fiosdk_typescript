@@ -19,6 +19,7 @@ import {
   FioNamesResponse,
   PendingFioRequestsResponse,
   PublicAddressResponse,
+  PublicAddressesResponse,
   RecordObtDataResponse,
   RegisterFioAddressResponse,
   RegisterFioDomainResponse,
@@ -1026,6 +1027,26 @@ export class FIOSDK {
   }
 
   /**
+   * Returns all public addresses for specified FIO Address.
+   *
+   * @param fioAddress FIO Address for which the token public address is to be returned.
+   * @param limit Number of results to return. If omitted, all results will be returned.
+   * @param offset First result from list to return. If omitted, 0 is assumed.
+   */
+  public getPublicAddresses(
+    fioAddress: string,
+    limit?: number,
+    offset?: number,
+  ): Promise<PublicAddressesResponse> {
+    const publicAddressesLookUp = new queries.GetPublicAddresses(
+      fioAddress,
+      limit,
+      offset,
+    )
+    return publicAddressesLookUp.execute(this.publicKey)
+  }
+
+  /**
    * Returns the FIO token public address for specified FIO Address.
    *
    * @param fioAddress FIO Address for which fio token public address is to be returned.
@@ -1426,6 +1447,8 @@ export class FIOSDK {
         return this.getSentFioRequests(params.limit, params.offset)
       case 'getPublicAddress':
         return this.getPublicAddress(params.fioAddress, params.chainCode, params.tokenCode)
+      case 'getPublicAddresses':
+        return this.getPublicAddresses(params.fioAddress, params.limit, params.offset)
       case 'transferTokens':
         return this.transferTokens(
           params.payeeFioPublicKey,
