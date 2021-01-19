@@ -581,6 +581,14 @@ describe('Testing generic actions', () => {
     expect(result.public_address).to.be.a('string')
   })
 
+  it(`getPublicAddresses`, async () => {
+    const result = await fioSdk.genericAction('getPublicAddresses', {
+      fioAddress: newFioAddress, limit: 10, offset: 0
+    })
+
+    expect(result.public_addresses).to.be.a('array')
+  })
+
   it(`getFee`, async () => {
     const result = await fioSdk.genericAction('getFee', {
       endPoint: 'register_fio_address',

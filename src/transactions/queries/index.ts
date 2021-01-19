@@ -1,5 +1,6 @@
 export { AvailabilityCheck } from './AvailabilityCheck'
 export { GetPublicAddress } from './GetPublicAddress'
+export { GetPublicAddresses } from './GetPublicAddresses'
 export { SentFioRequests } from './SentFioRequests'
 export { GetNames } from './GetNames'
 export { GetFioBalance } from './GetFioBalance'
