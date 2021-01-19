@@ -26,7 +26,7 @@ export class AddBundledTransactions extends SignedTransaction {
         const actor = this.getActor()
         const data = {
             fio_address: this.fioAddress,
-            bundleSets,
+            bundle_sets: this.bundleSets,
             actor,
             tpid: this.technologyProviderId,
             max_fee: this.maxFee,
