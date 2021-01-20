@@ -237,8 +237,10 @@ describe('Testing generic actions', () => {
 
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
-    expect(result).to.have.all.keys('balance')
+
+    expect(result).to.have.all.keys('balance', 'available')
     expect(result.balance).to.be.a('number')
+    expect(result.available).to.be.a('number')
   })
 
   it(`Register fio domain`, async () => {
@@ -367,27 +369,6 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
-  it(`getFee for transferFioAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
-      fioAddress: newFioAddress
-    })
-
-    expect(result).to.have.all.keys('fee')
-    expect(result.fee).to.be.a('number')
-  })
-
-  it(`Transfer fio address`, async () => {
-    const result = await fioSdk.genericAction('transferFioAddress', {
-      fioAddress: newFioAddress,
-      newOwnerKey: pubKeyForTransfer,
-      maxFee: defaultFee
-    })
-
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
-
   it(`getFee for transferFioDomain`, async () => {
     const result = await fioSdk.genericAction('getFeeForTransferFioDomain', {
       fioAddress: newFioAddress
@@ -478,6 +459,26 @@ describe('Testing generic actions', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+
+  it(`getPublicAddress`, async () => {
+    const result = await fioSdk.genericAction('getPublicAddress', {
+      fioAddress: newFioAddress, chainCode: fioChainCode, tokenCode: fioTokenCode
+    })
+
+    expect(result.public_address).to.be.a('string')
+  })
+
+
+  it(`getPublicAddresses`, async () => {
+    const result = await fioSdk.genericAction('getPublicAddresses', {
+      fioAddress: newFioAddress, limit: 10, offset: 0
+    })
+
+    expect(result).to.have.all.keys('public_addresses','more')
+    expect(result.public_addresses).to.be.a('array')
+    expect(result.more).to.be.a('number')
+  })
+
   it(`getFee for removePublicAddresses`, async () => {
     const result = await fioSdk.genericAction('getFeeForRemovePublicAddresses', {
       fioAddress: newFioAddress
@@ -561,32 +562,17 @@ describe('Testing generic actions', () => {
       fioPublicKey: publicKey2
     })
 
-    expect(result).to.have.all.keys('balance')
+    expect(result).to.have.all.keys('balance', 'available')
     expect(result.balance).to.be.a('number')
+    expect(result.available).to.be.a('number')
   })
 
-  it(`getFioNames`, async () => {
-    const result = await fioSdk.genericAction('getFioNames', { fioPublicKey: publicKey })
 
-    expect(result).to.have.all.keys('fio_domains', 'fio_addresses')
-    expect(result.fio_domains).to.be.a('array')
+  it(`getFioAddresses`, async () => {
+    const result = await fioSdk.genericAction('getFioAddresses', { fioPublicKey: publicKey })
+
+    expect(result).to.have.all.keys('fio_addresses','more')
     expect(result.fio_addresses).to.be.a('array')
-  })
-
-  it(`getPublicAddress`, async () => {
-    const result = await fioSdk.genericAction('getPublicAddress', {
-      fioAddress: newFioAddress, chainCode: fioChainCode, tokenCode: fioTokenCode
-    })
-
-    expect(result.public_address).to.be.a('string')
-  })
-
-  it(`getPublicAddresses`, async () => {
-    const result = await fioSdk.genericAction('getPublicAddresses', {
-      fioAddress: newFioAddress, limit: 10, offset: 0
-    })
-
-    expect(result.public_addresses).to.be.a('array')
   })
 
   it(`getFee`, async () => {
@@ -607,7 +593,7 @@ describe('Testing generic actions', () => {
 
   it(`getFee for BurnFioAddress`, async () => {
     const result = await fioSdk.genericAction('getFeeForBurnFioAddress', {
-        fioAddress: newFioAddress
+      fioAddress: newFioAddress
     })
 
     expect(result).to.have.all.keys('fee')
@@ -616,8 +602,29 @@ describe('Testing generic actions', () => {
 
   it(`Burn fio address`, async () => {
     const result = await fioSdk.genericAction('burnFioAddress', {
-        fioAddress: newFioAddress,
-        maxFee: defaultFee
+      fioAddress: newFioAddress,
+      maxFee: defaultFee
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getFee for transferFioAddress`, async () => {
+    const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
+      fioAddress: newFioAddress
+    })
+
+    expect(result).to.have.all.keys('fee')
+    expect(result.fee).to.be.a('number')
+  })
+
+  it(`Transfer fio address`, async () => {
+    const result = await fioSdk.genericAction('transferFioAddress', {
+      fioAddress: newFioAddress,
+      newOwnerKey: pubKeyForTransfer,
+      maxFee: defaultFee
     })
 
     expect(result).to.have.all.keys('status', 'fee_collected')
@@ -675,7 +682,27 @@ describe('Request funds, approve and send', () => {
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
   })
 
+  it(`getSentFioRequests`, async () => {
+    const result = await fioSdk2.genericAction('getSentFioRequests', {})
+    expect(result).to.have.all.keys('requests', 'more')
+    expect(result.requests).to.be.a('array')
+    expect(result.more).to.be.a('number')
+    const pendingReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
+    expect(pendingReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'status', 'time_stamp', 'content')
+    expect(pendingReq.fio_request_id).to.be.a('number')
+    expect(pendingReq.fio_request_id).to.equal(requestId)
+    expect(pendingReq.payer_fio_address).to.be.a('string')
+    expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
+    expect(pendingReq.payee_fio_address).to.be.a('string')
+    expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+  })
+
   it(`recordObtData`, async () => {
+    await fioSdk.genericAction('transferTokens', {
+      payeeFioPublicKey: publicKey2,
+      amount: fundsAmount,
+      maxFee: defaultFee,
+    })
     const result = await fioSdk.genericAction('recordObtData', {
       fioRequestId: requestId,
       payerFioAddress: testFioAddressName,
@@ -692,21 +719,6 @@ describe('Request funds, approve and send', () => {
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
-  })
-
-  it(`getSentFioRequests`, async () => {
-    const result = await fioSdk2.genericAction('getSentFioRequests', {})
-    expect(result).to.have.all.keys('requests', 'more')
-    expect(result.requests).to.be.a('array')
-    expect(result.more).to.be.a('number')
-    const pendingReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
-    expect(pendingReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'status', 'time_stamp', 'content')
-    expect(pendingReq.fio_request_id).to.be.a('number')
-    expect(pendingReq.fio_request_id).to.equal(requestId)
-    expect(pendingReq.payer_fio_address).to.be.a('string')
-    expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
-    expect(pendingReq.payee_fio_address).to.be.a('string')
-    expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
   })
 
   it(`Payer getObtData`, async () => {
