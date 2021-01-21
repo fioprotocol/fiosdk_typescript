@@ -476,7 +476,7 @@ describe('Testing generic actions', () => {
 
     expect(result).to.have.all.keys('public_addresses','more')
     expect(result.public_addresses).to.be.a('array')
-    expect(result.more).to.be.a('number')
+    expect(result.more).to.be.a('boolean')
   })
 
   it(`getFee for removePublicAddresses`, async () => {
