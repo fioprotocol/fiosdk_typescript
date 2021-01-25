@@ -18,6 +18,7 @@ import {
   FioFeeResponse,
   FioNamesResponse,
   PendingFioRequestsResponse,
+  ReceivedFioRequestsResponse,
   PublicAddressResponse,
   PublicAddressesResponse,
   RecordObtDataResponse,
@@ -985,6 +986,17 @@ export class FIOSDK {
   }
 
   /**
+   * Polls for any received requests sent to public key associated with the FIO SDK instance.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   */
+  public getReceivedFioRequests(limit?: number, offset?: number): Promise<ReceivedFioRequestsResponse> {
+    const receivedFioRequests = new queries.ReceivedFioRequests(this.publicKey, limit, offset)
+    return receivedFioRequests.execute(this.publicKey, this.privateKey)
+  }
+
+  /**
    * Polls for any sent requests sent by public key associated with the FIO SDK instance.
    *
    * @param limit Number of request to return. If omitted, all requests will be returned.
@@ -1441,6 +1453,8 @@ export class FIOSDK {
             return this.getFioAddresses(params.fioPublicKey, params.limit, params.offset)
       case 'getPendingFioRequests':
         return this.getPendingFioRequests(params.limit, params.offset)
+      case 'getReceivedFioRequests':
+        return this.getReceivedFioRequests(params.limit, params.offset)
       case 'getCancelledFioRequests':
         return this.getCancelledFioRequests(params.limit, params.offset)
       case 'getSentFioRequests':
