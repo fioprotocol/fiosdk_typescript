@@ -22,6 +22,7 @@ export class Constants {
     'fio.address',
     'fio.reqobt',
     'fio.staking',
+    'fio.oracle',
     'fio.token',
     'eosio',
     'fio.fee',
