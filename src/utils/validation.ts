@@ -89,6 +89,9 @@ export const validationRules = {
     tokenCode: allRules.chain,
     tpid: allRules.tpid,
   },
+  transferLockedTokensRequest: {
+    tpid: allRules.tpid,
+  },
   rejectFunds: {
     tpid: allRules.tpid,
   },

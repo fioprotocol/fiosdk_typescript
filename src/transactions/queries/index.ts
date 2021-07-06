@@ -1,5 +1,6 @@
 export { AvailabilityCheck } from './AvailabilityCheck'
 export { GetPublicAddress } from './GetPublicAddress'
+export { GetPublicAddresses } from './GetPublicAddresses'
 export { SentFioRequests } from './SentFioRequests'
 export { GetNames } from './GetNames'
 export { GetFioBalance } from './GetFioBalance'
@@ -10,4 +11,6 @@ export { GetObtData } from './GetObtData'
 export { CancelledFioRequests } from './CancelledFioRequests'
 export { GetAddresses } from './GetAddresses'
 export { GetDomains } from './GetDomains'
+export { GetLocks } from './GetLocks'
+export { GetAccount } from './GetAccount'
 
