@@ -21,6 +21,7 @@ export class Constants {
   public static rawAbiAccountName: string[] = [
     'fio.address',
     'fio.reqobt',
+      'fio.staking',
     'fio.token',
     'eosio',
     'fio.fee',
