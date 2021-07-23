@@ -993,7 +993,9 @@ describe('Check prepared transaction', () => {
       maxFee: defaultFee,
     })
     const result = await fioSdk2.executePreparedTrx(EndPoint.newFundsRequest, preparedTrx)
-    expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
+    expect(result.transaction_id).to.be.a('string')
+    expect(result.block_num).to.be.a('number')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
