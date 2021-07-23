@@ -12,12 +12,12 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '',
-  publicKey = '',
-  privateKey2 = '',
-  publicKey2 = '',
-  testFioAddressName = '',
-  testFioAddressName2 = ''
+let privateKey = '5Jw78NzS2QMvjcyemCgJ9XQv8SMSEvTEuLxF8TcKf27xWcX5fmw',
+  publicKey = 'FIO8k7N7jU9eyj57AfazGxMuvPGZG5hvXNUyxt9pBchnkXXx9KUuD',
+  privateKey2 = '5Hv1zRFa7XRo395dfHS8xrviszPiVYeBhQjJq4TsPv53NvAcfyU',
+  publicKey2 = 'FIO7b3WHTsS1wTF2dAUvE9DoDXvxYUVA8FepLW6x9Bv5rPJnUW6ab',
+  testFioAddressName = 'ebtest1@fiotestnet',
+  testFioAddressName2 = 'ebtest3@fiotestnet'
 
 const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
 
@@ -587,27 +587,6 @@ describe('Testing generic actions', () => {
   it(`Burn fio address`, async () => {
     const result = await fioSdk.genericAction('burnFioAddress', {
       fioAddress: newFioAddress,
-      maxFee: defaultFee
-    })
-
-    expect(result).to.have.all.keys('status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-  })
-
-  it(`getFee for transferFioAddress`, async () => {
-    const result = await fioSdk.genericAction('getFeeForTransferFioAddress', {
-      fioAddress: newFioAddress
-    })
-
-    expect(result).to.have.all.keys('fee')
-    expect(result.fee).to.be.a('number')
-  })
-
-  it(`Transfer fio address`, async () => {
-    const result = await fioSdk.genericAction('transferFioAddress', {
-      fioAddress: newFioAddress,
-      newOwnerKey: pubKeyForTransfer,
       maxFee: defaultFee
     })
 
