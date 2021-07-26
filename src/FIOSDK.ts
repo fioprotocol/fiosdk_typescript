@@ -221,13 +221,13 @@ export class FIOSDK {
   public static amountToSUF(amount: number): number {
 
     // get integer part
-    var floor = Math.floor(amount)
-    var tempResult = floor * this.SUFUnit
+    const floor = Math.floor(amount)
+    const tempResult = floor * this.SUFUnit
 
     // get remainder
-    var remainder = (amount % 1)
-    var remainderResult = remainder * (this.SUFUnit)
-    var floorRemainder = Math.floor(remainderResult)
+    const remainder = (amount % 1)
+    const remainderResult = remainder * (this.SUFUnit)
+    const floorRemainder = Math.floor(remainderResult)
 
     // add integer and remainder
     return tempResult + floorRemainder

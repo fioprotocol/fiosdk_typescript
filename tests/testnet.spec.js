@@ -112,48 +112,48 @@ describe('Testing generic actions', () => {
   })
 
   it(`FIO SUF Utilities - amountToSUF`, async () => {
-    const sufa = FIOSDK.amountToSUF (100)
+    const sufa = FIOSDK.amountToSUF(100)
     expect(sufa).to.equal(100000000000)
 
-    const sufb = FIOSDK.amountToSUF (500)
+    const sufb = FIOSDK.amountToSUF(500)
     expect(sufb).to.equal(500000000000)
 
-    const sufc = FIOSDK.amountToSUF (506)
+    const sufc = FIOSDK.amountToSUF(506)
     expect(sufc).to.equal(506000000000)
 
-    const sufd = FIOSDK.amountToSUF (1)
+    const sufd = FIOSDK.amountToSUF(1)
     expect(sufd).to.equal(1000000000)
 
-    const sufe = FIOSDK.amountToSUF (2)
+    const sufe = FIOSDK.amountToSUF(2)
     expect(sufe).to.equal(2000000000)
 
-    const suff = FIOSDK.amountToSUF (2.568)
+    const suff = FIOSDK.amountToSUF(2.568)
     expect(suff).to.equal(2568000000)
 
-    const sufg = FIOSDK.amountToSUF (2.123)
+    const sufg = FIOSDK.amountToSUF(2.123)
     expect(sufg).to.equal(2123000000)
   })
 
   it(`FIO SUF Utilities - SUFToAmount`, async () => {
-    const sufa = FIOSDK.SUFToAmount (100000000000)
+    const sufa = FIOSDK.SUFToAmount(100000000000)
     expect(sufa).to.equal(100)
 
-    const sufb = FIOSDK.SUFToAmount (500000000000)
+    const sufb = FIOSDK.SUFToAmount(500000000000)
     expect(sufb).to.equal(500)
 
-    const sufc = FIOSDK.SUFToAmount (506000000000)
+    const sufc = FIOSDK.SUFToAmount(506000000000)
     expect(sufc).to.equal(506)
 
-    const sufd = FIOSDK.SUFToAmount (1000000000)
+    const sufd = FIOSDK.SUFToAmount(1000000000)
     expect(sufd).to.equal(1)
 
-    const sufe = FIOSDK.SUFToAmount (2000000000)
+    const sufe = FIOSDK.SUFToAmount(2000000000)
     expect(sufe).to.equal(2)
 
-    const suff = FIOSDK.SUFToAmount (2568000000)
+    const suff = FIOSDK.SUFToAmount(2568000000)
     expect(suff).to.equal(2.568)
 
-    const sufg = FIOSDK.SUFToAmount (2123000000)
+    const sufg = FIOSDK.SUFToAmount(2123000000)
     expect(sufg).to.equal(2.123)
   })
 
@@ -277,10 +277,10 @@ describe('Testing generic actions', () => {
   })
 
   it(`getFioDomains`, async () => {
-    try{
+    try {
       const result = await fioSdk.genericAction('getFioDomains', { fioPublicKey: fioSdk.publicKey })
 
-      expect(result).to.have.all.keys('fio_domains','more')
+      expect(result).to.have.all.keys('fio_domains', 'more')
       expect(result.fio_domains).to.be.a('array')
     } catch (e) {
       console.log(e);
@@ -458,7 +458,7 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress, limit: 10, offset: 0
     })
 
-    expect(result).to.have.all.keys('public_addresses','more')
+    expect(result).to.have.all.keys('public_addresses', 'more')
     expect(result.public_addresses).to.be.a('array')
     expect(result.more).to.be.a('boolean')
   })
@@ -555,7 +555,7 @@ describe('Testing generic actions', () => {
   it(`getFioAddresses`, async () => {
     const result = await fioSdk.genericAction('getFioAddresses', { fioPublicKey: publicKey })
 
-    expect(result).to.have.all.keys('fio_addresses','more')
+    expect(result).to.have.all.keys('fio_addresses', 'more')
     expect(result.fio_addresses).to.be.a('array')
   })
 
@@ -747,7 +747,7 @@ describe('Request funds, cancel funds request', () => {
   })
 
   it(`cancel request`, async () => {
-    try{
+    try {
       const result = await fioSdk2.genericAction('cancelFundsRequest', {
         fioRequestId: requestId,
         maxFee: defaultFee,
@@ -763,7 +763,7 @@ describe('Request funds, cancel funds request', () => {
 
 
   it(`getCancelledFioRequests`, async () => {
-    try{
+    try {
       await timeout(4000)
       const result = await fioSdk2.genericAction('getCancelledFioRequests', {})
       expect(result).to.have.all.keys('requests', 'more')
