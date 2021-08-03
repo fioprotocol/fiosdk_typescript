@@ -1,4 +1,4 @@
-import {LockPeriod} from './LockPeriod'
+import { LockPeriod } from './LockPeriod'
 
 export interface LocksResponse {
   lock_amount: number,
