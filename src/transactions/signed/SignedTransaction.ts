@@ -2,6 +2,7 @@ import { Autorization } from '../../entities/Autorization'
 import { RawAction } from '../../entities/RawAction'
 import { RawTransaction } from '../../entities/RawTransaction'
 import { Transactions } from '../Transactions'
+import { AbiResponse } from "../../entities/AbiResponse";
 
 export abstract class SignedTransaction extends Transactions {
   public abstract ENDPOINT: string
@@ -10,10 +11,11 @@ export abstract class SignedTransaction extends Transactions {
 
   public abstract getData(): any
 
-  public async execute(baseUrl: string, privateKey: string, publicKey: string, dryRun = false): Promise<any> {
+  public async execute(baseUrl: string, abiMap: Map<string, AbiResponse>, privateKey: string, publicKey: string, dryRun = false): Promise<any> {
     this.privateKey = privateKey
     this.publicKey = publicKey
     this.baseUrl = baseUrl
+    this.abiMap = abiMap
 
     const rawTransaction = new RawTransaction()
     const rawaction = new RawAction()

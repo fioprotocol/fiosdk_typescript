@@ -10,12 +10,12 @@ const textEncoder: TextEncoder = new TextEncoder()
 const textDecoder: TextDecoder = new TextDecoder()
 
 export class Transactions {
-  public static abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
   public static FioProvider: {
     prepareTransaction(param: any): Promise<any>;
     accountHash(pubkey: string): string
   }
 
+  public abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
   public baseUrl: string = ''
   public static fetchJson: FetchJson
   public publicKey: string = ''
@@ -90,12 +90,12 @@ export class Transactions {
     transaction.expiration = expirationStr.substr(0, expirationStr.length - 1)
     if (dryRun) {
       return Transactions.FioProvider.prepareTransaction({
-        transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+        transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: this.abiMap,
         textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
       })
     } else {
       const signedTransaction = await Transactions.FioProvider.prepareTransaction({
-        transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: Transactions.abiMap,
+        transaction, chainId: chain.chain_id, privateKeys: privky, abiMap: this.abiMap,
         textDecoder: new TextDecoder(), textEncoder: new TextEncoder(),
       })
       return this.executeCall(endpoint, JSON.stringify(signedTransaction))
