@@ -10,9 +10,10 @@ export abstract class SignedTransaction extends Transactions {
 
   public abstract getData(): any
 
-  public async execute(privateKey: string, publicKey: string, dryRun = false): Promise<any> {
+  public async execute(baseUrl: string, privateKey: string, publicKey: string, dryRun = false): Promise<any> {
     this.privateKey = privateKey
     this.publicKey = publicKey
+    this.baseUrl = baseUrl
 
     const rawTransaction = new RawTransaction()
     const rawaction = new RawAction()

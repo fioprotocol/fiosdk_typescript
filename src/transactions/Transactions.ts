@@ -10,13 +10,13 @@ const textEncoder: TextEncoder = new TextEncoder()
 const textDecoder: TextDecoder = new TextDecoder()
 
 export class Transactions {
-  public static baseUrl: string
   public static abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
   public static FioProvider: {
     prepareTransaction(param: any): Promise<any>;
     accountHash(pubkey: string): string
   }
 
+  public baseUrl: string = ''
   public static fetchJson: FetchJson
   public publicKey: string = ''
   public privateKey: string = ''
@@ -38,7 +38,7 @@ export class Transactions {
         'Content-Type': 'application/json',
       },
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_info', options)
+    const res = await Transactions.fetchJson(this.baseUrl + 'chain/get_info', options)
     return await res.json()
   }
 
@@ -49,7 +49,7 @@ export class Transactions {
     if (chain.last_irreversible_block_num == undefined) {
       throw new Error('chain.last_irreversible_block_num undefined')
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_block', {
+    const res = await Transactions.fetchJson(this.baseUrl + 'chain/get_block', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -122,9 +122,9 @@ export class Transactions {
       }
     }
     try {
-      const res = await Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
+      const res = await Transactions.fetchJson(this.baseUrl + endPoint, options)
       if (!res.ok) {
-        const error: Error & { json?: Object, errorCode?: string, requestParams?: { endPoint: string, body: string, fetchOptions?: any } } = new Error(`Error ${res.status} while fetching ${Transactions.baseUrl + endPoint}`)
+        const error: Error & { json?: Object, errorCode?: string, requestParams?: { endPoint: string, body: string, fetchOptions?: any } } = new Error(`Error ${res.status} while fetching ${this.baseUrl + endPoint}`)
         try {
           error.json = await res.json()
         } catch (e) {
