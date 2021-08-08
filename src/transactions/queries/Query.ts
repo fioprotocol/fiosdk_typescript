@@ -10,9 +10,10 @@ export abstract class Query<T> extends Transactions {
 
   isEncrypted = false
 
-  async execute(publicKey: string, privateKey: string = ''): Promise<any> {
+  async execute(baseUrl: string, publicKey: string, privateKey: string = ''): Promise<any> {
     this.publicKey = publicKey
     this.privateKey = privateKey
+    this.baseUrl = baseUrl
     if (!this.isEncrypted) {
       return this.executeCall(this.getEndPoint(), JSON.stringify(this.getData()))
     } else {

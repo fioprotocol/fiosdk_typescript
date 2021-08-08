@@ -55,6 +55,8 @@ const { Ecc } = require('@fioprotocol/fiojs')
 type FetchJson = (uri: string, opts?: object) => Promise<object>
 
 export class FIOSDK {
+  private baseUrl: string = ''
+  private abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
   /**
    * @ignore
    */
@@ -303,7 +305,7 @@ export class FIOSDK {
     returnPreparedTrx: boolean = false,
   ) {
     this.transactions = new Transactions()
-    Transactions.baseUrl = baseUrl
+    this.baseUrl = baseUrl
     Transactions.FioProvider = Fio
     Transactions.fetchJson = fetchjson
     this.registerMockUrl = registerMockUrl
@@ -315,7 +317,7 @@ export class FIOSDK {
     for (const accountName of Constants.rawAbiAccountName) {
       this.getAbi(accountName)
         .then((response) => {
-          Transactions.abiMap.set(response.account_name, response)
+          this.abiMap.set(response.account_name, response)
         })
         .catch((error) => {
           throw error
@@ -376,7 +378,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return registerFioAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -399,7 +401,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return registerFioAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -420,7 +422,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return registerFioDomain.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return registerFioDomain.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -443,7 +445,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return registerFioDomain.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return registerFioDomain.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
     /**
@@ -463,7 +465,7 @@ export class FIOSDK {
             maxFee,
             this.getTechnologyProviderId(technologyProviderId),
         )
-        return burnFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+        return burnFioAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
     }
 
   /**
@@ -486,7 +488,7 @@ export class FIOSDK {
         maxFee,
         this.getTechnologyProviderId(technologyProviderId),
     )
-    return transferFioDomain.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return transferFioDomain.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -509,7 +511,7 @@ export class FIOSDK {
         maxFee,
         this.getTechnologyProviderId(technologyProviderId),
     )
-    return transferFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return transferFioAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -532,7 +534,7 @@ export class FIOSDK {
         maxFee,
         this.getTechnologyProviderId(technologyProviderId),
     )
-    return addBundledTransactions.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return addBundledTransactions.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -552,7 +554,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return renewFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return renewFioAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -572,7 +574,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return renewFioDomain.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return renewFioDomain.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -603,7 +605,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return addPublicAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return addPublicAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -623,7 +625,7 @@ export class FIOSDK {
         maxFee,
         this.getTechnologyProviderId(technologyProviderId),
     )
-    return cancelFundsRequest.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return cancelFundsRequest.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
 
@@ -647,7 +649,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return removePublicAddresses.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return removePublicAddresses.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -676,7 +678,7 @@ export class FIOSDK {
         maxFee,
         this.getTechnologyProviderId(technologyProviderId),
     )
-    return transferLockedTokens.execute(this.privateKey, this.publicKey)
+    return transferLockedTokens.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey)
   }
 
 
@@ -698,7 +700,7 @@ export class FIOSDK {
         maxFee,
         this.getTechnologyProviderId(technologyProviderId),
     )
-    return removeAllPublicAddresses.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return removeAllPublicAddresses.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
 
@@ -722,7 +724,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return addPublicAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return addPublicAddress.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -745,7 +747,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return SetFioDomainVisibility.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return SetFioDomainVisibility.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -812,7 +814,7 @@ export class FIOSDK {
       hash,
       offLineUrl,
     )
-    return recordObtData.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return recordObtData.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -824,7 +826,7 @@ export class FIOSDK {
    */
   public getObtData(limit?: number, offset?: number, tokenCode?: string): Promise<GetObtDataResponse> {
     const getObtDataRequest = new queries.GetObtData(this.publicKey, limit, offset, tokenCode)
-    return getObtDataRequest.execute(this.publicKey, this.privateKey)
+    return getObtDataRequest.execute(this.baseUrl, this.publicKey, this.privateKey)
   }
 
   /**
@@ -844,7 +846,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return rejectFundsRequest.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return rejectFundsRequest.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -897,7 +899,7 @@ export class FIOSDK {
       hash,
       offlineUrl,
     )
-    return requestNewFunds.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return requestNewFunds.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -907,7 +909,7 @@ export class FIOSDK {
    */
   public getLocks(fioPublicKey: string): Promise<LocksResponse> {
     const getLocks = new queries.GetLocks(fioPublicKey)
-    return getLocks.execute(this.publicKey)
+    return getLocks.execute(this.baseUrl, this.publicKey)
   }
 
   /*
@@ -917,7 +919,7 @@ export class FIOSDK {
    */
   public getAccount(actor: string): Promise<AccountResponse> {
     const getAccount = new queries.GetAccount(actor)
-    return getAccount.execute(this.publicKey)
+    return getAccount.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -927,7 +929,7 @@ export class FIOSDK {
    */
   public isAvailable(fioName: string): Promise<AvailabilityResponse> {
     const availabilityCheck = new queries.AvailabilityCheck(fioName)
-    return availabilityCheck.execute(this.publicKey)
+    return availabilityCheck.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -937,7 +939,7 @@ export class FIOSDK {
    */
   public getFioBalance(fioPublicKey?: string): Promise<BalanceResponse> {
     const getFioBalance = new queries.GetFioBalance(fioPublicKey)
-    return getFioBalance.execute(this.publicKey)
+    return getFioBalance.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -947,7 +949,7 @@ export class FIOSDK {
    */
   public getFioNames(fioPublicKey: string): Promise<FioNamesResponse> {
     const getNames = new queries.GetNames(fioPublicKey)
-    return getNames.execute(this.publicKey)
+    return getNames.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -959,7 +961,7 @@ export class FIOSDK {
    */
   public getFioAddresses(fioPublicKey: string, limit?: number, offset?: number): Promise<FioAddressesResponse> {
     const getNames = new queries.GetAddresses(fioPublicKey, limit, offset)
-    return getNames.execute(this.publicKey)
+    return getNames.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -971,7 +973,7 @@ export class FIOSDK {
    */
   public getFioDomains(fioPublicKey: string, limit?: number, offset?: number): Promise<FioAddressesResponse> {
     const getNames = new queries.GetDomains(fioPublicKey, limit, offset)
-    return getNames.execute(this.publicKey)
+    return getNames.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -982,7 +984,7 @@ export class FIOSDK {
    */
   public getPendingFioRequests(limit?: number, offset?: number): Promise<PendingFioRequestsResponse> {
     const pendingFioRequests = new queries.PendingFioRequests(this.publicKey, limit, offset)
-    return pendingFioRequests.execute(this.publicKey, this.privateKey)
+    return pendingFioRequests.execute(this.baseUrl, this.publicKey, this.privateKey)
   }
 
   /**
@@ -1004,7 +1006,7 @@ export class FIOSDK {
    */
   public getSentFioRequests(limit?: number, offset?: number): Promise<SentFioRequestResponse> {
     const sentFioRequest = new queries.SentFioRequests(this.publicKey, limit, offset)
-    return sentFioRequest.execute(this.publicKey, this.privateKey)
+    return sentFioRequest.execute(this.baseUrl, this.publicKey, this.privateKey)
   }
 
   /**
@@ -1015,7 +1017,7 @@ export class FIOSDK {
    */
   public getCancelledFioRequests(limit?: number, offset?: number): Promise<CancelledFioRequestResponse> {
     const cancelledFioRequest = new queries.CancelledFioRequests(this.publicKey, limit, offset)
-    return cancelledFioRequest.execute(this.publicKey, this.privateKey)
+    return cancelledFioRequest.execute(this.baseUrl, this.publicKey, this.privateKey)
   }
 
   /**
@@ -1035,7 +1037,7 @@ export class FIOSDK {
       chainCode,
       tokenCode,
     )
-    return publicAddressLookUp.execute(this.publicKey)
+    return publicAddressLookUp.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -1055,7 +1057,7 @@ export class FIOSDK {
       limit,
       offset,
     )
-    return publicAddressesLookUp.execute(this.publicKey)
+    return publicAddressesLookUp.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -1089,7 +1091,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return transferTokens.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return transferTokens.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -1118,7 +1120,7 @@ export class FIOSDK {
    */
   public getFee(endPoint: EndPoint, fioAddress: string = ''): Promise<FioFeeResponse> {
     const fioFee = new queries.GetFee(endPoint, fioAddress)
-    return fioFee.execute(this.publicKey)
+    return fioFee.execute(this.baseUrl, this.publicKey)
   }
 
   /**
@@ -1254,7 +1256,7 @@ export class FIOSDK {
       account,
       data,
     )
-    return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return pushTransaction.execute(this.baseUrl, this.abiMap, this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
   /**
@@ -1506,6 +1508,6 @@ export class FIOSDK {
    */
   private getAbi(accountName: string): Promise<AbiResponse> {
     const abi = new queries.GetAbi(accountName)
-    return abi.execute(this.publicKey)
+    return abi.execute(this.baseUrl, this.publicKey)
   }
 }
