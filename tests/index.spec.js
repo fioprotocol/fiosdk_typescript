@@ -740,6 +740,22 @@ describe('Request funds, approve and send', () => {
     expect(result.fee_collected).to.be.a('number')
   })
 
+  it(`getReceivedFioRequests`, async () => {
+    await timeout(4000)
+    const result = await fioSdk.genericAction('getReceivedFioRequests', {})
+    expect(result).to.have.all.keys('requests', 'more')
+    expect(result.requests).to.be.a('array')
+    expect(result.more).to.be.a('number')
+    const pendingReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
+    expect(pendingReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'time_stamp', 'content', 'status')
+    expect(pendingReq.fio_request_id).to.be.a('number')
+    expect(pendingReq.fio_request_id).to.equal(requestId)
+    expect(pendingReq.payer_fio_address).to.be.a('string')
+    expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
+    expect(pendingReq.payee_fio_address).to.be.a('string')
+    expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+  })
+
   it(`Payer getObtData`, async () => {
     await timeout(10000)
     const result = await fioSdk.genericAction('getObtData', {})
