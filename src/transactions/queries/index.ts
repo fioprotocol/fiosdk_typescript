@@ -14,4 +14,7 @@ export { GetAddresses } from './GetAddresses'
 export { GetDomains } from './GetDomains'
 export { GetLocks } from './GetLocks'
 export { GetAccount } from './GetAccount'
+export { GetNftsByFioAddress } from './GetNftsByFioAddress'
+export { GetNftsByContract } from './GetNftsByContract'
+export { GetNftsByHash } from './GetNftsByHash'
 
