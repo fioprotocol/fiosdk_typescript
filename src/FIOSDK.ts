@@ -1068,6 +1068,65 @@ export class FIOSDK {
   }
 
   /**
+   * Returns all mapped NFTs which have the specified contract address and token id or FIO Address or hash.
+   *
+   * @param options Detects the way how to get the data.
+   * @param options.fioAddress FIO Address.
+   * @param options.chainCode Chain code where NFT contract resides.
+   * @param options.contractAddress NFT contract address.
+   * @param options.tokenId NFT token ID.
+   * @param options.hash SHA-256 hash of NFT asset, e.g. media url.
+   * @param limit Number of records to return. If omitted, all records will be returned. Due to table read timeout, a value of less than 1,000 is recommended.
+   * @param offset First record from list to return. If omitted, 0 is assumed.
+   */
+  public getNfts(
+    options: {
+      fioAddress?: string;
+      chainCode?: string;
+      contractAddress?: string;
+      tokenId?: string;
+      hash?: string;
+    },
+    limit?: number,
+    offset?: number,
+  ): Promise<PublicAddressesResponse> {
+    const {
+      fioAddress,
+      chainCode,
+      contractAddress,
+      tokenId,
+      hash
+    } = options
+    let nftsLookUp
+    if (fioAddress != null && fioAddress != '') {
+      nftsLookUp = new queries.GetNftsByFioAddress(
+        fioAddress,
+        limit,
+        offset,
+      )
+    }
+    if (chainCode != null && chainCode != '' && contractAddress != null && contractAddress != '') {
+      nftsLookUp = new queries.GetNftsByContract(
+        chainCode,
+        contractAddress,
+        tokenId,
+        limit,
+        offset,
+      )
+    }
+    if (hash != null && hash != '') {
+      nftsLookUp = new queries.GetNftsByHash(
+        hash,
+        limit,
+        offset,
+      )
+    }
+
+    if (nftsLookUp == null) throw new Error('At least one of these options should be set: fioAddress, chainCode/contractAddress, hash')
+    return nftsLookUp.execute(this.publicKey)
+  }
+
+  /**
    *
    * Transfers FIO tokens from public key associated with the FIO SDK instance to
    * the payeePublicKey.
@@ -1463,6 +1522,8 @@ export class FIOSDK {
         return this.getPublicAddress(params.fioAddress, params.chainCode, params.tokenCode)
       case 'getPublicAddresses':
         return this.getPublicAddresses(params.fioAddress, params.limit, params.offset)
+      case 'getNfts':
+        return this.getNfts(params.options, params.limit, params.offset)
       case 'transferTokens':
         return this.transferTokens(
           params.payeeFioPublicKey,
