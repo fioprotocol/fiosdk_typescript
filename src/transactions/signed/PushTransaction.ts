@@ -16,12 +16,10 @@ export class PushTransaction extends SignedTransaction {
   }
 
   getData(): any {
-    let actor = this.getActor()
-    let data = {
+    return {
       ...this.data,
-      actor: actor
+      actor: this.data.actor != null && this.data.actor != '' ? this.data.actor : this.getActor()
     }
-    return data
   }
 
 }
