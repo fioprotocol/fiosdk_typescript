@@ -25,7 +25,6 @@ export class Constants {
     'eosio',
     'fio.fee',
     'eosio.msig',
-    'fio.staking',
     'fio.treasury',
     'fio.tpid'
   ]
