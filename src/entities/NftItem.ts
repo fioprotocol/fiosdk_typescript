@@ -5,4 +5,5 @@ export type NftItem = {
   url: string;
   hash: string;
   metadata: string;
+  fio_address?: string;
 }
