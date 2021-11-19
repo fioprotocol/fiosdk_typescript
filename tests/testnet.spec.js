@@ -43,6 +43,11 @@ const generateObtId = () => {
   return `${Date.now()}`
 }
 
+const generateHashForNft = () => {
+  const now = `${Date.now()}`
+  return `f83b5702557b1ee76d966c6bf92ae0d038cd176aaf36f86a18e${now.slice(0, 13)}`
+}
+
 const timeout = async (ms) => {
   await new Promise(resolve => {
     setTimeout(resolve, ms)
@@ -593,6 +598,85 @@ describe('Testing generic actions', () => {
     expect(result).to.have.all.keys('status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+  })
+})
+
+describe('NFT tests', () => {
+
+  const contractAddress1 = `0x63c0691d05f45ca${Date.now()}`
+  const tokenId1 = Date.now()
+  const contractAddress2 = `atomicassets${Date.now()}`
+  const tokenId2 = Date.now() + 4
+  const hash = generateHashForNft()
+
+  it(`Sign NFT`, async () => {
+    const result = await fioSdk.genericAction('pushTransaction', {
+      action: 'addnft',
+      account: 'fio.address',
+      data: {
+        fio_address: testFioAddressName,
+        nfts: [
+          {
+            chain_code: "ETH",
+            contract_address: contractAddress1,
+            token_id: tokenId1,
+            url: "ipfs://ipfs/QmZ15eQX8FPjfrtdX3QYbrhZxJpbLpvDpsgb2p3VEH8Bqq",
+            hash,
+            metadata: ""
+          },
+          {
+            chain_code: "EOS",
+            contract_address: contractAddress2,
+            token_id: tokenId2,
+            url: "",
+            hash: "",
+            metadata: "{'creator_url':'https://yahoo.com/'}"
+          }
+        ],
+        max_fee: defaultFee,
+        tpid: ''
+      }
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`getNfts by chain code and contract address`, async () => {
+    await timeout(2000)
+    const ccResult = await fioSdk.getNfts({
+      chainCode: 'ETH',
+      contractAddress: contractAddress1
+    }, 10, 0)
+
+    expect(ccResult).to.have.all.keys('nfts', 'more')
+    expect(ccResult.nfts).to.be.a('array')
+    expect(ccResult.more).to.be.a('number')
+    expect(ccResult.nfts[0].fio_address).to.be.a('string')
+    expect(ccResult.nfts[0].fio_address).to.equal(testFioAddressName)
+    expect(ccResult.nfts[0].contract_address).to.equal(contractAddress1)
+  })
+
+  it(`getNfts by FIO Address`, async () => {
+    const fioAddressResult = await fioSdk.getNfts({ fioAddress: testFioAddressName }, 10, 0)
+
+    expect(fioAddressResult).to.have.all.keys('nfts', 'more')
+    expect(fioAddressResult.nfts).to.be.a('array')
+    expect(fioAddressResult.more).to.be.a('number')
+    expect(fioAddressResult.nfts.length).to.gte(2)
+  })
+
+  it(`getNfts by hash`, async () => {
+    const hashResult = await fioSdk.getNfts({
+      hash
+    }, 10, 0)
+
+    expect(hashResult).to.have.all.keys('nfts', 'more')
+    expect(hashResult.nfts).to.be.a('array')
+    expect(hashResult.more).to.be.a('number')
+    expect(hashResult.nfts[0].hash).to.be.a('string')
+    expect(hashResult.nfts[0].hash).to.equal(hash)
   })
 })
 

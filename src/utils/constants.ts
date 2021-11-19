@@ -24,7 +24,9 @@ export class Constants {
     'fio.token',
     'eosio',
     'fio.fee',
-    'eosio.msig'
+    'eosio.msig',
+    'fio.treasury',
+    'fio.tpid'
   ]
 
   public static multiplier = 1000000000
