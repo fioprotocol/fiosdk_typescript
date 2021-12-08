@@ -31,7 +31,10 @@ import {
   SentFioRequestResponse,
   SetFioDomainVisibilityResponse,
   TransferTokensResponse,
-  GetObtDataResponse, CancelledFioRequestResponse, FioAddressesResponse,
+  GetObtDataResponse,
+  CancelledFioRequestResponse,
+  FioAddressesResponse,
+  TransactionResponse,
 } from './entities/responses'
 import { EndPoint } from './entities/EndPoint'
 import { PublicAddress } from './entities/PublicAddress'
@@ -1293,6 +1296,37 @@ export class FIOSDK {
   }
 
   /**
+   * Stake FIO Tokens.
+   *
+   * @param amount Amount of SUFs to stake.
+   * @param fioAddress FIO Address if using bundled transactions to pay. May be left empty if paying a fee instead.
+   * @param fee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param technologyProviderId FIO Address of the entity which generates this transaction. TPID rewards will be paid to this address. Set to empty if not known.
+   */
+  public async stakeFioTokens(
+    amount: number,
+    fioAddress: string = '',
+    fee: number = 0,
+    technologyProviderId: string | null = null,
+  ): Promise<TransactionResponse> {
+    if (!fee && fioAddress) {
+      const { fee: stakeFee } = await this.getFee(EndPoint.stakeFioTokens, fioAddress)
+      fee = stakeFee
+      console.log(fee, amount, fioAddress);
+    }
+    return this.pushTransaction(
+      'fio.staking',
+      'stakefio',
+      {
+        amount,
+        fio_address: fioAddress,
+        max_fee: fee,
+        tpid: technologyProviderId
+      }
+    )
+  }
+
+  /**
    * @ignore
    */
   public getMultiplier() {
@@ -1528,6 +1562,13 @@ export class FIOSDK {
         return this.transferTokens(
           params.payeeFioPublicKey,
           params.amount,
+          params.maxFee,
+          params.technologyProviderId,
+        )
+      case 'stakeFioTokens':
+        return this.stakeFioTokens(
+          params.amount,
+          params.fioAddress,
           params.maxFee,
           params.technologyProviderId,
         )

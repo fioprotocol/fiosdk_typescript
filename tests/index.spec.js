@@ -663,6 +663,28 @@ describe('Testing generic actions', () => {
   })
 })
 
+describe('Staking tests', () => {
+  const stakeAmount = FIOSDK.amountToSUF(5);
+
+  it(`Stake`, async () => {
+    const result = await fioSdk.genericAction('stakeFioTokens', {
+      amount: stakeAmount,
+      fioAddress: testFioAddressName,
+    })
+
+    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+  })
+
+  it(`Check staked amount`, async () => {
+    const result = await fioSdk.genericAction('getFioBalance', {})
+
+    expect(result).to.have.all.keys('balance', 'available', 'staked', 'srps', 'roe')
+    expect(result.staked).to.be.a(stakeAmount)
+  })
+})
+
 describe('NFT tests', () => {
 
   const contractAddress1 = `0x63c0691d05f45ca${Date.now()}`
