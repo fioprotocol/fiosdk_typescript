@@ -18,4 +18,5 @@ export enum EndPoint {
   cancelFundsRequest = 'cancel_funds_request',
   transferLockedTokens = 'transfer_locked_tokens',
   stakeFioTokens = 'stake_fio_tokens',
+  unStakeFioTokens = 'unstake_fio_tokens',
 }

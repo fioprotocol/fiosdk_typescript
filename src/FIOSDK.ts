@@ -1312,11 +1312,40 @@ export class FIOSDK {
     if (!fee && fioAddress) {
       const { fee: stakeFee } = await this.getFee(EndPoint.stakeFioTokens, fioAddress)
       fee = stakeFee
-      console.log(fee, amount, fioAddress);
     }
     return this.pushTransaction(
       'fio.staking',
       'stakefio',
+      {
+        amount,
+        fio_address: fioAddress,
+        max_fee: fee,
+        tpid: technologyProviderId
+      }
+    )
+  }
+
+  /**
+   * Unstake FIO Tokens.
+   *
+   * @param amount Amount of SUFs to unstake.
+   * @param fioAddress FIO Address if using bundled transactions to pay. May be left empty if paying a fee instead.
+   * @param fee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param technologyProviderId FIO Address of the entity which generates this transaction. TPID rewards will be paid to this address. Set to empty if not known.
+   */
+  public async unStakeFioTokens(
+    amount: number,
+    fioAddress: string = '',
+    fee: number = 0,
+    technologyProviderId: string | null = null,
+  ): Promise<TransactionResponse> {
+    if (!fee && fioAddress) {
+      const { fee: stakeFee } = await this.getFee(EndPoint.unStakeFioTokens, fioAddress)
+      fee = stakeFee
+    }
+    return this.pushTransaction(
+      'fio.staking',
+      'unstakefio',
       {
         amount,
         fio_address: fioAddress,
@@ -1567,6 +1596,13 @@ export class FIOSDK {
         )
       case 'stakeFioTokens':
         return this.stakeFioTokens(
+          params.amount,
+          params.fioAddress,
+          params.maxFee,
+          params.technologyProviderId,
+        )
+      case 'unStakeFioTokens':
+        return this.unStakeFioTokens(
           params.amount,
           params.fioAddress,
           params.maxFee,
