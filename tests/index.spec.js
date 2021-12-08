@@ -262,9 +262,12 @@ describe('Testing generic actions', () => {
   it(`getFioBalance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
 
-    expect(result).to.have.all.keys('balance', 'available')
+    expect(result).to.have.all.keys('balance', 'available', 'staked', 'srps', 'roe')
     expect(result.balance).to.be.a('number')
     expect(result.available).to.be.a('number')
+    expect(result.staked).to.be.a('number')
+    expect(result.srps).to.be.a('number')
+    expect(result.roe).to.be.a('string')
   })
 
   it(`Register fio domain`, async () => {
@@ -586,9 +589,12 @@ describe('Testing generic actions', () => {
       fioPublicKey: publicKey2
     })
 
-    expect(result).to.have.all.keys('balance', 'available')
+    expect(result).to.have.all.keys('balance', 'available', 'staked', 'srps', 'roe')
     expect(result.balance).to.be.a('number')
     expect(result.available).to.be.a('number')
+    expect(result.staked).to.be.a('number')
+    expect(result.srps).to.be.a('number')
+    expect(result.roe).to.be.a('string')
   })
 
 
