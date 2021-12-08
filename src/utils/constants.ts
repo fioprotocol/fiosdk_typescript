@@ -9,6 +9,7 @@ export class Constants {
     RequestNewFunds: 'new_funds_request',
     TransferTokensKey: 'transfer_tokens_pub_key',
     TransferTokensFioAddress: 'transfer_tokens_fio_address',
+    StakeFioTokens: 'stake_fio_tokens',
   }
 
   public static feeNoAddressOperation: string[] = [
