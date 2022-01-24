@@ -9,6 +9,9 @@ export class Constants {
     RequestNewFunds: 'new_funds_request',
     TransferTokensKey: 'transfer_tokens_pub_key',
     TransferTokensFioAddress: 'transfer_tokens_fio_address',
+    PushTransaction: 'push_transaction',
+    StakeFioTokens: 'stake_fio_tokens',
+    UnStakeFioTokens: 'unstake_fio_tokens',
   }
 
   public static feeNoAddressOperation: string[] = [
@@ -26,7 +29,8 @@ export class Constants {
     'fio.fee',
     'eosio.msig',
     'fio.treasury',
-    'fio.tpid'
+    'fio.tpid',
+    'fio.staking'
   ]
 
   public static multiplier = 1000000000
