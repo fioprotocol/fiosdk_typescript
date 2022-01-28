@@ -1,5 +1,5 @@
 import { Query } from './Query'
-import { AbiResponse } from '../../entities/ABIResponse'
+import { AbiResponse } from '../../entities/AbiResponse'
 
 export class GetAbi extends Query<AbiResponse> {
   ENDPOINT: string = 'chain/get_raw_abi'
