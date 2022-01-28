@@ -1,7 +1,7 @@
 import { FioFeeResponse } from '../../entities/FioFeeResponse'
 import { Constants } from '../../utils/constants'
-import { Query } from './Query'
 import { validationRules } from '../../utils/validation'
+import { Query } from './Query'
 
 export class GetFee extends Query<FioFeeResponse> {
   public ENDPOINT: string = 'chain/get_fee'

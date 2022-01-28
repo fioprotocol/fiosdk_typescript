@@ -1,5 +1,5 @@
-import { Query } from './Query'
 import { AccountResponse } from '../../entities/AccountResponse'
+import { Query } from './Query'
 
 export class GetAccount extends Query<AccountResponse> {
   public ENDPOINT: string = 'chain/get_account'

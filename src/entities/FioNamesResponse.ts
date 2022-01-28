@@ -1,5 +1,5 @@
-import { FioDomain } from './FioDomain'
 import { FioAddresses } from './FioAddresses'
+import { FioDomain } from './FioDomain'
 
 export interface FioNamesResponse {
   fio_domains: FioDomain[],

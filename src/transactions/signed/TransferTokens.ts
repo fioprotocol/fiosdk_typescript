@@ -1,15 +1,15 @@
-import { SignedTransaction } from './SignedTransaction'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class TransferTokens extends SignedTransaction {
 
-  ENDPOINT: string = 'chain/transfer_tokens_pub_key'
-  ACTION: string = 'trnsfiopubky'
-  ACCOUNT: string = 'fio.token'
-  payeePublicKey: string
-  amount: string
-  maxFee: number
-  technologyProviderId: string
+  public ENDPOINT: string = 'chain/transfer_tokens_pub_key'
+  public ACTION: string = 'trnsfiopubky'
+  public ACCOUNT: string = 'fio.token'
+  public payeePublicKey: string
+  public amount: string
+  public maxFee: number
+  public technologyProviderId: string
 
   constructor(payeePublicKey: string, amount: number, maxFee: number, technologyProviderId: string = '') {
     super()
@@ -23,25 +23,25 @@ export class TransferTokens extends SignedTransaction {
   }
 
   public prepareResponse(result: any): any {
-    if (!result.processed) return result
+    if (!result.processed) { return result }
 
     const apiResponse = SignedTransaction.parseProcessedResult(result.processed)
     return {
       transaction_id: result.transaction_id,
       block_num: result.processed.block_num,
-      ...apiResponse
+      ...apiResponse,
     }
   }
 
-  getData(): any {
-    let actor = this.getActor()
+  public getData(): any {
+    const actor = this.getActor()
 
-    let data = {
+    const data = {
       payee_public_key: this.payeePublicKey,
       amount: this.amount,
       max_fee: this.maxFee,
       tpid: this.technologyProviderId,
-      actor: actor
+      actor,
     }
     return data
   }

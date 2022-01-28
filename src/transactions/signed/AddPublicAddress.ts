@@ -1,7 +1,7 @@
 import { PublicAddress } from '../../entities/PublicAddress'
-import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class AddPublicAddress extends SignedTransaction {
   public ENDPOINT: string = 'chain/add_pub_address'

@@ -1,7 +1,6 @@
-import { SignedTransaction } from './SignedTransaction'
 import { LockPeriod } from '../../entities/LockPeriod'
 import { validationRules } from '../../utils/validation'
-
+import { SignedTransaction } from './SignedTransaction'
 
 export class TransferLockedTokens extends SignedTransaction {
   public ENDPOINT: string = 'chain/transfer_locked_tokens'
@@ -36,7 +35,7 @@ export class TransferLockedTokens extends SignedTransaction {
       amount: this.amount,
       max_fee: this.maxFee,
       actor,
-      tpid: this.technologyProviderId
+      tpid: this.technologyProviderId,
     }
     return data
   }

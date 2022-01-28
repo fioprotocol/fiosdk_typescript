@@ -1,8 +1,8 @@
 import { Autorization } from './Autorization'
 
 export class RawAction {
-  account: string = '' //'testeostoken',
-  name: string = '' //'transfer',
-  authorization: Array<Autorization> = new Array<Autorization>()
-  data: any
+  public account: string = '' // 'testeostoken',
+  public name: string = '' // 'transfer',
+  public authorization: Autorization[] = new Array<Autorization>()
+  public data: any
 }

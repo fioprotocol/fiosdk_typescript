@@ -1,6 +1,6 @@
 export class Autorization {
-  actor: string
-  permission: string
+  public actor: string
+  public permission: string
 
   constructor(actor: string, permission = 'active') {
     this.actor = actor

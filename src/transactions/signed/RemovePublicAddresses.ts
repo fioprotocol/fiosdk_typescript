@@ -1,7 +1,7 @@
 import { PublicAddress } from '../../entities/PublicAddress'
-import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class RemovePublicAddresses extends SignedTransaction {
   public ENDPOINT: string = 'chain/remove_pub_address'

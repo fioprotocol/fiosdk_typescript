@@ -1,55 +1,56 @@
 import { Fio } from '@fioprotocol/fiojs'
+import { EndPoint } from './entities/EndPoint'
 import {LockPeriod} from './entities/LockPeriod'
+import { PublicAddress } from './entities/PublicAddress'
 import {
   AbiResponse,
-  AddPublicAddressResponse,
-  CancelFundsRequestResponse,
-  TransferLockedTokensResponse,
   AccountResponse,
-  LocksResponse,
-  RemovePublicAddressesResponse,
-  RemoveAllPublicAddressesResponse,
-  BurnFioAddressResponse,
-  TransferFioAddressResponse,
-  TransferFioDomainResponse,
   AddBundledTransactionsResponse,
+  AddPublicAddressResponse,
   AvailabilityResponse,
   BalanceResponse,
+  BurnFioAddressResponse,
+  CancelFundsRequestResponse,
+  CancelledFioRequestResponse,
+  FioAddressesResponse,
   FioFeeResponse,
   FioNamesResponse,
+  GetObtDataResponse,
+  LocksResponse,
   PendingFioRequestsResponse,
-  ReceivedFioRequestsResponse,
-  PublicAddressResponse,
   PublicAddressesResponse,
+  PublicAddressResponse,
+  ReceivedFioRequestsResponse,
   RecordObtDataResponse,
   RegisterFioAddressResponse,
   RegisterFioDomainResponse,
   RejectFundsResponse,
+  RemoveAllPublicAddressesResponse,
+  RemovePublicAddressesResponse,
   RenewFioAddressResponse,
   RenewFioDomainResponse,
   RequestFundsResponse,
   SentFioRequestResponse,
   SetFioDomainVisibilityResponse,
-  TransferTokensResponse,
-  GetObtDataResponse,
-  CancelledFioRequestResponse,
-  FioAddressesResponse,
   TransactionResponse,
+  TransferFioAddressResponse,
+  TransferFioDomainResponse,
+  TransferLockedTokensResponse,
+  TransferTokensResponse,
 } from './entities/responses'
-import { EndPoint } from './entities/EndPoint'
-import { PublicAddress } from './entities/PublicAddress'
+import { ValidationError } from './entities/ValidationError'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
-import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
+import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
-import { validate, allRules } from './utils/validation'
-import { ValidationError } from './entities/ValidationError'
+import { allRules, validate } from './utils/validation'
 
 /**
  * @ignore
  */
+// tslint:disable-next-line:no-var-requires
 const { Ecc } = require('@fioprotocol/fiojs')
 
 /**
@@ -62,6 +63,11 @@ export class FIOSDK {
    * @ignore
    */
   public static ReactNativeFio: any
+
+  /**
+   * SUFs = Smallest Units of FIO
+   */
+  public static SUFUnit: number = 1000000000
 
   /**
    * @ignore
@@ -212,7 +218,6 @@ export class FIOSDK {
     return true
   }
 
-
   /**
    * Convert a FIO Token Amount to FIO SUFs
    *
@@ -245,7 +250,7 @@ export class FIOSDK {
    * @returns FIO Token amount
    */
   public static SUFToAmount(suf: number): number {
-    return parseInt(`${suf}`) / this.SUFUnit
+    return parseInt(`${suf}`, 10) / this.SUFUnit
   }
 
   public transactions: Transactions
@@ -269,11 +274,6 @@ export class FIOSDK {
    * Default FIO Address of the wallet which generates transactions.
    */
   public technologyProviderId: string
-
-  /**
-   * SUFs = Smallest Units of FIO
-   */
-  public static SUFUnit: number = 1000000000
 
   /**
    * Defines whether SignedTransaction would execute or return prepared transaction
@@ -355,7 +355,7 @@ export class FIOSDK {
    */
   public async executePreparedTrx(
     endPoint: string,
-    preparedTrx: object
+    preparedTrx: object,
   ): Promise<any> {
     const response = await this.transactions.executeCall(`chain/${endPoint}`, JSON.stringify(preparedTrx))
     return SignedTransaction.prepareResponse(response, true)
@@ -601,7 +601,7 @@ export class FIOSDK {
       [{
         chain_code: chainCode,
         token_code: tokenCode,
-        public_address: publicAddress
+        public_address: publicAddress,
       }],
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
@@ -628,7 +628,6 @@ export class FIOSDK {
     )
     return cancelFundsRequest.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
-
 
   /**
    * This call allows a any number of public addresses matching the blockchain code, the token code and the public address to be removed from the FIO Address.
@@ -682,8 +681,6 @@ export class FIOSDK {
     return transferLockedTokens.execute(this.privateKey, this.publicKey)
   }
 
-
-
   /**
    * This call allows a user to remove all addresses from the specified FIO Address, all addresses except the FIO address will be removed.
    *
@@ -703,7 +700,6 @@ export class FIOSDK {
     )
     return removeAllPublicAddresses.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
-
 
   /**
    * This call allows a public addresses of the specific blockchain type to be added to the FIO Address.
@@ -1098,7 +1094,7 @@ export class FIOSDK {
       chainCode,
       contractAddress,
       tokenId,
-      hash
+      hash,
     } = options
     let nftsLookUp
     if (fioAddress != null && fioAddress != '') {
@@ -1125,7 +1121,7 @@ export class FIOSDK {
       )
     }
 
-    if (nftsLookUp == null) throw new Error('At least one of these options should be set: fioAddress, chainCode/contractAddress, hash')
+    if (nftsLookUp == null) { throw new Error('At least one of these options should be set: fioAddress, chainCode/contractAddress, hash') }
     return nftsLookUp.execute(this.publicKey)
   }
 
@@ -1162,7 +1158,6 @@ export class FIOSDK {
   public getFeeForTransferLockedTokens(fioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.transferLockedTokens, fioAddress)
   }
-
 
   /**
    * Compute and return fee amount for specific call and specific user
@@ -1320,8 +1315,8 @@ export class FIOSDK {
         amount,
         fio_address: fioAddress,
         max_fee: fee,
-        tpid: technologyProviderId
-      }
+        tpid: technologyProviderId,
+      },
     )
   }
 
@@ -1350,8 +1345,8 @@ export class FIOSDK {
         amount,
         fio_address: fioAddress,
         max_fee: fee,
-        tpid: technologyProviderId
-      }
+        tpid: technologyProviderId,
+      },
     )
   }
 

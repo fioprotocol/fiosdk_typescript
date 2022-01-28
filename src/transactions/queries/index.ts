@@ -17,4 +17,3 @@ export { GetAccount } from './GetAccount'
 export { GetNftsByFioAddress } from './GetNftsByFioAddress'
 export { GetNftsByContract } from './GetNftsByContract'
 export { GetNftsByHash } from './GetNftsByHash'
-

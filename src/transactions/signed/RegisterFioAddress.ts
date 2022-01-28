@@ -1,6 +1,6 @@
-import { SignedTransaction } from './SignedTransaction'
-import { validationRules } from '../../utils/validation'
 import { Constants } from '../../utils/constants'
+import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class RegisterFioAddress extends SignedTransaction {
 
@@ -19,7 +19,7 @@ export class RegisterFioAddress extends SignedTransaction {
     this.maxFee = maxFee
     this.technologyProviderId = technologyProviderId
 
-    this.validationData = { fioAddress: fioAddress, tpid: technologyProviderId || null }
+    this.validationData = { fioAddress, tpid: technologyProviderId || null }
     this.validationRules = validationRules.registerFioAddress
   }
 

@@ -1,13 +1,11 @@
-import { Query } from './Query'
 import { PublicAddressesResponse } from '../../entities/PublicAddressesResponse'
-
+import { Query } from './Query'
 
 export class GetPublicAddresses extends Query<PublicAddressesResponse> {
-  ENDPOINT: string = 'chain/get_pub_addresses'
-  fioAddress: string
-  limit: number | null
-  offset: number | null
-
+  public ENDPOINT: string = 'chain/get_pub_addresses'
+  public fioAddress: string
+  public limit: number | null
+  public offset: number | null
 
   constructor(fioAddress: string, limit?: number, offset?: number) {
     super()
@@ -16,11 +14,11 @@ export class GetPublicAddresses extends Query<PublicAddressesResponse> {
     this.offset = offset || null
   }
 
-  getData() {
+  public getData() {
     return {
       fio_address: this.fioAddress,
       limit: this.limit || null,
-      offset: this.offset || null
+      offset: this.offset || null,
     }
   }
 }

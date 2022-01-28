@@ -2,12 +2,12 @@ import { Constants } from '../../utils/constants'
 
 export class MockRegisterFioName {
 
-  ENDPOINT: string = '/register_fio_name'
-  ACTION: string = 'regaddress'
-  ACOUNT: string = Constants.defaultAccount
-  fioName: string
-  publicKey: string
-  server: string
+  public ENDPOINT: string = '/register_fio_name'
+  public ACTION: string = 'regaddress'
+  public ACOUNT: string = Constants.defaultAccount
+  public fioName: string
+  public publicKey: string
+  public server: string
 
   constructor(fioName: string, publicKey: string, server: string) {
     this.fioName = fioName
@@ -15,23 +15,23 @@ export class MockRegisterFioName {
     this.server = server
   }
 
-  async execute(): Promise<any> {
-    let body = {
+  public async execute(): Promise<any> {
+    const body = {
       fio_name: this.fioName,
-      owner_fio_public_key: this.publicKey
+      owner_fio_public_key: this.publicKey,
     }
-    let options = {
+    const options = {
       method: 'POST',
       headers: {
-        Accept: 'application/json',
+        "Accept": 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     }
 
-    return fetch(this.server + this.ENDPOINT, options).then(response => {
-      let statusCode = response.status
-      let data = response.json()
+    return fetch(this.server + this.ENDPOINT, options).then((response) => {
+      const statusCode = response.status
+      const data = response.json()
       return Promise.all([statusCode, data])
     })
       .then(([status, data]) => {
