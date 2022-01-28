@@ -128,7 +128,7 @@ export class Transactions {
         try {
           error.json = await res.json()
         } catch (e) {
-          console.log(e);
+          console.log(e)
           error.json = {}
         }
         error.errorCode = res.status

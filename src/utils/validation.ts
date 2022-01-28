@@ -8,8 +8,8 @@ export const allRules = {
     length: { min: 1, max: 10 },
     matchParams: {
       regex: '^[a-z0-9]+$',
-      opt: 'i'
-    }
+      opt: 'i',
+    },
   },
   fioAddress: {
     required: true,
@@ -17,16 +17,16 @@ export const allRules = {
     length: { min: 3, max: 64 },
     matchParams: {
       regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
-      opt: 'gim'
-    }
+      opt: 'gim',
+    },
   },
   tpid: {
     type: String,
     length: { min: 3, max: 64 },
     matchParams: {
       regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
-      opt: 'gim'
-    }
+      opt: 'gim',
+    },
   },
   fioDomain: {
     required: true,
@@ -34,24 +34,24 @@ export const allRules = {
     length: { min: 1, max: 62 },
     matchParams: {
       regex: '^[a-z0-9\\-]+$',
-      opt: 'i'
-    }
+      opt: 'i',
+    },
   },
   fioPublicKey: {
     required: true,
     type: String,
     length: { min: 1, max: 62 },
     matchParams: {
-      regex: '^FIO\\w+$'
-    }
+      regex: '^FIO\\w+$',
+    },
   },
   nativeBlockchainPublicAddress: {
     required: true,
     type: String,
     length: { min: 1, max: 128 },
     matchParams: {
-      regex: '^\\w+$'
-    }
+      regex: '^\\w+$',
+    },
   },
 }
 
@@ -114,17 +114,17 @@ export function validate(data: any, rules: any): { isValid: boolean, errors: Err
   for (const ruleKey in rules) {
     schema[ruleKey] = { ...rules[ruleKey] }
     if (rules[ruleKey].matchParams && rules[ruleKey].matchParams.regex) {
-      schema[ruleKey].match = new RegExp(rules[ruleKey].matchParams.regex, rules[ruleKey].matchParams.opt);
+      schema[ruleKey].match = new RegExp(rules[ruleKey].matchParams.regex, rules[ruleKey].matchParams.opt)
       delete schema[ruleKey].matchParams
     }
   }
   const validator = new Schema(schema)
-  const errors: { path: string, message: string }[] = validator.validate(data)
+  const errors: Array<{ path: string, message: string }> = validator.validate(data)
   const validationResult: { isValid: boolean, errors: ErrObj[] } = { isValid: true, errors: [] }
 
   if (errors.length) {
     validationResult.isValid = false
-    validationResult.errors = errors.map(err => ({ field: err.path, message: err.message }))
+    validationResult.errors = errors.map((err) => ({ field: err.path, message: err.message }))
   }
 
   return validationResult

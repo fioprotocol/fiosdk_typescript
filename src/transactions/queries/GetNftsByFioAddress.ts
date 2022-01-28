@@ -1,13 +1,11 @@
-import { Query } from './Query'
 import { NftsResponse } from '../../entities/NftsResponse'
-
+import { Query } from './Query'
 
 export class GetNftsByFioAddress extends Query<NftsResponse> {
-  ENDPOINT: string = 'chain/get_nfts_fio_address'
-  fioAddress: string
-  limit: number | null
-  offset: number | null
-
+  public ENDPOINT: string = 'chain/get_nfts_fio_address'
+  public fioAddress: string
+  public limit: number | null
+  public offset: number | null
 
   constructor(fioAddress: string, limit?: number, offset?: number) {
     super()
@@ -16,11 +14,11 @@ export class GetNftsByFioAddress extends Query<NftsResponse> {
     this.offset = offset || null
   }
 
-  getData() {
+  public getData() {
     return {
       fio_address: this.fioAddress,
       limit: this.limit || null,
-      offset: this.offset || null
+      offset: this.offset || null,
     }
   }
 }

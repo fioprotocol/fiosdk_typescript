@@ -1,5 +1,5 @@
-import { GetObtDataResponse } from '../../entities/GetObtDataResponse'
 import { GetObtDataRecord } from '../../entities/GetObtDataRecord'
+import { GetObtDataResponse } from '../../entities/GetObtDataResponse'
 import { Query } from './Query'
 
 export class GetObtData extends Query<GetObtDataResponse> {
@@ -30,16 +30,26 @@ export class GetObtData extends Query<GetObtDataResponse> {
         const contentType = 'record_obt_data_content'
         try {
           if (obtDataRecord.payer_fio_public_key === this.publicKey) {
-            content = this.getUnCipherContent(contentType, obtDataRecord.content, this.privateKey, obtDataRecord.payee_fio_public_key)
+            content = this.getUnCipherContent(
+              contentType,
+              obtDataRecord.content,
+              this.privateKey,
+              obtDataRecord.payee_fio_public_key,
+            )
           } else {
-            content = this.getUnCipherContent(contentType, obtDataRecord.content, this.privateKey, obtDataRecord.payer_fio_public_key)
+            content = this.getUnCipherContent(
+              contentType,
+              obtDataRecord.content,
+              this.privateKey,
+              obtDataRecord.payer_fio_public_key,
+            )
           }
         } catch (e) {
           // UnCipherContent error
           // console.log(e)
         }
         if (content) {
-          if (this.tokenCode && content.token_code && content.token_code !== this.tokenCode) return
+          if (this.tokenCode && content.token_code && content.token_code !== this.tokenCode) { return }
           obtDataRecord.content = content
         }
         obtDataRecords.push(obtDataRecord)

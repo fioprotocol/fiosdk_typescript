@@ -1,16 +1,16 @@
 import { Transactions } from '../Transactions'
 
 export abstract class Query<T> extends Transactions {
-  abstract ENDPOINT: string
+  public abstract ENDPOINT: string
 
-  abstract getData(): any
+  public isEncrypted = false
 
-  decrypt(result: any): any {
+  public abstract getData(): any
+
+  public decrypt(result: any): any {
   }
 
-  isEncrypted = false
-
-  async execute(publicKey: string, privateKey: string = ''): Promise<any> {
+  public async execute(publicKey: string, privateKey: string = ''): Promise<any> {
     this.publicKey = publicKey
     this.privateKey = privateKey
     if (!this.isEncrypted) {
@@ -25,7 +25,7 @@ export abstract class Query<T> extends Transactions {
     }
   }
 
-  getEndPoint(): string {
+  public getEndPoint(): string {
     return this.ENDPOINT
   }
 

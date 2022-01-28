@@ -1,6 +1,6 @@
-import { SignedTransaction } from './SignedTransaction'
-import { validationRules } from '../../utils/validation'
 import { Constants } from '../../utils/constants'
+import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class SetFioDomainVisibility extends SignedTransaction {
 

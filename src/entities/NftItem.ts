@@ -1,4 +1,4 @@
-export type NftItem = {
+export interface NftItem {
   chain_code: string;
   contract_address: string;
   token_id: string;

@@ -1,5 +1,5 @@
-import { Query } from './Query'
 import { LocksResponse } from '../../entities/LocksResponse'
+import { Query } from './Query'
 
 export class GetLocks extends Query<LocksResponse> {
   public ENDPOINT: string = 'chain/get_locks'

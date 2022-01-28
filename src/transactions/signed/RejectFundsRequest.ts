@@ -1,14 +1,14 @@
-import { SignedTransaction } from './SignedTransaction'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class RejectFundsRequest extends SignedTransaction {
 
-  ENDPOINT: string = 'chain/reject_funds_request'
-  ACTION: string = 'rejectfndreq'
-  ACCOUNT: string = 'fio.reqobt'
-  fioreqid: number
-  maxFee: number
-  technologyProviderId: string
+  public ENDPOINT: string = 'chain/reject_funds_request'
+  public ACTION: string = 'rejectfndreq'
+  public ACCOUNT: string = 'fio.reqobt'
+  public fioreqid: number
+  public maxFee: number
+  public technologyProviderId: string
 
   constructor(fioreqid: number, maxFee: number, technologyProviderId: string = '') {
     super()
@@ -20,13 +20,13 @@ export class RejectFundsRequest extends SignedTransaction {
     this.validationRules = validationRules.rejectFunds
   }
 
-  getData(): any {
-    let actor = this.getActor()
-    let data = {
+  public getData(): any {
+    const actor = this.getActor()
+    const data = {
       fio_request_id: this.fioreqid,
       max_fee: this.maxFee,
       tpid: this.technologyProviderId,
-      actor: actor
+      actor,
     }
     return data
   }

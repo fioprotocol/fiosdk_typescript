@@ -1,4 +1,4 @@
-export type ErrObj = {
+export interface ErrObj {
   field: string,
   message: string
 }

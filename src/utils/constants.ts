@@ -31,7 +31,7 @@ export class Constants {
     'fio.treasury',
     'fio.tpid',
     'fio.staking',
-    'fio.escrow'
+    'fio.escrow',
   ]
 
   public static multiplier = 1000000000
