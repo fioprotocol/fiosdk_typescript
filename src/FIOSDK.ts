@@ -42,6 +42,7 @@ import { ValidationError } from './entities/ValidationError'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
+import { EncryptOptions } from './transactions/signed/PushTransaction'
 import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
@@ -1363,13 +1364,38 @@ export class FIOSDK {
    * @param account Account name
    * @param action Name of action
    * @param data JSON object with params for action
+   * @param encryptOptions JSON object with params for encryption
    */
-  public pushTransaction(account: string, action: string, data: any): Promise<any> {
+  public async pushTransaction(
+    account: string,
+    action: string,
+    data: any,
+    encryptOptions: EncryptOptions = {},
+  ): Promise<any> {
     data.tpid = this.getTechnologyProviderId(data.tpid)
+    if (data.content && !encryptOptions.key) {
+      switch (action) {
+        case 'newfundsreq': {
+          const payerKey = await this.getFioPublicAddress(data.payer_fio_address)
+          encryptOptions.key = payerKey.public_address
+          encryptOptions.contentType = 'new_funds_content'
+          break
+        }
+        case 'recordobt': {
+          const payeeKey = await this.getFioPublicAddress(data.payee_fio_address)
+          encryptOptions.key = payeeKey.public_address
+          encryptOptions.contentType = 'record_obt_data_content'
+          break
+        }
+        default:
+        //
+      }
+    }
     const pushTransaction = new SignedTransactions.PushTransaction(
       action,
       account,
       data,
+      encryptOptions,
     )
     return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
@@ -1630,7 +1656,7 @@ export class FIOSDK {
       case 'getMultiplier':
         return this.getMultiplier()
       case 'pushTransaction':
-        return this.pushTransaction(params.account, params.action, params.data)
+        return this.pushTransaction(params.account, params.action, params.data, params.encryptOptions)
     }
   }
 
