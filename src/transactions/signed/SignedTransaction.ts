@@ -11,15 +11,12 @@ export abstract class SignedTransaction extends Transactions {
   ): any {
     if (result.processed) {
       const processed = SignedTransaction.parseProcessedResult(result.processed)
-      if (includeTrxId) {
-        return {
+      return {
           transaction_id: result.transaction_id,
           block_num: result.processed.block_num,
           ...processed,
         }
-      }
 
-      return processed
     }
     return result
   }
