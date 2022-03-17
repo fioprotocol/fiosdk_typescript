@@ -12,8 +12,8 @@ export abstract class SignedTransaction extends Transactions {
     if (result.processed) {
       const processed = SignedTransaction.parseProcessedResult(result.processed)
       return {
-          transaction_id: result.transaction_id,
           block_num: result.processed.block_num,
+          transaction_id: result.transaction_id,
           ...processed,
         }
 

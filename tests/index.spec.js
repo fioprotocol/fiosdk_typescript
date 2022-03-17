@@ -274,19 +274,23 @@ describe('Testing generic actions', () => {
   it(`Register fio domain`, async () => {
     const result = await fioSdk.genericAction('registerFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
 
-    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Renew fio domain`, async () => {
     const result = await fioSdk.genericAction('renewFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
 
-    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`setFioDomainVisibility true`, async () => {
@@ -297,9 +301,11 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Register fio address`, async () => {
@@ -307,10 +313,12 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress,
       maxFee: defaultFee
     })
-    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Register owner fio address`, async () => {
@@ -320,18 +328,22 @@ describe('Testing generic actions', () => {
       ownerPublicKey: publicKey2,
       maxFee: defaultFee
     })
-    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Renew fio address`, async () => {
     const result = await fioSdk.genericAction('renewFioAddress', { fioAddress: newFioAddress, maxFee: defaultFee })
-    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Push Transaction - renewaddress`, async () => {
@@ -346,10 +358,12 @@ describe('Testing generic actions', () => {
       }
     })
 
-    expect(result).to.have.all.keys('status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getFioNames`, async () => {
@@ -379,9 +393,11 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`setFioDomainVisibility true`, async () => {
@@ -392,9 +408,11 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getFee for transferFioDomain`, async () => {
@@ -413,9 +431,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getFee for addBundledTransactions`, async () => {
@@ -434,9 +454,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getFee for addPublicAddress`, async () => {
@@ -458,9 +480,11 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Add public addresses`, async () => {
@@ -482,9 +506,11 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
 
@@ -530,9 +556,11 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getFee for removeAllPublicAddresses`, async () => {
@@ -564,9 +592,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       technologyProviderId: ''
     })
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`isAvailable true`, async () => {
@@ -638,9 +668,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getFee for BurnFioAddress`, async () => {
@@ -658,9 +690,11 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 })
 
@@ -679,9 +713,11 @@ describe('Staking tests', () => {
       technologyProviderId: stakingTPID,
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Check staked amount`, async () => {
@@ -697,9 +733,11 @@ describe('Staking tests', () => {
       technologyProviderId: stakingTPID,
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Check locks`, async () => {
@@ -759,9 +797,11 @@ describe('NFT tests', () => {
       }
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getNfts by chain code and contract address`, async () => {
@@ -828,10 +868,12 @@ describe('Request funds, approve and send', () => {
     })
 
     requestId = result.fio_request_id
-    expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getPendingFioRequests`, async () => {
@@ -884,9 +926,11 @@ describe('Request funds, approve and send', () => {
       obtId: '',
       maxFee: defaultFee,
     })
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getReceivedFioRequests`, async () => {
@@ -957,10 +1001,12 @@ describe('Request funds, cancel funds request', () => {
     })
 
     requestId = result.fio_request_id
-    expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`cancel request`, async () => {
@@ -970,9 +1016,11 @@ describe('Request funds, cancel funds request', () => {
         maxFee: defaultFee,
         tpid: ''
       })
-      expect(result).to.have.all.keys('status', 'fee_collected')
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
       expect(result.status).to.be.a('string')
       expect(result.fee_collected).to.be.a('number')
+      expect(result.block_num).to.be.a('number')
+      expect(result.transaction_id).to.be.a('string')
     } catch (e) {
       console.log(e);
     }
@@ -1020,10 +1068,12 @@ describe('Request funds, reject', () => {
     })
 
     requestId = result.fio_request_id
-    expect(result).to.have.all.keys('fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`getPendingFioRequests`, async () => {
@@ -1058,9 +1108,11 @@ describe('Request funds, reject', () => {
       maxFee: defaultFee,
     })
 
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
 })
@@ -1125,9 +1177,11 @@ describe('Record obt data, check', () => {
       obtId,
       maxFee: defaultFee,
     })
-    expect(result).to.have.all.keys('status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
   })
 
   it(`Payer getObtData`, async () => {
