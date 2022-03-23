@@ -25,8 +25,15 @@ export abstract class SignedTransaction extends Transactions {
   }
 
   public static parseProcessedResult(processed: { action_traces: Array<{ receipt: { response: string }}>}) {
-    return JSON.parse(processed.action_traces[0].receipt.response)
+    try {
+      return JSON.parse(processed.action_traces[0].receipt.response)
+    } catch (e) {
+      console.error(e)
+    }
+
+    return {}
   }
+
   public abstract ENDPOINT: string
   public abstract ACTION: string
   public abstract ACCOUNT: string
