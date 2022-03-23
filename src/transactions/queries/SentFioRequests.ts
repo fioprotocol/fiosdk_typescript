@@ -7,13 +7,15 @@ export class SentFioRequests extends Query<SentFioRequestResponse> {
   public fioPublicKey: string
   public limit: number | null
   public offset: number | null
+  public includeEncrypted: boolean
   public isEncrypted = true
 
-  constructor(fioPublicKey: string, limit: number | null = null, offset: number | null = null) {
+  constructor(fioPublicKey: string, limit: number | null = null, offset: number | null = null, includeEncrypted: boolean = false) {
     super()
     this.fioPublicKey = fioPublicKey
     this.limit = limit
     this.offset = offset
+    this.includeEncrypted = includeEncrypted
   }
 
   public getData() {
@@ -36,7 +38,7 @@ export class SentFioRequests extends Query<SentFioRequestResponse> {
           value.content = content
           requests.push(value)
         } catch (e) {
-          //
+          if (this.includeEncrypted) requests.push(value)
         }
       })
       return { requests, more: result.more }
