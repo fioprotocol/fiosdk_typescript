@@ -138,6 +138,9 @@ describe('Testing generic actions', () => {
 
     const sufg = FIOSDK.amountToSUF(2.123)
     expect(sufg).to.equal(2123000000)
+
+    const sufh = FIOSDK.amountToSUF(10.0102)
+    expect(sufh).to.equal(10010200000)
   })
 
   it(`FIO SUF Utilities - SUFToAmount`, async () => {
@@ -161,6 +164,9 @@ describe('Testing generic actions', () => {
 
     const sufg = FIOSDK.SUFToAmount(2123000000)
     expect(sufg).to.equal(2.123)
+
+    const sufh = FIOSDK.SUFToAmount(10010200000)
+    expect(sufh).to.equal(10.0102)
   })
 
   it(`Validation methods`, async () => {

@@ -235,7 +235,7 @@ export class FIOSDK {
     const tempResult = floor * this.SUFUnit
 
     // get remainder
-    const remainder = (amount % 1)
+    const remainder: number = Number((amount % 1).toFixed(9))
     const remainderResult = remainder * (this.SUFUnit)
     const floorRemainder = Math.floor(remainderResult)
 
