@@ -244,6 +244,33 @@ export class Transactions {
     return await api.transact(transaction, { sign: false })
   }
 
+  public async deserialize(
+    {
+      chainId,
+      abiMap = Transactions.abiMap,
+      serializedTransaction,
+      textDecoder = defaultTextDecoder,
+      textEncoder = defaultTextEncoder,
+    }: {
+      serializedTransaction: Uint8Array,
+      chainId: string,
+      abiMap?: Map<string, any>,
+      textDecoder?: TextDecoder,
+      textEncoder?: TextEncoder,
+    },
+  ): Promise<RawTransaction> {
+
+    const api = this.initFioJsApi({
+      abiMap,
+      chainId,
+      privateKeys: [],
+      textDecoder,
+      textEncoder,
+    })
+
+    return await api.deserializeTransactionWithActions(serializedTransaction)
+  }
+
   public async sign(
     {
       abiMap = Transactions.abiMap,
