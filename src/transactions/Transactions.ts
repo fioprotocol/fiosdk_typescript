@@ -128,14 +128,14 @@ export class Transactions {
         try {
           error.json = await res.json()
         } catch (e) {
-          console.log(e);
+          console.log(e)
           error.json = {}
         }
         error.errorCode = res.status
         throw error
       }
       return res.json()
-    } catch (e: any) {
+    } catch (e) {
       e.requestParams = { endPoint, body, fetchOptions }
       throw e
     }

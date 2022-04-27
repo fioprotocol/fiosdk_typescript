@@ -1,6 +1,6 @@
-import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class BurnFioAddress extends SignedTransaction {
     public ENDPOINT: string = 'chain/burn_fio_address'

@@ -19,7 +19,7 @@ const fetchJson = async (uri, opts = {}) => {
 const privateKey = 'your_private_key as generated on testnet'
 const publicKey = 'your_public_key as generated on testnet'
 
-const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
+const baseUrl = 'https://fiotestnet.blockpane.com/v1/'
 
 const fioAddress = 'your_fio_address@fiotestnet'
 const defaultFee = 800 * fio.FIOSDK.SUFUnit

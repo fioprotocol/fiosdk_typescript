@@ -1,24 +1,24 @@
-import { SignedTransaction } from './SignedTransaction'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class RecordObtData extends SignedTransaction {
 
-  ENDPOINT: string = 'chain/record_obt_data'
-  ACTION: string = 'recordobt'
-  ACCOUNT: string = 'fio.reqobt'
+  public ENDPOINT: string = 'chain/record_obt_data'
+  public ACTION: string = 'recordobt'
+  public ACCOUNT: string = 'fio.reqobt'
 
-  payerFioAddress: string
-  payeeFioPublicKey: string
-  payeeFioAddress: string
-  fioRequestId: number | null = null
-  maxFee: number
-  technologyProviderId: string = ''
-  payerPublicAddress: string
-  payeePublicAddress: string
+  public payerFioAddress: string
+  public payeeFioPublicKey: string
+  public payeeFioAddress: string
+  public fioRequestId: number | null = null
+  public maxFee: number
+  public technologyProviderId: string = ''
+  public payerPublicAddress: string
+  public payeePublicAddress: string
 
-  defaultStatus: string = 'sent_to_blockchain'
+  public defaultStatus: string = 'sent_to_blockchain'
 
-  content: any
+  public content: any
 
   constructor(
     fioRequestId: number | null,
@@ -58,27 +58,27 @@ export class RecordObtData extends SignedTransaction {
       token_code: tokenCode,
       status: status || this.defaultStatus,
       obt_id: obtID,
-      memo: memo,
-      hash: hash,
-      offline_url: offLineUrl
+      memo,
+      hash,
+      offline_url: offLineUrl,
     }
 
-    this.validationData = { payerFioAddress: payerFioAddress, payeeFioAddress: payeeFioAddress, tpid: technologyProviderId || null, tokenCode }
+    this.validationData = { payerFioAddress, payeeFioAddress, tpid: technologyProviderId || null, tokenCode }
     this.validationRules = validationRules.recordObtData
 
   }
 
-  getData(): any {
-    let actor = this.getActor()
+  public getData(): any {
+    const actor = this.getActor()
     const cipherContent = this.getCipherContent('record_obt_data_content', this.content, this.privateKey, this.payeeFioPublicKey)
-    let data = {
+    const data = {
       payer_fio_address: this.payerFioAddress,
       payee_fio_address: this.payeeFioAddress,
       content: cipherContent,
       fio_request_id: this.fioRequestId || '',
       max_fee: this.maxFee,
-      actor: actor,
-      tpid: this.technologyProviderId
+      actor,
+      tpid: this.technologyProviderId,
     }
     return data
   }

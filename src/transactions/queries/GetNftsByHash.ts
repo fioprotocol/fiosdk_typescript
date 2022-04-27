@@ -1,13 +1,11 @@
-import { Query } from './Query'
 import { NftsResponse } from '../../entities/NftsResponse'
-
+import { Query } from './Query'
 
 export class GetNftsByHash extends Query<NftsResponse> {
-  ENDPOINT: string = 'chain/get_nfts_hash'
-  hash: string
-  limit: number | null
-  offset: number | null
-
+  public ENDPOINT: string = 'chain/get_nfts_hash'
+  public hash: string
+  public limit: number | null
+  public offset: number | null
 
   constructor(hash: string, limit?: number, offset?: number) {
     super()
@@ -16,11 +14,11 @@ export class GetNftsByHash extends Query<NftsResponse> {
     this.offset = offset || null
   }
 
-  getData() {
+  public getData() {
     return {
       hash: this.hash,
       limit: this.limit || null,
-      offset: this.offset || null
+      offset: this.offset || null,
     }
   }
 }

@@ -1,12 +1,11 @@
-import { Query } from './Query'
 import { PublicAddressResponse } from '../../entities/PublicAddressResponse'
-
+import { Query } from './Query'
 
 export class GetPublicAddress extends Query<PublicAddressResponse> {
-  ENDPOINT: string = 'chain/get_pub_address'
-  fioAddress: string
-  chainCode: string
-  tokenCode: string
+  public ENDPOINT: string = 'chain/get_pub_address'
+  public fioAddress: string
+  public chainCode: string
+  public tokenCode: string
 
   constructor(fioAddress: string, chainCode: string, tokenCode: string) {
     super()
@@ -15,11 +14,11 @@ export class GetPublicAddress extends Query<PublicAddressResponse> {
     this.tokenCode = tokenCode
   }
 
-  getData() {
+  public getData() {
     return {
       fio_address: this.fioAddress,
       chain_code: this.chainCode,
-      token_code: this.tokenCode
+      token_code: this.tokenCode,
     }
   }
 }

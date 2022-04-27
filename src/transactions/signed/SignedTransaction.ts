@@ -4,6 +4,33 @@ import { RawTransaction } from '../../entities/RawTransaction'
 import { Transactions } from '../Transactions'
 
 export abstract class SignedTransaction extends Transactions {
+
+  public static prepareResponse(
+    result: { transaction_id: string, processed: { block_num: number, action_traces: Array<{ receipt: { response: string }}>} } | any,
+    includeTrxId: boolean = false,
+  ): any {
+    if (result.processed) {
+      const processed = SignedTransaction.parseProcessedResult(result.processed)
+      return {
+          block_num: result.processed.block_num,
+          transaction_id: result.transaction_id,
+          ...processed,
+        }
+
+    }
+    return result
+  }
+
+  public static parseProcessedResult(processed: { action_traces: Array<{ receipt: { response: string }}>}) {
+    try {
+      return JSON.parse(processed.action_traces[0].receipt.response)
+    } catch (e) {
+      console.error(e)
+    }
+
+    return {}
+  }
+
   public abstract ENDPOINT: string
   public abstract ACTION: string
   public abstract ACCOUNT: string
@@ -28,31 +55,8 @@ export abstract class SignedTransaction extends Transactions {
     return this.prepareResponse(result)
   }
 
-  public prepareResponse(result: { processed: { action_traces: { receipt: { response: string }}[]} } | any): any {
+  public prepareResponse(result: { processed: { action_traces: Array<{ receipt: { response: string }}>} } | any): any {
     return SignedTransaction.prepareResponse(result)
-  }
-
-  public static prepareResponse(
-    result: { transaction_id: string, processed: { block_num: number, action_traces: { receipt: { response: string }}[]} } | any,
-    includeTrxId: boolean = false
-  ): any {
-    if (result.processed) {
-      const processed = SignedTransaction.parseProcessedResult(result.processed)
-      if (includeTrxId) {
-        return {
-          transaction_id: result.transaction_id,
-          block_num: result.processed.block_num,
-          ...processed
-        }
-      }
-
-      return processed
-    }
-    return result
-  }
-
-  public static parseProcessedResult(processed: { action_traces: { receipt: { response: string }}[]}) {
-    return JSON.parse(processed.action_traces[0].receipt.response)
   }
 
   public getAction(): string {

@@ -1,6 +1,6 @@
-import { SignedTransaction } from './SignedTransaction'
 import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class RemoveAllPublicAddresses extends SignedTransaction {
   public ENDPOINT: string = 'chain/remove_all_pub_addresses'

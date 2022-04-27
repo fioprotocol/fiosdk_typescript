@@ -1,55 +1,57 @@
 import { Fio } from '@fioprotocol/fiojs'
+import { EndPoint } from './entities/EndPoint'
 import {LockPeriod} from './entities/LockPeriod'
+import { PublicAddress } from './entities/PublicAddress'
 import {
   AbiResponse,
-  AddPublicAddressResponse,
-  CancelFundsRequestResponse,
-  TransferLockedTokensResponse,
   AccountResponse,
-  LocksResponse,
-  RemovePublicAddressesResponse,
-  RemoveAllPublicAddressesResponse,
-  BurnFioAddressResponse,
-  TransferFioAddressResponse,
-  TransferFioDomainResponse,
   AddBundledTransactionsResponse,
+  AddPublicAddressResponse,
   AvailabilityResponse,
   BalanceResponse,
+  BurnFioAddressResponse,
+  CancelFundsRequestResponse,
+  CancelledFioRequestResponse,
+  FioAddressesResponse,
   FioFeeResponse,
   FioNamesResponse,
+  GetObtDataResponse,
+  LocksResponse,
   PendingFioRequestsResponse,
-  ReceivedFioRequestsResponse,
-  PublicAddressResponse,
   PublicAddressesResponse,
+  PublicAddressResponse,
+  ReceivedFioRequestsResponse,
   RecordObtDataResponse,
   RegisterFioAddressResponse,
   RegisterFioDomainResponse,
   RejectFundsResponse,
+  RemoveAllPublicAddressesResponse,
+  RemovePublicAddressesResponse,
   RenewFioAddressResponse,
   RenewFioDomainResponse,
   RequestFundsResponse,
   SentFioRequestResponse,
   SetFioDomainVisibilityResponse,
-  TransferTokensResponse,
-  GetObtDataResponse,
-  CancelledFioRequestResponse,
-  FioAddressesResponse,
   TransactionResponse,
+  TransferFioAddressResponse,
+  TransferFioDomainResponse,
+  TransferLockedTokensResponse,
+  TransferTokensResponse,
 } from './entities/responses'
-import { EndPoint } from './entities/EndPoint'
-import { PublicAddress } from './entities/PublicAddress'
+import { ValidationError } from './entities/ValidationError'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
-import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
+import { EncryptOptions } from './transactions/signed/PushTransaction'
+import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
-import { validate, allRules } from './utils/validation'
-import { ValidationError } from './entities/ValidationError'
+import { allRules, validate } from './utils/validation'
 
 /**
  * @ignore
  */
+// tslint:disable-next-line:no-var-requires
 const { Ecc } = require('@fioprotocol/fiojs')
 
 /**
@@ -62,6 +64,11 @@ export class FIOSDK {
    * @ignore
    */
   public static ReactNativeFio: any
+
+  /**
+   * SUFs = Smallest Units of FIO
+   */
+  public static SUFUnit: number = 1000000000
 
   /**
    * @ignore
@@ -212,7 +219,6 @@ export class FIOSDK {
     return true
   }
 
-
   /**
    * Convert a FIO Token Amount to FIO SUFs
    *
@@ -229,7 +235,7 @@ export class FIOSDK {
     const tempResult = floor * this.SUFUnit
 
     // get remainder
-    const remainder = (amount % 1)
+    const remainder: number = Number((amount % 1).toFixed(9))
     const remainderResult = remainder * (this.SUFUnit)
     const floorRemainder = Math.floor(remainderResult)
 
@@ -245,7 +251,7 @@ export class FIOSDK {
    * @returns FIO Token amount
    */
   public static SUFToAmount(suf: number): number {
-    return parseInt(`${suf}`) / this.SUFUnit
+    return parseInt(`${suf}`, 10) / this.SUFUnit
   }
 
   public transactions: Transactions
@@ -269,11 +275,6 @@ export class FIOSDK {
    * Default FIO Address of the wallet which generates transactions.
    */
   public technologyProviderId: string
-
-  /**
-   * SUFs = Smallest Units of FIO
-   */
-  public static SUFUnit: number = 1000000000
 
   /**
    * Defines whether SignedTransaction would execute or return prepared transaction
@@ -355,7 +356,7 @@ export class FIOSDK {
    */
   public async executePreparedTrx(
     endPoint: string,
-    preparedTrx: object
+    preparedTrx: object,
   ): Promise<any> {
     const response = await this.transactions.executeCall(`chain/${endPoint}`, JSON.stringify(preparedTrx))
     return SignedTransaction.prepareResponse(response, true)
@@ -601,7 +602,7 @@ export class FIOSDK {
       [{
         chain_code: chainCode,
         token_code: tokenCode,
-        public_address: publicAddress
+        public_address: publicAddress,
       }],
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
@@ -628,7 +629,6 @@ export class FIOSDK {
     )
     return cancelFundsRequest.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
-
 
   /**
    * This call allows a any number of public addresses matching the blockchain code, the token code and the public address to be removed from the FIO Address.
@@ -682,8 +682,6 @@ export class FIOSDK {
     return transferLockedTokens.execute(this.privateKey, this.publicKey)
   }
 
-
-
   /**
    * This call allows a user to remove all addresses from the specified FIO Address, all addresses except the FIO address will be removed.
    *
@@ -703,7 +701,6 @@ export class FIOSDK {
     )
     return removeAllPublicAddresses.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
-
 
   /**
    * This call allows a public addresses of the specific blockchain type to be added to the FIO Address.
@@ -993,9 +990,10 @@ export class FIOSDK {
    *
    * @param limit Number of request to return. If omitted, all requests will be returned.
    * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param includeEncrypted Set to true if you want to include not encrypted data in return.
    */
-  public getReceivedFioRequests(limit?: number, offset?: number): Promise<ReceivedFioRequestsResponse> {
-    const receivedFioRequests = new queries.ReceivedFioRequests(this.publicKey, limit, offset)
+  public getReceivedFioRequests(limit?: number, offset?: number, includeEncrypted?: boolean): Promise<ReceivedFioRequestsResponse> {
+    const receivedFioRequests = new queries.ReceivedFioRequests(this.publicKey, limit, offset, includeEncrypted)
     return receivedFioRequests.execute(this.publicKey, this.privateKey)
   }
 
@@ -1004,9 +1002,10 @@ export class FIOSDK {
    *
    * @param limit Number of request to return. If omitted, all requests will be returned.
    * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param includeEncrypted Set to true if you want to include not encrypted data in return.
    */
-  public getSentFioRequests(limit?: number, offset?: number): Promise<SentFioRequestResponse> {
-    const sentFioRequest = new queries.SentFioRequests(this.publicKey, limit, offset)
+  public getSentFioRequests(limit?: number, offset?: number, includeEncrypted?: boolean): Promise<SentFioRequestResponse> {
+    const sentFioRequest = new queries.SentFioRequests(this.publicKey, limit, offset, includeEncrypted)
     return sentFioRequest.execute(this.publicKey, this.privateKey)
   }
 
@@ -1098,7 +1097,7 @@ export class FIOSDK {
       chainCode,
       contractAddress,
       tokenId,
-      hash
+      hash,
     } = options
     let nftsLookUp
     if (fioAddress != null && fioAddress != '') {
@@ -1125,7 +1124,7 @@ export class FIOSDK {
       )
     }
 
-    if (nftsLookUp == null) throw new Error('At least one of these options should be set: fioAddress, chainCode/contractAddress, hash')
+    if (nftsLookUp == null) { throw new Error('At least one of these options should be set: fioAddress, chainCode/contractAddress, hash') }
     return nftsLookUp.execute(this.publicKey)
   }
 
@@ -1162,7 +1161,6 @@ export class FIOSDK {
   public getFeeForTransferLockedTokens(fioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.transferLockedTokens, fioAddress)
   }
-
 
   /**
    * Compute and return fee amount for specific call and specific user
@@ -1320,8 +1318,8 @@ export class FIOSDK {
         amount,
         fio_address: fioAddress,
         max_fee: fee,
-        tpid: technologyProviderId
-      }
+        tpid: technologyProviderId,
+      },
     )
   }
 
@@ -1350,8 +1348,8 @@ export class FIOSDK {
         amount,
         fio_address: fioAddress,
         max_fee: fee,
-        tpid: technologyProviderId
-      }
+        tpid: technologyProviderId,
+      },
     )
   }
 
@@ -1368,13 +1366,38 @@ export class FIOSDK {
    * @param account Account name
    * @param action Name of action
    * @param data JSON object with params for action
+   * @param encryptOptions JSON object with params for encryption
    */
-  public pushTransaction(account: string, action: string, data: any): Promise<any> {
+  public async pushTransaction(
+    account: string,
+    action: string,
+    data: any,
+    encryptOptions: EncryptOptions = {},
+  ): Promise<any> {
     data.tpid = this.getTechnologyProviderId(data.tpid)
+    if (data.content && !encryptOptions.key) {
+      switch (action) {
+        case 'newfundsreq': {
+          const payerKey = await this.getFioPublicAddress(data.payer_fio_address)
+          encryptOptions.key = payerKey.public_address
+          encryptOptions.contentType = 'new_funds_content'
+          break
+        }
+        case 'recordobt': {
+          const payeeKey = await this.getFioPublicAddress(data.payee_fio_address)
+          encryptOptions.key = payeeKey.public_address
+          encryptOptions.contentType = 'record_obt_data_content'
+          break
+        }
+        default:
+        //
+      }
+    }
     const pushTransaction = new SignedTransactions.PushTransaction(
       action,
       account,
       data,
+      encryptOptions,
     )
     return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
@@ -1576,11 +1599,11 @@ export class FIOSDK {
       case 'getPendingFioRequests':
         return this.getPendingFioRequests(params.limit, params.offset)
       case 'getReceivedFioRequests':
-        return this.getReceivedFioRequests(params.limit, params.offset)
+        return this.getReceivedFioRequests(params.limit, params.offset, params.includeEncrypted)
       case 'getCancelledFioRequests':
         return this.getCancelledFioRequests(params.limit, params.offset)
       case 'getSentFioRequests':
-        return this.getSentFioRequests(params.limit, params.offset)
+        return this.getSentFioRequests(params.limit, params.offset, params.includeEncrypted)
       case 'getPublicAddress':
         return this.getPublicAddress(params.fioAddress, params.chainCode, params.tokenCode)
       case 'getPublicAddresses':
@@ -1635,7 +1658,7 @@ export class FIOSDK {
       case 'getMultiplier':
         return this.getMultiplier()
       case 'pushTransaction':
-        return this.pushTransaction(params.account, params.action, params.data)
+        return this.pushTransaction(params.account, params.action, params.data, params.encryptOptions)
     }
   }
 

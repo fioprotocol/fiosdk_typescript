@@ -19,7 +19,11 @@ let privateKey = '',
   privateKey2 = '',
   publicKey2 = ''
 
-const baseUrl = 'https://testnet.fioprotocol.io:443/v1/'
+/**
+ * Public Testnet API nodes can be found at: https://github.com/fioprotocol/fio.mainnet
+ */
+
+ const baseUrl = 'https://testnet.fioprotocol.io/v1/'   // e.g., 'https://testnet.fioprotocol.io/v1/'
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'

@@ -1,6 +1,6 @@
 
-import { SignedTransaction } from './SignedTransaction'
 import { validationRules } from '../../utils/validation'
+import { SignedTransaction } from './SignedTransaction'
 
 export class CancelFundsRequest extends SignedTransaction {
   public ENDPOINT: string = 'chain/cancel_funds_request'

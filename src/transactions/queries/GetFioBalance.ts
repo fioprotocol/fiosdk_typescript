@@ -1,16 +1,16 @@
-import { Query } from './Query'
 import { BalanceResponse } from '../../entities/BalanceResponse'
+import { Query } from './Query'
 
 export class GetFioBalance extends Query<BalanceResponse> {
-  ENDPOINT: string = 'chain/get_fio_balance'
-  keyToUse: string
+  public ENDPOINT: string = 'chain/get_fio_balance'
+  public keyToUse: string
 
   constructor(othersBalance?: string) {
     super()
     this.keyToUse = othersBalance || ''
   }
 
-  getData() {
+  public getData() {
     return { fio_public_key: this.keyToUse || this.publicKey }
   }
 
