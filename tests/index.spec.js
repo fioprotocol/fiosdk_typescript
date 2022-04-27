@@ -14,7 +14,7 @@ const mnemonic = 'property follow talent guilt uncover someone gain powder urge 
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
 
 /**
- * Urls required
+ * Url for local dev node
  */
 const baseUrl = ''  // e.g., 'http://localhost:8889/v1/'
 
@@ -32,7 +32,6 @@ const fundAmount = 800 * FIOSDK.SUFUnit
 const defaultFee = 800 * FIOSDK.SUFUnit
 const defaultBundledSets = 1
 const receiveTransferTimout = 5000
-const stakingTPID = ''
 
 let fioSdk, fioSdk2
 
@@ -708,22 +707,53 @@ describe('Staking tests', () => {
   let stakedBalance = 0;
   const stakeAmount = FIOSDK.amountToSUF(5);
   const unStakeAmount = FIOSDK.amountToSUF(2);
+  let accountName;
+
+  it(`accountHash`, async () => {
+    accountName = FIOSDK.accountHash(publicKey).accountnm;
+  })
+
+  it(`fioSdk votes for bp1@dapixdev`, async () => {
+    try {
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'voteproducer',
+        account: 'eosio',
+        data: {
+          "producers": [
+            'bp1@dapixdev'
+          ],
+          fio_address: testFioAddressName,
+          actor: accountName,
+          max_fee: defaultFee
+        }
+      })
+      //console.log('Result: ', result)
+      expect(result.status).to.equal('OK')
+    } catch (err) {
+      console.log('Error: ', err.json);
+      expect(err).to.equal('null');
+    }
+  })
 
   it(`Stake`, async () => {
-    const { staked } = await fioSdk.genericAction('getFioBalance', {});
-    stakedBalance = staked;
+    try {
+      const { staked } = await fioSdk.genericAction('getFioBalance', {});
+      stakedBalance = staked;
 
-    const result = await fioSdk.genericAction('stakeFioTokens', {
-      amount: stakeAmount,
-      fioAddress: testFioAddressName,
-      technologyProviderId: stakingTPID,
-    })
+      const result = await fioSdk.genericAction('stakeFioTokens', {
+        amount: stakeAmount,
+        fioAddress: testFioAddressName,
+        technologyProviderId: "",
+      })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-    expect(result.block_num).to.be.a('number')
-    expect(result.transaction_id).to.be.a('string')
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+      expect(result.status).to.be.a('string')
+      expect(result.fee_collected).to.be.a('number')
+      expect(result.block_num).to.be.a('number')
+      expect(result.transaction_id).to.be.a('string')
+    } catch (e) {
+      console.log(e);
+    }
   })
 
   it(`Check staked amount`, async () => {
@@ -736,7 +766,7 @@ describe('Staking tests', () => {
     const result = await fioSdk.genericAction('unStakeFioTokens', {
       amount: unStakeAmount,
       fioAddress: testFioAddressName,
-      technologyProviderId: stakingTPID,
+      technologyProviderId: "",
     })
 
     expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
