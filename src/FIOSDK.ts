@@ -1163,6 +1163,14 @@ export class FIOSDK {
   }
 
   /**
+   * Return oracle fees amount
+   */
+  public getOracleFees(publicKey?: string): Promise<FioFeeResponse> {
+    const fioFee = new queries.GetOracleFees()
+    return fioFee.execute(publicKey || this.publicKey)
+  }
+
+  /**
    * Compute and return fee amount for specific call and specific user
    *
    * @param endPoint Name of API call end point, e.g. add_pub_address.
