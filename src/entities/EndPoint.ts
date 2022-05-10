@@ -21,4 +21,5 @@ export enum EndPoint {
   stakeFioTokens = 'stake_fio_tokens',
   unStakeFioTokens = 'unstake_fio_tokens',
   wrapFioTokens = 'wrap_fio_tokens',
+  wrapFioDomain = 'wrap_fio_domain',
 }
