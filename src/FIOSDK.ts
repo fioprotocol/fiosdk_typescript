@@ -317,13 +317,15 @@ export class FIOSDK {
     this.returnPreparedTrx = returnPreparedTrx
 
     for (const accountName of Constants.rawAbiAccountName) {
-      this.getAbi(accountName)
-        .then((response) => {
-          Transactions.abiMap.set(response.account_name, response)
-        })
-        .catch((error) => {
-          throw error
-        })
+      if (!Transactions.abiMap.get(accountName)) {
+        this.getAbi(accountName)
+          .then((response) => {
+            Transactions.abiMap.set(response.account_name, response)
+          })
+          .catch((error) => {
+            throw error
+          })
+      }
     }
   }
 

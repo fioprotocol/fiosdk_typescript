@@ -1,12 +1,15 @@
-import { Autorization } from '../../entities/Autorization'
-import { RawAction } from '../../entities/RawAction'
-import { RawTransaction } from '../../entities/RawTransaction'
 import { Transactions } from '../Transactions'
 
 export abstract class SignedTransaction extends Transactions {
 
   public static prepareResponse(
-    result: { transaction_id: string, processed: { block_num: number, action_traces: Array<{ receipt: { response: string }}>} } | any,
+    result: {
+      transaction_id: string,
+      processed: {
+        block_num: number,
+        action_traces: Array<{ receipt: { response: string }}>,
+      },
+    } | any,
     includeTrxId: boolean = false,
   ): any {
     if (result.processed) {
@@ -25,6 +28,7 @@ export abstract class SignedTransaction extends Transactions {
     try {
       return JSON.parse(processed.action_traces[0].receipt.response)
     } catch (e) {
+      // tslint:disable-next-line:no-console
       console.error(e)
     }
 
@@ -41,16 +45,12 @@ export abstract class SignedTransaction extends Transactions {
     this.privateKey = privateKey
     this.publicKey = publicKey
 
-    const rawTransaction = new RawTransaction()
-    const rawaction = new RawAction()
-    rawaction.account = this.getAccount()
-    const actor = await this.getActor()
+    const rawTransaction = await this.createRawTransaction({
+      account: this.getAccount(),
+      action: this.getAction(),
+      data: this.getData(),
+    })
 
-    rawaction.authorization.push(new Autorization(actor))
-    rawaction.account = this.getAccount()
-    rawaction.name = this.getAction()
-    rawaction.data = this.getData()
-    rawTransaction.actions.push(rawaction)
     const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
     return this.prepareResponse(result)
   }
