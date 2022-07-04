@@ -204,7 +204,7 @@ export class Transactions {
       data.actor = actor
     }
 
-    rawaction.authorization.push(new Autorization(actor))
+    rawaction.authorization.push(new Autorization(data.actor, data.permission))
     rawaction.account = account
     rawaction.name = action
     rawaction.data = data
