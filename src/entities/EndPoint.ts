@@ -20,4 +20,5 @@ export enum EndPoint {
   pushTransaction = 'push_transaction',
   stakeFioTokens = 'stake_fio_tokens',
   unStakeFioTokens = 'unstake_fio_tokens',
+  wrapFioTokens = 'wrap_fio_tokens',
 }
