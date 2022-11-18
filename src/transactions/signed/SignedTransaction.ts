@@ -16,6 +16,7 @@ export abstract class SignedTransaction extends Transactions {
       const processed = SignedTransaction.parseProcessedResult(result.processed)
       return {
           block_num: result.processed.block_num,
+          block_time: result.processed.block_time,
           transaction_id: result.transaction_id,
           ...processed,
         }

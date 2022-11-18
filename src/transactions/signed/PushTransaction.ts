@@ -38,6 +38,7 @@ export class PushTransaction extends SignedTransaction {
     return {
       ...data,
       actor: this.data.actor != null && this.data.actor !== '' ? this.data.actor : this.getActor(),
+      permission: this.data.permission || 'active',
     }
   }
 
