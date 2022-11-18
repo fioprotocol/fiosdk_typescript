@@ -42,6 +42,8 @@ To publish to npm.
 		npm test
 		npm publish --access public
 
+		(If you have enabled 2FA for authorization and publishing using an authenticator app, you will be asked to enter the 6 digit 2FA OTP during publish.)
+
 Further details: 
 	http://npmjs.com/ 
 	https://docs.npmjs.com/creating-and-publishing-scoped-public-packages
