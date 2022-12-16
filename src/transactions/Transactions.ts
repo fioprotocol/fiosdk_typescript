@@ -19,6 +19,7 @@ import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 
 import { validate } from '../utils/validation'
+import { Constants } from '../utils/constants'
 
 type FetchJson = (uri: string, opts?: object) => any
 interface SignedTxArgs {
@@ -53,6 +54,8 @@ export class Transactions {
 
   public validationData: object = {}
   public validationRules: any | null = null
+
+  public expirationOffset: number = Constants.defaultExpirationOffset
 
   public getActor(publicKey: string = ''): string {
     return Transactions.FioProvider.accountHash((publicKey === '' || !publicKey) ? this.publicKey : publicKey)
@@ -117,7 +120,7 @@ export class Transactions {
       throw e
     }
     const expiration = new Date(chain.head_block_time + 'Z')
-    expiration.setSeconds(expiration.getSeconds() + 180)
+    expiration.setSeconds(expiration.getSeconds() + this.expirationOffset)
     const expirationStr = expiration.toISOString()
     return  {
       chain_id: chain.chain_id,

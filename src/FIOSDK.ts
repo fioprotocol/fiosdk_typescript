@@ -370,11 +370,13 @@ export class FIOSDK {
    * @param fioAddress FIO Address to register.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
    * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
    */
   public registerFioAddress(
     fioAddress: string,
     maxFee: number,
     technologyProviderId: string | null = null,
+    expirationOffset?: number,
   ): Promise<RegisterFioAddressResponse> {
     const registerFioAddress = new SignedTransactions.RegisterFioAddress(
       fioAddress,
@@ -382,7 +384,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
   }
 
   /**
@@ -392,12 +394,14 @@ export class FIOSDK {
    * @param ownerPublicKey Owner FIO Public Key.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
    * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
    */
   public registerOwnerFioAddress(
     fioAddress: string,
     ownerPublicKey: string,
     maxFee: number,
     technologyProviderId: string | null = null,
+    expirationOffset?: number,
   ): Promise<RegisterFioAddressResponse> {
     const registerFioAddress = new SignedTransactions.RegisterFioAddress(
       fioAddress,
@@ -405,7 +409,7 @@ export class FIOSDK {
       maxFee,
       this.getTechnologyProviderId(technologyProviderId),
     )
-    return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+    return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
   }
 
   /**
@@ -1428,12 +1432,14 @@ export class FIOSDK {
             params.ownerPublicKey,
             params.maxFee,
             params.technologyProviderId,
+            params.expirationOffset,
           )
         } else {
           return this.registerFioAddress(
             params.fioAddress,
             params.maxFee,
             params.technologyProviderId,
+            params.expirationOffset,
           )
         }
       case 'registerOwnerFioAddress':

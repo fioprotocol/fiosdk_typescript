@@ -39,4 +39,5 @@ export class Constants {
 
   public static defaultAccount: string = 'fio.address'
 
+  public static defaultExpirationOffset = 180
 }
