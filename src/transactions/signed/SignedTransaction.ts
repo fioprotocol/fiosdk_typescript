@@ -1,4 +1,5 @@
 import { Transactions } from '../Transactions'
+import { Constants } from '../../utils/constants'
 
 export abstract class SignedTransaction extends Transactions {
 
@@ -42,9 +43,12 @@ export abstract class SignedTransaction extends Transactions {
 
   public abstract getData(): any
 
-  public async execute(privateKey: string, publicKey: string, dryRun = false): Promise<any> {
+  public static expirationOffset: number
+
+  public async execute(privateKey: string, publicKey: string, dryRun = false, expirationOffset = Constants.defaultExpirationOffset): Promise<any> {
     this.privateKey = privateKey
     this.publicKey = publicKey
+    this.expirationOffset = expirationOffset
 
     const rawTransaction = await this.createRawTransaction({
       account: this.getAccount(),
