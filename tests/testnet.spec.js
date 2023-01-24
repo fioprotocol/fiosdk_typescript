@@ -192,7 +192,7 @@ describe('Testing generic actions', () => {
     try {
       FIOSDK.isFioDomainValid('$%FG%')
     } catch (e) {
-      expect(e.list[0].message).to.equal('fioDomain must match /^[a-z0-9\\-]+$/i.')
+      expect(e.list[0].message).to.equal('fioDomain must match /^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/i.')
     }
     try {
       FIOSDK.isFioPublicKeyValid('dfsd')
@@ -681,7 +681,7 @@ describe('Staking tests', () => {
   let stakedBalance = 0;
   const stakeAmount = FIOSDK.amountToSUF(5);
   const unStakeAmount = FIOSDK.amountToSUF(2);
-  
+
   it(`Stake`, async () => {
     try {
       const { staked } = await fioSdk.genericAction('getFioBalance', {});
