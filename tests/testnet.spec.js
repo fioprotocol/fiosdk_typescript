@@ -23,7 +23,7 @@ let privateKey = '',
  * Public Testnet API nodes can be found at: https://github.com/fioprotocol/fio.mainnet
  */
 
-const baseUrl = 'https://fiotestnet.blockpane.com/v1/'   // e.g., 'https://testnet.fioprotocol.io/v1/'
+const baseUrls = ['https://testnet.fioprotocol.io:443/v1/']
 
 const fioTestnetDomain = 'fiotestnet'
 const fioTokenCode = 'FIO'
@@ -63,7 +63,7 @@ before(async () => {
   fioSdk = new FIOSDK(
     privateKey,
     publicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
 
@@ -71,7 +71,7 @@ before(async () => {
   fioSdk2 = new FIOSDK(
     privateKey2,
     publicKey2,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
 
@@ -1217,7 +1217,7 @@ describe('Encrypting/Decrypting', () => {
   let fioSDKBob = new FIOSDK(
     bobPrivateKey,
     bobPublicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
 

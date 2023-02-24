@@ -16,7 +16,7 @@ const mnemonic2 = 'round work clump little air glue lemon gravity shed charge as
 /**
  * Url for local dev node
  */
-const baseUrl = ''  // e.g., 'http://localhost:8889/v1/'
+const baseUrls = [] // e.g., ['http://localhost:8889/v1/']
 
 /**
  * Keys to transfer funds to be able make all calls with fee
@@ -66,7 +66,7 @@ before(async () => {
   fioSdk = new FIOSDK(
     privateKey,
     publicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   const testDomain = generateTestingFioDomain()
@@ -80,7 +80,7 @@ before(async () => {
   fioSdk2 = new FIOSDK(
     privateKey2,
     publicKey2,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   testFioAddressName2 = generateTestingFioAddress(testDomain)
@@ -88,7 +88,7 @@ before(async () => {
   const fioSdkFaucet = new FIOSDK(
     faucetPriv,
     faucetPub,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   await fioSdkFaucet.transferTokens(publicKey, fundAmount * 4, defaultFee)
