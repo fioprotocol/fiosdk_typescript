@@ -1,0 +1,1 @@
+{"version":3,"file":"GetAccount.d.ts","sourceRoot":"","sources":["../../../src/transactions/queries/GetAccount.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,gCAAgC,CAAA;AAChE,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAE/B,qBAAa,UAAW,SAAQ,KAAK,CAAC,eAAe,CAAC;IAC7C,QAAQ,EAAE,MAAM,CAAsB;IACtC,YAAY,EAAE,MAAM,CAAA;gBAEf,KAAK,EAAE,MAAM;IAKlB,OAAO;;;CAIf"}

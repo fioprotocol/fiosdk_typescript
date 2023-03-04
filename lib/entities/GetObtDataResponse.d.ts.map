@@ -1,0 +1,1 @@
+{"version":3,"file":"GetObtDataResponse.d.ts","sourceRoot":"","sources":["../../src/entities/GetObtDataResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,oBAAoB,CAAA;AAErD,MAAM,WAAW,kBAAkB;IACjC,gBAAgB,EAAE,gBAAgB,EAAE,CAAC;IACrC,IAAI,EAAE,MAAM,CAAA;CACb"}

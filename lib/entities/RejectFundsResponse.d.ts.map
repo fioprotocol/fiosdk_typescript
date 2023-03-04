@@ -1,0 +1,1 @@
+{"version":3,"file":"RejectFundsResponse.d.ts","sourceRoot":"","sources":["../../src/entities/RejectFundsResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,mBAAmB;IAClC,cAAc,EAAE,MAAM,CAAC;IACvB,SAAS,EAAE,MAAM,CAAC;IAClB,MAAM,EAAE,MAAM,CAAC;IACf,aAAa,EAAE,MAAM,CAAA;CACtB"}

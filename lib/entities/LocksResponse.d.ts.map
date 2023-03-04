@@ -1,0 +1,1 @@
+{"version":3,"file":"LocksResponse.d.ts","sourceRoot":"","sources":["../../src/entities/LocksResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAE,MAAM,cAAc,CAAA;AAEzC,MAAM,WAAW,aAAa;IAC5B,WAAW,EAAE,MAAM,CAAC;IACpB,qBAAqB,EAAE,MAAM,CAAC;IAC9B,UAAU,EAAE,MAAM,CAAC;IACnB,iBAAiB,EAAE,MAAM,CAAC;IAC1B,QAAQ,EAAE,MAAM,CAAC;IACjB,cAAc,EAAE,UAAU,EAAE,CAAA;CAC7B"}

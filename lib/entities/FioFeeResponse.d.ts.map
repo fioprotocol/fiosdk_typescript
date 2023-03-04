@@ -1,0 +1,1 @@
+{"version":3,"file":"FioFeeResponse.d.ts","sourceRoot":"","sources":["../../src/entities/FioFeeResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,cAAc;IAC7B,GAAG,EAAE,MAAM,CAAA;CACZ;AAED,MAAM,WAAW,qBAAqB;IACpC,WAAW,EAAE;QACX;YAAE,QAAQ,EAAE,iBAAiB,CAAC;YAAC,UAAU,EAAE,MAAM,CAAA;SAAE;QACnD;YAAE,QAAQ,EAAE,iBAAiB,CAAC;YAAC,UAAU,EAAE,MAAM,CAAA;SAAE;KACpD,CAAA;CACF"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"CancelFundsRequestResponse.d.ts","sourceRoot":"","sources":["../../src/entities/CancelFundsRequestResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,0BAA0B;IACzC,cAAc,EAAE,MAAM,CAAC;IACvB,SAAS,EAAE,MAAM,CAAC;IAClB,MAAM,EAAE,MAAM,CAAC;IACf,aAAa,EAAE,MAAM,CAAA;CACtB"}

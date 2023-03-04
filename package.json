@@ -13,6 +13,7 @@
         "lib": "lib",
         "test": "tests"
     },
+    "types": "lib/FIOSDK.d.ts",
     "scripts": {
         "test": "mocha -t 80000 tests/testnet.spec.js",
         "localtest": "mocha -t 80000 tests/index.spec.js"

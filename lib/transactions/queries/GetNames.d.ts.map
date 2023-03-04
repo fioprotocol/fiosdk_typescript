@@ -1,0 +1,1 @@
+{"version":3,"file":"GetNames.d.ts","sourceRoot":"","sources":["../../../src/transactions/queries/GetNames.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,iCAAiC,CAAA;AAClE,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAE/B,qBAAa,QAAS,SAAQ,KAAK,CAAC,gBAAgB,CAAC;IAC5C,QAAQ,EAAE,MAAM,CAAwB;IACxC,YAAY,EAAE,MAAM,CAAA;gBAEf,YAAY,EAAE,MAAM;IAKzB,OAAO;;;CAGf"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"GetFioBalance.d.ts","sourceRoot":"","sources":["../../../src/transactions/queries/GetFioBalance.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,gCAAgC,CAAA;AAChE,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAE/B,qBAAa,aAAc,SAAQ,KAAK,CAAC,eAAe,CAAC;IAChD,QAAQ,EAAE,MAAM,CAA0B;IAC1C,QAAQ,EAAE,MAAM,CAAA;gBAEX,aAAa,CAAC,EAAE,MAAM;IAK3B,OAAO;;;CAIf"}

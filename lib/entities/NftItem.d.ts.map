@@ -1,0 +1,1 @@
+{"version":3,"file":"NftItem.d.ts","sourceRoot":"","sources":["../../src/entities/NftItem.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,OAAO;IACtB,UAAU,EAAE,MAAM,CAAC;IACnB,gBAAgB,EAAE,MAAM,CAAC;IACzB,QAAQ,EAAE,MAAM,CAAC;IACjB,GAAG,EAAE,MAAM,CAAC;IACZ,IAAI,EAAE,MAAM,CAAC;IACb,QAAQ,EAAE,MAAM,CAAC;IACjB,WAAW,CAAC,EAAE,MAAM,CAAC;CACtB"}

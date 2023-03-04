@@ -1,0 +1,1 @@
+{"version":3,"file":"RenewFioAddressResponse.d.ts","sourceRoot":"","sources":["../../src/entities/RenewFioAddressResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,uBAAuB;IACtC,cAAc,EAAE,MAAM,CAAC;IACvB,SAAS,EAAE,MAAM,CAAC;IAClB,MAAM,EAAE,MAAM,CAAC;IACf,UAAU,EAAE,MAAM,CAAC;IACnB,aAAa,EAAE,MAAM,CAAA;CACtB"}

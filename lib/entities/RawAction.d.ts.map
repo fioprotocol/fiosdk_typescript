@@ -1,0 +1,1 @@
+{"version":3,"file":"RawAction.d.ts","sourceRoot":"","sources":["../../src/entities/RawAction.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,gBAAgB,CAAA;AAE7C,qBAAa,SAAS;IACb,OAAO,EAAE,MAAM,CAAK;IACpB,IAAI,EAAE,MAAM,CAAK;IACjB,aAAa,EAAE,YAAY,EAAE,CAA4B;IACzD,IAAI,EAAE,GAAG,CAAA;CACjB"}

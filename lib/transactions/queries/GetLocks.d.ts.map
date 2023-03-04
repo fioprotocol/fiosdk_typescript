@@ -1,0 +1,1 @@
+{"version":3,"file":"GetLocks.d.ts","sourceRoot":"","sources":["../../../src/transactions/queries/GetLocks.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,aAAa,EAAE,MAAM,8BAA8B,CAAA;AAC5D,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAE/B,qBAAa,QAAS,SAAQ,KAAK,CAAC,aAAa,CAAC;IACzC,QAAQ,EAAE,MAAM,CAAoB;IACpC,QAAQ,EAAE,MAAM,CAAA;gBAEX,YAAY,EAAE,MAAM;IAKzB,OAAO;;;CAIf"}
