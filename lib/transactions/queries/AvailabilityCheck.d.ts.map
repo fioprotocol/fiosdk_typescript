@@ -1,0 +1,1 @@
+{"version":3,"file":"AvailabilityCheck.d.ts","sourceRoot":"","sources":["../../../src/transactions/queries/AvailabilityCheck.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,oBAAoB,EAAE,MAAM,qCAAqC,CAAA;AAC1E,OAAO,EAAE,KAAK,EAAE,MAAM,SAAS,CAAA;AAE/B,qBAAa,iBAAkB,SAAQ,KAAK,CAAC,oBAAoB,CAAC;IACzD,QAAQ,EAAE,MAAM,CAAsB;IACtC,OAAO,EAAE,MAAM,CAAA;gBAEV,OAAO,EAAE,MAAM;IAKpB,OAAO;;;CAGf"}

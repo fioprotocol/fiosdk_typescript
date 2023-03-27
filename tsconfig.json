@@ -8,7 +8,10 @@
       "outDir": "lib",
       "sourceMap": false,
       "strict": true,
-      "target": "es2015"
+      "target": "es2015",
+      "declaration": true,
+      "emitDeclarationOnly": true,
+      "declarationMap": true
     },
     "compileOnSave": true,
     "include": [

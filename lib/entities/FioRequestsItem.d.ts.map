@@ -1,0 +1,1 @@
+{"version":3,"file":"FioRequestsItem.d.ts","sourceRoot":"","sources":["../../src/entities/FioRequestsItem.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,eAAe;IAC9B,gBAAgB,EAAE,MAAM,CAAC;IACzB,mBAAmB,EAAE,MAAM,CAAC;IAC5B,mBAAmB,EAAE,MAAM,CAAC;IAC5B,sBAAsB,EAAE,MAAM,CAAC;IAC/B,sBAAsB,EAAE,MAAM,CAAC;IAC/B,QAAQ,EAAE,MAAM,CAAC;IACjB,YAAY,EAAE,MAAM,CAAA;IACpB,SAAS,EAAE,MAAM,CAAA;CAClB"}

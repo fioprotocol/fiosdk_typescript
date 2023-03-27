@@ -1,0 +1,1 @@
+{"version":3,"file":"TransferFioDomainResponse.d.ts","sourceRoot":"","sources":["../../src/entities/TransferFioDomainResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,yBAAyB;IACtC,cAAc,EAAE,MAAM,CAAC;IACzB,SAAS,EAAE,MAAM,CAAC;IAChB,MAAM,EAAE,MAAM,CAAC;IACf,aAAa,EAAE,MAAM,CAAA;CACxB"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"BalanceResponse.d.ts","sourceRoot":"","sources":["../../src/entities/BalanceResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,eAAe;IAC9B,OAAO,EAAE,MAAM,CAAC;IAChB,SAAS,EAAE,MAAM,CAAC;IAClB,MAAM,EAAE,MAAM,CAAC;IACf,IAAI,EAAE,MAAM,CAAC;IACb,GAAG,EAAE,MAAM,CAAA;CACZ"}

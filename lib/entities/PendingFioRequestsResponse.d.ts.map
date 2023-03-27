@@ -1,0 +1,1 @@
+{"version":3,"file":"PendingFioRequestsResponse.d.ts","sourceRoot":"","sources":["../../src/entities/PendingFioRequestsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,MAAM,mBAAmB,CAAA;AAEnD,MAAM,WAAW,0BAA0B;IACzC,QAAQ,EAAE,eAAe,EAAE,CAAC;IAC5B,IAAI,EAAE,MAAM,CAAA;CACb"}

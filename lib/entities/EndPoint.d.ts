@@ -1,0 +1,26 @@
+export declare enum EndPoint {
+    newFundsRequest = "new_funds_request",
+    registerFioAddress = "register_fio_address",
+    registerFioDomain = "register_fio_domain",
+    renewFioDomain = "renew_fio_domain",
+    renewFioAddress = "renew_fio_address",
+    burnFioAddress = "burn_fio_address",
+    transferFioAddress = "transfer_fio_address",
+    transferFioDomain = "transfer_fio_domain",
+    addBundledTransactions = "add_bundled_transactions",
+    addPubAddress = "add_pub_address",
+    removePubAddress = "remove_pub_address",
+    removeAllPubAddresses = "remove_all_pub_addresses",
+    setFioDomainPublic = "set_fio_domain_public",
+    rejectFundsRequest = "reject_funds_request",
+    recordObtData = "record_obt_data",
+    transferTokens = "transfer_tokens_pub_key",
+    cancelFundsRequest = "cancel_funds_request",
+    transferLockedTokens = "transfer_locked_tokens",
+    pushTransaction = "push_transaction",
+    stakeFioTokens = "stake_fio_tokens",
+    unStakeFioTokens = "unstake_fio_tokens",
+    wrapFioTokens = "wrap_fio_tokens",
+    wrapFioDomain = "wrap_fio_domain"
+}
+//# sourceMappingURL=EndPoint.d.ts.map

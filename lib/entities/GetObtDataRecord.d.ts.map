@@ -1,0 +1,1 @@
+{"version":3,"file":"GetObtDataRecord.d.ts","sourceRoot":"","sources":["../../src/entities/GetObtDataRecord.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,gBAAgB;IAC/B,iBAAiB,EAAE,MAAM,CAAC;IAC1B,iBAAiB,EAAE,MAAM,CAAC;IAC1B,oBAAoB,EAAE,MAAM,CAAC;IAC7B,oBAAoB,EAAE,MAAM,CAAC;IAC7B,OAAO,EAAE,MAAM,CAAC;IAChB,cAAc,EAAE,MAAM,CAAC;IACvB,MAAM,EAAE,MAAM,CAAC;IACf,UAAU,EAAE,MAAM,CAAA;CACnB"}

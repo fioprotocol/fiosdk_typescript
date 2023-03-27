@@ -1,0 +1,1 @@
+{"version":3,"file":"TransferTokensResponse.d.ts","sourceRoot":"","sources":["../../src/entities/TransferTokensResponse.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,sBAAsB;IACrC,cAAc,EAAE,MAAM,CAAC;IACrB,SAAS,EAAE,MAAM,CAAC;IACpB,MAAM,EAAE,MAAM,CAAC;IACf,aAAa,EAAE,MAAM,CAAA;CACtB"}
