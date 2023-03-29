@@ -61,6 +61,36 @@ const { Ecc } = require('@fioprotocol/fiojs')
 type FetchJson = (uri: string, opts?: object) => Promise<object>
 
 export class FIOSDK {
+  proxyHandle = {
+    // We save refrenece to our class inside the object
+    main: this,
+    /**
+     * The apply will be fired each time the function is called
+     * @param  target Called function
+     * @param  scope  Scope from where function was called
+     * @param  args   Arguments passed to function
+     * @return        Results of the function
+     */
+    apply: async function (target: any, scope: any, args: any) {
+      // Remember that you have to exclude methods which you are gonna use
+      // inside here to avoid “too much recursion” error
+
+      const setAbi = async (accountName: string) => {
+        if (!Transactions.abiMap.get(accountName)) {
+          const response = await this.main.getAbi(accountName)
+          Transactions.abiMap.set(response.account_name, response)
+        }
+      } 
+      const setAbiPromises = Constants.rawAbiAccountName.map(accountName => setAbi(accountName))
+
+      await Promise.all(setAbiPromises).catch(error => { throw error })
+
+      // Here we bind method with our class by accessing reference to instance
+      const results = target.bind(this.main)(...args);
+
+      return results;
+    }
+  }
   /**
    * @ignore
    */
@@ -318,17 +348,13 @@ export class FIOSDK {
     this.technologyProviderId = technologyProviderId
     this.returnPreparedTrx = returnPreparedTrx
 
-    for (const accountName of Constants.rawAbiAccountName) {
-      if (!Transactions.abiMap.get(accountName)) {
-        this.getAbi(accountName)
-          .then((response) => {
-            Transactions.abiMap.set(response.account_name, response)
-          })
-          .catch((error) => {
-            throw error
-          })
-      }
-    }
+    const methods = Object.getOwnPropertyNames(FIOSDK.prototype);
+
+    // Replace all methods with Proxy methods
+    // Find and remove constructor as we don't need Proxy on it
+    methods.filter(method => !Constants.classMethodsToExcludeFromProxy.includes(method)).forEach(methodName => {
+      this[methodName as keyof FIOSDK] = new Proxy(this[methodName as keyof FIOSDK], this.proxyHandle);
+    });
   }
 
   /**

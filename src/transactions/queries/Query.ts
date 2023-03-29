@@ -14,7 +14,11 @@ export abstract class Query<T> extends Transactions {
     this.publicKey = publicKey
     this.privateKey = privateKey
     if (!this.isEncrypted) {
-      return this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
+      try {
+        return this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
+      } catch (error) {
+        throw error
+      }
     } else {
       try {
         const result = await this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
