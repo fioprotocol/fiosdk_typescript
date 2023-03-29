@@ -405,6 +405,16 @@ export class Transactions {
     }
     try {
       const res = await Transactions.fetchJson(baseUrl + endPoint, options)
+      if (res === undefined) {
+        const error = new Error(`Error: Can't reach the site ${baseUrl}${endPoint}. Possible wrong url.`)
+        return {
+          data: {
+            code: 500,
+            message: error.message,
+          },
+          isError: true,
+        }
+      }
       if (!res.ok) {
         const error: Error & {
           json?: FioErrorJson,
