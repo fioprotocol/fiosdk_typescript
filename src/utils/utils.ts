@@ -1,7 +1,7 @@
 const PROMISE_TIMEOUT = 5000;
 
 const snooze: Function = (ms: number) =>
-  new Promise((resolve: Function) => setTimeout(resolve, ms))
+  new Promise((resolve: (...args: any[]) => void) => setTimeout(resolve, ms))
 
 export function shuffleArray(array: Array<any>) {
   let currentIndex = array.length
@@ -47,7 +47,8 @@ export async function asyncWaterfall(
       )
     }
     try {
-      const result = await Promise.race(promises)
+      const result = await Promise.any(promises)
+      if (result.isError) throw result.data
       if (result === 'async_waterfall_timed_out') {
         promises.pop()
         --pending
