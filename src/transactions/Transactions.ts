@@ -19,7 +19,7 @@ import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 
 import { validate } from '../utils/validation'
-import { asyncWaterfall, shuffleArray } from '../utils/utils'
+import { asyncWaterfall } from '../utils/utils'
 import { Constants } from '../utils/constants'
 
 type FetchJson = (uri: string, opts?: object) => any
@@ -463,10 +463,8 @@ export class Transactions {
 
   public async multicastServers(endpoint: string, body: string | null, fetchOptions?: any): Promise<any> {
     const res = await asyncWaterfall(
-      shuffleArray(
-        Transactions.baseUrls.map((apiUrl) => () =>
-          this.executeCall(apiUrl, endpoint, body, fetchOptions),
-        ),
+      Transactions.baseUrls.map((apiUrl) => () =>
+        this.executeCall(apiUrl, endpoint, body, fetchOptions),
       ),
     )
 
