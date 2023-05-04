@@ -27,7 +27,7 @@ export async function asyncWaterfall(
       )
     }
     try {
-      const result = await Promise.any(promises)
+      const result = await Promise.race(promises)
       if (result.isError) throw result.data
       if (result === 'async_waterfall_timed_out') {
         promises.pop()
