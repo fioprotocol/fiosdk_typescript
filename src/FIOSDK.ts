@@ -1471,6 +1471,14 @@ export class FIOSDK {
   }
 
   /**
+  * @ignore
+  */
+  public getEncryptKey(fioAddress: string) {
+    const getEncryptKey = new queries.GetEncryptKey(fioAddress)
+    return getEncryptKey.execute(this.publicKey)
+  }
+
+  /**
    * @ignore
    */
   public genericAction(action: string, params: any): any {
@@ -1737,6 +1745,8 @@ export class FIOSDK {
         return this.pushTransaction(params.account, params.action, params.data, params.encryptOptions)
       case 'getAccountPubKey':
         return this.getAccountPubKey(params.account)
+      case 'getEncryptKey':
+        return this.getEncryptKey(params.fioAddress)
     }
   }
 
