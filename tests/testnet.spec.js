@@ -688,6 +688,16 @@ describe('Testing generic actions', () => {
 
   //   expect(result.fio_public_key).to.be.a('string')
   // })
+
+  // Uncomment when Get Ecrypted Key will be available on testnet servers
+  
+  // it(`Get Ecrypted Key`, async () => {
+  //   const result = await fioSdk.genericAction('getEncryptKey', {
+  //     fioAddress: newFioAddress,
+  //   });
+
+  //   expect(result.encrypt_public_key).to.be.a('string');
+  // });
 })
 
 describe('Staking tests', () => {
