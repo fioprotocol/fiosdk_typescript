@@ -31,6 +31,7 @@ export class Constants {
     'fio.treasury',
     'fio.tpid',
     'fio.staking',
+    'fio.perms',
     'fio.escrow',
     'fio.oracle'
   ]

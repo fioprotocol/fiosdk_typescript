@@ -17,6 +17,16 @@ Visit the [FIO Protocol Developer Hub](https://developers.fioprotocol.io) to get
 
 # Building The FIO TypeScript SDK, manually
 #### Building FIO TypeScript SDK, manually
+required tsc version 4.7.2
+    git clone http://github.com/fioprotocol/fiosdk_typescript --recursive
+    cd fiosdk_typescript
+    install typescript@4.7.2 -g
+    npm install
+    tsc
+    (verify on the github that your generated .js matches what is presently in the github repository)
+
+Using yarn
+
 Navigate to the "fiosdk_typescript" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
 	
 	cd fiosdk_typescript
