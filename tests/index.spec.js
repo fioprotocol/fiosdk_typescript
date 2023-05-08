@@ -223,10 +223,10 @@ describe('Testing generic actions', () => {
       expect(e.list[0].message).to.equal('fioAddress must have a length between 3 and 64.')
     }
     try {
-//      FIOSDK.isFioDomainValid('$%FG%')
+      FIOSDK.isFioDomainValid('$%FG%')
     } catch (e) {
-//      console.log(e)
-//      expect(e.list[0].message).to.equal('fioDomain must match /^[a-z0-9\\-]+$/i.')
+      console.log(e)
+      expect(e.list[0].message).to.equal('fioDomain must match /^[a-z0-9\\-]+$/i.')
     }
     try {
       FIOSDK.isFioPublicKeyValid('dfsd')
