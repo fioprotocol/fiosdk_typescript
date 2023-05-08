@@ -675,6 +675,21 @@ describe('Testing generic actions', () => {
       console.log(e);
     }
   })
+
+  // Uncomment when Get Account Public Key will be available on testnet servers
+  // let accountName;
+
+  // it(`accountHash`, async () => {
+  //   accountName = FIOSDK.accountHash(publicKey).accountnm;
+  // });
+
+  // it(`Get Account Public Key`, async () => {
+  //   const result = await fioSdk.genericAction('getAccountPubKey', {
+  //     account: accountName
+  //   });
+
+  //   expect(result.fio_public_key).to.be.a('string')
+  // })
 })
 
 describe('Staking tests', () => {
