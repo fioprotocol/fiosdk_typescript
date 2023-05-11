@@ -1427,6 +1427,14 @@ export class FIOSDK {
   /**
    * @ignore
    */
+  getAccountPubKey(account: string) {
+    const getAccountPubKey = new queries.GetAccountPubKey(account);
+    return getAccountPubKey.execute(this.publicKey);
+  }
+
+  /**
+   * @ignore
+   */
   public genericAction(action: string, params: any): any {
     switch (action) {
       case 'getFioPublicKey':
@@ -1683,6 +1691,8 @@ export class FIOSDK {
         return this.getMultiplier()
       case 'pushTransaction':
         return this.pushTransaction(params.account, params.action, params.data, params.encryptOptions)
+      case 'getAccountPubKey':
+        return this.getAccountPubKey(params.account)
     }
   }
 
