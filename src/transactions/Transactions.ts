@@ -92,6 +92,7 @@ export class Transactions {
   public validationRules: any | null = null
 
   public expirationOffset: number = Constants.defaultExpirationOffset
+  public authPermission: string | undefined
 
   public getActor(publicKey: string = ''): string {
     return Transactions.FioProvider.accountHash((publicKey === '' || !publicKey) ? this.publicKey : publicKey)
@@ -223,9 +224,10 @@ export class Transactions {
   }
 
   public async createRawTransaction(
-    { account, action, data, publicKey, chainData }: {
+    { account, action, authPermission, data, publicKey, chainData }: {
       account: string;
       action: string;
+      authPermission?: string;
       data: any,
       publicKey?: string,
       chainData?: {
@@ -244,7 +246,7 @@ export class Transactions {
       data.actor = actor
     }
 
-    rawaction.authorization.push(new Autorization(data.actor, data.permission))
+    rawaction.authorization.push(new Autorization(data.actor, authPermission))
     rawaction.account = account
     rawaction.name = action
     rawaction.data = data
