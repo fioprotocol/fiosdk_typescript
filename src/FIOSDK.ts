@@ -18,6 +18,7 @@ import {
   GetObtDataResponse,
   LocksResponse,
   PendingFioRequestsResponse,
+  PermissionsResponse,
   PublicAddressesResponse,
   PublicAddressResponse,
   ReceivedFioRequestsResponse,
@@ -842,6 +843,43 @@ export class FIOSDK {
   }
 
   /**
+   * Gets FIO permissions for the specified grantee account.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param granteeAccount string account name of the grantee account
+   */
+  public getGranteePermissions(granteeAccount: string, limit?: number, offset?: number): Promise<PermissionsResponse> {
+    const getGranteePermissions = new queries.GetGranteePermissions( granteeAccount, limit, offset)
+    return getGranteePermissions.execute(this.publicKey, this.privateKey)
+  }
+
+  /**
+   * Gets FIO permissions for the specified grantor account.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param grantorAccount string account name of the grantor account
+   */
+  public getGrantorPermissions(grantorAccount: string, limit?: number, offset?: number): Promise<PermissionsResponse> {
+    const getGrantorPermissions = new queries.GetGrantorPermissions( grantorAccount, limit, offset)
+    return getGrantorPermissions.execute(this.publicKey, this.privateKey)
+  }
+
+  /**
+   * Gets FIO permissions for the specified permission name and object name account.
+   *
+   * @param limit Number of request to return. If omitted, all requests will be returned.
+   * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param permissionName string permission name ex register_address_on_domain
+   */
+  public getObjectPermissions(permissionName: string, objectName: string, limit?: number, offset?: number): Promise<PermissionsResponse> {
+    const getObjectPermissions = new queries.GetObjectPermissions( permissionName, objectName, limit, offset)
+    return getObjectPermissions.execute(this.publicKey, this.privateKey)
+  }
+
+
+  /**
    * Reject funds request.
    *
    * @param fioRequestId Existing funds request Id
@@ -1585,6 +1623,13 @@ export class FIOSDK {
         return this.getFeeForTransferLockedTokens(params.fioAddress)
       case 'getObtData':
         return this.getObtData(params.limit, params.offset, params.tokenCode)
+      case 'getGranteePermissions':
+        return this.getGranteePermissions(params.granteeAccount, params.limit, params.offset)
+      case 'getGrantorPermissions':
+        return this.getGrantorPermissions(params.grantorAccount, params.limit, params.offset)
+      case 'getObjectPermissions':
+        return this.getObjectPermissions(params.permissionName, params.objectName, params.limit, params.offset)
+
       case 'rejectFundsRequest':
         return this.rejectFundsRequest(
           params.fioRequestId,
