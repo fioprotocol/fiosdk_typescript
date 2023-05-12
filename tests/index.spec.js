@@ -767,6 +767,21 @@ describe('Testing generic actions', () => {
     expect(result.block_num).to.be.a('number')
     expect(result.transaction_id).to.be.a('string')
   })
+
+  // Uncomment when Get Account Public Key will be available on testnet servers
+  // let accountName;
+
+  // it(`accountHash`, async () => {
+  //   accountName = FIOSDK.accountHash(publicKey).accountnm;
+  // });
+
+  // it(`Get Account Public Key`, async () => {
+  //   const result = await fioSdk.genericAction('getAccountPubKey', {
+  //     account: accountName
+  //   });
+
+  //   expect(result.fio_public_key).to.be.a('string')
+  // })
 })
 
 describe('Staking tests', () => {
