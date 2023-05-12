@@ -690,6 +690,67 @@ describe('Testing generic actions', () => {
   // })
 })
 
+/* todo uncomment when the permissions go live in test net
+describe('Testing Fio permissions', () => {
+
+  let accountName, accountName2;
+  let newFioDomain;
+  const let permName = "register_address_on_domain";
+
+  it(`create new domain and register to user 1`, async () => {
+
+    accountName = FIOSDK.accountHash(publicKey).accountnm;
+    accountName2 = FIOSDK.accountHash(publicKey2).accountnm;
+    newFioDomain = generateTestingFioDomain()
+    const result = await fioSdk.genericAction('registerFioDomain', {fioDomain: newFioDomain, maxFee: defaultFee})
+    expect(result.status).to.equal('OK')
+  })
+
+  it(`First call addperm, user1 adds permission to user2 to register addresses on user1 domain `, async () => {
+
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'addperm',
+        account: 'fio.perms',
+        data: {
+          grantee_account: accountName2,
+          permission_name: permName,
+          permission_info: "",
+          object_name: newFioDomain,
+          max_fee: defaultFee,
+          tpid: '',
+          actor: fioSdk.account
+        }
+      })
+
+      expect(result.status).to.equal('OK')
+  })
+
+  it(`getGranteePermissions user2 account `, async () => {
+    const result = await fioSdk.genericAction('getGranteePermissions', {granteeAccount: accountName2})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+  it(`getGrantorPermissions user1 account `, async () => {
+    const result = await fioSdk.genericAction('getGrantorPermissions', {grantorAccount: accountName})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+
+  it(`getObjectPermissions user1 domain and "register_address_on_domain" permission `, async () => {
+    const result = await fioSdk.genericAction('getObjectPermissions', {permissionName: permName,
+      objectName: newFioDomain})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+})
+*/
+
 describe('Staking tests', () => {
   let stakedBalance = 0;
   const stakeAmount = FIOSDK.amountToSUF(5);

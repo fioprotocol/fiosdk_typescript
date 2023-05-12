@@ -16,13 +16,19 @@ const mnemonic2 = 'round work clump little air glue lemon gravity shed charge as
 /**
  * Url for local dev node
  */
-const baseUrls = [] // e.g., ['http://localhost:8889/v1/']
+const baseUrls = ['http://localhost:8889/v1/'] // e.g., ['http://localhost:8889/v1/']
 
 /**
  * Keys to transfer funds to be able make all calls with fee
  */
-const faucetPub = '';
-const faucetPriv = '';
+/*
+
+FAUCET_PRIV_KEY: '5KF2B21xT5pE5G3LNA6LKJc6AP2pAd2EnfpAUrJH12SFV8NtvCD',
+    FAUCET_PUB_KEY: 'FIO6zwqqzHQcqCc2MB4jpp1F73MXpisEQe2SDghQFSGQKoAPjvQ3H',
+    FAUCET_ACCOUNT: 'qhh25sqpktwh',
+    */
+const faucetPub = 'FIO6zwqqzHQcqCc2MB4jpp1F73MXpisEQe2SDghQFSGQKoAPjvQ3H';
+const faucetPriv = '5KF2B21xT5pE5G3LNA6LKJc6AP2pAd2EnfpAUrJH12SFV8NtvCD';
 
 const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
@@ -138,6 +144,65 @@ before(async () => {
     console.log(e);
   }
 })
+
+describe('Testing Fio permissions', () => {
+
+  let accountName, accountName2;
+  let newFioDomain;
+  const permName = "register_address_on_domain";
+
+  it(`create new domain and register to user 1`, async () => {
+
+    accountName = FIOSDK.accountHash(publicKey).accountnm;
+    accountName2 = FIOSDK.accountHash(publicKey2).accountnm;
+    newFioDomain = generateTestingFioDomain()
+    const result = await fioSdk.genericAction('registerFioDomain', {fioDomain: newFioDomain, maxFee: defaultFee})
+    expect(result.status).to.equal('OK')
+  })
+
+  it(`First call addperm, user1 adds permission to user2 to register addresses on user1 domain `, async () => {
+
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'addperm',
+        account: 'fio.perms',
+        data: {
+          grantee_account: accountName2,
+          permission_name: permName,
+          permission_info: "",
+          object_name: newFioDomain,
+          max_fee: defaultFee,
+          tpid: '',
+          actor: fioSdk.account
+        }
+      })
+      expect(result.status).to.equal('OK')
+  })
+
+  it(`getGranteePermissions user2 account `, async () => {
+      const result = await fioSdk.genericAction('getGranteePermissions', {granteeAccount: accountName2})
+      expect(result).to.have.keys("more","permissions");
+      expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+          "permission_info","object_name","grantor_account");
+  })
+
+  it(`getGrantorPermissions user1 account `, async () => {
+    const result = await fioSdk.genericAction('getGrantorPermissions', {grantorAccount: accountName})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+
+  it(`getObjectPermissions user1 domain and "register_address_on_domain" permission `, async () => {
+    const result = await fioSdk.genericAction('getObjectPermissions', {permissionName: permName,
+           objectName: newFioDomain})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+})
+
 
 describe('Testing generic actions', () => {
 
@@ -1032,7 +1097,6 @@ describe('Request funds, approve and send', () => {
 
 })
 
-
 describe('Request funds, cancel funds request', () => {
   const fundsAmount = 3
   let requestId
@@ -1098,7 +1162,6 @@ describe('Request funds, cancel funds request', () => {
   })
 
 })
-
 
 describe('Request funds, reject', () => {
   const fundsAmount = 4
