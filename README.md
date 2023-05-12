@@ -40,8 +40,8 @@ Make sure to install typescript by running, this command in terminal:
 	
 	sudo npm install -g typescript
 
-# Publishing to Node Package Manager (npm)
-To publish to npm.  
+# Publishing to Node Package Manager (npm) Registry
+To publish to npm registry.  
 1. Update the version number, for this release. In 'package.json'
 2. If the fioJS library was updated in npm.  Also update the fioJS version number.  In 'package.json'
 3. Publish to npm:
