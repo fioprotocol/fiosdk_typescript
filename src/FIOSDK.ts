@@ -1637,7 +1637,6 @@ export class FIOSDK {
         return this.getGrantorPermissions(params.grantorAccount, params.limit, params.offset)
       case 'getObjectPermissions':
         return this.getObjectPermissions(params.permissionName, params.objectName, params.limit, params.offset)
-
       case 'rejectFundsRequest':
         return this.rejectFundsRequest(
           params.fioRequestId,

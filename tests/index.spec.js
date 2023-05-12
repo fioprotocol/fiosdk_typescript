@@ -175,8 +175,6 @@ describe('Testing Fio permissions', () => {
           actor: fioSdk.account
         }
       })
-
-      //console.log(result);
       expect(result.status).to.equal('OK')
   })
 
