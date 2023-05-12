@@ -803,12 +803,15 @@ export class FIOSDK {
     hash: string | null = null,
     offLineUrl: string | null = null,
   ): Promise<RecordObtDataResponse> {
-    let payeeKey: any = { public_address: '' }
-    if (!payeeFioPublicKey && typeof payeeFioPublicKey !== 'string') {
-      payeeKey = await this.getFioPublicAddress(payeeFioAddress)
-    } else {
-      payeeKey.public_address = payeeFioPublicKey
+    let payeeKey = ''
+    const encryptKey = await this.getEncryptKey(payeeFioAddress)
+
+    if (encryptKey && encryptKey.encrypt_public_key) {
+      payeeKey = encryptKey.encrypt_public_key
+    } else if (payeeFioPublicKey && typeof payeeFioPublicKey === 'string') {
+      payeeKey = payeeFioPublicKey
     }
+
     const recordObtData = new SignedTransactions.RecordObtData(
       fioRequestId,
       payerFioAddress,
@@ -822,7 +825,7 @@ export class FIOSDK {
       maxFee,
       status,
       this.getTechnologyProviderId(technologyProviderId),
-      payeeKey.public_address,
+      payeeKey,
       memo,
       hash,
       offLineUrl,
@@ -929,15 +932,18 @@ export class FIOSDK {
     hash?: string,
     offlineUrl?: string,
   ): Promise<RequestFundsResponse> {
-    let payerKey: any = { public_address: '' }
-    if (!payerFioPublicKey && typeof payerFioPublicKey !== 'string') {
-      payerKey = await this.getFioPublicAddress(payerFioAddress)
-    } else {
-      payerKey.public_address = payerFioPublicKey
+    let payerKey = ''
+    const encryptKey = await this.getEncryptKey(payerFioAddress)
+
+    if (encryptKey && encryptKey.encrypt_public_key) {
+      payerKey = encryptKey.encrypt_public_key
+    } else if (payerFioPublicKey && typeof payerFioPublicKey === 'string') {
+      payerKey = payerFioPublicKey
     }
+
     const requestNewFunds = new SignedTransactions.RequestNewFunds(
       payerFioAddress,
-      payerKey.public_address,
+      payerKey,
       payeeFioAddress,
       this.getTechnologyProviderId(technologyProviderId),
       maxFee,
@@ -1438,14 +1444,14 @@ export class FIOSDK {
     if (data.content && !encryptOptions.key) {
       switch (action) {
         case 'newfundsreq': {
-          const payerKey = await this.getFioPublicAddress(data.payer_fio_address)
-          encryptOptions.key = payerKey.public_address
+          const payerKey = await this.getEncryptKey(data.payer_fio_address)
+          encryptOptions.key = payerKey.encrypt_public_key
           encryptOptions.contentType = 'new_funds_content'
           break
         }
         case 'recordobt': {
-          const payeeKey = await this.getFioPublicAddress(data.payee_fio_address)
-          encryptOptions.key = payeeKey.public_address
+          const payeeKey = await this.getEncryptKey(data.payee_fio_address)
+          encryptOptions.key = payeeKey.encrypt_public_key
           encryptOptions.contentType = 'record_obt_data_content'
           break
         }
@@ -1468,6 +1474,14 @@ export class FIOSDK {
   getAccountPubKey(account: string) {
     const getAccountPubKey = new queries.GetAccountPubKey(account);
     return getAccountPubKey.execute(this.publicKey);
+  }
+
+  /**
+  * @ignore
+  */
+  public getEncryptKey(fioAddress: string) {
+    const getEncryptKey = new queries.GetEncryptKey(fioAddress)
+    return getEncryptKey.execute(this.publicKey)
   }
 
   /**
@@ -1737,6 +1751,8 @@ export class FIOSDK {
         return this.pushTransaction(params.account, params.action, params.data, params.encryptOptions)
       case 'getAccountPubKey':
         return this.getAccountPubKey(params.account)
+      case 'getEncryptKey':
+        return this.getEncryptKey(params.fioAddress)
     }
   }
 
