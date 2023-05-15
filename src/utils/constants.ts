@@ -41,4 +41,24 @@ export class Constants {
   public static defaultAccount: string = 'fio.address'
 
   public static defaultExpirationOffset = 180
+
+  public static classMethodsToExcludeFromProxy: string[] = [
+    'constructor',
+    'SUFUnit',
+    'derivedPublicKey',
+    'isChainCodeValid',
+    'isTokenCodeValid',
+    'isFioAddressValid',
+    'isFioDomainValid',
+    'isFioPublicKeyValid',
+    'isPublicAddressValid',
+    'amountToSUF',
+    'SUFToAmount',
+    'getFioPublicKey',
+    'getTechnologyProviderId',
+    'setSignedTrxReturnOption',
+    'setApiUrls',
+    'getMultiplier',
+    'getAbi'
+  ]
 }

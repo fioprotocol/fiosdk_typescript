@@ -19,7 +19,7 @@ import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 
 import { validate } from '../utils/validation'
-import { asyncWaterfall, shuffleArray } from '../utils/utils'
+import { asyncWaterfall } from '../utils/utils'
 import { Constants } from '../utils/constants'
 
 type FetchJson = (uri: string, opts?: object) => any
@@ -405,6 +405,16 @@ export class Transactions {
     }
     try {
       const res = await Transactions.fetchJson(baseUrl + endPoint, options)
+      if (res === undefined) {
+        const error = new Error(`Error: Can't reach the site ${baseUrl}${endPoint}. Possible wrong url.`)
+        return {
+          data: {
+            code: 500,
+            message: error.message,
+          },
+          isError: true,
+        }
+      }
       if (!res.ok) {
         const error: Error & {
           json?: FioErrorJson,
@@ -453,10 +463,8 @@ export class Transactions {
 
   public async multicastServers(endpoint: string, body: string | null, fetchOptions?: any): Promise<any> {
     const res = await asyncWaterfall(
-      shuffleArray(
-        Transactions.baseUrls.map((apiUrl) => () =>
-          this.executeCall(apiUrl, endpoint, body, fetchOptions),
-        ),
+      Transactions.baseUrls.map((apiUrl) => () =>
+        this.executeCall(apiUrl, endpoint, body, fetchOptions),
       ),
     )
 
