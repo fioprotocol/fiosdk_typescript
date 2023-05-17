@@ -1466,12 +1466,14 @@ export class FIOSDK {
     data,
     authPermission,
     encryptOptions = {},
+    signingAccount,
   }: {
     account: string,
     action: string,
     data: any,
     authPermission?: string,
     encryptOptions?: EncryptOptions,
+    signingAccount?: string,
 }): Promise<any> {
     data.tpid = this.getTechnologyProviderId(data.tpid)
     if (data.content && !encryptOptions.key) {
@@ -1498,6 +1500,7 @@ export class FIOSDK {
       authPermission,
       data,
       encryptOptions,
+      signingAccount,
 })
     return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
@@ -1788,6 +1791,7 @@ export class FIOSDK {
           data: params.data,
           authPermission: params.authPermission,
           encryptOptions: params.encryptOptions,
+          signingAccount: params.signingAccount,
         })
       case 'getAccountPubKey':
         return this.getAccountPubKey(params.account)

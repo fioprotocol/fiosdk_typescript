@@ -93,6 +93,7 @@ export class Transactions {
 
   public expirationOffset: number = Constants.defaultExpirationOffset
   public authPermission: string | undefined
+  public signingAccount: string | undefined
 
   public getActor(publicKey: string = ''): string {
     return Transactions.FioProvider.accountHash((publicKey === '' || !publicKey) ? this.publicKey : publicKey)
@@ -224,17 +225,18 @@ export class Transactions {
   }
 
   public async createRawTransaction(
-    { account, action, authPermission, data, publicKey, chainData }: {
+    { account, action, authPermission, data, publicKey, chainData, signingAccount }: {
       account: string;
       action: string;
       authPermission?: string;
-      data: any,
-      publicKey?: string,
+      data: any;
+      publicKey?: string;
       chainData?: {
         ref_block_num: number,
         ref_block_prefix: number,
         expiration: string,
-      }
+      };
+      signingAccount?: string;
     },
   ): Promise<RawTransaction> {
     const rawTransaction = new RawTransaction()
@@ -250,6 +252,7 @@ export class Transactions {
     rawaction.account = account
     rawaction.name = action
     rawaction.data = data
+    rawaction.actor = signingAccount
     rawTransaction.actions.push(rawaction)
 
     if (chainData && chainData.ref_block_num) {
