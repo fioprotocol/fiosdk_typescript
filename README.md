@@ -222,6 +222,11 @@ This is the expected Private Key:
 This is the expected Public Key:
 "FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o"
 
+## Version 1.9.0
+### Breaking changes:
+- Set new parameter `authPermission` for sign and push transactions
+- `pushTransaction` receives object params instead of multiple arguments
+
 ## Version 1.0.2
 Bug Fix to method: addPublicAddresses - TechnologyProviderId (i.e. TPID), was not being set correctly for this method.
 

@@ -1063,13 +1063,13 @@
 					<a name="pushtransaction" class="tsd-anchor"></a>
 					<h3>push<wbr>Transaction</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">push<wbr>Transaction<span class="tsd-signature-symbol">(</span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
+						<li class="tsd-signature tsd-kind-icon">push<wbr>Transaction<span class="tsd-signature-symbol">({</span>account<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, action<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, authPermission<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string | undefined</span>, data<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span>, encryptOptions<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">EncryptOptions</span><span class="tsd-signature-symbol">, signingAccount<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string | undefined</span>})</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/fioprotocol/fiosdk_typescript/blob/650dec4/src/FIOSDK.ts#L828">FIOSDK.ts:828</a></li>
+									<li>Defined in <a href="https://github.com/fioprotocol/fiosdk_typescript/blob/6acaa206ed8d0ccd402665088d142ef6b92f60fd/src/FIOSDK.ts#L1393">FIOSDK.ts:L1393</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1092,9 +1092,27 @@
 									</div>
 								</li>
 								<li>
+									<h5>authPermission: <span class="tsd-signature-type">string | undefined</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Auth permision parameter</p>
+									</div>
+								</li>
+								<li>
 									<h5>data: <span class="tsd-signature-type">any</span></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>JSON object with params for action</p>
+									</div>
+								</li>
+								<li>
+									<h5>encryptOptions: <span class="tsd-signature-type">EncryptOptions</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Parameters for encryption</p>
+									</div>
+								</li>
+								<li>
+									<h5>signingAccount: <span class="tsd-signature-type">string | undefined</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Sign transaction account</p>
 									</div>
 								</li>
 							</ul>

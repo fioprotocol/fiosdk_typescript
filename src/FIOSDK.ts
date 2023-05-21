@@ -1403,16 +1403,16 @@ export class FIOSDK {
       const { fee: stakeFee } = await this.getFee(EndPoint.stakeFioTokens, fioAddress)
       fee = stakeFee
     }
-    return this.pushTransaction(
-      'fio.staking',
-      'stakefio',
-      {
+    return this.pushTransaction({
+      account: 'fio.staking',
+      action: 'stakefio',
+      data: {
         amount,
         fio_address: fioAddress,
         max_fee: fee,
         tpid: technologyProviderId,
       },
-    )
+    })
   }
 
   /**
@@ -1433,16 +1433,16 @@ export class FIOSDK {
       const { fee: stakeFee } = await this.getFee(EndPoint.unStakeFioTokens, fioAddress)
       fee = stakeFee
     }
-    return this.pushTransaction(
-      'fio.staking',
-      'unstakefio',
-      {
+    return this.pushTransaction({
+      account: 'fio.staking',
+      action: 'unstakefio',
+      data: {
         amount,
         fio_address: fioAddress,
         max_fee: fee,
         tpid: technologyProviderId,
       },
-    )
+    })
   }
 
   /**
@@ -1460,12 +1460,21 @@ export class FIOSDK {
    * @param data JSON object with params for action
    * @param encryptOptions JSON object with params for encryption
    */
-  public async pushTransaction(
+  public async pushTransaction({
+    account,
+    action,
+    data,
+    authPermission,
+    encryptOptions = {},
+    signingAccount,
+  }: {
     account: string,
     action: string,
     data: any,
-    encryptOptions: EncryptOptions = {},
-  ): Promise<any> {
+    authPermission?: string,
+    encryptOptions?: EncryptOptions,
+    signingAccount?: string,
+}): Promise<any> {
     data.tpid = this.getTechnologyProviderId(data.tpid)
     if (data.content && !encryptOptions.key) {
       switch (action) {
@@ -1485,12 +1494,14 @@ export class FIOSDK {
         //
       }
     }
-    const pushTransaction = new SignedTransactions.PushTransaction(
+    const pushTransaction = new SignedTransactions.PushTransaction({
       action,
       account,
+      authPermission,
       data,
       encryptOptions,
-    )
+      signingAccount,
+})
     return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
@@ -1774,7 +1785,14 @@ export class FIOSDK {
       case 'getMultiplier':
         return this.getMultiplier()
       case 'pushTransaction':
-        return this.pushTransaction(params.account, params.action, params.data, params.encryptOptions)
+        return this.pushTransaction({
+          account: params.account,
+          action: params.action,
+          data: params.data,
+          authPermission: params.authPermission,
+          encryptOptions: params.encryptOptions,
+          signingAccount: params.signingAccount,
+        })
       case 'getAccountPubKey':
         return this.getAccountPubKey(params.account)
       case 'getEncryptKey':

@@ -17,7 +17,8 @@ let privateKey = '',
   privateKey2 = '',
   publicKey2 = '',
   testFioAddressName = '',
-  testFioAddressName2 = ''
+  testFioAddressName2 = '',
+  testFioDomainName = '';
 
 /**
  * Public Testnet API nodes can be found at: https://github.com/fioprotocol/fio.mainnet
@@ -699,6 +700,125 @@ describe('Testing generic actions', () => {
   //   expect(result.encrypt_public_key).to.be.a('string');
   // });
 })
+
+describe('Test addaddress on account with permissions', () => {
+  const account1 = FIOSDK.accountHash(publicKey).accountnm;
+  const account2 = FIOSDK.accountHash(publicKey2).accountnm;
+
+  const permissionName = 'addmyadd'; // Must be < 12 chars
+
+  it(`user1 creates addmyadd permission and assigns to user2`, async () => {
+    try {
+      const authorization_object = {
+        threshold: 1,
+        accounts: [
+          {
+            permission: {
+              actor: account2,
+              permission: 'active',
+            },
+            weight: 1,
+          },
+        ],
+        keys: [],
+        waits: [],
+      };
+
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'updateauth',
+        account: 'eosio',
+        actor: account1,
+        data: {
+          permission: permissionName, //addmyadd
+          parent: 'active',
+          max_fee: defaultFee,
+          auth: authorization_object,
+          account: account1,
+        },
+      });
+
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time')
+      expect(result.block_num).to.be.a('number')
+      expect(result.transaction_id).to.be.a('string')
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  it(`user1 links regmyadd permission to regaddress`, async () => {
+    try {
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'linkauth',
+        account: 'eosio',
+        actor: account1,
+        data: {
+          account: account1, // the owner of the permission to be linked, this account will sign the transaction
+          code: 'fio.address', // the contract owner of the action to be linked
+          type: 'addaddress', // the action to be linked
+          requirement: permissionName, // the name of the custom permission (created by updateauth)
+          max_fee: defaultFee,
+        },
+      });
+      
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time')
+      expect(result.block_num).to.be.a('number')
+      expect(result.transaction_id).to.be.a('string')
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  it(`renewdomain for user1`, async () => {
+    try {
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'renewdomain',
+        account: 'fio.address',
+        authPermission: 'active',
+        data: {
+          fio_domain: testFioDomainName,
+          max_fee: defaultFee,
+          tpid: '',
+          actor: account1,
+        },
+      });
+
+      expect(result.status).to.equal('OK');
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  /* todo uncomment when the permissions go live in test net
+  it(`addaddress as user2`, async () => {
+    try {
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'addaddress',
+        account: 'fio.address',
+        signingAccount: account2,
+        authPermission: permissionName,
+        data: {
+          fio_address: testFioAddressName,
+          public_addresses: [
+            {
+              chain_code: 'BCH',
+              token_code: 'BCH',
+              public_address:
+                'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
+            },
+          ],
+          max_fee: defaultFee,
+          tpid: '',
+          actor: account1,
+        },
+      });
+      console.log('Result: ', result);
+      expect(result.status).to.equal('OK');
+    } catch (e) {
+      console.log(e);
+    }
+  });
+  */
+});
 
 /* todo uncomment when the permissions go live in test net
 describe('Testing Fio permissions', () => {

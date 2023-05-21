@@ -43,6 +43,8 @@ export abstract class SignedTransaction extends Transactions {
 
   public abstract getData(): any
 
+  public static authPermission: string | undefined
+  public static signingAccount: string | undefined
   public static expirationOffset: number
 
   public async execute(privateKey: string, publicKey: string, dryRun = false, expirationOffset = Constants.defaultExpirationOffset): Promise<any> {
@@ -53,7 +55,9 @@ export abstract class SignedTransaction extends Transactions {
     const rawTransaction = await this.createRawTransaction({
       account: this.getAccount(),
       action: this.getAction(),
+      authPermission: this.getAuthPermission(),
       data: this.getData(),
+      signingAccount: this.getSigningAccount(),
     })
 
     const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
@@ -70,6 +74,14 @@ export abstract class SignedTransaction extends Transactions {
 
   public getAccount(): string {
     return this.ACCOUNT
+  }
+
+  public getAuthPermission(): string | undefined {
+    return this.authPermission
+  }
+
+  public getSigningAccount(): string | undefined {
+    return this.signingAccount
   }
 
   public getEndPoint(): string {
