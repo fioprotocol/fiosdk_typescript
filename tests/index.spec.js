@@ -814,7 +814,7 @@ describe('Testing generic actions', () => {
 })
 
 
-describe.only('Test addaddress on account with permissions', () => {
+describe('Test addaddress on account with permissions', () => {
 
 
   let account1, account2;
@@ -851,20 +851,7 @@ describe.only('Test addaddress on account with permissions', () => {
         data: {
           permission: permissionName,
           parent: 'active',
-          auth: {
-            threshold: 1,
-            accounts: [
-              {
-                permission: {
-                  actor: account2,
-                  permission: 'active',
-                },
-                weight: 1,
-              }
-            ],
-            keys: [],
-            waits: [],
-          },
+          auth: authorization_object,
           max_fee: defaultFee,
           account: account1,
         },
