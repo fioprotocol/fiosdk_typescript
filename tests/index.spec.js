@@ -910,7 +910,9 @@ describe.only('Test addaddress on account with permissions', () => {
       expect(result.block_num).to.be.a('number');
       expect(result.transaction_id).to.be.a('string');
     } catch (e) {
-      console.log(e);
+      //the error we get here is due to using the same account every time we run the test,
+      //we get an error "same as previous" from linkauth, this is ok!
+     // console.log(e);
     }
   });
 
