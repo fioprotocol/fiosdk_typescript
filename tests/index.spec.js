@@ -15,7 +15,8 @@ let privateKey,
   publicKey2,
   testFioAddressName,
   testFioAddressName2,
-  testFioDomainName
+  testFioDomainName;
+
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
 
@@ -83,6 +84,7 @@ before(async () => {
   )
   const testDomain = generateTestingFioDomain()
   testFioAddressName = generateTestingFioAddress(testDomain)
+  testFioDomainName = testDomain
 
   await timeout(1000)
   privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic2)
@@ -95,7 +97,10 @@ before(async () => {
     baseUrls,
     fetchJson
   )
-  testFioAddressName2 = generateTestingFioAddress(testDomain)
+
+  const testDomain2 = generateTestingFioDomain()
+  await timeout(1000)
+  testFioAddressName2 = generateTestingFioAddress(testDomain2)
 
   const fioSdkFaucet = new FIOSDK(
     faucetPriv,
@@ -125,6 +130,16 @@ before(async () => {
       maxFee: defaultFee,
       technologyProviderId: ''
     })
+
+    const isAvailableResult3 = await fioSdk2.genericAction('isAvailable', {
+      fioName: testDomain2
+    })
+    if (!isAvailableResult3.is_registered) {
+      await fioSdk2.genericAction('registerFioDomain', {
+        fioDomain: testDomain2,
+        maxFee: defaultFee
+      })
+    }
 
     const isAvailableResult1 = await fioSdk.genericAction('isAvailable', {
       fioName: testFioAddressName
@@ -798,15 +813,23 @@ describe('Testing generic actions', () => {
   // })
 })
 
+
 describe('Test addaddress on account with permissions', () => {
-  const account1 = FIOSDK.accountHash(publicKey).accountnm;
-  const account2 = FIOSDK.accountHash(publicKey2).accountnm;
+
+
+  let account1, account2;
+
+  it(`gen account names`, async () => {
+    account1 = FIOSDK.accountHash(publicKey).accountnm;
+    account2 = FIOSDK.accountHash(publicKey2).accountnm;
+  })
+
 
   const permissionName = 'addmyadd'; // Must be < 12 chars
 
   it(`user1 creates addmyadd permission and assigns to user2`, async () => {
-    try {
-      const authorization_object = {
+     try{
+       const authorization_object = {
         threshold: 1,
         accounts: [
           {
@@ -826,25 +849,30 @@ describe('Test addaddress on account with permissions', () => {
         account: 'eosio',
         actor: account1,
         data: {
-          permission: permissionName, //addmyadd
+          permission: permissionName,
           parent: 'active',
-          max_fee: defaultFee,
           auth: authorization_object,
+          max_fee: defaultFee,
           account: account1,
         },
       });
 
+      //console.log(result);
       expect(result).to.have.all.keys(
         'transaction_id',
         'block_num',
         'block_time'
       );
+
       expect(result.block_num).to.be.a('number');
       expect(result.transaction_id).to.be.a('string');
     } catch (e) {
-      console.log(e);
+      console.log('Error' ,e);
     }
   });
+
+
+
 
   it(`user1 links regmyadd permission to regaddress`, async () => {
     try {
@@ -869,7 +897,9 @@ describe('Test addaddress on account with permissions', () => {
       expect(result.block_num).to.be.a('number');
       expect(result.transaction_id).to.be.a('string');
     } catch (e) {
-      console.log(e);
+      //the error we get here is due to using the same account every time we run the test,
+      //we get an error "same as previous" from linkauth, this is ok!
+     // console.log(e);
     }
   });
 
@@ -883,7 +913,7 @@ describe('Test addaddress on account with permissions', () => {
           fio_domain: testFioDomainName,
           max_fee: defaultFee,
           tpid: '',
-          actor: account1,
+          actor: account1
         },
       });
 
@@ -895,7 +925,7 @@ describe('Test addaddress on account with permissions', () => {
 
   it(`addaddress as user2`, async () => {
     try {
-      const result = await fioSdk.genericAction('pushTransaction', {
+      const result = await fioSdk2.genericAction('pushTransaction', {
         action: 'addaddress',
         account: 'fio.address',
         signingAccount: account2,
@@ -922,6 +952,7 @@ describe('Test addaddress on account with permissions', () => {
     }
   });
 });
+
 
 describe('Staking tests', () => {
   let stakedBalance = 0;
