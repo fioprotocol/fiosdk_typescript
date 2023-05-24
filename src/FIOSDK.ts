@@ -394,6 +394,7 @@ export class FIOSDK {
     endPoint: string,
     preparedTrx: object,
   ): Promise<any> {
+    console.log('THIS PUB KEY', this.publicKey);
     const response = await this.transactions.multicastServers(`chain/${endPoint}`, JSON.stringify(preparedTrx))
     return SignedTransaction.prepareResponse(response, true)
   }
@@ -458,6 +459,11 @@ export class FIOSDK {
     maxFee: number,
     technologyProviderId: string | null = null,
   ): Promise<RegisterFioDomainResponse> {
+    console.log('REG FIO DOMAIN PARAMS');
+    console.log('fioDomain', fioDomain);
+    console.log('maxFee', maxFee);
+    console.log('technologyProviderId', technologyProviderId);
+
     const registerFioDomain = new SignedTransactions.RegisterFioDomain(
       fioDomain,
       null,
@@ -481,6 +487,11 @@ export class FIOSDK {
     maxFee: number,
     technologyProviderId: string | null = null,
   ): Promise<RegisterFioDomainResponse> {
+    console.log('OWNER REG FIO DOMAIN PARAMS');
+    console.log('fioDomain', fioDomain);
+    console.log('ownerPublicKey', ownerPublicKey);
+    console.log('maxFee', maxFee);
+    console.log('technologyProviderId', technologyProviderId);
     const registerFioDomain = new SignedTransactions.RegisterFioDomain(
       fioDomain,
       ownerPublicKey,
@@ -611,6 +622,10 @@ export class FIOSDK {
     maxFee: number,
     technologyProviderId: string | null = null,
   ): Promise<RenewFioDomainResponse> {
+    console.log('RENEW FIO DOMAIN PARAMS');
+    console.log('fioDomain', fioDomain);
+    console.log('maxFee', maxFee);
+    console.log('technologyProviderId', technologyProviderId);
     const renewFioDomain = new SignedTransactions.RenewFioDomain(
       fioDomain,
       maxFee,

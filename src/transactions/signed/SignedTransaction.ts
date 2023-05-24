@@ -56,7 +56,12 @@ export abstract class SignedTransaction extends Transactions {
       data: this.getData(),
     })
 
+    console.log('RAW TX', rawTransaction);
+    console.log('ENDPOINT', this.getEndPoint());
+    console.log('DRY RUN', dryRun);
+
     const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
+    console.log('RESULT', result);
     return this.prepareResponse(result)
   }
 

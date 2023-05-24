@@ -249,7 +249,8 @@ export class Transactions {
     rawaction.name = action
     rawaction.data = data
     rawTransaction.actions.push(rawaction)
-
+    console.log('RAW ACTION', rawaction);
+    console.log('rawTransaction', rawTransaction);
     if (chainData && chainData.ref_block_num) {
       this.setRawTransactionExp(rawTransaction, chainData)
     }
@@ -381,6 +382,7 @@ export class Transactions {
         textEncoder: new TextEncoder(),
         transaction,
       })
+      console.log('SIGNED TX', JSON.stringify(signedTransaction));
       return this.multicastServers(endpoint, JSON.stringify(signedTransaction))
     }
   }
@@ -404,7 +406,10 @@ export class Transactions {
       }
     }
     try {
+      console.log('URL', baseUrl + endPoint);
+      console.log('OPTIONS', options);
       const res = await Transactions.fetchJson(baseUrl + endPoint, options)
+      console.log('RES ENDPOINT', res);
       if (res === undefined) {
         const error = new Error(`Error: Can't reach the site ${baseUrl}${endPoint}. Possible wrong url.`)
         return {
