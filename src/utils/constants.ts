@@ -61,4 +61,6 @@ export class Constants {
     'getMultiplier',
     'getAbi'
   ]
+
+  public static missingAbiError = 'unknown key'
 }

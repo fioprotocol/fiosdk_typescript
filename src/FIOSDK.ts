@@ -83,7 +83,25 @@ export class FIOSDK {
       } 
       const setAbiPromises = Constants.rawAbiAccountName.map(accountName => setAbi(accountName))
 
-      await Promise.all(setAbiPromises).catch(error => { throw error })
+      await Promise.allSettled(setAbiPromises).then(results => results.forEach(result => {
+        if (result.status === 'rejected') {
+          let error = '';
+          const reason = result.reason;
+
+          const errorObj = reason.json || reason.errors[0].json;
+
+          if (errorObj) {
+            error = errorObj.error?.details[0]?.message;
+          }
+          if (!error) error = reason.message
+
+          if (error.includes(Constants.missingAbiError)) {
+            console.error('FIO_SDK ABI Error:', error);
+          } else {
+            throw new Error(`FIO_SDK ABI Error: ${result.reason}`);
+          }
+        }
+      }));
 
       // Here we bind method with our class by accessing reference to instance
       const results = target.bind(this.main)(...args);
