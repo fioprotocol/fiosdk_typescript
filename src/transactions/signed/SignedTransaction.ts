@@ -28,6 +28,7 @@ export abstract class SignedTransaction extends Transactions {
 
   public static parseProcessedResult(processed: { action_traces: Array<{ receipt: { response: string }}>}) {
     try {
+      if (!processed.action_traces[0].receipt.response || typeof processed.action_traces[0].receipt.response !== 'object') return {}
       return JSON.parse(processed.action_traces[0].receipt.response)
     } catch (e) {
       // tslint:disable-next-line:no-console
