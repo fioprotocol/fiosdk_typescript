@@ -80,8 +80,13 @@ export class FIOSDK {
           const response = await this.main.getAbi(accountName)
           Transactions.abiMap.set(response.account_name, response)
         }
-      } 
-      const setAbiPromises = Constants.rawAbiAccountName.map(accountName => setAbi(accountName))
+      }
+      const rawAbiAccountNameList = Constants.rawAbiAccountName;
+      if (FIOSDK.customRawAbiAccountName) {
+        rawAbiAccountNameList.push(...FIOSDK.customRawAbiAccountName)
+      }
+  
+      const setAbiPromises = rawAbiAccountNameList.map(accountName => setAbi(accountName))
 
       await Promise.allSettled(setAbiPromises).then(results => results.forEach(result => {
         if (result.status === 'rejected') {
@@ -96,7 +101,7 @@ export class FIOSDK {
           if (!error) error = reason.message
 
           if (error.includes(Constants.missingAbiError)) {
-            console.error('FIO_SDK ABI Error:', error);
+            console.warn('\x1b[33m', 'FIO_SDK ABI WARNING:', error);
           } else {
             throw new Error(`FIO_SDK ABI Error: ${result.reason}`);
           }
@@ -108,6 +113,20 @@ export class FIOSDK {
 
       return results;
     }
+  }
+
+  /**
+   * Needed for testing abi
+  **/
+
+  public static customRawAbiAccountName: string[] | null
+
+  /**
+   * Needed for testing abi
+  **/
+ 
+  public static setCustomRawAbiAccountName(customRawAbiAccountName: string) {
+    FIOSDK.customRawAbiAccountName = [customRawAbiAccountName];
   }
   /**
    * @ignore

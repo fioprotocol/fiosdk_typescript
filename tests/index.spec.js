@@ -166,6 +166,48 @@ before(async () => {
   }
 })
 
+describe('Raw Abi missing', () => {
+  FIOSDK.setCustomRawAbiAccountName('fio.absentabi');
+
+  let consoleWarnOriginal; // Store the original console.warn method
+  let consoleWarnMessages = [];
+
+  beforeEach(() => {
+    consoleWarnOriginal = console.warn; // Store the original console.warn method
+    console.warn = (...args) => {
+      consoleWarnMessages.push(args.join(' '));
+    };
+  });
+
+  afterEach(() => {
+    console.warn = consoleWarnOriginal; // Restore the original console.warn method
+    consoleWarnMessages = []; // Reset the captured warning messages
+  });
+
+  it(`Get FIO Balance to test Raw Abi`, async () => {
+    const result = await fioSdk.genericAction('getFioBalance', {});
+
+    const fioSdkAbiWarning = consoleWarnMessages.find((message) =>
+      message.includes('FIO_SDK ABI WARNING:')
+    );
+
+    expect(fioSdkAbiWarning).to.exist;
+
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+});
+
 describe('Testing Fio permissions', () => {
 
   let accountName, accountName2;
