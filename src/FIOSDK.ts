@@ -101,7 +101,12 @@ export class FIOSDK {
           if (!error) error = reason.message
 
           if (error.includes(Constants.missingAbiError)) {
-            console.warn('\x1b[33m', 'FIO_SDK ABI WARNING:', error);
+            const abiAccountName = reason.requestParams && reason.requestParams.body && reason.requestParams.body.replace('{', '').replace('}', '').split(':')[1].replace('\"', '').replace('\"', '');
+
+            if (!this.main.rawAbiMissingWarnings?.includes(abiAccountName) || (FIOSDK.customRawAbiAccountName && FIOSDK.customRawAbiAccountName.includes(abiAccountName))) {
+              console.warn('\x1b[33m', 'FIO_SDK ABI WARNING:', error);
+              FIOSDK.setRawAbiMissingWarnings(abiAccountName, this.main);
+            }
           } else {
             throw new Error(`FIO_SDK ABI Error: ${result.reason}`);
           }
@@ -118,16 +123,15 @@ export class FIOSDK {
   /**
    * Needed for testing abi
   **/
-
   public static customRawAbiAccountName: string[] | null
 
   /**
    * Needed for testing abi
   **/
- 
   public static setCustomRawAbiAccountName(customRawAbiAccountName: string) {
     FIOSDK.customRawAbiAccountName = [customRawAbiAccountName];
   }
+
   /**
    * @ignore
    */
@@ -350,6 +354,12 @@ export class FIOSDK {
   private returnPreparedTrx: boolean = false
 
   /**
+   * Stored raw abi missing warnings
+  **/
+  public rawAbiMissingWarnings: string[]
+  static rawAbiMissingWarnings: string[]
+
+  /**
    * // how to instantiate fetchJson parameter
    * i.e.
    * fetch = require('node-fetch')
@@ -384,6 +394,7 @@ export class FIOSDK {
     this.publicKey = publicKey
     this.technologyProviderId = technologyProviderId
     this.returnPreparedTrx = returnPreparedTrx
+    this.rawAbiMissingWarnings = []
 
     const methods = Object.getOwnPropertyNames(FIOSDK.prototype);
 
@@ -392,6 +403,13 @@ export class FIOSDK {
     methods.filter(method => !Constants.classMethodsToExcludeFromProxy.includes(method)).forEach(methodName => {
       this[methodName as keyof FIOSDK] = new Proxy(this[methodName as keyof FIOSDK], this.proxyHandle);
     });
+  }
+
+  /**
+   * Set stored raw abi missing warnings
+  **/
+  public static setRawAbiMissingWarnings(rawAbiName: string, fioSdkInctance: FIOSDK) {
+    fioSdkInctance.rawAbiMissingWarnings.push(rawAbiName);
   }
 
   /**

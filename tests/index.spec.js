@@ -167,8 +167,6 @@ before(async () => {
 })
 
 describe('Raw Abi missing', () => {
-  FIOSDK.setCustomRawAbiAccountName('fio.absentabi');
-
   let consoleWarnOriginal; // Store the original console.warn method
   let consoleWarnMessages = [];
 
@@ -185,11 +183,15 @@ describe('Raw Abi missing', () => {
   });
 
   it(`Get FIO Balance to test Raw Abi`, async () => {
+    FIOSDK.setCustomRawAbiAccountName('fio.absentabi');
+
     const result = await fioSdk.genericAction('getFioBalance', {});
 
     const fioSdkAbiWarning = consoleWarnMessages.find((message) =>
       message.includes('FIO_SDK ABI WARNING:')
     );
+
+    FIOSDK.setCustomRawAbiAccountName(null);
 
     expect(fioSdkAbiWarning).to.exist;
 
