@@ -24,7 +24,7 @@ export abstract class Query<T> extends Transactions {
     } else {
       try {
         const result = await this.multicastServers({ endpoint: this.getEndPoint(), body: JSON.stringify(this.getData()), requestTimeout: this.requestTimeout })
-        return this.decrypt(result)
+        return await this.decrypt(result)
       } catch (error) {
         throw error
       }
