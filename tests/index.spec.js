@@ -109,7 +109,7 @@ before(async () => {
     fetchJson
   )
   await fioSdkFaucet.transferTokens(publicKey, fundAmount * 4, defaultFee)
-  await fioSdkFaucet.transferTokens(publicKey2, fundAmount, defaultFee)
+  await fioSdkFaucet.transferTokens(publicKey2, fundAmount * 4, defaultFee)
   await timeout(receiveTransferTimout)
 
   try {
@@ -312,7 +312,9 @@ describe('Testing generic actions', () => {
       FIOSDK.isFioDomainValid('$%FG%')
     } catch (e) {
       console.log(e)
-      expect(e.list[0].message).to.equal('fioDomain must match /^[a-z0-9\\-]+$/i.')
+      expect(e.list[0].message).to.equal(
+        'fioDomain must match /^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/i.'
+      );
     }
     try {
       FIOSDK.isFioPublicKeyValid('dfsd')
