@@ -1497,6 +1497,7 @@ describe('Request funds, cancel funds request', () => {
       expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
       expect(pendingReq.payee_fio_address).to.be.a('string')
       expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+      expect(pendingReq.content.memo).to.be.equal(memo);
     } catch (e) {
       console.log(e);
     }
@@ -1546,6 +1547,7 @@ describe('Request funds, reject', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo);
   })
 
   it(`getFee for rejectFundsRequest`, async () => {

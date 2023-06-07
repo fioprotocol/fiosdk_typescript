@@ -1348,6 +1348,7 @@ describe('Request funds, approve and send', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo)
   })
 
   it(`getSentFioRequests`, async () => {
@@ -1363,6 +1364,7 @@ describe('Request funds, approve and send', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo);
   })
 
   it(`recordObtData`, async () => {
@@ -1405,6 +1407,7 @@ describe('Request funds, approve and send', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo);
   })
 
   it(`Payer getObtData`, async () => {
@@ -1499,6 +1502,7 @@ describe('Request funds, cancel funds request', () => {
       expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
       expect(pendingReq.payee_fio_address).to.be.a('string')
       expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+      expect(pendingReq.content.memo).to.be.equal(memo);
     } catch (e) {
       console.log(e);
     }
@@ -1547,6 +1551,7 @@ describe('Request funds, reject', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo);
   })
 
   it(`getFee for rejectFundsRequest`, async () => {
