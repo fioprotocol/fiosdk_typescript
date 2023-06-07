@@ -1,4 +1,5 @@
 import { AbortController, AbortSignal } from 'abort-controller';
+import { GetEncryptKeyResponse } from '../entities/GetEncryptKeyResponse'; 
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
@@ -44,4 +45,58 @@ export async function asyncWaterfall({
   } finally {
     timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
   }
+}
+
+export async function getEncryptKeyForUnCipherContent({
+  getEncryptKey,
+  method = '',
+  payeeFioAddress,
+  payerFioAddress,
+  payeePublicKey,
+  payerPublicKey,
+  publicKey
+}: {
+  getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>,
+  method?: string,
+  payeeFioAddress: string,
+  payerFioAddress: string,
+  payeePublicKey: string,
+  payerPublicKey: string,
+  publicKey: string
+}) {
+  let encryptKey = null;
+  let payerEncryptKey = payerPublicKey;
+  let payeeEncryptKey = payeePublicKey;
+
+  if (payerFioAddress) {
+    try {
+      const payerEncryptKeyRes = await getEncryptKey(payerFioAddress);
+      if (payerEncryptKeyRes && payerEncryptKeyRes.encrypt_public_key) {
+        payerEncryptKey = payerEncryptKeyRes.encrypt_public_key;
+      }
+    } catch (error) {
+      console.warn(`${method}: Get Encrypt Key for payer_fio_address ${payerFioAddress} failed. Using publicKey.`);
+      // Skip if getEncryptKey fails and continue with the publicKey
+    }
+  }
+
+  if (payeeFioAddress) {
+    try {
+      const payeeEncryptKeyRes = await getEncryptKey(payeeFioAddress);
+      if (payeeEncryptKeyRes && payeeEncryptKeyRes.encrypt_public_key) {
+        payeeEncryptKey = payeeEncryptKeyRes.encrypt_public_key;
+      }
+    } catch (error) {
+      console.warn(`${method}: Get Encrypt Key for payee_fio_address ${payeeFioAddress} failed. Using publicKey.`);
+      // Skip if getEncryptKey fails and continue with the publicKey
+    }
+  }
+
+  if (payerEncryptKey === publicKey || payerPublicKey === publicKey) {
+    encryptKey = payeeEncryptKey
+  } else {
+    encryptKey = payerEncryptKey
+  }
+
+  return encryptKey;
 }

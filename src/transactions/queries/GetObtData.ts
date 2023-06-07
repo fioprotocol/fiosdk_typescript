@@ -1,6 +1,7 @@
 import { GetObtDataRecord } from '../../entities/GetObtDataRecord'
 import { GetObtDataResponse } from '../../entities/GetObtDataResponse'
 import { GetEncryptKeyResponse } from '../../entities/GetEncryptKeyResponse'
+import { getEncryptKeyForUnCipherContent } from '../../utils/utils'
 
 import { Query } from './Query'
 
@@ -33,40 +34,35 @@ export class GetObtData extends Query<GetObtDataResponse> {
         let content: {
           token_code: string;
         } | null = null;
-        const contentType = 'record_obt_data_content'
         try {
           const requests = await Promise.allSettled(result.obt_data_records.map(async (obtDataRecord: GetObtDataRecord) => {
             let encryptKey = this.publicKey;
-            if (obtDataRecord.payer_fio_address) {
-              try {
-                const payerEncryptKey = await this.getEncryptKey(obtDataRecord.payer_fio_address);
-                if (payerEncryptKey && payerEncryptKey.encrypt_public_key) {
-                  encryptKey = payerEncryptKey.encrypt_public_key;
-                }
-              } catch (error) {
-                console.warn(`Get Encrypt Key for ${obtDataRecord.payer_fio_address} failed. Using publicKey.`);
-                // Skip if getEncryptKey fails and continue with the publicKey
-              }
+
+            const { content: obtDataRecordContent, payee_fio_address, payee_fio_public_key, payer_fio_address, payer_fio_public_key } = obtDataRecord || {};
+
+            try {
+              encryptKey = await getEncryptKeyForUnCipherContent({
+                getEncryptKey: this.getEncryptKey,
+                method: 'GetObtData',
+                payeeFioAddress: payee_fio_address,
+                payerFioAddress: payer_fio_address,
+                payeePublicKey: payee_fio_public_key,
+                payerPublicKey: payer_fio_public_key,
+                publicKey: this.publicKey
+              });
+            } catch (error) {
+              console.error(error);
             }
 
             try {
-              if (obtDataRecord.payer_fio_public_key === encryptKey) {
-                content = this.getUnCipherContent(
-                  contentType,
-                  obtDataRecord.content,
-                  this.privateKey,
-                  obtDataRecord.payee_fio_public_key,
-                );
-              } else {
-                content = this.getUnCipherContent(
-                  contentType,
-                  obtDataRecord.content,
-                  this.privateKey,
-                  obtDataRecord.payer_fio_public_key,
-                );
-              }
+              content = this.getUnCipherContent(
+                'record_obt_data_content',
+                obtDataRecordContent,
+                this.privateKey,
+                encryptKey,
+              );
             } catch (error) {
-              console.warn(`Get UnCipher Content for ${encryptKey} failed. Return original value.`);
+              console.warn(`GetObtData: Get UnCipher Content for ${encryptKey} failed. Return original value.`);
             }
 
             if (content) {

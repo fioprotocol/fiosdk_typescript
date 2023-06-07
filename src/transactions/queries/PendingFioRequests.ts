@@ -1,6 +1,7 @@
 import { PendingFioRequestsResponse } from '../../entities/PendingFioRequestsResponse'
 import { GetEncryptKeyResponse } from '../../entities/GetEncryptKeyResponse'
 import { FioRequestsItem } from '../../entities/FioRequestsItem'
+import { getEncryptKeyForUnCipherContent } from '../../utils/utils'
 
 import { Query } from './Query'
 
@@ -32,36 +33,32 @@ export class PendingFioRequests extends Query<PendingFioRequestsResponse> {
         try {
           const requests = await Promise.allSettled(result.requests.map(async (value: FioRequestsItem) => {
             let encryptKey = this.publicKey;
-            if (value.payer_fio_address) {
-              try {
-                const payerEncryptKey = await this.getEncryptKey(value.payer_fio_address);
-                if (payerEncryptKey && payerEncryptKey.encrypt_public_key) {
-                  encryptKey = payerEncryptKey.encrypt_public_key;
-                }
-              } catch (error) {
-                console.warn(`Get Encrypt Key for ${value.payer_fio_address} failed. Using publicKey.`);
-                // Skip if getEncryptKey fails and continue with the publicKey
-              }
+
+            const { payee_fio_address, payee_fio_public_key, payer_fio_address, payer_fio_public_key } = value || {};
+
+            try {
+              encryptKey = await getEncryptKeyForUnCipherContent({
+                getEncryptKey: this.getEncryptKey,
+                method: 'PendingFioRequests',
+                payeeFioAddress: payee_fio_address,
+                payerFioAddress: payer_fio_address,
+                payeePublicKey: payee_fio_public_key,
+                payerPublicKey: payer_fio_public_key,
+                publicKey: this.publicKey
+              });
+            } catch (error) {
+              console.error(error);
             }
 
             try {
-              if (value.payer_fio_public_key === encryptKey) {
-                value.content = this.getUnCipherContent(
-                  'new_funds_content',
-                  value.content,
-                  this.privateKey,
-                  value.payee_fio_public_key,
-                );
-              } else {
-                value.content = this.getUnCipherContent(
-                  'new_funds_content',
-                  value.content,
-                  this.privateKey,
-                  value.payer_fio_public_key,
-                );
-              }
+              value.content = this.getUnCipherContent(
+                'new_funds_content',
+                value.content,
+                this.privateKey,
+                encryptKey,
+              );
             } catch (error) {
-              console.warn(`Get UnCipher Content for ${encryptKey} failed. Return original value.`);
+              console.warn(`PendingFioRequests: Get UnCipher Content for ${encryptKey} failed. Return original value.`);
             }
 
             return value;
