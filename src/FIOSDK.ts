@@ -128,8 +128,12 @@ export class FIOSDK {
   /**
    * Needed for testing abi
   **/
-  public static setCustomRawAbiAccountName(customRawAbiAccountName: string) {
-    FIOSDK.customRawAbiAccountName = [customRawAbiAccountName];
+  public static setCustomRawAbiAccountName(customRawAbiAccountName: string | null) {
+    if (customRawAbiAccountName) {
+      FIOSDK.customRawAbiAccountName = [customRawAbiAccountName];
+    } else {
+      FIOSDK.customRawAbiAccountName = null;
+    }
   }
 
   /**
