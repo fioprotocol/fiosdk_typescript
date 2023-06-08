@@ -12,6 +12,8 @@ import { arrayToHex, base64ToBinary } from '@fioprotocol/fiojs/dist/chain-numeri
 
 import { TextDecoder, TextEncoder } from 'text-encoding'
 
+import { AbortSignal } from 'abort-controller';
+
 import { AbiResponse } from '../entities/AbiResponse'
 import { Autorization } from '../entities/Autorization'
 import { RawAction } from '../entities/RawAction'
@@ -107,7 +109,7 @@ export class Transactions {
       },
       method: 'GET',
     }
-    return await this.multicastServers('chain/get_info', null, options)
+    return await this.multicastServers({ endpoint: 'chain/get_info', fetchOptions: options })
   }
 
   public async getBlock(chain: any): Promise<any> {
@@ -117,7 +119,7 @@ export class Transactions {
     if (chain.last_irreversible_block_num === undefined) {
       throw new Error('chain.last_irreversible_block_num undefined')
     }
-    return await this.multicastServers('chain/get_block', null,{
+    return await this.multicastServers({ endpoint: 'chain/get_block', fetchOptions: {
       body: JSON.stringify({
         block_num_or_id: chain.last_irreversible_block_num,
       }),
@@ -126,7 +128,7 @@ export class Transactions {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-    })
+    }})
   }
 
   public async getChainDataForTx(): Promise<{
@@ -386,11 +388,11 @@ export class Transactions {
         textEncoder: new TextEncoder(),
         transaction,
       })
-      return this.multicastServers(endpoint, JSON.stringify(signedTransaction))
+      return this.multicastServers({ endpoint, body: JSON.stringify(signedTransaction) })
     }
   }
 
-  public async executeCall(baseUrl: string, endPoint: string, body: string | null, fetchOptions?: any): Promise<any> {
+  public async executeCall({ baseUrl, endPoint, body, fetchOptions, signal }: { baseUrl: string, endPoint: string, body ?: string | null, fetchOptions ?: any, signal: AbortSignal }): Promise<any> {
     let options: any
     this.validate()
     if (fetchOptions != null) {
@@ -408,6 +410,7 @@ export class Transactions {
         method: 'POST',
       }
     }
+    options.signal = signal;
     try {
       const res = await Transactions.fetchJson(baseUrl + endPoint, options)
       if (res === undefined) {
@@ -466,12 +469,13 @@ export class Transactions {
     }
   }
 
-  public async multicastServers(endpoint: string, body: string | null, fetchOptions?: any): Promise<any> {
-    const res = await asyncWaterfall(
-      Transactions.baseUrls.map((apiUrl) => () =>
-        this.executeCall(apiUrl, endpoint, body, fetchOptions),
+  public async multicastServers({ endpoint, body, fetchOptions, requestTimeout }: { endpoint: string, body?: string | null, fetchOptions?: any, requestTimeout?: number }): Promise<any> {
+    const res = await asyncWaterfall({
+      asyncFuncs: Transactions.baseUrls.map((apiUrl) => (signal: AbortSignal) =>
+        this.executeCall({ baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal }),
       ),
-    )
+      requestTimeout,
+    })
 
     if (res.isError) {
       const error = new FioError(res.errorMessage || res.data.message)

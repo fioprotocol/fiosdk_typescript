@@ -454,7 +454,7 @@ export class FIOSDK {
     endPoint: string,
     preparedTrx: object,
   ): Promise<any> {
-    const response = await this.transactions.multicastServers(`chain/${endPoint}`, JSON.stringify(preparedTrx))
+    const response = await this.transactions.multicastServers({ endpoint: `chain/${endPoint}`, body: JSON.stringify(preparedTrx) })
     return SignedTransaction.prepareResponse(response, true)
   }
 

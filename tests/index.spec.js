@@ -45,8 +45,10 @@ const fundAmount = 800 * FIOSDK.SUFUnit
 const defaultFee = 800 * FIOSDK.SUFUnit
 const defaultBundledSets = 1
 const receiveTransferTimout = 5000
+const wrongBaseUrl = 'https://wrong-url-test.test.com/'
+const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
-let fioSdk, fioSdk2
+let fioSdk, fioSdk2, fioSdkWithWrongBaseUrl, fioSdkWithWrongBaseUrl2, fioSdkWithCorrectAndWrongBaseUrl
 
 const generateTestingFioAddress = (customDomain = 'edge') => {
   return `testing${Date.now()}@${customDomain}`
@@ -95,6 +97,27 @@ before(async () => {
     privateKey2,
     publicKey2,
     baseUrls,
+    fetchJson
+  )
+
+  fioSdkWithWrongBaseUrl = new FIOSDK(
+    privateKey2,
+    publicKey2,
+    [wrongBaseUrl],
+    fetchJson
+  )
+
+  fioSdkWithWrongBaseUrl2 = new FIOSDK(
+    privateKey2,
+    publicKey2,
+    [wrongBaseUrl, wrongBaseUrl2],
+    fetchJson
+  )
+
+  fioSdkWithCorrectAndWrongBaseUrl = new FIOSDK(
+    privateKey2,
+    publicKey2,
+    [wrongBaseUrl, ...baseUrls],
     fetchJson
   )
 
@@ -209,6 +232,43 @@ describe('Raw Abi missing', () => {
     expect(result.roe).to.be.a('string');
   });
 });
+
+describe('Testing request timeout on wrong url', () => {
+  it(`Get Fio Ballance with wrong base url`, async () => {
+    try {
+      await fioSdkWithWrongBaseUrl.genericAction(
+        'getFioBalance',
+        {}
+      );
+    } catch (e) {
+      expect(e.errors[0].message).to.equal('request_timeout');
+    }
+  })
+
+  it(`Get Fio Ballance with 2 wrong base urls`, async () => {
+    try {
+      await fioSdkWithWrongBaseUrl2.genericAction('getFioBalance', {});
+    } catch (e) {
+      expect(e.errors[0].message).to.equal('request_timeout');
+    }
+  })
+
+  it(`Get Fio Ballance with one wrong and correct base urls`, async () => {
+    const result = await fioSdkWithCorrectAndWrongBaseUrl.genericAction('getFioBalance', {});
+      expect(result).to.have.all.keys(
+        'balance',
+        'available',
+        'staked',
+        'srps',
+        'roe'
+      );
+      expect(result.balance).to.be.a('number');
+      expect(result.available).to.be.a('number');
+      expect(result.staked).to.be.a('number');
+      expect(result.srps).to.be.a('number');
+      expect(result.roe).to.be.a('string');
+  });
+})
 
 describe('Testing Fio permissions', () => {
 
