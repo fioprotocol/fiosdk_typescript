@@ -80,10 +80,38 @@ export class FIOSDK {
           const response = await this.main.getAbi(accountName)
           Transactions.abiMap.set(response.account_name, response)
         }
-      } 
-      const setAbiPromises = Constants.rawAbiAccountName.map(accountName => setAbi(accountName))
+      }
+      const rawAbiAccountNameList = Constants.rawAbiAccountName;
+      if (FIOSDK.customRawAbiAccountName) {
+        rawAbiAccountNameList.push(...FIOSDK.customRawAbiAccountName)
+      }
+  
+      const setAbiPromises = rawAbiAccountNameList.map(accountName => setAbi(accountName))
 
-      await Promise.all(setAbiPromises).catch(error => { throw error })
+      await Promise.allSettled(setAbiPromises).then(results => results.forEach(result => {
+        if (result.status === 'rejected') {
+          let error = '';
+          const reason = result.reason;
+
+          const errorObj = reason.json || reason.errors[0].json;
+
+          if (errorObj) {
+            error = errorObj.error?.details[0]?.message;
+          }
+          if (!error) error = reason.message
+
+          if (error.includes(Constants.missingAbiError)) {
+            const abiAccountName = reason.requestParams && reason.requestParams.body && reason.requestParams.body.replace('{', '').replace('}', '').split(':')[1].replace('\"', '').replace('\"', '');
+
+            if (!this.main.rawAbiMissingWarnings?.includes(abiAccountName) || (FIOSDK.customRawAbiAccountName && FIOSDK.customRawAbiAccountName.includes(abiAccountName))) {
+              console.warn('\x1b[33m', 'FIO_SDK ABI WARNING:', error);
+              FIOSDK.setRawAbiMissingWarnings(abiAccountName, this.main);
+            }
+          } else {
+            throw new Error(`FIO_SDK ABI Error: ${result.reason}`);
+          }
+        }
+      }));
 
       // Here we bind method with our class by accessing reference to instance
       const results = target.bind(this.main)(...args);
@@ -91,6 +119,23 @@ export class FIOSDK {
       return results;
     }
   }
+
+  /**
+   * Needed for testing abi
+  **/
+  public static customRawAbiAccountName: string[] | null
+
+  /**
+   * Needed for testing abi
+  **/
+  public static setCustomRawAbiAccountName(customRawAbiAccountName: string | null) {
+    if (customRawAbiAccountName) {
+      FIOSDK.customRawAbiAccountName = [customRawAbiAccountName];
+    } else {
+      FIOSDK.customRawAbiAccountName = null;
+    }
+  }
+
   /**
    * @ignore
    */
@@ -313,6 +358,12 @@ export class FIOSDK {
   private returnPreparedTrx: boolean = false
 
   /**
+   * Stored raw abi missing warnings
+  **/
+  public rawAbiMissingWarnings: string[]
+  static rawAbiMissingWarnings: string[]
+
+  /**
    * // how to instantiate fetchJson parameter
    * i.e.
    * fetch = require('node-fetch')
@@ -347,6 +398,7 @@ export class FIOSDK {
     this.publicKey = publicKey
     this.technologyProviderId = technologyProviderId
     this.returnPreparedTrx = returnPreparedTrx
+    this.rawAbiMissingWarnings = []
 
     const methods = Object.getOwnPropertyNames(FIOSDK.prototype);
 
@@ -355,6 +407,13 @@ export class FIOSDK {
     methods.filter(method => !Constants.classMethodsToExcludeFromProxy.includes(method)).forEach(methodName => {
       this[methodName as keyof FIOSDK] = new Proxy(this[methodName as keyof FIOSDK], this.proxyHandle);
     });
+  }
+
+  /**
+   * Set stored raw abi missing warnings
+  **/
+  public static setRawAbiMissingWarnings(rawAbiName: string, fioSdkInctance: FIOSDK) {
+    fioSdkInctance.rawAbiMissingWarnings.push(rawAbiName);
   }
 
   /**

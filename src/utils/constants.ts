@@ -59,6 +59,10 @@ export class Constants {
     'setSignedTrxReturnOption',
     'setApiUrls',
     'getMultiplier',
-    'getAbi'
+    'getAbi',
+    'customRawAbiAccountName',
+    'setCustomRawAbiAccountName',
   ]
+
+  public static missingAbiError = 'unknown key'
 }
