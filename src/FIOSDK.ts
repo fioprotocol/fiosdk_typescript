@@ -927,8 +927,8 @@ export class FIOSDK {
    * @param offset First request from list to return. If omitted, 0 is assumed.
    * @param tokenCode Code of the token to filter results
    */
-  public getObtData(limit?: number, offset?: number, tokenCode?: string): Promise<GetObtDataResponse> {
-    const getObtDataRequest = new queries.GetObtData({ fioPublicKey: this.publicKey, limit, offset, tokenCode, getEncryptKey: this.getEncryptKey })
+  public getObtData({ limit, offset, tokenCode, encryptKeys }: { limit?: number, offset?: number, tokenCode?: string, encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> }): Promise<GetObtDataResponse> {
+    const getObtDataRequest = new queries.GetObtData({ fioPublicKey: this.publicKey, limit, offset, tokenCode, encryptKeys, getEncryptKey: this.getEncryptKey })
     return getObtDataRequest.execute(this.publicKey, this.privateKey)
   }
 
@@ -1125,8 +1125,20 @@ export class FIOSDK {
    * @param limit Number of request to return. If omitted, all requests will be returned.
    * @param offset First request from list to return. If omitted, 0 is assumed.
    */
-  public getPendingFioRequests(limit?: number, offset?: number): Promise<PendingFioRequestsResponse> {
-    const pendingFioRequests = new queries.PendingFioRequests({ fioPublicKey: this.publicKey, limit, offset, getEncryptKey: this.getEncryptKey.bind(this) })
+  public getPendingFioRequests({
+    limit, offset, encryptKeys
+  }: {
+      limit?: number,
+      offset?: number
+      encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> 
+    }): Promise<PendingFioRequestsResponse> {
+    const pendingFioRequests = new queries.PendingFioRequests({
+      fioPublicKey: this.publicKey,
+      limit,
+      offset,
+      encryptKeys,
+      getEncryptKey: this.getEncryptKey.bind(this)
+    })
     return pendingFioRequests.execute(this.publicKey, this.privateKey)
   }
 
@@ -1137,8 +1149,25 @@ export class FIOSDK {
    * @param offset First request from list to return. If omitted, 0 is assumed.
    * @param includeEncrypted Set to true if you want to include not encrypted data in return.
    */
-  public getReceivedFioRequests(limit?: number, offset?: number, includeEncrypted?: boolean): Promise<ReceivedFioRequestsResponse> {
-    const receivedFioRequests = new queries.ReceivedFioRequests({ fioPublicKey: this.publicKey, limit, offset, includeEncrypted, getEncryptKey: this.getEncryptKey.bind(this) })
+  public getReceivedFioRequests({
+    limit,
+    offset,
+    includeEncrypted,
+    encryptKeys,
+  }: {
+    limit?: number,
+    offset?: number,
+    includeEncrypted?: boolean,
+    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
+  }): Promise<ReceivedFioRequestsResponse> {
+    const receivedFioRequests = new queries.ReceivedFioRequests({
+      fioPublicKey: this.publicKey,
+      limit,
+      offset,
+      includeEncrypted,
+      encryptKeys,
+      getEncryptKey: this.getEncryptKey.bind(this)
+    })
     return receivedFioRequests.execute(this.publicKey, this.privateKey)
   }
 
@@ -1149,8 +1178,18 @@ export class FIOSDK {
    * @param offset First request from list to return. If omitted, 0 is assumed.
    * @param includeEncrypted Set to true if you want to include not encrypted data in return.
    */
-  public getSentFioRequests(limit?: number, offset?: number, includeEncrypted?: boolean): Promise<SentFioRequestResponse> {
-    const sentFioRequest = new queries.SentFioRequests({ fioPublicKey: this.publicKey, limit, offset, includeEncrypted, getEncryptKey: this.getEncryptKey.bind(this) })
+  public getSentFioRequests({
+    limit,
+    offset,
+    includeEncrypted,
+    encryptKeys,
+  }: {
+    limit?: number,
+    offset?: number,
+    includeEncrypted?: boolean,
+    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
+  }): Promise<SentFioRequestResponse> {
+    const sentFioRequest = new queries.SentFioRequests({ fioPublicKey: this.publicKey, limit, offset, includeEncrypted, encryptKeys, getEncryptKey: this.getEncryptKey.bind(this) })
     return sentFioRequest.execute(this.publicKey, this.privateKey)
   }
 
@@ -1160,8 +1199,14 @@ export class FIOSDK {
    * @param limit Number of request to return. If omitted, all requests will be returned.
    * @param offset First request from list to return. If omitted, 0 is assumed.
    */
-  public getCancelledFioRequests(limit?: number, offset?: number): Promise<CancelledFioRequestResponse> {
-    const cancelledFioRequest = new queries.CancelledFioRequests({ fioPublicKey: this.publicKey, limit, offset, getEncryptKey: this.getEncryptKey.bind(this) })
+  public getCancelledFioRequests({
+    limit, offset, encryptKeys
+  }: {
+    limit?: number,
+    offset?: number
+    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> 
+  }): Promise<CancelledFioRequestResponse> {
+    const cancelledFioRequest = new queries.CancelledFioRequests({ fioPublicKey: this.publicKey, limit, offset, encryptKeys, getEncryptKey: this.getEncryptKey.bind(this) })
     return cancelledFioRequest.execute(this.publicKey, this.privateKey)
   }
 
@@ -1742,7 +1787,12 @@ export class FIOSDK {
       case 'getFeeForTransferLockedTokens':
         return this.getFeeForTransferLockedTokens(params.fioAddress)
       case 'getObtData':
-        return this.getObtData(params.limit, params.offset, params.tokenCode)
+        return this.getObtData({
+          limit: params.limit,
+          offset: params.offset,
+          tokenCode: params.tokenCode,
+          encryptKeys: params.encryptKeys
+        })
       case 'getGranteePermissions':
         return this.getGranteePermissions(params.granteeAccount, params.limit, params.offset)
       case 'getGrantorPermissions':
@@ -1785,13 +1835,27 @@ export class FIOSDK {
         case 'getFioAddresses':
             return this.getFioAddresses(params.fioPublicKey, params.limit, params.offset)
       case 'getPendingFioRequests':
-        return this.getPendingFioRequests(params.limit, params.offset)
+        return this.getPendingFioRequests({
+          limit: params.limit,
+          offset: params.offset,
+          encryptKeys: params.encryptKeys
+        })
       case 'getReceivedFioRequests':
-        return this.getReceivedFioRequests(params.limit, params.offset, params.includeEncrypted)
+        return this.getReceivedFioRequests({
+          limit: params.limit,
+          offset: params.offset,
+          includeEncrypted: params.includeEncrypted,
+          encryptKeys: params.encryptKeys
+        })
       case 'getCancelledFioRequests':
-        return this.getCancelledFioRequests(params.limit, params.offset)
+        return this.getCancelledFioRequests({ limit: params.limit, offset: params.offset, encryptKeys: params.encryptKeys })
       case 'getSentFioRequests':
-        return this.getSentFioRequests(params.limit, params.offset, params.includeEncrypted)
+        return this.getSentFioRequests({
+          limit: params.limit,
+          offset: params.offset,
+          includeEncrypted: params.includeEncrypted,
+          encryptKeys: params.encryptKeys
+        })
       case 'getPublicAddress':
         return this.getPublicAddress(params.fioAddress, params.chainCode, params.tokenCode)
       case 'getPublicAddresses':

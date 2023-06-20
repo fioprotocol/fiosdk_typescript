@@ -50,52 +50,24 @@ export async function asyncWaterfall({
 export async function getEncryptKeyForUnCipherContent({
   getEncryptKey,
   method = '',
-  payeeFioAddress,
-  payerFioAddress,
-  payeePublicKey,
-  payerPublicKey,
-  publicKey
+  fioAddress,
 }: {
   getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>,
   method?: string,
-  payeeFioAddress: string,
-  payerFioAddress: string,
-  payeePublicKey: string,
-  payerPublicKey: string,
-  publicKey: string
+  fioAddress: string;
 }) {
   let encryptKey = null;
-  let payerEncryptKey = payerPublicKey;
-  let payeeEncryptKey = payeePublicKey;
 
-  if (payerFioAddress) {
+  if (fioAddress) {
     try {
-      const payerEncryptKeyRes = await getEncryptKey(payerFioAddress);
-      if (payerEncryptKeyRes && payerEncryptKeyRes.encrypt_public_key) {
-        payerEncryptKey = payerEncryptKeyRes.encrypt_public_key;
+      const encryptKeyRes = await getEncryptKey(fioAddress);
+      if (encryptKeyRes && encryptKeyRes.encrypt_public_key) {
+        encryptKey = encryptKeyRes.encrypt_public_key;
       }
     } catch (error) {
-      console.warn(`${method}: Get Encrypt Key for payer_fio_address ${payerFioAddress} failed. Using publicKey.`);
+      console.warn(`${method}: Get Encrypt Key fio_address ${fioAddress} failed.`);
       // Skip if getEncryptKey fails and continue with the publicKey
     }
-  }
-
-  if (payeeFioAddress) {
-    try {
-      const payeeEncryptKeyRes = await getEncryptKey(payeeFioAddress);
-      if (payeeEncryptKeyRes && payeeEncryptKeyRes.encrypt_public_key) {
-        payeeEncryptKey = payeeEncryptKeyRes.encrypt_public_key;
-      }
-    } catch (error) {
-      console.warn(`${method}: Get Encrypt Key for payee_fio_address ${payeeFioAddress} failed. Using publicKey.`);
-      // Skip if getEncryptKey fails and continue with the publicKey
-    }
-  }
-
-  if (payerEncryptKey === publicKey || payerPublicKey === publicKey) {
-    encryptKey = payeeEncryptKey
-  } else {
-    encryptKey = payerEncryptKey
   }
 
   return encryptKey;

@@ -11,16 +11,24 @@ export class GetObtData extends Query<GetObtDataResponse> {
   public limit: number | undefined
   public offset: number | undefined
   public tokenCode: string
+  public encryptKeys: Map<string, { privateKey: string, publicKey: string } []> | undefined
   public isEncrypted = true
   public getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
 
-  constructor({ fioPublicKey, limit = 0, offset = 0, tokenCode = '', getEncryptKey }: {
-    fioPublicKey: string, limit?: number, offset?: number, tokenCode?: string, getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse> }) {
+  constructor({ fioPublicKey, limit = 0, offset = 0, tokenCode = '', encryptKeys, getEncryptKey }: {
+    fioPublicKey: string,
+    limit?: number,
+    offset?: number,
+    tokenCode?: string,
+    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>,
+    getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
+  }) {
     super()
     this.fio_public_key = fioPublicKey
     this.limit = limit
     this.offset = offset
     this.tokenCode = tokenCode
+    this.encryptKeys = encryptKeys
     this.getEncryptKey = getEncryptKey
   }
 
@@ -36,33 +44,82 @@ export class GetObtData extends Query<GetObtDataResponse> {
         } | null = null;
         try {
           const requests = await Promise.allSettled(result.obt_data_records.map(async (obtDataRecord: GetObtDataRecord) => {
-            let encryptKey = this.publicKey;
+            let encryptKeysArray: { publicKey: string, privateKey?: string }[] = [];
 
             const { content: obtDataRecordContent, payee_fio_address, payee_fio_public_key, payer_fio_address, payer_fio_public_key } = obtDataRecord || {};
 
             try {
-              encryptKey = await getEncryptKeyForUnCipherContent({
+              const payerEncryptKeyRes = await getEncryptKeyForUnCipherContent({
                 getEncryptKey: this.getEncryptKey,
                 method: 'GetObtData',
-                payeeFioAddress: payee_fio_address,
-                payerFioAddress: payer_fio_address,
-                payeePublicKey: payee_fio_public_key,
-                payerPublicKey: payer_fio_public_key,
-                publicKey: this.publicKey
+                fioAddress: payer_fio_address,
               });
+              if (payerEncryptKeyRes) {
+                encryptKeysArray.push({ publicKey: payerEncryptKeyRes });
+              }
+            } catch (error) {
+              console.error(error);
+            }
+            try {
+              const payeeEncryptKeyRes = await getEncryptKeyForUnCipherContent({
+                getEncryptKey: this.getEncryptKey,
+                method: 'GetObtData',
+                fioAddress: payee_fio_address,
+              });
+              if (payeeEncryptKeyRes) {
+                encryptKeysArray.push({ publicKey: payeeEncryptKeyRes });
+              }
             } catch (error) {
               console.error(error);
             }
 
+            const account = this.getActor();
+
+            if (this.encryptKeys) {
+              const accountEncryptKeys = this.encryptKeys.get(account);
+              if (accountEncryptKeys && accountEncryptKeys.length > 0) {
+                encryptKeysArray = encryptKeysArray.concat(accountEncryptKeys);
+              }
+            }
+
+            if (payee_fio_public_key) {
+              encryptKeysArray.push({ publicKey: payee_fio_public_key });
+            }
+
+            if (payer_fio_public_key) {
+              encryptKeysArray.push({ publicKey: payer_fio_public_key });
+            }
+
+            encryptKeysArray.push({ publicKey: this.publicKey });
+
             try {
-              content = this.getUnCipherContent(
-                'record_obt_data_content',
-                obtDataRecordContent,
-                this.privateKey,
-                encryptKey,
-              );
+              for (let i = 0; i < encryptKeysArray.length; i++) {
+                const { publicKey, privateKey } = encryptKeysArray[i];
+
+                let result = null;
+
+                try {
+                  result = this.getUnCipherContent(
+                    'record_obt_data_content',
+                    obtDataRecordContent,
+                    privateKey || this.privateKey,
+                    publicKey
+                  );
+                } catch (error) {}
+
+                // Check if the result is successful
+                if (result !== null) {
+                  content = result;
+                  break; // Exit the loop if a successful result is obtained
+                }
+              }
+
+              if (content === null) {
+                throw new Error(`GetObtData: Get UnCipher Content for account ${account} failed.`); // Throw an error if all keys failed
+              }
             } catch (error) {
-              console.warn(`GetObtData: Get UnCipher Content for ${encryptKey} failed. Return original value.`);
+              console.error(error);
+              throw error
             }
 
             if (content) {

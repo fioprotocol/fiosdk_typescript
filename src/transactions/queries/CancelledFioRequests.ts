@@ -11,13 +11,27 @@ export class CancelledFioRequests extends Query<CancelledFioRequestResponse> {
   public limit: number | null
   public offset: number | null
   public isEncrypted = true
+  public encryptKeys: Map<string, { privateKey: string, publicKey: string }[]> | undefined
   public getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
 
-  constructor({ fioPublicKey, limit = null, offset = null, getEncryptKey }: { fioPublicKey: string, limit?: number | null, offset?: number | null, getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse> }) {
+  constructor({
+    fioPublicKey,
+    limit = null,
+    offset = null,
+    encryptKeys,
+    getEncryptKey
+  }: {
+    fioPublicKey: string,
+    limit?: number | null,
+    offset?: number | null,
+    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>,
+    getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
+  }) {
     super()
     this.fioPublicKey = fioPublicKey
     this.limit = limit
     this.offset = offset
+    this.encryptKeys = encryptKeys
     this.getEncryptKey = getEncryptKey
   }
 
@@ -32,33 +46,70 @@ export class CancelledFioRequests extends Query<CancelledFioRequestResponse> {
       if (result.requests.length > 0) {
         try {
           const requests = await Promise.allSettled(result.requests.map(async (value: FioRequestsItem) => {
-            let encryptKey = this.publicKey;
+            let encryptKeysArray: { publicKey: string, privateKey?: string }[] = [];
 
-            const { payee_fio_address, payee_fio_public_key, payer_fio_address, payer_fio_public_key } = value || {};
+            const { payer_fio_address, payer_fio_public_key } = value || {};
 
             try {
-              encryptKey = await getEncryptKeyForUnCipherContent({
+              const uncipherEncryptKey = await getEncryptKeyForUnCipherContent({
                 getEncryptKey: this.getEncryptKey,
                 method: 'CancelledFioRequests',
-                payeeFioAddress: payee_fio_address,
-                payerFioAddress: payer_fio_address,
-                payeePublicKey: payee_fio_public_key,
-                payerPublicKey: payer_fio_public_key,
-                publicKey: this.publicKey
+                fioAddress: payer_fio_address,
               });
+              if (uncipherEncryptKey) {
+                encryptKeysArray.push({ publicKey: uncipherEncryptKey })
+              }
             } catch (error) {
               console.error(error);
             }
 
+            const account = this.getActor();
+
+            if (this.encryptKeys) {
+              const accountEncryptKeys = this.encryptKeys.get(account);
+              if (accountEncryptKeys && accountEncryptKeys.length > 0) {
+                encryptKeysArray = encryptKeysArray.concat(accountEncryptKeys);
+              }
+            }
+
+            if (payer_fio_public_key) {
+              encryptKeysArray.push({ publicKey: payer_fio_public_key });
+            }
+
+            encryptKeysArray.push({ publicKey: this.publicKey });
+
+            let content = null;
+
             try {
-              value.content = this.getUnCipherContent(
-                'new_funds_content',
-                value.content,
-                this.privateKey,
-                encryptKey,
-              );
+              for (let i = 0; i < encryptKeysArray.length; i++) {
+                const { publicKey, privateKey } = encryptKeysArray[i];
+
+                let result = null;
+
+                try {
+                  result = this.getUnCipherContent(
+                    'new_funds_content',
+                    value.content,
+                    privateKey || this.privateKey,
+                    publicKey
+                  );
+                } catch (error) {}
+
+                // Check if the result is successful
+                if (result !== null) {
+                  content = result;
+                  break; // Exit the loop if a successful result is obtained
+                }
+              }
+
+              if (content === null) {
+                throw new Error(`CancelledFioRequests: Get UnCipher Content for account ${account} failed.`); // Throw an error if all keys failed
+              } else {
+                value.content = content;
+              }
             } catch (error) {
-              console.warn(`CancelledFioRequests: Get UnCipher Content for ${encryptKey} failed. Return original value.`);
+              console.error(error);
+              throw error;
             }
 
             return value;
