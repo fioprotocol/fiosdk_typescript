@@ -93,7 +93,7 @@ export class FIOSDK {
           let error = '';
           const reason = result.reason;
 
-          const errorObj = reason.json || reason.errors[0].json;
+          const errorObj = reason.json || reason.errors && reason.errors[0].json;
 
           if (errorObj) {
             error = errorObj.error?.details[0]?.message;

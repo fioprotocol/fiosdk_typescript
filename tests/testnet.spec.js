@@ -39,9 +39,7 @@ const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
 let fioSdk,
   fioSdk2,
-  fioSdkWithWrongBaseUrl,
-  fioSdkWithWrongBaseUrl2,
-  fioSdkWithCorrectAndWrongBaseUrl
+  fioSdkWithWrongBaseUrl
 
 const generateTestingFioAddress = (customDomain = fioTestnetDomain) => {
   return `testing${Date.now()}@${customDomain}`
@@ -86,20 +84,6 @@ before(async () => {
     privateKey2,
     publicKey2,
     [wrongBaseUrl],
-    fetchJson
-  )
-
-  fioSdkWithWrongBaseUrl2 = new FIOSDK(
-    privateKey2,
-    publicKey2,
-    [wrongBaseUrl, wrongBaseUrl2],
-    fetchJson
-  )
-
-  fioSdkWithCorrectAndWrongBaseUrl = new FIOSDK(
-    privateKey2,
-    publicKey2,
-    [wrongBaseUrl, ...baseUrls],
     fetchJson
   )
 
@@ -174,26 +158,30 @@ describe('Raw Abi missing', () => {
 describe('Testing request timeout on wrong url', () => {
   it(`Get Fio Ballance with wrong base url`, async () => {
     try {
-      await fioSdkWithWrongBaseUrl.genericAction(
-        'getFioBalance',
-        {}
-      );
+      fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl]);
+      await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
     } catch (e) {
-      expect(e.errors[0].message).to.equal('request_timeout');
+      expect(e.message).to.match(/request_timeout/);
     }
-  })
+  });
 
   it(`Get Fio Ballance with 2 wrong base urls`, async () => {
     try {
-      await fioSdkWithWrongBaseUrl2.genericAction('getFioBalance', {});
+      fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
+      await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
     } catch (e) {
-      expect(e.errors[0].message).to.equal('request_timeout');
+      expect(e.message).to.match(/request_timeout/);
     }
-  })
+  });
 
   /* todo: uncomment when DASH-678 missing raw abi task will be merged
   it(`Get Fio Ballance with one wrong and correct base urls`, async () => {
-    const result = await fioSdkWithCorrectAndWrongBaseUrl.genericAction('getFioBalance', {});
+    fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, ...baseUrls]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
       expect(result).to.have.all.keys(
         'balance',
         'available',
@@ -208,6 +196,10 @@ describe('Testing request timeout on wrong url', () => {
       expect(result.roe).to.be.a('string');
   });
   */
+
+  it(`Return back correct baseUrls`, () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+  });
 })
 
 describe('Testing generic actions', () => {
