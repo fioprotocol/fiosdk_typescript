@@ -9,7 +9,7 @@
       "sourceMap": false,
       "strict": true,
       "target": "es2015",
-      "lib": ["ES2020.Promise", "dom"],
+      "lib": ["ES2021.Promise", "ES2020.Promise", "dom"],
     },
     "compileOnSave": true,
     "include": [
