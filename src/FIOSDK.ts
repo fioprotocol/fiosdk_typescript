@@ -81,9 +81,11 @@ export class FIOSDK {
           Transactions.abiMap.set(response.account_name, response)
         }
       }
-      const rawAbiAccountNameList = Constants.rawAbiAccountName;
+      let rawAbiAccountNameList = [];
       if (FIOSDK.customRawAbiAccountName) {
-        rawAbiAccountNameList.push(...FIOSDK.customRawAbiAccountName)
+        rawAbiAccountNameList = [...Constants.rawAbiAccountName, ...FIOSDK.customRawAbiAccountName];
+      } else {
+        rawAbiAccountNameList = Constants.rawAbiAccountName;
       }
   
       const setAbiPromises = rawAbiAccountNameList.map(accountName => setAbi(accountName))
