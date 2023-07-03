@@ -28,24 +28,10 @@ export async function asyncWaterfall({
 
     const index = promises.length
 
-    const promise = Promise.any([func(abortController.signal), timeoutPromise])
+    const promise = Promise.race([func(abortController.signal), timeoutPromise])
       .catch((e) => {
-        // Throw only one error instead of array of errors
-        let errorToThrow = e
-
-        if (e instanceof AggregateError) {
-          const rejectionReasons = e.errors;
-          errorToThrow = rejectionReasons[0];
-
-          for (const [reasonIndex, reason] of rejectionReasons.entries()) {
-            if (reason.message === 'request_timeout') {
-              errorToThrow = rejectionReasons[reasonIndex];
-            }
-          }
-        }
-
-        errorToThrow.index = index;
-        throw errorToThrow;
+        e.index = index;
+        throw e;
       });
 
     promises.push({ promise, abortController });
@@ -61,7 +47,7 @@ export async function asyncWaterfall({
     }
 
     try {
-      const result = await Promise.any(promises.map(p => p.promise));
+      const result = await Promise.race(promises.map(p => p.promise));
       if (result.isError) throw result.data
       if (result === 'async_waterfall_timed_out') {
         promises.pop()

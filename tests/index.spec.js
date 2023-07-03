@@ -220,7 +220,7 @@ describe('Raw Abi missing', () => {
 });
 
 describe('Testing request timeout on wrong url', () => {
-  it(`Get Fio Ballance with wrong base url`, async () => {
+  it(`Get Fio Balance with wrong base url`, async () => {
     try {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl]);
       await fioSdkWithWrongBaseUrl.genericAction(
@@ -228,20 +228,21 @@ describe('Testing request timeout on wrong url', () => {
         {}
       );
     } catch (e) {
-      expect(e.message).to.match(/request_timeout/);
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
     }
   })
 
-  it(`Get Fio Ballance with 2 wrong base urls`, async () => {
+  it(`Get Fio Balance with 2 wrong base urls`, async () => {
     try {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
       await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
     } catch (e) {
-      expect(e.message).to.match(/request_timeout/);
+      console.log('E', e);
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
     }
   })
 
-  it(`Get Fio Ballance with one wrong and correct base urls`, async () => {
+  it(`Get Fio Balance with one wrong and correct base urls`, async () => {
     fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, ...baseUrls]);
 
     const result = await fioSdkWithWrongBaseUrl.genericAction(
@@ -260,6 +261,33 @@ describe('Testing request timeout on wrong url', () => {
       expect(result.staked).to.be.a('number');
       expect(result.srps).to.be.a('number');
       expect(result.roe).to.be.a('string');
+  });
+
+  it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    try {
+      await fioSdk.genericAction('removePublicAddresses', {
+        fioAddress: '',
+        publicAddresses: [
+          {
+            chain_code: 'BCH',
+            token_code: 'BCH',
+            public_address:
+              'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
+          },
+          {
+            chain_code: 'DASH',
+            token_code: 'DASH',
+            public_address: 'XyCyPKzTWvW2XdcYjPaPXGQDCGk946ywEv',
+          },
+        ],
+        maxFee: 600000000,
+        tpid: '',
+      });
+    } catch (err) {
+      expect(err.message).to.equal('Validation error');
+      expect(err.list[0].message).to.equal('fioAddress is required.');
+    }
   });
 
   it(`Return back correct baseUrls`, () => {
@@ -412,7 +440,6 @@ describe('Testing generic actions', () => {
     try {
       FIOSDK.isFioDomainValid('$%FG%')
     } catch (e) {
-      console.log(e)
       expect(e.list[0].message).to.equal(
         'fioDomain must match /^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/i.'
       );

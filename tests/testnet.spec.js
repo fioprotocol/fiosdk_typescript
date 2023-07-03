@@ -83,7 +83,7 @@ before(async () => {
   fioSdkWithWrongBaseUrl = new FIOSDK(
     privateKey2,
     publicKey2,
-    [wrongBaseUrl],
+    baseUrls,
     fetchJson
   )
 
@@ -161,7 +161,7 @@ describe('Testing request timeout on wrong url', () => {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl]);
       await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
     } catch (e) {
-      expect(e.message).to.match(/request_timeout/);
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
     }
   });
 
@@ -170,7 +170,7 @@ describe('Testing request timeout on wrong url', () => {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
       await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
     } catch (e) {
-      expect(e.message).to.match(/request_timeout/);
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
     }
   });
 
@@ -196,6 +196,33 @@ describe('Testing request timeout on wrong url', () => {
       expect(result.roe).to.be.a('string');
   });
   */
+
+  it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    try {
+      await fioSdk.genericAction('removePublicAddresses', {
+        fioAddress: '',
+        publicAddresses: [
+          {
+            chain_code: 'BCH',
+            token_code: 'BCH',
+            public_address:
+              'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
+          },
+          {
+            chain_code: 'DASH',
+            token_code: 'DASH',
+            public_address: 'XyCyPKzTWvW2XdcYjPaPXGQDCGk946ywEv',
+          },
+        ],
+        maxFee: 600000000,
+        tpid: '',
+      });
+    } catch (err) {
+      expect(err.message).to.equal('Validation error');
+      expect(err.list[0].message).to.equal('fioAddress is required.');
+    }
+  });
 
   it(`Return back correct baseUrls`, () => {
     fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
