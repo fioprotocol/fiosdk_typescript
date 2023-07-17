@@ -871,25 +871,45 @@ export class FIOSDK {
    * @param memo
    * @param hash
    * @param offlineUrl
+   * @param encryptPrivateKey Encrypt Private Key for ecnrypt content. If missig uses this.privateKey.
    */
-  public async recordObtData(
-    fioRequestId: number | null,
-    payerFioAddress: string,
-    payeeFioAddress: string,
-    payerTokenPublicAddress: string,
-    payeeTokenPublicAddress: string,
+  public async recordObtData({
+    amount,
+    chainCode,
+    encryptPrivateKey = null,
+    fioRequestId = null,
+    hash = null,
+    maxFee,
+    memo = null,
+    obtId,
+    offLineUrl = null,
+    payeeFioAddress,
+    payeeFioPublicKey = '',
+    payeeTokenPublicAddress,
+    payerFioAddress,
+    payerTokenPublicAddress,
+    status,
+    technologyProviderId = null,
+    tokenCode,
+  }: {
     amount: number,
     chainCode: string,
-    tokenCode: string,
-    status: string,
-    obtId: string,
+    encryptPrivateKey: string | null,
+    fioRequestId: number | null,
+    hash: string | null,
     maxFee: number,
-    technologyProviderId: string | null = null,
-    payeeFioPublicKey: string | null = null,
-    memo: string | null = null,
-    hash: string | null = null,
-    offLineUrl: string | null = null,
-  ): Promise<RecordObtDataResponse> {
+    memo: string | null,
+    obtId: string,
+    offLineUrl: string | null,
+    payeeFioAddress: string,
+    payeeFioPublicKey: string,
+    payeeTokenPublicAddress: string,
+    payerFioAddress: string,
+    payerTokenPublicAddress: string,
+    status: string,
+    technologyProviderId: string | null,
+    tokenCode: string,
+  }): Promise<RecordObtDataResponse> {
     let payeeKey = ''
     const encryptKey = await this.getEncryptKey(payeeFioAddress)
 
@@ -899,24 +919,26 @@ export class FIOSDK {
       payeeKey = payeeFioPublicKey
     }
 
-    const recordObtData = new SignedTransactions.RecordObtData(
-      fioRequestId,
-      payerFioAddress,
-      payeeFioAddress,
-      payerTokenPublicAddress,
-      payeeTokenPublicAddress,
+    const recordObtData = new SignedTransactions.RecordObtData({
       amount,
       chainCode,
-      tokenCode,
-      obtId,
-      maxFee,
-      status,
-      this.getTechnologyProviderId(technologyProviderId),
-      payeeKey,
-      memo,
+      encryptPrivateKey,
+      fioRequestId,
       hash,
+      maxFee,
+      memo,
+      obtId,
       offLineUrl,
-    )
+      payeeFioAddress,
+      payeeFioPublicKey: payeeKey,
+      payeePublicAddress: payeeTokenPublicAddress,
+      payerFioAddress,
+      payerPublicAddress: payerTokenPublicAddress,
+      status,
+      technologyProviderId: this.getTechnologyProviderId(technologyProviderId),
+      tokenCode,
+    });
+
     return recordObtData.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
@@ -992,33 +1014,49 @@ export class FIOSDK {
   /**
    * Create a new funds request on the FIO chain.
    *
-   * @param payerFioAddress FIO Address of the payer. This address will receive the request and will initiate payment.
-   * @param payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
-   * @param payeeTokenPublicAddress Payee's public address where they want funds sent.
    * @param amount Amount requested.
    * @param chainCode Blockchain code for blockchain hosting this token.
-   * @param tokenCode Code of the token represented in amount requested.
-   * @param memo
+   * @param encryptPrivateKey Encrypt Private Key for ecnrypt content. If missig uses this.privateKey.
+   * @param hash
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by [getFee] for correct value.
+   * @param memo
+   * @param offlineUrl
+   * @param payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
+   * @param payeeTokenPublicAddress Payee's public address where they want funds sent.
+   * @param payerFioAddress FIO Address of the payer. This address will receive the request and will initiate payment.
    * @param payerFioPublicKey Public address on other blockchain of user sending funds.
    * @param technologyProviderId FIO Address of the wallet which generates this transaction.
-   * @param hash
-   * @param offlineUrl
+   * @param tokenCode Code of the token represented in amount requested.
    */
-  public async requestFunds(
-    payerFioAddress: string,
-    payeeFioAddress: string,
-    payeeTokenPublicAddress: string,
+  public async requestFunds({
+    amount,
+    chainCode,
+    encryptPrivateKey = null,
+    hash = null,
+    maxFee,
+    memo,
+    offlineUrl = null,
+    payeeFioAddress,
+    payeeTokenPublicAddress,
+    payerFioAddress,
+    payerFioPublicKey = null,
+    technologyProviderId = null,
+    tokenCode,
+  }: {
     amount: number,
     chainCode: string,
-    tokenCode: string,
-    memo: string,
+    encryptPrivateKey: string | null,
+    hash: string | null,
     maxFee: number,
-    payerFioPublicKey: string | null = null,
-    technologyProviderId: string | null = null,
-    hash?: string,
-    offlineUrl?: string,
-  ): Promise<RequestFundsResponse> {
+    memo: string,
+    offlineUrl: string | null,
+    payeeFioAddress: string,
+    payeeTokenPublicAddress: string,
+    payerFioAddress: string,
+    payerFioPublicKey: string | null,
+    technologyProviderId: string | null,
+    tokenCode: string,
+  }): Promise<RequestFundsResponse> {
     let payerKey = ''
     const encryptKey = await this.getEncryptKey(payerFioAddress)
 
@@ -1028,20 +1066,21 @@ export class FIOSDK {
       payerKey = payerFioPublicKey
     }
 
-    const requestNewFunds = new SignedTransactions.RequestNewFunds(
-      payerFioAddress,
-      payerKey,
-      payeeFioAddress,
-      this.getTechnologyProviderId(technologyProviderId),
-      maxFee,
-      payeeTokenPublicAddress,
+    const requestNewFunds = new SignedTransactions.RequestNewFunds({
       amount,
       chainCode,
-      tokenCode,
-      memo,
+      encryptPrivateKey,
       hash,
+      maxFee,
+      memo,
       offlineUrl,
-    )
+      payeeFioAddress,
+      payeeTokenPublicAddress,
+      payerFioAddress,
+      payerFioPublicKey: payerKey,
+      technologyProviderId: this.getTechnologyProviderId(technologyProviderId),
+      tokenCode,
+    });
     return requestNewFunds.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
   }
 
@@ -1582,17 +1621,17 @@ export class FIOSDK {
     signingAccount?: string,
 }): Promise<any> {
     data.tpid = this.getTechnologyProviderId(data.tpid)
-    if (data.content && !encryptOptions.key) {
+    if (data.content && !encryptOptions.publicKey) {
       switch (action) {
         case 'newfundsreq': {
           const payerKey = await this.getEncryptKey(data.payer_fio_address)
-          encryptOptions.key = payerKey.encrypt_public_key
+          encryptOptions.publicKey = payerKey.encrypt_public_key
           encryptOptions.contentType = 'new_funds_content'
           break
         }
         case 'recordobt': {
           const payeeKey = await this.getEncryptKey(data.payee_fio_address)
-          encryptOptions.key = payeeKey.encrypt_public_key
+          encryptOptions.publicKey = payeeKey.encrypt_public_key
           encryptOptions.contentType = 'record_obt_data_content'
           break
         }
@@ -1766,24 +1805,25 @@ export class FIOSDK {
           params.technologyProviderId,
         )
       case 'recordObtData':
-        return this.recordObtData(
-          params.fioRequestId || null,
-          params.payerFioAddress,
-          params.payeeFioAddress,
-          params.payerTokenPublicAddress,
-          params.payeeTokenPublicAddress,
-          params.amount,
-          params.chainCode,
-          params.tokenCode,
-          params.status || '',
-          params.obtId,
-          params.maxFee,
-          params.technologyProviderId,
-          params.payeeFioPublicKey,
-          params.memo,
-          params.hash,
-          params.offLineUrl,
-        )
+        return this.recordObtData({
+          amount: params.amount,
+          chainCode: params.chainCode,
+          encryptPrivateKey: params.encryptPrivateKey || null,
+          fioRequestId: params.fioRequestId || null,
+          hash: params.hash,
+          maxFee: params.maxFee,
+          memo: params.memo,
+          obtId: params.obtId,
+          offLineUrl: params.offLineUrl,
+          payeeFioAddress: params.payeeFioAddress,
+          payeeFioPublicKey: params.payeeFioPublicKey,
+          payeeTokenPublicAddress: params.payeeTokenPublicAddress,
+          payerFioAddress: params.payerFioAddress,
+          payerTokenPublicAddress: params.payerTokenPublicAddress,
+          status: params.status || '',
+          technologyProviderId: params.technologyProviderId,
+          tokenCode: params.tokenCode,
+      })
       case 'getFeeForTransferLockedTokens':
         return this.getFeeForTransferLockedTokens(params.fioAddress)
       case 'getObtData':
@@ -1806,20 +1846,21 @@ export class FIOSDK {
           params.technologyProviderId,
         )
       case 'requestFunds':
-        return this.requestFunds(
-          params.payerFioAddress,
-          params.payeeFioAddress,
-          params.payeeTokenPublicAddress,
-          params.amount,
-          params.chainCode,
-          params.tokenCode,
-          params.memo,
-          params.maxFee,
-          params.payerFioPublicKey,
-          params.technologyProviderId,
-          params.hash,
-          params.offlineUrl,
-        )
+        return this.requestFunds({
+          amount: params.amount,
+          chainCode: params.chainCode,
+          encryptPrivateKey: params.encryptPrivateKey,
+          hash: params.hash,
+          maxFee: params.maxFee,
+          memo: params.memo,
+          offlineUrl: params.offlineUrl,
+          payeeFioAddress: params.payeeFioAddress,
+          payeeTokenPublicAddress: params.payeeTokenPublicAddress,
+          payerFioAddress: params.payerFioAddress,
+          payerFioPublicKey: params.payerFioPublicKey,
+          technologyProviderId: params.technologyProviderId,
+          tokenCode: params.tokenCode,
+        })
       case 'isAvailable':
         return this.isAvailable(params.fioName)
       case 'getFioBalance':

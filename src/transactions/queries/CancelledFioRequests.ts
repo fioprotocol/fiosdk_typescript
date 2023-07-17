@@ -46,7 +46,8 @@ export class CancelledFioRequests extends Query<CancelledFioRequestResponse> {
       if (result.requests.length > 0) {
         try {
           const requests = await Promise.allSettled(result.requests.map(async (value: FioRequestsItem) => {
-            let encryptKeysArray: { publicKey: string, privateKey?: string }[] = [];
+            let encryptPublicKeysArray: string[] = [];
+            let encryptPrivateKeysArray: string[] = [];
 
             const { payer_fio_address, payer_fio_public_key } = value || {};
 
@@ -57,7 +58,7 @@ export class CancelledFioRequests extends Query<CancelledFioRequestResponse> {
                 fioAddress: payer_fio_address,
               });
               if (uncipherEncryptKey) {
-                encryptKeysArray.push({ publicKey: uncipherEncryptKey })
+                encryptPublicKeysArray.push(uncipherEncryptKey)
               }
             } catch (error) {
               console.error(error);
@@ -68,37 +69,38 @@ export class CancelledFioRequests extends Query<CancelledFioRequestResponse> {
             if (this.encryptKeys) {
               const accountEncryptKeys = this.encryptKeys.get(account);
               if (accountEncryptKeys && accountEncryptKeys.length > 0) {
-                encryptKeysArray = encryptKeysArray.concat(accountEncryptKeys);
+                encryptPrivateKeysArray =
+                  encryptPrivateKeysArray.concat(
+                    accountEncryptKeys.map(
+                      (accountEncryptKey) =>
+                        accountEncryptKey.privateKey
+                    )
+                  );
               }
             }
 
             if (payer_fio_public_key) {
-              encryptKeysArray.push({ publicKey: payer_fio_public_key });
+              encryptPublicKeysArray.push(payer_fio_public_key);
             }
 
-            encryptKeysArray.push({ publicKey: this.publicKey });
+            encryptPublicKeysArray.push(this.publicKey);
+            encryptPrivateKeysArray.push(this.privateKey);
 
             let content = null;
 
             try {
-              for (let i = 0; i < encryptKeysArray.length; i++) {
-                const { publicKey, privateKey } = encryptKeysArray[i];
-
-                let result = null;
-
-                try {
-                  result = this.getUnCipherContent(
-                    'new_funds_content',
-                    value.content,
-                    privateKey || this.privateKey,
-                    publicKey
-                  );
-                } catch (error) {}
-
-                // Check if the result is successful
-                if (result !== null) {
-                  content = result;
-                  break; // Exit the loop if a successful result is obtained
+              for (let i = 0; i < encryptPublicKeysArray.length; i++) {
+                const publicKey = encryptPublicKeysArray[i];
+                for (let j = 0; j < encryptPrivateKeysArray.length; j++) {
+                  const privateKey = encryptPrivateKeysArray[j];
+                  let result = null;
+                  try {
+                    result = this.getUnCipherContent('new_funds_content', value.content, privateKey, publicKey);
+                    if (result !== null) {
+                      content = result;
+                      break; // Exit the inner loop if a successful result is obtained
+                    }
+                  } catch (error) { }
                 }
               }
 

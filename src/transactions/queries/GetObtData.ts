@@ -44,7 +44,8 @@ export class GetObtData extends Query<GetObtDataResponse> {
         } | null = null;
         try {
           const requests = await Promise.allSettled(result.obt_data_records.map(async (obtDataRecord: GetObtDataRecord) => {
-            let encryptKeysArray: { publicKey: string, privateKey?: string }[] = [];
+            let encryptPublicKeysArray: string[] = [];
+            let encryptPrivateKeysArray: string[] = [];
 
             const { content: obtDataRecordContent, payee_fio_address, payee_fio_public_key, payer_fio_address, payer_fio_public_key } = obtDataRecord || {};
 
@@ -55,7 +56,7 @@ export class GetObtData extends Query<GetObtDataResponse> {
                 fioAddress: payer_fio_address,
               });
               if (payerEncryptKeyRes) {
-                encryptKeysArray.push({ publicKey: payerEncryptKeyRes });
+                encryptPublicKeysArray.push(payerEncryptKeyRes);
               }
             } catch (error) {
               console.error(error);
@@ -67,7 +68,7 @@ export class GetObtData extends Query<GetObtDataResponse> {
                 fioAddress: payee_fio_address,
               });
               if (payeeEncryptKeyRes) {
-                encryptKeysArray.push({ publicKey: payeeEncryptKeyRes });
+                encryptPublicKeysArray.push(payeeEncryptKeyRes);
               }
             } catch (error) {
               console.error(error);
@@ -78,39 +79,45 @@ export class GetObtData extends Query<GetObtDataResponse> {
             if (this.encryptKeys) {
               const accountEncryptKeys = this.encryptKeys.get(account);
               if (accountEncryptKeys && accountEncryptKeys.length > 0) {
-                encryptKeysArray = encryptKeysArray.concat(accountEncryptKeys);
+                encryptPrivateKeysArray =
+                  encryptPrivateKeysArray.concat(
+                    accountEncryptKeys.map(
+                      (accountEncryptKey) =>
+                        accountEncryptKey.privateKey
+                    )
+                  );
               }
             }
 
             if (payee_fio_public_key) {
-              encryptKeysArray.push({ publicKey: payee_fio_public_key });
+              encryptPublicKeysArray.push(payee_fio_public_key);
             }
 
             if (payer_fio_public_key) {
-              encryptKeysArray.push({ publicKey: payer_fio_public_key });
+              encryptPublicKeysArray.push(payer_fio_public_key);
             }
 
-            encryptKeysArray.push({ publicKey: this.publicKey });
+            encryptPublicKeysArray.push(this.publicKey);
+            encryptPrivateKeysArray.push(this.privateKey);
 
             try {
-              for (let i = 0; i < encryptKeysArray.length; i++) {
-                const { publicKey, privateKey } = encryptKeysArray[i];
-
-                let result = null;
-
-                try {
-                  result = this.getUnCipherContent(
-                    'record_obt_data_content',
-                    obtDataRecordContent,
-                    privateKey || this.privateKey,
-                    publicKey
-                  );
-                } catch (error) {}
-
-                // Check if the result is successful
-                if (result !== null) {
-                  content = result;
-                  break; // Exit the loop if a successful result is obtained
+              for (let i = 0; i < encryptPublicKeysArray.length; i++) {
+                const publicKey = encryptPublicKeysArray[i];
+                for (let j = 0; j < encryptPrivateKeysArray.length; j++) {
+                  const privateKey = encryptPrivateKeysArray[j];
+                  let result = null;
+                  try {
+                    result = this.getUnCipherContent(
+                      'record_obt_data_content',
+                      obtDataRecordContent,
+                      privateKey,
+                      publicKey
+                    );
+                    if (result !== null) {
+                      content = result;
+                      break; // Exit the inner loop if a successful result is obtained
+                    }
+                  } catch (error) { }
                 }
               }
 
