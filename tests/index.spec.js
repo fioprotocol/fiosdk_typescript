@@ -237,7 +237,6 @@ describe('Testing request timeout on wrong url', () => {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
       await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
     } catch (e) {
-      console.log('E', e);
       expect(e.message).to.match(/request_timeout|ENOTFOUND/);
     }
   })
@@ -263,8 +262,50 @@ describe('Testing request timeout on wrong url', () => {
       expect(result.roe).to.be.a('string');
   });
 
+  it(`Get Fio Balance with one correct and wrong base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([...baseUrls, wrongBaseUrl]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+
+  it(`Get Fio Balance with one wrong, correct and wrong base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, baseUrls[0], wrongBaseUrl2]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+
   it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
-    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    fioSdkWithWrongBaseUrl.setApiUrls(baseUrls);
     try {
       await fioSdk.genericAction('removePublicAddresses', {
         fioAddress: '',
@@ -291,7 +332,7 @@ describe('Testing request timeout on wrong url', () => {
   });
 
   it(`Return back correct baseUrls`, () => {
-    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    fioSdkWithWrongBaseUrl.setApiUrls(baseUrls);
   })
 })
 
