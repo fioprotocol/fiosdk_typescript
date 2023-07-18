@@ -1,48 +1,47 @@
-const PROMISE_TIMEOUT = 5000;
+import { AbortController, AbortSignal } from 'abort-controller';
 
-const snooze: Function = (ms: number) =>
-  new Promise((resolve: (...args: any[]) => void) => setTimeout(resolve, ms))
+const DEFAULT_REQUEST_TIMEOUT = 60000;
 
-export async function asyncWaterfall(
-  asyncFuncs: Array<Function>,
-  timeoutMs: number = PROMISE_TIMEOUT,
-): Promise<any> {
-  let pending = asyncFuncs.length
-  const promises: Array<Promise<any>> = []
-  for (const func of asyncFuncs) {
-    const index = promises.length
-    promises.push(
-      func().catch((e: Error & { index: number }) => {
-        e.index = index
-        throw e
-      }),
-    )
-    if (pending > 1) {
-      promises.push(
-        new Promise(resolve => {
-          snooze(timeoutMs).then(() => {
-            resolve('async_waterfall_timed_out')
-          })
-        })
-      )
-    }
-    try {
-      const result = await Promise.race(promises)
-      if (result.isError) throw result.data
-      if (result === 'async_waterfall_timed_out') {
-        promises.pop()
-        --pending
-      } else {
-        return result
-      }
-    } catch (error: any) {
-      const i = error.index
-      promises.splice(i, 1)
-      promises.pop()
-      --pending
-      if (!pending) {
-        throw error
+export async function asyncWaterfall({
+  asyncFuncs,
+  requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+}: {
+  asyncFuncs: Array<(signal: AbortSignal) => Promise<any>>;
+  requestTimeout?: number;
+}): Promise<any> {
+  const timeoutIds: NodeJS.Timeout[] = [];
+
+  try {
+    for (let i = 0; i < asyncFuncs.length; i++) {
+      const func = asyncFuncs[i];
+      const abortController = new AbortController();
+      let timeoutId: NodeJS.Timeout | undefined;
+
+      const timeoutPromise = new Promise<void>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          abortController.abort();
+          reject(new Error('request_timeout'));
+        }, requestTimeout);
+        timeoutIds.push(timeoutId!);
+      });
+
+      try {
+        const result = await Promise.race([func(abortController.signal), timeoutPromise]);
+        clearTimeout(timeoutId!);
+        if (result.isError) {
+          throw result.data;
+        }
+        if (result !== undefined) {
+          return result;
+        }
+      } catch (error: any) {
+        clearTimeout(timeoutId!);
+        if (i === asyncFuncs.length - 1) {
+          throw error;
+        }
       }
     }
+  } finally {
+    timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
   }
 }

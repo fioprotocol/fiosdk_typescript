@@ -81,9 +81,11 @@ export class FIOSDK {
           Transactions.abiMap.set(response.account_name, response)
         }
       }
-      const rawAbiAccountNameList = Constants.rawAbiAccountName;
+      let rawAbiAccountNameList = [];
       if (FIOSDK.customRawAbiAccountName) {
-        rawAbiAccountNameList.push(...FIOSDK.customRawAbiAccountName)
+        rawAbiAccountNameList = [...Constants.rawAbiAccountName, ...FIOSDK.customRawAbiAccountName];
+      } else {
+        rawAbiAccountNameList = Constants.rawAbiAccountName;
       }
   
       const setAbiPromises = rawAbiAccountNameList.map(accountName => setAbi(accountName))
@@ -93,7 +95,7 @@ export class FIOSDK {
           let error = '';
           const reason = result.reason;
 
-          const errorObj = reason.json || reason.errors[0].json;
+          const errorObj = reason.json || reason.errors && reason.errors[0].json;
 
           if (errorObj) {
             error = errorObj.error?.details[0]?.message;
@@ -454,7 +456,7 @@ export class FIOSDK {
     endPoint: string,
     preparedTrx: object,
   ): Promise<any> {
-    const response = await this.transactions.multicastServers(`chain/${endPoint}`, JSON.stringify(preparedTrx))
+    const response = await this.transactions.multicastServers({ endpoint: `chain/${endPoint}`, body: JSON.stringify(preparedTrx) })
     return SignedTransaction.prepareResponse(response, true)
   }
 

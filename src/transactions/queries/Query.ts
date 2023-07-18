@@ -5,6 +5,8 @@ export abstract class Query<T> extends Transactions {
 
   public isEncrypted = false
 
+  public requestTimeout = 5000
+
   public abstract getData(): any
 
   public decrypt(result: any): any {
@@ -15,13 +17,13 @@ export abstract class Query<T> extends Transactions {
     this.privateKey = privateKey
     if (!this.isEncrypted) {
       try {
-        return this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
+        return this.multicastServers({ endpoint: this.getEndPoint(), body: JSON.stringify(this.getData()), requestTimeout: this.requestTimeout })
       } catch (error) {
         throw error
       }
     } else {
       try {
-        const result = await this.multicastServers(this.getEndPoint(), JSON.stringify(this.getData()))
+        const result = await this.multicastServers({ endpoint: this.getEndPoint(), body: JSON.stringify(this.getData()), requestTimeout: this.requestTimeout })
         return this.decrypt(result)
       } catch (error) {
         throw error

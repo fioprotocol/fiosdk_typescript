@@ -34,8 +34,12 @@ const ethChainCode = 'ETH'
 const defaultBundledSets = 1
 const defaultFee = 800 * FIOSDK.SUFUnit
 const stakingTPID = ''   // e.g., 'autoproxy@fiotestnet'
+const wrongBaseUrl = 'https://wrong-url-test.test.com/'
+const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
-let fioSdk, fioSdk2
+let fioSdk,
+  fioSdk2,
+  fioSdkWithWrongBaseUrl
 
 const generateTestingFioAddress = (customDomain = fioTestnetDomain) => {
   return `testing${Date.now()}@${customDomain}`
@@ -70,6 +74,13 @@ before(async () => {
 
   await timeout(1000)
   fioSdk2 = new FIOSDK(
+    privateKey2,
+    publicKey2,
+    baseUrls,
+    fetchJson
+  )
+
+  fioSdkWithWrongBaseUrl = new FIOSDK(
     privateKey2,
     publicKey2,
     baseUrls,
@@ -142,6 +153,80 @@ describe('Raw Abi missing', () => {
     expect(result.srps).to.be.a('number')
     expect(result.roe).to.be.a('string')
   })
+})
+
+describe('Testing request timeout on wrong url', () => {
+  it(`Get Fio Ballance with wrong base url`, async () => {
+    try {
+      fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl]);
+      await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
+    } catch (e) {
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
+    }
+  });
+
+  it(`Get Fio Ballance with 2 wrong base urls`, async () => {
+    try {
+      fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
+      await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
+    } catch (e) {
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
+    }
+  });
+
+  /* todo: uncomment when DASH-678 missing raw abi task will be merged
+  it(`Get Fio Ballance with one wrong and correct base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, ...baseUrls]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+      expect(result).to.have.all.keys(
+        'balance',
+        'available',
+        'staked',
+        'srps',
+        'roe'
+      );
+      expect(result.balance).to.be.a('number');
+      expect(result.available).to.be.a('number');
+      expect(result.staked).to.be.a('number');
+      expect(result.srps).to.be.a('number');
+      expect(result.roe).to.be.a('string');
+  });
+  */
+
+  it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    try {
+      await fioSdk.genericAction('removePublicAddresses', {
+        fioAddress: '',
+        publicAddresses: [
+          {
+            chain_code: 'BCH',
+            token_code: 'BCH',
+            public_address:
+              'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
+          },
+          {
+            chain_code: 'DASH',
+            token_code: 'DASH',
+            public_address: 'XyCyPKzTWvW2XdcYjPaPXGQDCGk946ywEv',
+          },
+        ],
+        maxFee: 600000000,
+        tpid: '',
+      });
+    } catch (err) {
+      expect(err.message).to.equal('Validation error');
+      expect(err.list[0].message).to.equal('fioAddress is required.');
+    }
+  });
+
+  it(`Return back correct baseUrls`, () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+  });
 })
 
 describe('Testing generic actions', () => {
