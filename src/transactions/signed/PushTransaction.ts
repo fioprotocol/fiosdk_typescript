@@ -1,7 +1,7 @@
 import { Constants } from '../../utils/constants'
 import { SignedTransaction } from './SignedTransaction'
 
-export interface EncryptOptions { key?: string; contentType?: string }
+export interface EncryptOptions { publicKey?: string; privateKey?: string; contentType?: string }
 
 export class PushTransaction extends SignedTransaction {
 
@@ -39,12 +39,12 @@ export class PushTransaction extends SignedTransaction {
 
   public getData(): any {
     const data = { ...this.data }
-    if (data.content && this.encryptOptions && this.encryptOptions.key && this.encryptOptions.contentType) {
+    if (data.content && this.encryptOptions && this.encryptOptions.publicKey && this.encryptOptions.contentType) {
       data.content = this.getCipherContent(
         this.encryptOptions.contentType,
         data.content,
-        this.privateKey,
-        this.encryptOptions.key,
+        this.encryptOptions.privateKey || this.privateKey,
+        this.encryptOptions.publicKey,
       )
     }
 

@@ -1,4 +1,5 @@
 import { AbortController, AbortSignal } from 'abort-controller';
+import { GetEncryptKeyResponse } from '../entities/GetEncryptKeyResponse'; 
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
 
@@ -44,4 +45,30 @@ export async function asyncWaterfall({
   } finally {
     timeoutIds.forEach((timeoutId) => clearTimeout(timeoutId));
   }
+}
+
+export async function getEncryptKeyForUnCipherContent({
+  getEncryptKey,
+  method = '',
+  fioAddress,
+}: {
+  getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>,
+  method?: string,
+  fioAddress: string;
+}) {
+  let encryptKey = null;
+
+  if (fioAddress) {
+    try {
+      const encryptKeyRes = await getEncryptKey(fioAddress);
+      if (encryptKeyRes && encryptKeyRes.encrypt_public_key) {
+        encryptKey = encryptKeyRes.encrypt_public_key;
+      }
+    } catch (error) {
+      console.warn(`${method}: Get Encrypt Key fio_address ${fioAddress} failed.`);
+      // Skip if getEncryptKey fails and continue with the publicKey
+    }
+  }
+
+  return encryptKey;
 }
