@@ -178,7 +178,7 @@ describe('Raw Abi missing', () => {
 })
 
 describe('Testing request timeout on wrong url', () => {
-  it(`Get Fio Ballance with wrong base url`, async () => {
+  it(`Get Fio Balance with wrong base url`, async () => {
     try {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl]);
       await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
@@ -187,7 +187,7 @@ describe('Testing request timeout on wrong url', () => {
     }
   });
 
-  it(`Get Fio Ballance with 2 wrong base urls`, async () => {
+  it(`Get Fio Balance with 2 wrong base urls`, async () => {
     try {
       fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
       await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
@@ -196,31 +196,75 @@ describe('Testing request timeout on wrong url', () => {
     }
   });
 
-  /* todo: uncomment when DASH-678 missing raw abi task will be merged
-  it(`Get Fio Ballance with one wrong and correct base urls`, async () => {
+  it(`Get Fio Balance with one wrong and correct base urls`, async () => {
     fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, ...baseUrls]);
 
     const result = await fioSdkWithWrongBaseUrl.genericAction(
       'getFioBalance',
       {}
     );
-      expect(result).to.have.all.keys(
-        'balance',
-        'available',
-        'staked',
-        'srps',
-        'roe'
-      );
-      expect(result.balance).to.be.a('number');
-      expect(result.available).to.be.a('number');
-      expect(result.staked).to.be.a('number');
-      expect(result.srps).to.be.a('number');
-      expect(result.roe).to.be.a('string');
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
   });
-  */
+
+  it(`Get Fio Balance with one correct and wrong base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([...baseUrls, wrongBaseUrl]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+
+  it(`Get Fio Balance with one wrong, correct and wrong base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([
+      wrongBaseUrl,
+      baseUrls[0],
+      wrongBaseUrl2,
+    ]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
 
   it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
-    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    fioSdkWithWrongBaseUrl.setApiUrls(baseUrls);
     try {
       await fioSdk.genericAction('removePublicAddresses', {
         fioAddress: '',
@@ -247,9 +291,9 @@ describe('Testing request timeout on wrong url', () => {
   });
 
   it(`Return back correct baseUrls`, () => {
-    fioSdkWithWrongBaseUrl.setApiUrls([baseUrls]);
+    fioSdkWithWrongBaseUrl.setApiUrls(baseUrls);
   });
-})
+});
 
 describe('Testing generic actions', () => {
 
