@@ -9,20 +9,40 @@ const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
 }
 
-let privateKey, publicKey, privateKey2, publicKey2, testFioAddressName, testFioAddressName2
+let privateKey,
+  publicKey,
+  privateKey2,
+  publicKey2,
+  testFioAddressName,
+  testFioAddressName2,
+  testFioDomainName;
+
+let encPrivateKey,
+  encPublicKey,
+  encPrivateKey2,
+  encPublicKey2,
+  encTestFioAddressName,
+  encTestFioAddressName2;
+
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
 
 /**
  * Url for local dev node
  */
-const baseUrl = ''  // e.g., 'http://localhost:8889/v1/'
+const baseUrls = ['http://localhost:8889/v1/'] // e.g., ['http://localhost:8889/v1/']
 
 /**
  * Keys to transfer funds to be able make all calls with fee
  */
-const faucetPub = '';
-const faucetPriv = '';
+/*
+
+FAUCET_PRIV_KEY: '5KF2B21xT5pE5G3LNA6LKJc6AP2pAd2EnfpAUrJH12SFV8NtvCD',
+    FAUCET_PUB_KEY: 'FIO6zwqqzHQcqCc2MB4jpp1F73MXpisEQe2SDghQFSGQKoAPjvQ3H',
+    FAUCET_ACCOUNT: 'qhh25sqpktwh',
+    */
+const faucetPub = 'FIO6zwqqzHQcqCc2MB4jpp1F73MXpisEQe2SDghQFSGQKoAPjvQ3H';
+const faucetPriv = '5KF2B21xT5pE5G3LNA6LKJc6AP2pAd2EnfpAUrJH12SFV8NtvCD';
 
 const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
@@ -32,8 +52,10 @@ const fundAmount = 800 * FIOSDK.SUFUnit
 const defaultFee = 800 * FIOSDK.SUFUnit
 const defaultBundledSets = 1
 const receiveTransferTimout = 5000
+const wrongBaseUrl = 'https://wrong-url-test.test.com/'
+const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
-let fioSdk, fioSdk2
+let fioSdk, fioSdk2, fioSdkWithWrongBaseUrl
 
 const generateTestingFioAddress = (customDomain = 'edge') => {
   return `testing${Date.now()}@${customDomain}`
@@ -58,6 +80,18 @@ const timeout = async (ms) => {
   })
 }
 
+function randStr(len) {
+  var charset = "abcdefghijklmnopqrstuvwxyz";
+  result="";
+  for( var i=0; i < len; i++ )
+    result += charset[Math.floor(Math.random() * charset.length)];
+  return result
+}
+
+function getMnemonic() {
+  return 'test health mine over uncover someone gain powder urge slot property ' + randStr(7)
+}
+
 before(async () => {
   let privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic)
   privateKey = privateKeyRes.fioKey
@@ -66,11 +100,12 @@ before(async () => {
   fioSdk = new FIOSDK(
     privateKey,
     publicKey,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   const testDomain = generateTestingFioDomain()
   testFioAddressName = generateTestingFioAddress(testDomain)
+  testFioDomainName = testDomain
 
   await timeout(1000)
   privateKeyRes = await FIOSDK.createPrivateKeyMnemonic(mnemonic2)
@@ -80,19 +115,58 @@ before(async () => {
   fioSdk2 = new FIOSDK(
     privateKey2,
     publicKey2,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
-  testFioAddressName2 = generateTestingFioAddress(testDomain)
+
+  fioSdkWithWrongBaseUrl = new FIOSDK(
+    privateKey2,
+    publicKey2,
+    [wrongBaseUrl],
+    fetchJson
+  )
+
+  const testDomain2 = generateTestingFioDomain()
+  await timeout(1000)
+  testFioAddressName2 = generateTestingFioAddress(testDomain2)
+
+  let encPrivateKeyRes = await FIOSDK.createPrivateKeyMnemonic(getMnemonic())
+  encPrivateKey = encPrivateKeyRes.fioKey
+  let encPublicKeyRes = FIOSDK.derivedPublicKey(encPrivateKey)
+  encPublicKey = encPublicKeyRes.publicKey
+  encFioSdk = new FIOSDK(
+    encPrivateKey,
+    encPublicKey,
+    baseUrls,
+    fetchJson
+  )
+  const encTestDomain = generateTestingFioDomain()
+  encTestFioAddressName = generateTestingFioAddress(encTestDomain)
+
+  let encPrivateKeyRes2 = await FIOSDK.createPrivateKeyMnemonic(getMnemonic());
+  encPrivateKey2 = encPrivateKeyRes2.fioKey
+  let encPublicKeyRes2 = FIOSDK.derivedPublicKey(encPrivateKey2)
+  encPublicKey2 = encPublicKeyRes2.publicKey
+  encFioSdk2 = new FIOSDK(
+    encPrivateKey2,
+    encPublicKey2,
+    baseUrls,
+    fetchJson
+  )
+  const encTestDomain2 = generateTestingFioDomain()
+  encTestFioAddressName2 = generateTestingFioAddress(encTestDomain2);
 
   const fioSdkFaucet = new FIOSDK(
     faucetPriv,
     faucetPub,
-    baseUrl,
+    baseUrls,
     fetchJson
   )
   await fioSdkFaucet.transferTokens(publicKey, fundAmount * 4, defaultFee)
-  await fioSdkFaucet.transferTokens(publicKey2, fundAmount, defaultFee)
+  await fioSdkFaucet.transferTokens(publicKey2, fundAmount * 4, defaultFee)
+  await fioSdkFaucet.transferTokens(encPublicKey, fundAmount * 4, defaultFee)
+  await fioSdkFaucet.transferTokens(encPublicKey2, fundAmount * 4, defaultFee);
+
   await timeout(receiveTransferTimout)
 
   try {
@@ -114,6 +188,16 @@ before(async () => {
       technologyProviderId: ''
     })
 
+    const isAvailableResult3 = await fioSdk2.genericAction('isAvailable', {
+      fioName: testDomain2
+    })
+    if (!isAvailableResult3.is_registered) {
+      await fioSdk2.genericAction('registerFioDomain', {
+        fioDomain: testDomain2,
+        maxFee: defaultFee
+      })
+    }
+
     const isAvailableResult1 = await fioSdk.genericAction('isAvailable', {
       fioName: testFioAddressName
     })
@@ -134,10 +218,283 @@ before(async () => {
       })
     }
 
+    const encIsAvailableResult = await encFioSdk.genericAction('isAvailable', {
+      fioName: encTestDomain,
+    });
+    if (!encIsAvailableResult.is_registered) {
+      await encFioSdk.genericAction('registerFioDomain', {
+        fioDomain: encTestDomain,
+        maxFee: defaultFee,
+      });
+    }
+
+    await encFioSdk.genericAction('setFioDomainVisibility', {
+      fioDomain: encTestDomain,
+      isPublic: true,
+      maxFee: defaultFee,
+      technologyProviderId: '',
+    });
+
+    const encIsAvailableResult2 = await encFioSdk2.genericAction(
+      'isAvailable',
+      {
+        fioName: encTestDomain2,
+      }
+    );
+    if (!encIsAvailableResult2.is_registered) {
+      await encFioSdk2.genericAction('registerFioDomain', {
+        fioDomain: encTestDomain2,
+        maxFee: defaultFee,
+      });
+    }
+
+    const encIsAvailableResult3 = await encFioSdk.genericAction('isAvailable', {
+      fioName: encTestFioAddressName,
+    });
+    if (!encIsAvailableResult3.is_registered) {
+      await encFioSdk.genericAction('registerFioAddress', {
+        fioAddress: encTestFioAddressName,
+        maxFee: defaultFee,
+      });
+    }
+
+    const encIsAvailableResult4 = await encFioSdk2.genericAction(
+      'isAvailable',
+      {
+        fioName: encTestFioAddressName2,
+      }
+    );
+    if (!encIsAvailableResult4.is_registered) {
+      await encFioSdk2.genericAction('registerFioAddress', {
+        fioAddress: encTestFioAddressName2,
+        maxFee: defaultFee,
+      });
+    }
+
   } catch (e) {
     console.log(e);
   }
 })
+
+describe('Raw Abi missing', () => {
+  let consoleWarnOriginal; // Store the original console.warn method
+  let consoleWarnMessages = [];
+
+  beforeEach(() => {
+    consoleWarnOriginal = console.warn; // Store the original console.warn method
+    console.warn = (...args) => {
+      consoleWarnMessages.push(args.join(' '));
+    };
+  });
+
+  afterEach(() => {
+    console.warn = consoleWarnOriginal; // Restore the original console.warn method
+    consoleWarnMessages = []; // Reset the captured warning messages
+  });
+
+  it(`Get FIO Balance to test Raw Abi`, async () => {
+    FIOSDK.setCustomRawAbiAccountName('fio.absentabi');
+
+    const result = await fioSdk.genericAction('getFioBalance', {});
+
+    const fioSdkAbiWarning = consoleWarnMessages.find((message) =>
+      message.includes('FIO_SDK ABI WARNING:')
+    );
+
+    FIOSDK.setCustomRawAbiAccountName(null);
+
+    expect(fioSdkAbiWarning).to.exist;
+
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+});
+
+describe('Testing request timeout on wrong url', () => {
+  it(`Get Fio Balance with wrong base url`, async () => {
+    try {
+      fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl]);
+      await fioSdkWithWrongBaseUrl.genericAction(
+        'getFioBalance',
+        {}
+      );
+    } catch (e) {
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
+    }
+  })
+
+  it(`Get Fio Balance with 2 wrong base urls`, async () => {
+    try {
+      fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2]);
+      await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {});
+    } catch (e) {
+      expect(e.message).to.match(/request_timeout|ENOTFOUND/);
+    }
+  })
+
+  it(`Get Fio Balance with one wrong and correct base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, ...baseUrls]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+      expect(result).to.have.all.keys(
+        'balance',
+        'available',
+        'staked',
+        'srps',
+        'roe'
+      );
+      expect(result.balance).to.be.a('number');
+      expect(result.available).to.be.a('number');
+      expect(result.staked).to.be.a('number');
+      expect(result.srps).to.be.a('number');
+      expect(result.roe).to.be.a('string');
+  });
+
+  it(`Get Fio Balance with one correct and wrong base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([...baseUrls, wrongBaseUrl]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+
+  it(`Get Fio Balance with one wrong, correct and wrong base urls`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, baseUrls[0], wrongBaseUrl2]);
+
+    const result = await fioSdkWithWrongBaseUrl.genericAction(
+      'getFioBalance',
+      {}
+    );
+    expect(result).to.have.all.keys(
+      'balance',
+      'available',
+      'staked',
+      'srps',
+      'roe'
+    );
+    expect(result.balance).to.be.a('number');
+    expect(result.available).to.be.a('number');
+    expect(result.staked).to.be.a('number');
+    expect(result.srps).to.be.a('number');
+    expect(result.roe).to.be.a('string');
+  });
+
+  it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
+    fioSdkWithWrongBaseUrl.setApiUrls(baseUrls);
+    try {
+      await fioSdk.genericAction('removePublicAddresses', {
+        fioAddress: '',
+        publicAddresses: [
+          {
+            chain_code: 'BCH',
+            token_code: 'BCH',
+            public_address:
+              'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
+          },
+          {
+            chain_code: 'DASH',
+            token_code: 'DASH',
+            public_address: 'XyCyPKzTWvW2XdcYjPaPXGQDCGk946ywEv',
+          },
+        ],
+        maxFee: 600000000,
+        tpid: '',
+      });
+    } catch (err) {
+      expect(err.message).to.equal('Validation error');
+      expect(err.list[0].message).to.equal('fioAddress is required.');
+    }
+  });
+
+  it(`Return back correct baseUrls`, () => {
+    fioSdkWithWrongBaseUrl.setApiUrls(baseUrls);
+  })
+})
+
+describe('Testing Fio permissions', () => {
+
+  let accountName, accountName2;
+  let newFioDomain;
+  const permName = "register_address_on_domain";
+
+  it(`create new domain and register to user 1`, async () => {
+
+    accountName = FIOSDK.accountHash(publicKey).accountnm;
+    accountName2 = FIOSDK.accountHash(publicKey2).accountnm;
+    newFioDomain = generateTestingFioDomain()
+    const result = await fioSdk.genericAction('registerFioDomain', {fioDomain: newFioDomain, maxFee: defaultFee})
+    expect(result.status).to.equal('OK')
+  })
+
+  it(`First call addperm, user1 adds permission to user2 to register addresses on user1 domain `, async () => {
+
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'addperm',
+        account: 'fio.perms',
+        data: {
+          grantee_account: accountName2,
+          permission_name: permName,
+          permission_info: "",
+          object_name: newFioDomain,
+          max_fee: defaultFee,
+          tpid: '',
+          actor: fioSdk.account
+        }
+      })
+      expect(result.status).to.equal('OK')
+  })
+
+  it(`getGranteePermissions user2 account `, async () => {
+      const result = await fioSdk.genericAction('getGranteePermissions', {granteeAccount: accountName2})
+      expect(result).to.have.keys("more","permissions");
+      expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+          "permission_info","object_name","grantor_account");
+  })
+
+  it(`getGrantorPermissions user1 account `, async () => {
+    const result = await fioSdk.genericAction('getGrantorPermissions', {grantorAccount: accountName})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+
+  it(`getObjectPermissions user1 domain and "register_address_on_domain" permission `, async () => {
+    const result = await fioSdk.genericAction('getObjectPermissions', {permissionName: permName,
+           objectName: newFioDomain})
+    expect(result).to.have.keys("more","permissions");
+    expect(result.permissions[0]).to.have.keys("grantee_account","permission_name",
+        "permission_info","object_name","grantor_account");
+  })
+
+})
+
 
 describe('Testing generic actions', () => {
 
@@ -225,7 +582,9 @@ describe('Testing generic actions', () => {
     try {
       FIOSDK.isFioDomainValid('$%FG%')
     } catch (e) {
-      expect(e.list[0].message).to.equal('fioDomain must match /^[a-z0-9\\-]+$/i.')
+      expect(e.list[0].message).to.equal(
+        'fioDomain must match /^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/i.'
+      );
     }
     try {
       FIOSDK.isFioPublicKeyValid('dfsd')
@@ -279,7 +638,7 @@ describe('Testing generic actions', () => {
   it(`Register fio domain`, async () => {
     const result = await fioSdk.genericAction('registerFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -290,7 +649,7 @@ describe('Testing generic actions', () => {
   it(`Renew fio domain`, async () => {
     const result = await fioSdk.genericAction('renewFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -305,8 +664,7 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       technologyProviderId: ''
     })
-
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -318,7 +676,7 @@ describe('Testing generic actions', () => {
       fioAddress: newFioAddress,
       maxFee: defaultFee
     })
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -333,7 +691,7 @@ describe('Testing generic actions', () => {
       ownerPublicKey: publicKey2,
       maxFee: defaultFee
     })
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -343,7 +701,7 @@ describe('Testing generic actions', () => {
 
   it(`Renew fio address`, async () => {
     const result = await fioSdk.genericAction('renewFioAddress', { fioAddress: newFioAddress, maxFee: defaultFee })
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -363,7 +721,7 @@ describe('Testing generic actions', () => {
       }
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'expiration', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.expiration).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -398,7 +756,7 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -413,7 +771,7 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -435,8 +793,7 @@ describe('Testing generic actions', () => {
       newOwnerKey: pubKeyForTransfer,
       maxFee: defaultFee
     })
-
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -459,7 +816,7 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -485,7 +842,7 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -511,7 +868,7 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -561,7 +918,7 @@ describe('Testing generic actions', () => {
       technologyProviderId: ''
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -597,7 +954,7 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee,
       technologyProviderId: ''
     })
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -673,7 +1030,7 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -695,13 +1052,179 @@ describe('Testing generic actions', () => {
       maxFee: defaultFee
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
     expect(result.transaction_id).to.be.a('string')
   })
+
+  // Uncomment when Get Account Public Key will be available on testnet servers
+  // let accountName;
+
+  // it(`accountHash`, async () => {
+  //   accountName = FIOSDK.accountHash(publicKey).accountnm;
+  // });
+
+  // it(`Get Account Public Key`, async () => {
+  //   const result = await fioSdk.genericAction('getAccountPubKey', {
+  //     account: accountName
+  //   });
+
+  //   expect(result.fio_public_key).to.be.a('string')
+  // })
+
+  // Uncomment when Get Ecrypted Key will be available on testnet servers
+  
+  // it(`Get Ecrypted Key`, async () => {
+  //   const result = await fioSdk.genericAction('getEncryptKey', {
+  //     fioAddress: newFioAddress
+  //   });
+
+  //   expect(result.encrypt_public_key).to.be.a('string')
+  // })
 })
+
+
+describe('Test addaddress on account with permissions', () => {
+
+
+  let account1, account2;
+
+  it(`gen account names`, async () => {
+    account1 = FIOSDK.accountHash(publicKey).accountnm;
+    account2 = FIOSDK.accountHash(publicKey2).accountnm;
+  })
+
+
+  const permissionName = 'addmyadd'; // Must be < 12 chars
+
+  it(`user1 creates addmyadd permission and assigns to user2`, async () => {
+     try{
+       const authorization_object = {
+        threshold: 1,
+        accounts: [
+          {
+            permission: {
+              actor: account2,
+              permission: 'active',
+            },
+            weight: 1,
+          },
+        ],
+        keys: [],
+        waits: [],
+      };
+
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'updateauth',
+        account: 'eosio',
+        actor: account1,
+        data: {
+          permission: permissionName,
+          parent: 'active',
+          auth: authorization_object,
+          max_fee: defaultFee,
+          account: account1,
+        },
+      });
+
+      //console.log(result);
+      expect(result).to.have.all.keys(
+        'transaction_id',
+        'block_num',
+        'block_time'
+      );
+
+      expect(result.block_num).to.be.a('number');
+      expect(result.transaction_id).to.be.a('string');
+    } catch (e) {
+      console.log('Error' ,e);
+    }
+  });
+
+
+
+
+  it(`user1 links regmyadd permission to regaddress`, async () => {
+    try {
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'linkauth',
+        account: 'eosio',
+        actor: account1,
+        data: {
+          account: account1, // the owner of the permission to be linked, this account will sign the transaction
+          code: 'fio.address', // the contract owner of the action to be linked
+          type: 'addaddress', // the action to be linked
+          requirement: permissionName, // the name of the custom permission (created by updateauth)
+          max_fee: defaultFee,
+        },
+      });
+
+      expect(result).to.have.all.keys(
+        'transaction_id',
+        'block_num',
+        'block_time'
+      );
+      expect(result.block_num).to.be.a('number');
+      expect(result.transaction_id).to.be.a('string');
+    } catch (e) {
+      //the error we get here is due to using the same account every time we run the test,
+      //we get an error "same as previous" from linkauth, this is ok!
+     // console.log(e);
+    }
+  });
+
+  it(`renewdomain for user1`, async () => {
+    try {
+      const result = await fioSdk.genericAction('pushTransaction', {
+        action: 'renewdomain',
+        account: 'fio.address',
+        authPermission: 'active',
+        data: {
+          fio_domain: testFioDomainName,
+          max_fee: defaultFee,
+          tpid: '',
+          actor: account1
+        },
+      });
+
+      expect(result.status).to.equal('OK');
+    } catch (e) {
+      console.log(e);
+    }
+  });
+
+  it(`addaddress as user2`, async () => {
+    try {
+      const result = await fioSdk2.genericAction('pushTransaction', {
+        action: 'addaddress',
+        account: 'fio.address',
+        signingAccount: account2,
+        authPermission: permissionName,
+        data: {
+          fio_address: testFioAddressName,
+          public_addresses: [
+            {
+              chain_code: 'BCH',
+              token_code: 'BCH',
+              public_address:
+                'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
+            },
+          ],
+          max_fee: defaultFee,
+          tpid: '',
+          actor: account1,
+        },
+      });
+      
+      expect(result.status).to.equal('OK');
+    } catch (e) {
+      console.log(e);
+    }
+  });
+});
+
 
 describe('Staking tests', () => {
   let stakedBalance = 0;
@@ -746,7 +1269,7 @@ describe('Staking tests', () => {
         technologyProviderId: "",
       })
 
-      expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
       expect(result.status).to.be.a('string')
       expect(result.fee_collected).to.be.a('number')
       expect(result.block_num).to.be.a('number')
@@ -769,7 +1292,7 @@ describe('Staking tests', () => {
       technologyProviderId: "",
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -833,7 +1356,7 @@ describe('NFT tests', () => {
       }
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -895,16 +1418,16 @@ describe('Request funds, approve and send', () => {
     const result = await fioSdk2.genericAction('requestFunds', {
       payerFioAddress: testFioAddressName,
       payeeFioAddress: testFioAddressName2,
-      payeePublicAddress: testFioAddressName2,
+      payeeTokenPublicAddress: fioSdk2.publicKey,
       amount: fundsAmount,
       chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       memo,
       maxFee: defaultFee,
-    })
+    });
 
     requestId = result.fio_request_id
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fio_request_id', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -926,6 +1449,7 @@ describe('Request funds, approve and send', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo)
   })
 
   it(`getSentFioRequests`, async () => {
@@ -933,40 +1457,45 @@ describe('Request funds, approve and send', () => {
     expect(result).to.have.all.keys('requests', 'more')
     expect(result.requests).to.be.a('array')
     expect(result.more).to.be.a('number')
-    const pendingReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
-    expect(pendingReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'status', 'time_stamp', 'content')
-    expect(pendingReq.fio_request_id).to.be.a('number')
-    expect(pendingReq.fio_request_id).to.equal(requestId)
-    expect(pendingReq.payer_fio_address).to.be.a('string')
-    expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
-    expect(pendingReq.payee_fio_address).to.be.a('string')
-    expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    const sentReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
+    expect(sentReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'status', 'time_stamp', 'content')
+    expect(sentReq.fio_request_id).to.be.a('number')
+    expect(sentReq.fio_request_id).to.equal(requestId)
+    expect(sentReq.payer_fio_address).to.be.a('string')
+    expect(sentReq.payer_fio_address).to.equal(testFioAddressName)
+    expect(sentReq.payee_fio_address).to.be.a('string')
+    expect(sentReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(sentReq.content.memo).to.be.equal(memo);
   })
 
   it(`recordObtData`, async () => {
-    await fioSdk.genericAction('transferTokens', {
-      payeeFioPublicKey: publicKey2,
-      amount: fundsAmount,
-      maxFee: defaultFee,
-    })
-    const result = await fioSdk.genericAction('recordObtData', {
-      fioRequestId: requestId,
-      payerFioAddress: testFioAddressName,
-      payeeFioAddress: testFioAddressName2,
-      payerTokenPublicAddress: publicKey,
-      payeeTokenPublicAddress: publicKey2,
-      amount: fundsAmount,
-      chainCode: fioChainCode,
-      tokenCode: fioTokenCode,
-      status: 'sent_to_blockchain',
-      obtId: '',
-      maxFee: defaultFee,
-    })
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
-    expect(result.status).to.be.a('string')
-    expect(result.fee_collected).to.be.a('number')
-    expect(result.block_num).to.be.a('number')
-    expect(result.transaction_id).to.be.a('string')
+    try {
+      await fioSdk.genericAction('transferTokens', {
+        payeeFioPublicKey: publicKey2,
+        amount: fundsAmount,
+        maxFee: defaultFee,
+      })
+      const result = await fioSdk.genericAction('recordObtData', {
+        fioRequestId: requestId,
+        payerFioAddress: testFioAddressName,
+        payeeFioAddress: testFioAddressName2,
+        payerTokenPublicAddress: publicKey,
+        payeeTokenPublicAddress: publicKey2,
+        amount: fundsAmount,
+        chainCode: fioChainCode,
+        tokenCode: fioTokenCode,
+        status: 'sent_to_blockchain',
+        obtId: '',
+        maxFee: defaultFee,
+      })
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
+      expect(result.status).to.be.a('string')
+      expect(result.fee_collected).to.be.a('number')
+      expect(result.block_num).to.be.a('number')
+      expect(result.transaction_id).to.be.a('string')
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
   })
 
   it(`getReceivedFioRequests`, async () => {
@@ -975,14 +1504,15 @@ describe('Request funds, approve and send', () => {
     expect(result).to.have.all.keys('requests', 'more')
     expect(result.requests).to.be.a('array')
     expect(result.more).to.be.a('number')
-    const pendingReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
-    expect(pendingReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'time_stamp', 'content', 'status')
-    expect(pendingReq.fio_request_id).to.be.a('number')
-    expect(pendingReq.fio_request_id).to.equal(requestId)
-    expect(pendingReq.payer_fio_address).to.be.a('string')
-    expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
-    expect(pendingReq.payee_fio_address).to.be.a('string')
-    expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    const receivedReq = result.requests.find(pr => parseInt(pr.fio_request_id) === parseInt(requestId))
+    expect(receivedReq).to.have.all.keys('fio_request_id', 'payer_fio_address', 'payee_fio_address', 'payee_fio_public_key', 'payer_fio_public_key', 'time_stamp', 'content', 'status')
+    expect(receivedReq.fio_request_id).to.be.a('number')
+    expect(receivedReq.fio_request_id).to.equal(requestId)
+    expect(receivedReq.payer_fio_address).to.be.a('string')
+    expect(receivedReq.payer_fio_address).to.equal(testFioAddressName)
+    expect(receivedReq.payee_fio_address).to.be.a('string')
+    expect(receivedReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(receivedReq.content.memo).to.be.equal(memo);
   })
 
   it(`Payer getObtData`, async () => {
@@ -1015,9 +1545,1041 @@ describe('Request funds, approve and send', () => {
     expect(obtData.payee_fio_address).to.be.a('string')
     expect(obtData.payee_fio_address).to.equal(testFioAddressName2)
   })
-
 })
 
+describe('Request funds, approve and send with updated encrypt key', () => {
+  const fundsAmount = 3;
+  const requestIds = [];
+  const requestIds2 = [];
+  const memo = 'testing fund request with updated encrypt key';
+  const memo2 = '2 testing fund request with updated encrypt key';
+  const memo3 = '3 testing fund request with updated encrypt key';
+  const memo4 = '4 testing fund request with updated encrypt key';
+  const user1EncryptKeysMap = new Map();
+  const user2EncryptKeysMap = new Map();
+  let user1Account = null;
+  let user2Account = null;
+
+  let user1EncryptKeys = null,
+    user1EncryptKeys2 = null,
+    user2EncryptKeys = null,
+    user2EncryptKeys2 = null;
+
+  it(`Generate encrypt keys for user1`, async () => {
+    let user1PrivateKeyRes1 = await FIOSDK.createPrivateKeyMnemonic(
+      getMnemonic()
+    );
+    user1PrivateKey1 = user1PrivateKeyRes1.fioKey;
+    let user1PublicKeyRes1 = FIOSDK.derivedPublicKey(user1PrivateKey1);
+    user1PublicKey1 = user1PublicKeyRes1.publicKey;
+
+    let user1PrivateKeyRes2 = await FIOSDK.createPrivateKeyMnemonic(
+      getMnemonic()
+    );
+    user1PrivateKey2 = user1PrivateKeyRes2.fioKey;
+    let user1PublicKeyRes2 = FIOSDK.derivedPublicKey(user1PrivateKey2);
+    user1PublicKey2 = user1PublicKeyRes2.publicKey;
+
+    user1EncryptKeys = {
+      publicKey: user1PublicKey1,
+      privateKey: user1PrivateKey1,
+    };
+
+    user1EncryptKeys2 = {
+      publicKey: user1PublicKey2,
+      privateKey: user1PrivateKey2,
+    };
+  });
+
+  it(`Generate encrypt keys for user2`, async () => {
+    let user2PrivateKeyRes1 = await FIOSDK.createPrivateKeyMnemonic(
+      getMnemonic()
+    );
+    user2PrivateKey1 = user2PrivateKeyRes1.fioKey;
+    let user2PublicKeyRes1 = FIOSDK.derivedPublicKey(user2PrivateKey1);
+    user2PublicKey1 = user2PublicKeyRes1.publicKey;
+
+    let user2PrivateKeyRes2 = await FIOSDK.createPrivateKeyMnemonic(
+      getMnemonic()
+    );
+    user2PrivateKey2 = user2PrivateKeyRes2.fioKey;
+    let user2PublicKeyRes2 = FIOSDK.derivedPublicKey(user2PrivateKey2);
+    user2PublicKey2 = user2PublicKeyRes2.publicKey;
+
+    user2EncryptKeys = {
+      publicKey: user2PublicKey1,
+      privateKey: user2PrivateKey1,
+    };
+
+    user2EncryptKeys2 = {
+      publicKey: user2PublicKey2,
+      privateKey: user2PrivateKey2,
+    };
+  });
+
+  it(`Set accountHash and set encryptKeys`, async () => {
+    user1Account = FIOSDK.accountHash(encFioSdk.publicKey).accountnm;
+    user1EncryptKeysMap.set(user1Account, [
+      user1EncryptKeys,
+      user1EncryptKeys2,
+    ]);
+
+    user2Account = FIOSDK.accountHash(encFioSdk2.publicKey).accountnm;
+    user2EncryptKeysMap.set(user2Account, [
+      user2EncryptKeys,
+      user2EncryptKeys2,
+    ]);
+  });
+
+  it(`Add new encrypt key for user1`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('pushTransaction', {
+        action: 'updcryptkey',
+        account: 'fio.address',
+        data: {
+          fio_address: encTestFioAddressName,
+          encrypt_public_key: user1EncryptKeys.publicKey,
+          max_fee: 40000000000,
+          tpid: '',
+        },
+      });
+      expect(result.status).to.equal('OK');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`requestFunds using encryptkey1 - user1 request of user2`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('requestFunds', {
+        payerFioAddress: encTestFioAddressName2,
+        payeeFioAddress: encTestFioAddressName,
+        payeeTokenPublicAddress: encFioSdk.publicKey,
+        amount: fundsAmount,
+        chainCode: fioChainCode,
+        tokenCode: fioTokenCode,
+        memo,
+        maxFee: defaultFee,
+        payerFioPublicKey: encFioSdk2.publicKey,
+        technologyProviderId: '',
+        encryptPrivateKey: user1EncryptKeys.privateKey,
+      });
+
+      requestIds.push(result.fio_request_id);
+      expect(result.status).to.equal('requested');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`Add new encrypt 2 key for user1`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('pushTransaction', {
+        action: 'updcryptkey',
+        account: 'fio.address',
+        data: {
+          fio_address: encTestFioAddressName,
+          encrypt_public_key: user1EncryptKeys2.publicKey,
+          max_fee: 40000000000,
+          tpid: '',
+        },
+      });
+      expect(result.status).to.equal('OK');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`requestFunds using encryptkey2 - user1 request of user2`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('requestFunds', {
+        payerFioAddress: encTestFioAddressName2,
+        payeeFioAddress: encTestFioAddressName,
+        payeeTokenPublicAddress: encFioSdk.publicKey,
+        amount: fundsAmount,
+        chainCode: fioChainCode,
+        tokenCode: fioTokenCode,
+        memo: memo2,
+        maxFee: defaultFee,
+        payerFioPublicKey: encFioSdk2.publicKey,
+        technologyProviderId: '',
+        encryptPrivateKey: user1EncryptKeys2.privateKey,
+      });
+
+      requestIds.push(result.fio_request_id);
+      expect(result.status).to.equal('requested');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`Add new encrypt key for user2`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('pushTransaction', {
+        action: 'updcryptkey',
+        account: 'fio.address',
+        data: {
+          fio_address: encTestFioAddressName2,
+          encrypt_public_key: user2EncryptKeys.publicKey,
+          max_fee: 40000000000,
+          tpid: '',
+        },
+      });
+      expect(result.status).to.equal('OK');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`requestFunds using encryptkey - user2 request of user1`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('requestFunds', {
+        payerFioAddress: encTestFioAddressName,
+        payeeFioAddress: encTestFioAddressName2,
+        payeeTokenPublicAddress: encFioSdk2.publicKey,
+        amount: fundsAmount,
+        chainCode: fioChainCode,
+        tokenCode: fioTokenCode,
+        memo: memo3,
+        maxFee: defaultFee,
+        payerFioPublicKey: encFioSdk.publicKey,
+        technologyProviderId: '',
+        encryptPrivateKey: user2EncryptKeys.privateKey,
+      });
+
+      requestIds2.push(result.fio_request_id);
+      expect(result.status).to.equal('requested');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`Add new encrypt2 key for user2`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('pushTransaction', {
+        action: 'updcryptkey',
+        account: 'fio.address',
+        data: {
+          fio_address: encTestFioAddressName2,
+          encrypt_public_key: user2EncryptKeys2.publicKey,
+          max_fee: 40000000000,
+          tpid: '',
+        },
+      });
+      expect(result.status).to.equal('OK');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`requestFunds using encryptkey2 - user2 request of user1`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('requestFunds', {
+        payerFioAddress: encTestFioAddressName,
+        payeeFioAddress: encTestFioAddressName2,
+        payeeTokenPublicAddress: encFioSdk2.publicKey,
+        amount: fundsAmount,
+        chainCode: fioChainCode,
+        tokenCode: fioTokenCode,
+        memo: memo4,
+        maxFee: defaultFee,
+        payerFioPublicKey: encFioSdk.publicKey,
+        technologyProviderId: '',
+        encryptPrivateKey: user2EncryptKeys2.privateKey,
+      });
+      requestIds2.push(result.fio_request_id);
+      expect(result.status).to.equal('requested');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getSentFioRequests user 1 encrypt keys`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('getSentFioRequests', {
+        encryptKeys: user1EncryptKeysMap,
+      });
+
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const sentReq = result.requests.filter(
+        (sr) => requestIds.includes(sr.fio_request_id)
+      );
+
+      const firstSentReq = sentReq[0];
+      const secondSentReq = sentReq[1];
+
+      expect(firstSentReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(firstSentReq.fio_request_id).to.be.a('number');
+      expect(firstSentReq.fio_request_id).to.equal(requestIds[0]);
+      expect(firstSentReq.payer_fio_address).to.be.a('string');
+      expect(firstSentReq.payer_fio_address).to.equal(encTestFioAddressName2);
+      expect(firstSentReq.payee_fio_address).to.be.a('string');
+      expect(firstSentReq.payee_fio_address).to.equal(encTestFioAddressName);
+      expect(firstSentReq.payer_fio_public_key).to.equal(encFioSdk2.publicKey);
+      expect(firstSentReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys.publicKey
+      );
+      expect(firstSentReq.content.memo).to.be.equal(memo);
+
+      expect(secondSentReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(secondSentReq.fio_request_id).to.be.a('number');
+      expect(secondSentReq.fio_request_id).to.equal(requestIds[1]);
+      expect(secondSentReq.payer_fio_address).to.be.a('string');
+      expect(secondSentReq.payer_fio_address).to.equal(encTestFioAddressName2);
+      expect(secondSentReq.payee_fio_address).to.be.a('string');
+      expect(secondSentReq.payee_fio_address).to.equal(encTestFioAddressName);
+      expect(secondSentReq.payer_fio_public_key).to.equal(encFioSdk2.publicKey);
+      expect(secondSentReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(secondSentReq.content.memo).to.be.equal(memo2);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getPendingFioRequests user2 encrypt keys`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('getPendingFioRequests', {
+        encryptKeys: user2EncryptKeysMap,
+      });
+
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const pendingReq = result.requests.filter((pr) =>
+        requestIds.includes(pr.fio_request_id)
+      );
+      const firstPendingReq = pendingReq[0];
+      const secondPendingReq = pendingReq[1];
+
+      expect(firstPendingReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content'
+      );
+      expect(firstPendingReq.fio_request_id).to.be.a('number');
+      expect(firstPendingReq.fio_request_id).to.equal(requestIds[0]);
+      expect(firstPendingReq.payer_fio_address).to.be.a('string');
+      expect(firstPendingReq.payer_fio_address).to.equal(encTestFioAddressName2);
+      expect(firstPendingReq.payee_fio_address).to.be.a('string');
+      expect(firstPendingReq.payee_fio_address).to.equal(encTestFioAddressName);
+      expect(firstPendingReq.payer_fio_public_key).to.equal(
+        encFioSdk2.publicKey
+      );
+      expect(firstPendingReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys.publicKey
+      );
+      expect(firstPendingReq.content.memo).to.equal(memo);
+
+      expect(secondPendingReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content'
+      );
+      expect(secondPendingReq.fio_request_id).to.be.a('number');
+      expect(secondPendingReq.fio_request_id).to.equal(requestIds[1]);
+      expect(secondPendingReq.payer_fio_address).to.be.a('string');
+      expect(secondPendingReq.payer_fio_address).to.equal(
+        encTestFioAddressName2
+      );
+      expect(secondPendingReq.payee_fio_address).to.be.a('string');
+      expect(secondPendingReq.payee_fio_address).to.equal(
+        encTestFioAddressName
+      );
+      expect(secondPendingReq.payer_fio_public_key).to.equal(
+        encFioSdk2.publicKey
+      );
+      expect(secondPendingReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(secondPendingReq.content.memo).to.equal(memo2);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+   it(`(sdk) Call getSentFioRequests user2 encrypt keys`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('getSentFioRequests', {
+        encryptKeys: user2EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const sentReq = result.requests.filter((sr) =>
+        requestIds2.includes(sr.fio_request_id)
+      );
+      const firstSentReq = sentReq[0];
+      const secondSentReq = sentReq[1];
+
+      expect(firstSentReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(firstSentReq.fio_request_id).to.be.a('number');
+      expect(firstSentReq.fio_request_id).to.equal(requestIds2[0]);
+      expect(firstSentReq.payer_fio_address).to.be.a('string');
+      expect(firstSentReq.payer_fio_address).to.equal(encTestFioAddressName);
+      expect(firstSentReq.payee_fio_address).to.be.a('string');
+      expect(firstSentReq.payee_fio_address).to.equal(encTestFioAddressName2);
+      expect(firstSentReq.payer_fio_public_key).to.equal(user1EncryptKeys2.publicKey);
+      expect(firstSentReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys.publicKey
+      );
+      expect(firstSentReq.content.memo).to.be.equal(memo3);
+
+      expect(secondSentReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(secondSentReq.fio_request_id).to.be.a('number');
+      expect(secondSentReq.fio_request_id).to.equal(requestIds2[1]);
+      expect(secondSentReq.payer_fio_address).to.be.a('string');
+      expect(secondSentReq.payer_fio_address).to.equal(encTestFioAddressName);
+      expect(secondSentReq.payee_fio_address).to.be.a('string');
+      expect(secondSentReq.payee_fio_address).to.equal(encTestFioAddressName2);
+      expect(secondSentReq.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(secondSentReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys2.publicKey
+      );
+      expect(secondSentReq.content.memo).to.be.equal(memo4);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+   });
+
+   it(`(sdk) Call getPendingFioRequests user1 encrypt keys`, async () => {
+     try {
+      const result = await encFioSdk.genericAction('getPendingFioRequests', {
+        encryptKeys: user1EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const pendingReq = result.requests.filter((pr) =>
+        requestIds2.includes(pr.fio_request_id)
+      );
+      const firstPendingReq = pendingReq[0];
+      const secondPendingReq = pendingReq[1];
+
+      expect(firstPendingReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content'
+      );
+      expect(firstPendingReq.fio_request_id).to.be.a('number');
+      expect(firstPendingReq.fio_request_id).to.equal(requestIds2[0]);
+      expect(firstPendingReq.payer_fio_address).to.be.a('string');
+      expect(firstPendingReq.payer_fio_address).to.equal(encTestFioAddressName);
+      expect(firstPendingReq.payee_fio_address).to.be.a('string');
+      expect(firstPendingReq.payee_fio_address).to.equal(encTestFioAddressName2);
+      expect(firstPendingReq.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(firstPendingReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys.publicKey
+      );
+      expect(firstPendingReq.content.memo).to.equal(memo3);
+
+      expect(secondPendingReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content'
+      );
+      expect(secondPendingReq.fio_request_id).to.be.a('number');
+      expect(secondPendingReq.fio_request_id).to.equal(requestIds2[1]);
+      expect(secondPendingReq.payer_fio_address).to.be.a('string');
+      expect(secondPendingReq.payer_fio_address).to.equal(
+        encTestFioAddressName
+      );
+      expect(secondPendingReq.payee_fio_address).to.be.a('string');
+      expect(secondPendingReq.payee_fio_address).to.equal(
+        encTestFioAddressName2
+      );
+      expect(secondPendingReq.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(secondPendingReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys2.publicKey
+      );
+      expect(secondPendingReq.content.memo).to.equal(memo4);
+     } catch (err) {
+       expect(err).to.equal(null);
+     }
+   });
+
+  it(`(sdk) Call getReceivedFioRequests encrypt keys - user1 to user2`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('getReceivedFioRequests', {
+        encryptKeys: user1EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const receivedReq = result.requests.filter((pr) =>
+        requestIds2.includes(pr.fio_request_id)
+      );
+      const firstReceivedReq = receivedReq[0];
+      const secondReceivedReq = receivedReq[1];
+
+      expect(firstReceivedReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content',
+        'status'
+      );
+      expect(firstReceivedReq.status).to.be.a('string');
+      expect(firstReceivedReq.fio_request_id).to.be.a('number');
+      expect(firstReceivedReq.fio_request_id).to.equal(requestIds2[0]);
+      expect(firstReceivedReq.payer_fio_address).to.be.a('string');
+      expect(firstReceivedReq.payer_fio_address).to.equal(
+        encTestFioAddressName
+      );
+      expect(firstReceivedReq.payee_fio_address).to.be.a('string');
+      expect(firstReceivedReq.payee_fio_address).to.equal(
+        encTestFioAddressName2
+      );
+      expect(firstReceivedReq.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(firstReceivedReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys.publicKey
+      );
+      expect(firstReceivedReq.content.memo).to.equal(memo3);
+
+      expect(secondReceivedReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content',
+        'status'
+      );
+      expect(secondReceivedReq.status).to.be.a('string');
+      expect(secondReceivedReq.fio_request_id).to.be.a('number');
+      expect(secondReceivedReq.fio_request_id).to.equal(requestIds2[1]);
+      expect(secondReceivedReq.payer_fio_address).to.be.a('string');
+      expect(secondReceivedReq.payer_fio_address).to.equal(
+        encTestFioAddressName
+      );
+      expect(secondReceivedReq.payee_fio_address).to.be.a('string');
+      expect(secondReceivedReq.payee_fio_address).to.equal(
+        encTestFioAddressName2
+      );
+      expect(secondReceivedReq.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(secondReceivedReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys2.publicKey
+      );
+      expect(secondReceivedReq.content.memo).to.equal(memo4);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getReceivedFioRequests encrypt keys - user2 to user1`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction(
+        'getReceivedFioRequests',
+        {
+          encryptKeys: user2EncryptKeysMap,
+        }
+      );
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const receivedReq = result.requests.filter((pr) =>
+        requestIds.includes(pr.fio_request_id)
+      );
+      const firstReceivedReq = receivedReq[0];
+      const secondReceivedReq = receivedReq[1];
+
+      expect(firstReceivedReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content',
+        'status'
+      );
+      expect(firstReceivedReq.status).to.be.a('string');
+      expect(firstReceivedReq.fio_request_id).to.be.a('number');
+      expect(firstReceivedReq.fio_request_id).to.equal(requestIds[0]);
+      expect(firstReceivedReq.payer_fio_address).to.be.a('string');
+      expect(firstReceivedReq.payer_fio_address).to.equal(
+        encTestFioAddressName2
+      );
+      expect(firstReceivedReq.payee_fio_address).to.be.a('string');
+      expect(firstReceivedReq.payee_fio_address).to.equal(
+        encTestFioAddressName
+      );
+      expect(firstReceivedReq.payer_fio_public_key).to.equal(
+        encFioSdk2.publicKey
+      );
+      expect(firstReceivedReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys.publicKey
+      );
+      expect(firstReceivedReq.content.memo).to.equal(memo);
+
+      expect(secondReceivedReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'time_stamp',
+        'content',
+        'status'
+      );
+      expect(secondReceivedReq.status).to.be.a('string');
+      expect(secondReceivedReq.fio_request_id).to.be.a('number');
+      expect(secondReceivedReq.fio_request_id).to.equal(requestIds[1]);
+      expect(secondReceivedReq.payer_fio_address).to.be.a('string');
+      expect(secondReceivedReq.payer_fio_address).to.equal(
+        encTestFioAddressName2
+      );
+      expect(secondReceivedReq.payee_fio_address).to.be.a('string');
+      expect(secondReceivedReq.payee_fio_address).to.equal(
+        encTestFioAddressName
+      );
+      expect(secondReceivedReq.payer_fio_public_key).to.equal(
+        encFioSdk2.publicKey
+      );
+      expect(secondReceivedReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(secondReceivedReq.content.memo).to.equal(memo2);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`Cancel request encrypt key - user1 to user2`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('cancelFundsRequest', {
+        fioRequestId: requestIds[0],
+        maxFee: defaultFee,
+        tpid: '',
+      });
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
+      expect(result.status).to.be.a('string')
+      expect(result.fee_collected).to.be.a('number')
+      expect(result.block_num).to.be.a('number')
+      expect(result.transaction_id).to.be.a('string')
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  })
+
+  it(`Cancel request encrypt key - user2 to user1`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('cancelFundsRequest', {
+        fioRequestId: requestIds2[0],
+        maxFee: defaultFee,
+        tpid: '',
+      });
+      expect(result).to.have.all.keys(
+        'transaction_id',
+        'block_num',
+        'block_time',
+        'status',
+        'fee_collected'
+      );
+      expect(result.status).to.be.a('string');
+      expect(result.fee_collected).to.be.a('number');
+      expect(result.block_num).to.be.a('number');
+      expect(result.transaction_id).to.be.a('string');
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getCancelledFioRequests user1 encrypt keys`, async () => {
+    try {
+      await timeout(4000);
+      const result = await encFioSdk.genericAction('getCancelledFioRequests', {
+        encryptKeys: user1EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const canceledReq = result.requests.find((cr) =>
+        requestIds[0] === cr.fio_request_id
+      );
+
+      expect(canceledReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(canceledReq.fio_request_id).to.be.a('number');
+      expect(canceledReq.fio_request_id).to.equal(requestIds[0]);
+      expect(canceledReq.payer_fio_address).to.be.a('string');
+      expect(canceledReq.payer_fio_address).to.equal(encTestFioAddressName2);
+      expect(canceledReq.payee_fio_address).to.be.a('string');
+      expect(canceledReq.payee_fio_address).to.equal(encTestFioAddressName);
+      expect(canceledReq.payer_fio_public_key).to.equal(encFioSdk2.publicKey);
+      expect(canceledReq.payee_fio_public_key).to.equal(
+        user1EncryptKeys.publicKey
+      );
+      expect(canceledReq.content.memo).to.be.equal(memo);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getCancelledFioRequests user2 encrypt keys`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('getCancelledFioRequests', {
+        encryptKeys: user2EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('requests', 'more');
+      expect(result.requests).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const canceledReq = result.requests.find((cr) =>
+        requestIds2[0] === cr.fio_request_id
+      );
+
+      expect(canceledReq).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(canceledReq.fio_request_id).to.be.a('number');
+      expect(canceledReq.fio_request_id).to.equal(requestIds2[0]);
+      expect(canceledReq.payer_fio_address).to.be.a('string');
+      expect(canceledReq.payer_fio_address).to.equal(encTestFioAddressName);
+      expect(canceledReq.payee_fio_address).to.be.a('string');
+      expect(canceledReq.payee_fio_address).to.equal(encTestFioAddressName2);
+      expect(canceledReq.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(canceledReq.payee_fio_public_key).to.equal(
+        user2EncryptKeys.publicKey
+      );
+      expect(canceledReq.content.memo).to.be.equal(memo3);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`recordObtData encrypt2 key - user1 to user2`, async () => {
+    try {
+      const transfer = await encFioSdk.genericAction('transferTokens', {
+        payeeFioPublicKey: encFioSdk2.publicKey,
+        amount: fundsAmount,
+        maxFee: defaultFee,
+      });
+      const result = await encFioSdk.genericAction('recordObtData', {
+        memo: memo4,
+        fioRequestId: requestIds2[1],
+        payerFioAddress: encTestFioAddressName,
+        payeeFioAddress: encTestFioAddressName2,
+        payerTokenPublicAddress: encPublicKey,
+        payeeTokenPublicAddress: encPublicKey2,
+        amount: fundsAmount,
+        chainCode: fioChainCode,
+        tokenCode: fioTokenCode,
+        status: 'sent_to_blockchain',
+        obtId: transfer.transaction_id,
+        maxFee: defaultFee,
+        encryptPrivateKey: user1EncryptKeys2.privateKey,
+      });
+      expect(result).to.have.all.keys(
+        'transaction_id',
+        'block_num',
+        'block_time',
+        'status',
+        'fee_collected'
+      );
+      expect(result.status).to.be.a('string');
+      expect(result.fee_collected).to.be.a('number');
+      expect(result.block_num).to.be.a('number');
+      expect(result.transaction_id).to.be.a('string');
+    } catch (err) {
+      console.log('RecordObtData Error', err);
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`recordObtData encrypt2 key - user2 to user1`, async () => {
+    const transfer = await encFioSdk2.genericAction('transferTokens', {
+      payeeFioPublicKey: encFioSdk.publicKey,
+      amount: fundsAmount,
+      maxFee: defaultFee,
+    });
+    const result = await encFioSdk2.genericAction('recordObtData', {
+      fioRequestId: requestIds[1],
+      payerFioAddress: encTestFioAddressName2,
+      payeeFioAddress: encTestFioAddressName,
+      payerTokenPublicAddress: encFioSdk2.publicKey,
+      payeeTokenPublicAddress: encFioSdk.publicKey,
+      amount: fundsAmount,
+      chainCode: fioChainCode,
+      tokenCode: fioTokenCode,
+      status: 'sent_to_blockchain',
+      obtId: transfer.transaction_id,
+      memo: memo2,
+      maxFee: defaultFee,
+      encryptPrivateKey: user2EncryptKeys2.privateKey,
+    });
+    expect(result).to.have.all.keys(
+      'transaction_id',
+      'block_num',
+      'block_time',
+      'status',
+      'fee_collected'
+    );
+    expect(result.status).to.be.a('string');
+    expect(result.fee_collected).to.be.a('number');
+    expect(result.block_num).to.be.a('number');
+    expect(result.transaction_id).to.be.a('string');
+  });
+
+  it(`(sdk) Call getObtData - Payer user1`, async () => {
+    try {
+      await timeout(10000);
+      const result = await encFioSdk.genericAction('getObtData', {
+        encryptKeys: user1EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('obt_data_records', 'more');
+      expect(result.obt_data_records).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const obtData = result.obt_data_records.find(
+        (pr) => parseInt(pr.fio_request_id) === parseInt(requestIds2[1])
+      );
+
+      expect(obtData).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(obtData.fio_request_id).to.be.a('number');
+      expect(obtData.fio_request_id).to.equal(requestIds2[1]);
+      expect(obtData.payer_fio_address).to.be.a('string');
+      expect(obtData.payer_fio_address).to.equal(encTestFioAddressName);
+      expect(obtData.payee_fio_address).to.be.a('string');
+      expect(obtData.payee_fio_address).to.equal(encTestFioAddressName2);
+      expect(obtData.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(obtData.payee_fio_public_key).to.equal(
+        user2EncryptKeys2.publicKey
+      );
+      expect(obtData.content.memo).to.be.equal(memo4);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getObtData - Payee user2`, async () => {
+    try {
+      const result = await encFioSdk2.genericAction('getObtData', {
+        encryptKeys: user2EncryptKeysMap,
+      });
+
+      expect(result).to.have.all.keys('obt_data_records', 'more');
+      expect(result.obt_data_records).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const obtData = result.obt_data_records.find(
+        (pr) => parseInt(pr.fio_request_id) === parseInt(requestIds2[1])
+      );
+
+      expect(obtData).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(obtData.fio_request_id).to.be.a('number');
+      expect(obtData.fio_request_id).to.equal(requestIds2[1]);
+      expect(obtData.payer_fio_address).to.be.a('string');
+      expect(obtData.payer_fio_address).to.equal(encTestFioAddressName);
+      expect(obtData.payee_fio_address).to.be.a('string');
+      expect(obtData.payee_fio_address).to.equal(encTestFioAddressName2);
+      expect(obtData.payer_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(obtData.payee_fio_public_key).to.equal(
+        user2EncryptKeys2.publicKey
+      );
+      expect(obtData.content.memo).to.be.equal(memo4);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getObtData - Payer user2`, async () => {
+    try {
+      await timeout(10000);
+      const result = await encFioSdk2.genericAction('getObtData', {
+        encryptKeys: user2EncryptKeysMap,
+      });
+      expect(result).to.have.all.keys('obt_data_records', 'more');
+      expect(result.obt_data_records).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const obtData = result.obt_data_records.find(
+        (pr) => parseInt(pr.fio_request_id) === parseInt(requestIds[1])
+      );
+
+      expect(obtData).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(obtData.fio_request_id).to.be.a('number');
+      expect(obtData.fio_request_id).to.equal(requestIds[1]);
+      expect(obtData.payer_fio_address).to.be.a('string');
+      expect(obtData.payer_fio_address).to.equal(encTestFioAddressName2);
+      expect(obtData.payee_fio_address).to.be.a('string');
+      expect(obtData.payee_fio_address).to.equal(encTestFioAddressName);
+      expect(obtData.payer_fio_public_key).to.equal(encPublicKey2);
+      expect(obtData.payee_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(obtData.content.memo).to.be.equal(memo2);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+
+  it(`(sdk) Call getObtData - Payee user1`, async () => {
+    try {
+      const result = await encFioSdk.genericAction('getObtData', {
+        encryptKeys: user1EncryptKeysMap,
+      });
+
+      expect(result).to.have.all.keys('obt_data_records', 'more');
+      expect(result.obt_data_records).to.be.a('array');
+      expect(result.more).to.be.a('number');
+
+      const obtData = result.obt_data_records.find(
+        (pr) => parseInt(pr.fio_request_id) === parseInt(requestIds[1])
+      );
+
+      expect(obtData).to.have.all.keys(
+        'fio_request_id',
+        'payer_fio_address',
+        'payee_fio_address',
+        'payee_fio_public_key',
+        'payer_fio_public_key',
+        'status',
+        'time_stamp',
+        'content'
+      );
+      expect(obtData.fio_request_id).to.be.a('number');
+      expect(obtData.fio_request_id).to.equal(requestIds[1]);
+      expect(obtData.payer_fio_address).to.be.a('string');
+      expect(obtData.payer_fio_address).to.equal(encTestFioAddressName2);
+      expect(obtData.payee_fio_address).to.be.a('string');
+      expect(obtData.payee_fio_address).to.equal(encTestFioAddressName);
+      expect(obtData.payer_fio_public_key).to.equal(
+        encPublicKey2
+      );
+      expect(obtData.payee_fio_public_key).to.equal(
+        user1EncryptKeys2.publicKey
+      );
+      expect(obtData.content.memo).to.be.equal(memo2);
+    } catch (err) {
+      expect(err).to.equal(null);
+    }
+  });
+})
 
 describe('Request funds, cancel funds request', () => {
   const fundsAmount = 3
@@ -1028,16 +2590,16 @@ describe('Request funds, cancel funds request', () => {
     const result = await fioSdk2.genericAction('requestFunds', {
       payerFioAddress: testFioAddressName,
       payeeFioAddress: testFioAddressName2,
-      payeePublicAddress: testFioAddressName2,
+      payeeTokenPublicAddress: fioSdk2.publicKey,
       amount: fundsAmount,
       chainCode: fioChainCode,
       tokenCode: fioTokenCode,
       memo,
       maxFee: defaultFee,
-    })
+    });
 
     requestId = result.fio_request_id
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fio_request_id', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -1052,7 +2614,7 @@ describe('Request funds, cancel funds request', () => {
         maxFee: defaultFee,
         tpid: ''
       })
-      expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+      expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
       expect(result.status).to.be.a('string')
       expect(result.fee_collected).to.be.a('number')
       expect(result.block_num).to.be.a('number')
@@ -1078,13 +2640,12 @@ describe('Request funds, cancel funds request', () => {
       expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
       expect(pendingReq.payee_fio_address).to.be.a('string')
       expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+      expect(pendingReq.content.memo).to.be.equal(memo);
     } catch (e) {
       console.log(e);
     }
   })
-
 })
-
 
 describe('Request funds, reject', () => {
   const fundsAmount = 4
@@ -1104,7 +2665,7 @@ describe('Request funds, reject', () => {
     })
 
     requestId = result.fio_request_id
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fio_request_id', 'fee_collected')
     expect(result.fio_request_id).to.be.a('number')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
@@ -1127,6 +2688,7 @@ describe('Request funds, reject', () => {
     expect(pendingReq.payer_fio_address).to.equal(testFioAddressName)
     expect(pendingReq.payee_fio_address).to.be.a('string')
     expect(pendingReq.payee_fio_address).to.equal(testFioAddressName2)
+    expect(pendingReq.content.memo).to.be.equal(memo);
   })
 
   it(`getFee for rejectFundsRequest`, async () => {
@@ -1144,7 +2706,7 @@ describe('Request funds, reject', () => {
       maxFee: defaultFee,
     })
 
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -1213,7 +2775,7 @@ describe('Record obt data, check', () => {
       obtId,
       maxFee: defaultFee,
     })
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
     expect(result.status).to.be.a('string')
     expect(result.fee_collected).to.be.a('number')
     expect(result.block_num).to.be.a('number')
@@ -1267,7 +2829,7 @@ describe('Check prepared transaction', () => {
       maxFee: defaultFee,
     })
     const result = await fioSdk2.executePreparedTrx(EndPoint.newFundsRequest, preparedTrx)
-    expect(result).to.have.all.keys('transaction_id', 'block_num', 'fio_request_id', 'status', 'fee_collected')
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fio_request_id', 'fee_collected')
     expect(result.transaction_id).to.be.a('string')
     expect(result.block_num).to.be.a('number')
     expect(result.fio_request_id).to.be.a('number')

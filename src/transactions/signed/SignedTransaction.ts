@@ -1,4 +1,5 @@
 import { Transactions } from '../Transactions'
+import { Constants } from '../../utils/constants'
 
 export abstract class SignedTransaction extends Transactions {
 
@@ -27,6 +28,7 @@ export abstract class SignedTransaction extends Transactions {
 
   public static parseProcessedResult(processed: { action_traces: Array<{ receipt: { response: string }}>}) {
     try {
+      if (!processed.action_traces[0].receipt.response) return {}
       return JSON.parse(processed.action_traces[0].receipt.response)
     } catch (e) {
       // tslint:disable-next-line:no-console
@@ -42,14 +44,21 @@ export abstract class SignedTransaction extends Transactions {
 
   public abstract getData(): any
 
-  public async execute(privateKey: string, publicKey: string, dryRun = false): Promise<any> {
+  public static authPermission: string | undefined
+  public static signingAccount: string | undefined
+  public static expirationOffset: number
+
+  public async execute(privateKey: string, publicKey: string, dryRun = false, expirationOffset = Constants.defaultExpirationOffset): Promise<any> {
     this.privateKey = privateKey
     this.publicKey = publicKey
+    this.expirationOffset = expirationOffset
 
     const rawTransaction = await this.createRawTransaction({
       account: this.getAccount(),
       action: this.getAction(),
+      authPermission: this.getAuthPermission(),
       data: this.getData(),
+      signingAccount: this.getSigningAccount(),
     })
 
     const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
@@ -66,6 +75,14 @@ export abstract class SignedTransaction extends Transactions {
 
   public getAccount(): string {
     return this.ACCOUNT
+  }
+
+  public getAuthPermission(): string | undefined {
+    return this.authPermission
+  }
+
+  public getSigningAccount(): string | undefined {
+    return this.signingAccount
   }
 
   public getEndPoint(): string {

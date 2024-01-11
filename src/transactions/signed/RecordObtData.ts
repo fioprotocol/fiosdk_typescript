@@ -15,28 +15,49 @@ export class RecordObtData extends SignedTransaction {
   public technologyProviderId: string = ''
   public payerPublicAddress: string
   public payeePublicAddress: string
+  public encryptPrivateKey: string | null
 
   public defaultStatus: string = 'sent_to_blockchain'
 
   public content: any
 
-  constructor(
-    fioRequestId: number | null,
-    payerFioAddress: string,
-    payeeFioAddress: string,
-    payerPublicAddress: string,
-    payeePublicAddress: string,
+  constructor({
+    amount,
+    chainCode,
+    encryptPrivateKey = null,
+    fioRequestId = null,
+    hash = null,
+    maxFee,
+    memo = null,
+    obtId,
+    offLineUrl = null,
+    payeeFioAddress,
+    payeeFioPublicKey,
+    payeePublicAddress,
+    payerFioAddress,
+    payerPublicAddress,
+    status,
+    technologyProviderId = '',
+    tokenCode,
+  }: {
     amount: number,
     chainCode: string,
-    tokenCode: string,
-    obtID: string,
+    encryptPrivateKey: string | null,
+    fioRequestId: number | null,
+    hash: string | null,
     maxFee: number,
-    status: string,
-    technologyProviderId: string = '',
+    memo: string | null,
+    obtId: string,
+    offLineUrl: string | null,
+    payeeFioAddress: string,
     payeeFioPublicKey: string,
-    memo: string | null = null,
-    hash: string | null = null,
-    offLineUrl: string | null = null) {
+    payeePublicAddress: string,
+    payerFioAddress: string,
+    payerPublicAddress: string,
+    status: string,
+    technologyProviderId: string,
+    tokenCode: string,
+  }) {
     super()
     this.fioRequestId = fioRequestId
     this.payerFioAddress = payerFioAddress
@@ -44,6 +65,7 @@ export class RecordObtData extends SignedTransaction {
     this.payeeFioAddress = payeeFioAddress
     this.payerPublicAddress = payerPublicAddress
     this.payeePublicAddress = payeePublicAddress
+    this.encryptPrivateKey = encryptPrivateKey
     if (technologyProviderId) {
       this.technologyProviderId = technologyProviderId
     } else {
@@ -57,7 +79,7 @@ export class RecordObtData extends SignedTransaction {
       chain_code: chainCode,
       token_code: tokenCode,
       status: status || this.defaultStatus,
-      obt_id: obtID,
+      obt_id: obtId,
       memo,
       hash,
       offline_url: offLineUrl,
@@ -70,7 +92,7 @@ export class RecordObtData extends SignedTransaction {
 
   public getData(): any {
     const actor = this.getActor()
-    const cipherContent = this.getCipherContent('record_obt_data_content', this.content, this.privateKey, this.payeeFioPublicKey)
+    const cipherContent = this.getCipherContent('record_obt_data_content', this.content, this.encryptPrivateKey || this.privateKey, this.payeeFioPublicKey)
     const data = {
       payer_fio_address: this.payerFioAddress,
       payee_fio_address: this.payeeFioAddress,
