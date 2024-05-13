@@ -11,15 +11,17 @@ export class GetObtData extends Query<GetObtDataResponse> {
   public limit: number | undefined
   public offset: number | undefined
   public tokenCode: string
+  public includeEncrypted: boolean
   public encryptKeys: Map<string, { privateKey: string, publicKey: string } []> | undefined
   public isEncrypted = true
   public getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
 
-  constructor({ fioPublicKey, limit = 0, offset = 0, tokenCode = '', encryptKeys, getEncryptKey }: {
+  constructor({ fioPublicKey, limit = 0, offset = 0, tokenCode = '', includeEncrypted = false, encryptKeys, getEncryptKey }: {
     fioPublicKey: string,
     limit?: number,
     offset?: number,
     tokenCode?: string,
+    includeEncrypted: boolean,
     encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>,
     getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
   }) {
@@ -28,6 +30,7 @@ export class GetObtData extends Query<GetObtDataResponse> {
     this.limit = limit
     this.offset = offset
     this.tokenCode = tokenCode
+    this.includeEncrypted = includeEncrypted
     this.encryptKeys = encryptKeys
     this.getEncryptKey = getEncryptKey
   }
@@ -125,6 +128,8 @@ export class GetObtData extends Query<GetObtDataResponse> {
                 throw new Error(`GetObtData: Get UnCipher Content for account ${account} failed.`); // Throw an error if all keys failed
               }
             } catch (error) {
+              if (this.includeEncrypted) return obtDataRecord;
+
               console.error(error);
               throw error
             }
