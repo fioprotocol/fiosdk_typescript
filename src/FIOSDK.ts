@@ -948,9 +948,10 @@ export class FIOSDK {
    * @param limit Number of request to return. If omitted, all requests will be returned.
    * @param offset First request from list to return. If omitted, 0 is assumed.
    * @param tokenCode Code of the token to filter results
+   * @param includeEncrypted Set to true if you want to include not encrypted data in return.
    */
-  public getObtData({ limit, offset, tokenCode, encryptKeys }: { limit?: number, offset?: number, tokenCode?: string, encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> }): Promise<GetObtDataResponse> {
-    const getObtDataRequest = new queries.GetObtData({ fioPublicKey: this.publicKey, limit, offset, tokenCode, encryptKeys, getEncryptKey: this.getEncryptKey })
+  public getObtData({ limit, offset, tokenCode, includeEncrypted, encryptKeys }: { limit?: number, offset?: number, tokenCode?: string, includeEncrypted: boolean, encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> }): Promise<GetObtDataResponse> {
+    const getObtDataRequest = new queries.GetObtData({ fioPublicKey: this.publicKey, limit, offset, tokenCode, includeEncrypted, encryptKeys, getEncryptKey: this.getEncryptKey })
     return getObtDataRequest.execute(this.publicKey, this.privateKey)
   }
 
@@ -1831,6 +1832,7 @@ export class FIOSDK {
           limit: params.limit,
           offset: params.offset,
           tokenCode: params.tokenCode,
+          includeEncrypted: params.includeEncrypted,
           encryptKeys: params.encryptKeys
         })
       case 'getGranteePermissions':
