@@ -1,4 +1,4 @@
-import { AbortController, AbortSignal } from 'abort-controller';
+import AbortController, { AbortSignal } from 'abort-controller';
 import { GetEncryptKeyResponse } from '../entities/GetEncryptKeyResponse'; 
 
 const DEFAULT_REQUEST_TIMEOUT = 60000;
