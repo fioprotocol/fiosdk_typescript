@@ -15,21 +15,37 @@ export class RequestNewFunds extends SignedTransaction {
   public maxFee: number
   public content: any
   public technologyProviderId: string
+  public encryptPrivateKey: string | null
 
-  constructor(
-    payerFioAddress: string,
-    payerFioPublicKey: string,
-    payeeFioAddress: string,
-    technologyProviderId: string = '',
-    maxFee: number,
-    payeeTokenPublicAddress: string,
+  constructor({
+    amount,
+    chainCode,
+    encryptPrivateKey = null,
+    hash = null,
+    maxFee,
+    memo = null,
+    offlineUrl = null,
+    payeeFioAddress,
+    payeeTokenPublicAddress,
+    payerFioAddress,
+    payerFioPublicKey,
+    technologyProviderId = '',
+    tokenCode,
+  }: {
     amount: number,
     chainCode: string,
+    encryptPrivateKey: string | null,
+    hash?: string | null,
+    maxFee: number,
+    memo: string | null,
+    offlineUrl: string | null,
+    payeeFioAddress: string,
+    payeeTokenPublicAddress: string,
+    payerFioAddress: string,
+    payerFioPublicKey: string,
+    technologyProviderId: string,
     tokenCode: string,
-    memo: string | null = null,
-    hash: string | null = null,
-    offlineUrl: string | null = null,
-  ) {
+  }) {
     super()
     this.validationData = { payerFioAddress, payeeFioAddress, tokenCode, tpid: technologyProviderId || null }
     this.validationRules = validationRules.newFundsRequest
@@ -49,6 +65,7 @@ export class RequestNewFunds extends SignedTransaction {
       hash,
       offline_url: offlineUrl,
     }
+    this.encryptPrivateKey = encryptPrivateKey
 
     if (technologyProviderId) {
       this.technologyProviderId = technologyProviderId
@@ -59,7 +76,7 @@ export class RequestNewFunds extends SignedTransaction {
 
   public getData(): any {
     const actor = this.getActor()
-    const cipherContent = this.getCipherContent('new_funds_content', this.content, this.privateKey, this.payerFioPublicKey)
+    const cipherContent = this.getCipherContent('new_funds_content', this.content, this.encryptPrivateKey || this.privateKey, this.payerFioPublicKey)
     const data = {
       payer_fio_address: this.payerFioAddress,
       payee_fio_address: this.payeeFioAddress,

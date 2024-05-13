@@ -12,6 +12,8 @@ import { arrayToHex, base64ToBinary } from '@fioprotocol/fiojs/dist/chain-numeri
 
 import { TextDecoder, TextEncoder } from 'text-encoding'
 
+import { AbortSignal } from 'abort-controller';
+
 import { AbiResponse } from '../entities/AbiResponse'
 import { Autorization } from '../entities/Autorization'
 import { RawAction } from '../entities/RawAction'
@@ -19,6 +21,8 @@ import { RawTransaction } from '../entities/RawTransaction'
 import { ValidationError } from '../entities/ValidationError'
 
 import { validate } from '../utils/validation'
+import { asyncWaterfall } from '../utils/utils'
+import { Constants } from '../utils/constants'
 
 type FetchJson = (uri: string, opts?: object) => any
 interface SignedTxArgs {
@@ -38,8 +42,43 @@ export const signAllAuthorityProvider: AuthorityProvider = {
   },
 }
 
+export const fioApiErrorCodes = [400, 403, 404, 409]
+export const FIO_CHAIN_INFO_ERROR_CODE = 800
+export const FIO_BLOCK_NUMBER_ERROR_CODE = 801
+interface FioErrorJson {
+  fields?: Array<{
+    error: string,
+  }>,
+}
+
+export class FioError extends Error {
+  list: { field: string, message: string }[] = []
+  labelCode: string = ''
+  errorCode: number = 0
+  json: any
+
+  constructor(message: string, code?: number, labelCode?: string, json?: any) {
+    super(message)
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, FioError)
+    }
+
+    this.name = 'FioError'
+    if (code) {
+      this.errorCode = code
+    }
+    if (labelCode) {
+      this.labelCode = labelCode
+    }
+    if (json) {
+      this.json = json
+    }
+  }
+}
+
 export class Transactions {
-  public static baseUrl: string
+  public static baseUrls: string[]
   public static abiMap: Map<string, AbiResponse> = new Map<string, AbiResponse>()
   public static FioProvider: {
     prepareTransaction(param: any): Promise<any>;
@@ -54,6 +93,10 @@ export class Transactions {
   public validationData: object = {}
   public validationRules: any | null = null
 
+  public expirationOffset: number = Constants.defaultExpirationOffset
+  public authPermission: string | undefined
+  public signingAccount: string | undefined
+
   public getActor(publicKey: string = ''): string {
     return Transactions.FioProvider.accountHash((publicKey === '' || !publicKey) ? this.publicKey : publicKey)
   }
@@ -66,8 +109,7 @@ export class Transactions {
       },
       method: 'GET',
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_info', options)
-    return await res.json()
+    return await this.multicastServers({ endpoint: 'chain/get_info', fetchOptions: options })
   }
 
   public async getBlock(chain: any): Promise<any> {
@@ -77,7 +119,7 @@ export class Transactions {
     if (chain.last_irreversible_block_num === undefined) {
       throw new Error('chain.last_irreversible_block_num undefined')
     }
-    const res = await Transactions.fetchJson(Transactions.baseUrl + 'chain/get_block', {
+    return await this.multicastServers({ endpoint: 'chain/get_block', fetchOptions: {
       body: JSON.stringify({
         block_num_or_id: chain.last_irreversible_block_num,
       }),
@@ -86,8 +128,7 @@ export class Transactions {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-    })
-    return await res.json()
+    }})
   }
 
   public async getChainDataForTx(): Promise<{
@@ -101,10 +142,13 @@ export class Transactions {
     try {
       chain = await this.getChainInfo()
     } catch (error) {
+      if ((error as Error).name === 'ValidationError') {
+        throw error
+      }
       // tslint:disable-next-line:no-console
       console.error('chain:: ' + error)
       const e: Error & { errorCode?: number } = new Error(`Error while fetching chain info`)
-      e.errorCode = 800
+      e.errorCode = FIO_CHAIN_INFO_ERROR_CODE
       throw e
     }
     try {
@@ -113,11 +157,11 @@ export class Transactions {
       // tslint:disable-next-line:no-console
       console.error('block: ' + error)
       const e: Error & { errorCode?: number } = new Error(`Error while fetching block`)
-      e.errorCode = 801
+      e.errorCode = FIO_BLOCK_NUMBER_ERROR_CODE
       throw e
     }
     const expiration = new Date(chain.head_block_time + 'Z')
-    expiration.setSeconds(expiration.getSeconds() + 180)
+    expiration.setSeconds(expiration.getSeconds() + this.expirationOffset)
     const expirationStr = expiration.toISOString()
     return  {
       chain_id: chain.chain_id,
@@ -183,16 +227,18 @@ export class Transactions {
   }
 
   public async createRawTransaction(
-    { account, action, data, publicKey, chainData }: {
+    { account, action, authPermission, data, publicKey, chainData, signingAccount }: {
       account: string;
       action: string;
-      data: any,
-      publicKey?: string,
+      authPermission?: string;
+      data: any;
+      publicKey?: string;
       chainData?: {
         ref_block_num: number,
         ref_block_prefix: number,
         expiration: string,
-      }
+      };
+      signingAccount?: string;
     },
   ): Promise<RawTransaction> {
     const rawTransaction = new RawTransaction()
@@ -204,10 +250,11 @@ export class Transactions {
       data.actor = actor
     }
 
-    rawaction.authorization.push(new Autorization(data.actor, data.permission))
+    rawaction.authorization.push(new Autorization(data.actor, authPermission))
     rawaction.account = account
     rawaction.name = action
     rawaction.data = data
+    rawaction.actor = signingAccount
     rawTransaction.actions.push(rawaction)
 
     if (chainData && chainData.ref_block_num) {
@@ -341,12 +388,11 @@ export class Transactions {
         textEncoder: new TextEncoder(),
         transaction,
       })
-      return this.executeCall(endpoint, JSON.stringify(signedTransaction))
+      return this.multicastServers({ endpoint, body: JSON.stringify(signedTransaction) })
     }
-
   }
 
-  public async executeCall(endPoint: string, body: string, fetchOptions?: any): Promise<any> {
+  public async executeCall({ baseUrl, endPoint, body, fetchOptions, signal }: { baseUrl: string, endPoint: string, body ?: string | null, fetchOptions ?: any, signal: AbortSignal }): Promise<any> {
     let options: any
     this.validate()
     if (fetchOptions != null) {
@@ -364,20 +410,49 @@ export class Transactions {
         method: 'POST',
       }
     }
+    options.signal = signal;
     try {
-      const res = await Transactions.fetchJson(Transactions.baseUrl + endPoint, options)
+      const res = await Transactions.fetchJson(baseUrl + endPoint, options)
+      if (res === undefined) {
+        const error = new Error(`Error: Can't reach the site ${baseUrl}${endPoint}. Possible wrong url.`)
+        return {
+          data: {
+            code: 500,
+            message: error.message,
+          },
+          isError: true,
+        }
+      }
       if (!res.ok) {
         const error: Error & {
-          json?: object,
+          json?: FioErrorJson,
           errorCode?: string,
           requestParams?: {
             endPoint: string,
             body: string,
             fetchOptions?: any,
           },
-        } = new Error(`Error ${res.status} while fetching ${Transactions.baseUrl + endPoint}`)
+        } = new Error(`Error ${res.status} while fetching ${baseUrl + endPoint}`)
         try {
           error.json = await res.json()
+          if (fioApiErrorCodes.indexOf(res.status) > -1) {
+            if (
+              error.json &&
+              error.json.fields &&
+              error.json.fields[0] &&
+              error.json.fields[0].error
+            ) {
+              error.message = error.json.fields[0].error
+            }
+            return {
+              data: {
+                code: error.errorCode || res.status,
+                message: error.message,
+                json: error.json,
+              },
+              isError: true,
+            }
+          }
         } catch (e) {
           // tslint:disable-next-line:no-console
           console.log(e)
@@ -389,9 +464,29 @@ export class Transactions {
       return res.json()
     } catch (e) {
       // @ts-ignore
-      e.requestParams = { endPoint, body, fetchOptions }
+      e.requestParams = { baseUrl, endPoint, body, fetchOptions }
       throw e
     }
+  }
+
+  public async multicastServers({ endpoint, body, fetchOptions, requestTimeout }: { endpoint: string, body?: string | null, fetchOptions?: any, requestTimeout?: number }): Promise<any> {
+    const res = await asyncWaterfall({
+      asyncFuncs: Transactions.baseUrls.map((apiUrl) => (signal: AbortSignal) =>
+        this.executeCall({ baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal }),
+      ),
+      requestTimeout,
+    })
+
+    if (res.isError) {
+      const error = new FioError(res.errorMessage || res.data.message)
+      error.json = res.data.json
+      error.list = res.data.list
+      error.errorCode = res.data.code
+
+      throw error
+    }
+
+    return res
   }
 
   public getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {

@@ -17,6 +17,16 @@ Visit the [FIO Protocol Developer Hub](https://developers.fioprotocol.io) to get
 
 # Building The FIO TypeScript SDK, manually
 #### Building FIO TypeScript SDK, manually
+required tsc version 4.7.2
+    git clone http://github.com/fioprotocol/fiosdk_typescript --recursive
+    cd fiosdk_typescript
+    install typescript@4.7.2 -g
+    npm install
+    tsc
+    (verify on the github that your generated .js matches what is presently in the github repository)
+
+Using yarn
+
 Navigate to the "fiosdk_typescript" folder, run yarn to install its dependencies, then run tsc to compile. Before running the test refer to the "Workflow for using the SDK with TestNet" section of this README.
 	
 	cd fiosdk_typescript
@@ -30,8 +40,8 @@ Make sure to install typescript by running, this command in terminal:
 	
 	sudo npm install -g typescript
 
-# Publishing to Node Package Manager (npm)
-To publish to npm.  
+# Publishing to Node Package Manager (npm) Registry
+To publish to npm registry.  
 1. Update the version number, for this release. In 'package.json'
 2. If the fioJS library was updated in npm.  Also update the fioJS version number.  In 'package.json'
 3. Publish to npm:
@@ -41,6 +51,8 @@ To publish to npm.
 		tsc
 		npm test
 		npm publish --access public
+
+		(If you have enabled 2FA for authorization and publishing using an authenticator app, you will be asked to enter the 6 digit 2FA OTP during publish.)
 
 Further details: 
 	http://npmjs.com/ 
@@ -209,6 +221,11 @@ This is the expected Private Key:
 
 This is the expected Public Key:
 "FIO5kJKNHwctcfUM5XZyiWSqSTM5HTzznJP9F3ZdbhaQAHEVq575o"
+
+## Version 1.9.0
+### Breaking changes:
+- Set new parameter `authPermission` for sign and push transactions
+- `pushTransaction` receives object params instead of multiple arguments
 
 ## Version 1.0.2
 Bug Fix to method: addPublicAddresses - TechnologyProviderId (i.e. TPID), was not being set correctly for this method.
