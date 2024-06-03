@@ -10,14 +10,6 @@ export type RegisterFioDomainAddressOptions = {
   technologyProviderId?: string | null;
 }
 
-export type RegisterFioDomainReturnType = {
-  fioAddress: string;
-  maxFee: number;
-  isPublic?: boolean;
-  ownerPublicKey?: string | null;
-  technologyProviderId?: string | null;
-}
-
 export class RegisterFioDomainAddress extends SignedTransaction {
 
   public ENDPOINT: string = 'chain/register_fio_domain_address'
