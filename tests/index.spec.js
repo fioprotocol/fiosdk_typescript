@@ -1,9 +1,13 @@
 require('mocha')
+const dotenv = require('dotenv')
 const { expect } = require('chai')
 const { FIOSDK } = require('../lib/FIOSDK')
 const { EndPoint } = require('../lib/entities/EndPoint')
+const nodeFetch = require('node-fetch')
 
-fetch = require('node-fetch')
+dotenv.config({ path: ['.env.test', '.env'] });
+
+fetch = nodeFetch
 
 const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)

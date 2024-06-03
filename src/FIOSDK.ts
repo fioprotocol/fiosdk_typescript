@@ -47,6 +47,7 @@ import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
 import { allRules, validate } from './utils/validation'
+import {RegisterFioDomainAddressOptions} from "./transactions/signed/RegisterFioDomainAddress";
 
 /**
  * @ignore
@@ -59,8 +60,15 @@ const { Ecc } = require('@fioprotocol/fiojs')
  */
 type FetchJson = (uri: string, opts?: object) => Promise<object>
 
+/**
+ * @ignore
+ */
+type SignedTransactionOptions<T extends Record<string, unknown>> = T & {
+  expirationOffset?: number;
+}
+
 export class FIOSDK {
-  proxyHandle = {
+  private proxyHandle = {
     // We save refrenece to our class inside the object
     main: this,
     /**
@@ -115,9 +123,7 @@ export class FIOSDK {
       }));
 
       // Here we bind method with our class by accessing reference to instance
-      const results = target.bind(this.main)(...args);
-
-      return results;
+      return target.bind(this.main)(...args);
     }
   }
 
@@ -427,8 +433,10 @@ export class FIOSDK {
   /**
    * Returns technologyProviderId or default
    */
-  public getTechnologyProviderId(technologyProviderId: string | null): string {
-    return technologyProviderId !== null ? technologyProviderId : this.technologyProviderId
+  public getTechnologyProviderId(technologyProviderId?: string | null): string {
+    return technologyProviderId !== null && technologyProviderId !== undefined
+        ? technologyProviderId
+        : this.technologyProviderId
   }
 
   /**
@@ -508,57 +516,22 @@ export class FIOSDK {
   }
 
   /**
-   * Registers a FIO Address and FIO domain on the FIO blockchain. The owner will be the public key associated with the FIO SDK instance.
-   *
-   * @param fioAddress FIO Address to register.
-   * @param isPublic true - allows anyone to register FIO Address, false - only owner of domain can register FIO Address.
-   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
-   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
-   * @param expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
-   */
-  public registerFioDomainAddress(
-      fioAddress: string,
-      isPublic: boolean,
-      maxFee: number,
-      technologyProviderId: string | null = null,
-      expirationOffset?: number,
-  ): Promise<RegisterFioAddressResponse> {
-    const registerFioDomainAddress = new SignedTransactions.RegisterFioDomainAddress(
-        fioAddress,
-        maxFee,
-        isPublic,
-        null,
-        this.getTechnologyProviderId(technologyProviderId),
-    )
-    return registerFioDomainAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
-  }
-
-  /**
    * Registers a FIO Address and FIO domain on behalf of the owner FIO Public key parameter. Owner FIO Public key owns the FIO address
    *
-   * @param fioAddress FIO Address to register.
-   * @param isPublic true - allows anyone to register FIO Address, false - only owner of domain can register FIO Address.
-   * @param ownerPublicKey Owner FIO Public Key.
-   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
-   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
-   * @param expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
+   * @param options.fioAddress FIO Address to register.
+   * @param options.isPublic true - allows anyone to register FIO Address, false - only owner of domain can register FIO Address.
+   * @param options.ownerPublicKey Owner FIO Public Key.
+   * @param options.maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param options.expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
    */
-  public registerOwnerFioDomainAddress(
-      fioAddress: string,
-      isPublic: boolean,
-      maxFee: number,
-      ownerPublicKey: string,
-      technologyProviderId: string | null = null,
-      expirationOffset?: number,
+  public registerFioDomainAddress(
+      options: SignedTransactionOptions<RegisterFioDomainAddressOptions>,
   ): Promise<RegisterFioAddressResponse> {
     const registerFioDomainAddress = new SignedTransactions.RegisterFioDomainAddress(
-        fioAddress,
-        maxFee,
-        isPublic,
-        ownerPublicKey,
-        this.getTechnologyProviderId(technologyProviderId),
+        {...options, technologyProviderId: this.getTechnologyProviderId(options.technologyProviderId)}
     )
-    return registerFioDomainAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
+    return registerFioDomainAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, options.expirationOffset)
   }
 
   /**
@@ -908,43 +881,25 @@ export class FIOSDK {
    * Records information on the FIO blockchain about a transaction that occurred on other blockchain, i.e. 1 BTC was sent on Bitcoin Blockchain, and both
    * sender and receiver have FIO Addresses. OBT stands for Other Blockchain Transaction
    *
-   * @param fioRequestId ID of funds request, if this Record Send transaction is in response to a previously received funds request.  Send empty if no FIO Request ID
-   * @param payerFioAddress FIO Address of the payer. This address initiated payment.
-   * @param payeeFioAddress FIO Address of the payee. This address is receiving payment.
-   * @param payerTokenPublicAddress Public address on other blockchain of user sending funds.
-   * @param payeeTokenPublicAddress Public address on other blockchain of user receiving funds.
-   * @param amount Amount sent.
-   * @param chainCode Blockchain code for blockchain hosting this token.
-   * @param tokenCode Code of the token represented in Amount requested, i.e. BTC.
-   * @param status Status of this OBT. Allowed statuses are: sent_to_blockchain.
-   * @param obtId Other Blockchain Transaction ID (OBT ID), i.e Bitcoin transaction ID.
-   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
-   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
-   * @param payeeFioPublicKey Public address on other blockchain of user receiving funds.
-   * @param memo
-   * @param hash
-   * @param offlineUrl
-   * @param encryptPrivateKey Encrypt Private Key for ecnrypt content. If missig uses this.privateKey.
+   * @param options.fioRequestId ID of funds request, if this Record Send transaction is in response to a previously received funds request.  Send empty if no FIO Request ID
+   * @param options.payerFioAddress FIO Address of the payer. This address initiated payment.
+   * @param options.payeeFioAddress FIO Address of the payee. This address is receiving payment.
+   * @param options.payerTokenPublicAddress Public address on other blockchain of user sending funds.
+   * @param options.payeeTokenPublicAddress Public address on other blockchain of user receiving funds.
+   * @param options.amount Amount sent.
+   * @param options.chainCode Blockchain code for blockchain hosting this token.
+   * @param options.tokenCode Code of the token represented in Amount requested, i.e. BTC.
+   * @param options.status Status of this OBT. Allowed statuses are: sent_to_blockchain.
+   * @param options.obtId Other Blockchain Transaction ID (OBT ID), i.e Bitcoin transaction ID.
+   * @param options.maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
+   * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param options.payeeFioPublicKey Public address on other blockchain of user receiving funds.
+   * @param options.memo
+   * @param options.hash
+   * @param options.offlineUrl
+   * @param options.encryptPrivateKey Encrypt Private Key for ecnrypt content. If missig uses this.privateKey.
    */
-  public async recordObtData({
-    amount,
-    chainCode,
-    encryptPrivateKey = null,
-    fioRequestId = null,
-    hash = null,
-    maxFee,
-    memo = null,
-    obtId,
-    offLineUrl = null,
-    payeeFioAddress,
-    payeeFioPublicKey = '',
-    payeeTokenPublicAddress,
-    payerFioAddress,
-    payerTokenPublicAddress,
-    status,
-    technologyProviderId = null,
-    tokenCode,
-  }: {
+  public async recordObtData(options: {
     amount: number,
     chainCode: string,
     encryptPrivateKey: string | null,
@@ -963,6 +918,26 @@ export class FIOSDK {
     technologyProviderId: string | null,
     tokenCode: string,
   }): Promise<RecordObtDataResponse> {
+    const {
+      amount,
+      chainCode,
+      encryptPrivateKey = null,
+      fioRequestId = null,
+      hash = null,
+      maxFee,
+      memo = null,
+      obtId,
+      offLineUrl = null,
+      payeeFioAddress,
+      payeeFioPublicKey = '',
+      payeeTokenPublicAddress,
+      payerFioAddress,
+      payerTokenPublicAddress,
+      status,
+      technologyProviderId = null,
+      tokenCode,
+    } = options;
+
     let payeeKey = ''
     const encryptKey = await this.getEncryptKey(payeeFioAddress)
 
@@ -998,12 +973,13 @@ export class FIOSDK {
   /**
    * Retrives OBT metadata data stored using record send.
    *
-   * @param limit Number of request to return. If omitted, all requests will be returned.
-   * @param offset First request from list to return. If omitted, 0 is assumed.
-   * @param tokenCode Code of the token to filter results
-   * @param includeEncrypted Set to true if you want to include not encrypted data in return.
+   * @param options.limit Number of request to return. If omitted, all requests will be returned.
+   * @param options.offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.tokenCode Code of the token to filter results
+   * @param options.includeEncrypted Set to true if you want to include not encrypted data in return.
    */
-  public getObtData({ limit, offset, tokenCode, includeEncrypted, encryptKeys }: { limit?: number, offset?: number, tokenCode?: string, includeEncrypted: boolean, encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> }): Promise<GetObtDataResponse> {
+  public getObtData(options: { limit?: number, offset?: number, tokenCode?: string, includeEncrypted: boolean, encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> }): Promise<GetObtDataResponse> {
+    const { limit, offset, tokenCode, includeEncrypted, encryptKeys } = options;
     const getObtDataRequest = new queries.GetObtData({ fioPublicKey: this.publicKey, limit, offset, tokenCode, includeEncrypted, encryptKeys, getEncryptKey: this.getEncryptKey })
     return getObtDataRequest.execute(this.publicKey, this.privateKey)
   }
@@ -1068,35 +1044,21 @@ export class FIOSDK {
   /**
    * Create a new funds request on the FIO chain.
    *
-   * @param amount Amount requested.
-   * @param chainCode Blockchain code for blockchain hosting this token.
-   * @param encryptPrivateKey Encrypt Private Key for ecnrypt content. If missig uses this.privateKey.
-   * @param hash
-   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by [getFee] for correct value.
-   * @param memo
-   * @param offlineUrl
-   * @param payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
-   * @param payeeTokenPublicAddress Payee's public address where they want funds sent.
-   * @param payerFioAddress FIO Address of the payer. This address will receive the request and will initiate payment.
-   * @param payerFioPublicKey Public address on other blockchain of user sending funds.
-   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
-   * @param tokenCode Code of the token represented in amount requested.
+   * @param options.amount Amount requested.
+   * @param options.chainCode Blockchain code for blockchain hosting this token.
+   * @param options.encryptPrivateKey Encrypt Private Key for ecnrypt content. If missig uses this.privateKey.
+   * @param options.hash
+   * @param options.maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by [getFee] for correct value.
+   * @param options.memo
+   * @param options.offlineUrl
+   * @param options.payeeFioAddress FIO Address of the payee. This address is sending the request and will receive payment.
+   * @param options.payeeTokenPublicAddress Payee's public address where they want funds sent.
+   * @param options.payerFioAddress FIO Address of the payer. This address will receive the request and will initiate payment.
+   * @param options.payerFioPublicKey Public address on other blockchain of user sending funds.
+   * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param options.tokenCode Code of the token represented in amount requested.
    */
-  public async requestFunds({
-    amount,
-    chainCode,
-    encryptPrivateKey = null,
-    hash = null,
-    maxFee,
-    memo,
-    offlineUrl = null,
-    payeeFioAddress,
-    payeeTokenPublicAddress,
-    payerFioAddress,
-    payerFioPublicKey = null,
-    technologyProviderId = null,
-    tokenCode,
-  }: {
+  public async requestFunds(options: {
     amount: number,
     chainCode: string,
     encryptPrivateKey: string | null,
@@ -1111,6 +1073,22 @@ export class FIOSDK {
     technologyProviderId: string | null,
     tokenCode: string,
   }): Promise<RequestFundsResponse> {
+    const {
+      amount,
+      chainCode,
+      encryptPrivateKey = null,
+      hash = null,
+      maxFee,
+      memo,
+      offlineUrl = null,
+      payeeFioAddress,
+      payeeTokenPublicAddress,
+      payerFioAddress,
+      payerFioPublicKey = null,
+      technologyProviderId = null,
+      tokenCode,
+    } = options;
+
     let payerKey = ''
     const encryptKey = await this.getEncryptKey(payerFioAddress)
 
@@ -1215,16 +1193,18 @@ export class FIOSDK {
   /**
    * Polls for any pending requests sent to public key associated with the FIO SDK instance.
    *
-   * @param limit Number of request to return. If omitted, all requests will be returned.
-   * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.limit Number of request to return. If omitted, all requests will be returned.
+   * @param options.offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.encryptKeys
    */
-  public getPendingFioRequests({
-    limit, offset, encryptKeys
-  }: {
+  public getPendingFioRequests(options: {
       limit?: number,
       offset?: number
       encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
     }): Promise<PendingFioRequestsResponse> {
+    const {
+      limit, offset, encryptKeys
+    } = options;
     const pendingFioRequests = new queries.PendingFioRequests({
       fioPublicKey: this.publicKey,
       limit,
@@ -1238,21 +1218,23 @@ export class FIOSDK {
   /**
    * Polls for any received requests sent to public key associated with the FIO SDK instance.
    *
-   * @param limit Number of request to return. If omitted, all requests will be returned.
-   * @param offset First request from list to return. If omitted, 0 is assumed.
-   * @param includeEncrypted Set to true if you want to include not encrypted data in return.
+   * @param options.limit Number of request to return. If omitted, all requests will be returned.
+   * @param options.offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.includeEncrypted Set to true if you want to include not encrypted data in return.
+   * @param options.encryptKeys
    */
-  public getReceivedFioRequests({
-    limit,
-    offset,
-    includeEncrypted,
-    encryptKeys,
-  }: {
+  public getReceivedFioRequests(options: {
     limit?: number,
     offset?: number,
     includeEncrypted?: boolean,
     encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
   }): Promise<ReceivedFioRequestsResponse> {
+    const {
+      limit,
+      offset,
+      includeEncrypted,
+      encryptKeys,
+    } = options;
     const receivedFioRequests = new queries.ReceivedFioRequests({
       fioPublicKey: this.publicKey,
       limit,
@@ -1267,21 +1249,23 @@ export class FIOSDK {
   /**
    * Polls for any sent requests sent by public key associated with the FIO SDK instance.
    *
-   * @param limit Number of request to return. If omitted, all requests will be returned.
-   * @param offset First request from list to return. If omitted, 0 is assumed.
-   * @param includeEncrypted Set to true if you want to include not encrypted data in return.
+   * @param options.limit Number of request to return. If omitted, all requests will be returned.
+   * @param options.offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.includeEncrypted Set to true if you want to include not encrypted data in return.
+   * @param options.encryptKeys
    */
-  public getSentFioRequests({
-    limit,
-    offset,
-    includeEncrypted,
-    encryptKeys,
-  }: {
+  public getSentFioRequests(options: {
     limit?: number,
     offset?: number,
     includeEncrypted?: boolean,
     encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
   }): Promise<SentFioRequestResponse> {
+    const {
+      limit,
+      offset,
+      includeEncrypted,
+      encryptKeys,
+    } = options;
     const sentFioRequest = new queries.SentFioRequests({ fioPublicKey: this.publicKey, limit, offset, includeEncrypted, encryptKeys, getEncryptKey: this.getEncryptKey.bind(this) })
     return sentFioRequest.execute(this.publicKey, this.privateKey)
   }
@@ -1289,16 +1273,16 @@ export class FIOSDK {
   /**
    * Polls for any cancelled requests sent by public key associated with the FIO SDK instance.
    *
-   * @param limit Number of request to return. If omitted, all requests will be returned.
-   * @param offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.limit Number of request to return. If omitted, all requests will be returned.
+   * @param options.offset First request from list to return. If omitted, 0 is assumed.
+   * @param options.encryptKeys
    */
-  public getCancelledFioRequests({
-    limit, offset, encryptKeys
-  }: {
+  public getCancelledFioRequests(options: {
     limit?: number,
     offset?: number
     encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
   }): Promise<CancelledFioRequestResponse> {
+    const { limit, offset, encryptKeys } = options;
     const cancelledFioRequest = new queries.CancelledFioRequests({ fioPublicKey: this.publicKey, limit, offset, encryptKeys, getEncryptKey: this.getEncryptKey.bind(this) })
     return cancelledFioRequest.execute(this.publicKey, this.privateKey)
   }
@@ -1475,7 +1459,7 @@ export class FIOSDK {
   /**
    * Compute and return fee amount for specific call and specific user
    *
-   * @param payerFioAddress, Payer FIO Address incurring the fee and owned by signer.
+   * @param payerFioAddress Payer FIO Address incurring the fee and owned by signer.
    */
   public getFeeForRecordObtData(payerFioAddress: string): Promise<FioFeeResponse> {
     return this.getFee(EndPoint.recordObtData, payerFioAddress)
@@ -1654,19 +1638,14 @@ export class FIOSDK {
   /**
    * Allows advance user to send their own content directly to FIO contracts
    *
-   * @param account Account name
-   * @param action Name of action
-   * @param data JSON object with params for action
-   * @param encryptOptions JSON object with params for encryption
+   * @param options.account Account name
+   * @param options.action Name of action
+   * @param options.data JSON object with params for action
+   * @param options.authPermission
+   * @param options.encryptOptions JSON object with params for encryption
+   * @param options.signingAccount
    */
-  public async pushTransaction({
-    account,
-    action,
-    data,
-    authPermission,
-    encryptOptions = {},
-    signingAccount,
-  }: {
+  public async pushTransaction(options: {
     account: string,
     action: string,
     data: any,
@@ -1674,6 +1653,14 @@ export class FIOSDK {
     encryptOptions?: EncryptOptions,
     signingAccount?: string,
 }): Promise<any> {
+    const {
+      account,
+      action,
+      data,
+      authPermission,
+      encryptOptions = {},
+      signingAccount,
+    } = options;
     data.tpid = this.getTechnologyProviderId(data.tpid)
     if (data.content && !encryptOptions.publicKey) {
       switch (action) {
@@ -1730,24 +1717,7 @@ export class FIOSDK {
       case 'getAccount':
         return this.getAccount(params.account)
       case 'registerFioDomainAddress':
-        if (params.ownerPublicKey) {
-          return this.registerOwnerFioDomainAddress(
-              params.fioAddress,
-              params.isPublic ?? false,
-              params.maxFee,
-              params.ownerPublicKey,
-              params.technologyProviderId,
-              params.expirationOffset,
-          )
-        } else {
-          return this.registerFioDomainAddress(
-              params.fioAddress,
-              params.isPublic ?? false,
-              params.maxFee,
-              params.technologyProviderId,
-              params.expirationOffset,
-          )
-        }
+        return this.registerFioDomainAddress(params)
       case 'registerFioAddress':
         if (params.ownerPublicKey) {
           return this.registerOwnerFioAddress(
