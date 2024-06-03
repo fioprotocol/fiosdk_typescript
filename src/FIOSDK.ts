@@ -42,7 +42,6 @@ import {
 import { ValidationError } from './entities/ValidationError'
 import * as queries from './transactions/queries'
 import * as SignedTransactions from './transactions/signed'
-import { MockRegisterFioName } from './transactions/signed/MockRegisterFioName'
 import { EncryptOptions } from './transactions/signed/PushTransaction'
 import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { Transactions } from './transactions/Transactions'
@@ -87,7 +86,7 @@ export class FIOSDK {
       } else {
         rawAbiAccountNameList = Constants.rawAbiAccountName;
       }
-  
+
       const setAbiPromises = rawAbiAccountNameList.map(accountName => setAbi(accountName))
 
       await Promise.allSettled(setAbiPromises).then(results => results.forEach(result => {
@@ -506,6 +505,60 @@ export class FIOSDK {
       this.getTechnologyProviderId(technologyProviderId),
     )
     return registerFioAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
+  }
+
+  /**
+   * Registers a FIO Address and FIO domain on the FIO blockchain. The owner will be the public key associated with the FIO SDK instance.
+   *
+   * @param fioAddress FIO Address to register.
+   * @param isPublic true - allows anyone to register FIO Address, false - only owner of domain can register FIO Address.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
+   */
+  public registerFioDomainAddress(
+      fioAddress: string,
+      isPublic: boolean,
+      maxFee: number,
+      technologyProviderId: string | null = null,
+      expirationOffset?: number,
+  ): Promise<RegisterFioAddressResponse> {
+    const registerFioDomainAddress = new SignedTransactions.RegisterFioDomainAddress(
+        fioAddress,
+        maxFee,
+        isPublic,
+        null,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return registerFioDomainAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
+  }
+
+  /**
+   * Registers a FIO Address and FIO domain on behalf of the owner FIO Public key parameter. Owner FIO Public key owns the FIO address
+   *
+   * @param fioAddress FIO Address to register.
+   * @param isPublic true - allows anyone to register FIO Address, false - only owner of domain can register FIO Address.
+   * @param ownerPublicKey Owner FIO Public Key.
+   * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by @ [getFee] for correct value.
+   * @param technologyProviderId FIO Address of the wallet which generates this transaction.
+   * @param expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
+   */
+  public registerOwnerFioDomainAddress(
+      fioAddress: string,
+      isPublic: boolean,
+      maxFee: number,
+      ownerPublicKey: string,
+      technologyProviderId: string | null = null,
+      expirationOffset?: number,
+  ): Promise<RegisterFioAddressResponse> {
+    const registerFioDomainAddress = new SignedTransactions.RegisterFioDomainAddress(
+        fioAddress,
+        maxFee,
+        isPublic,
+        ownerPublicKey,
+        this.getTechnologyProviderId(technologyProviderId),
+    )
+    return registerFioDomainAddress.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
   }
 
   /**
@@ -1170,7 +1223,7 @@ export class FIOSDK {
   }: {
       limit?: number,
       offset?: number
-      encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> 
+      encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
     }): Promise<PendingFioRequestsResponse> {
     const pendingFioRequests = new queries.PendingFioRequests({
       fioPublicKey: this.publicKey,
@@ -1244,7 +1297,7 @@ export class FIOSDK {
   }: {
     limit?: number,
     offset?: number
-    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]> 
+    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>
   }): Promise<CancelledFioRequestResponse> {
     const cancelledFioRequest = new queries.CancelledFioRequests({ fioPublicKey: this.publicKey, limit, offset, encryptKeys, getEncryptKey: this.getEncryptKey.bind(this) })
     return cancelledFioRequest.execute(this.publicKey, this.privateKey)
@@ -1523,7 +1576,7 @@ export class FIOSDK {
    */
   public registerFioNameOnBehalfOfUser(fioName: string, publicKey: string) {
     const server = this.registerMockUrl // "mock.dapix.io/mockd/DEV2"
-    const mockRegisterFioName = new MockRegisterFioName(
+    const mockRegisterFioName = new SignedTransactions.MockRegisterFioName(
       fioName,
       publicKey,
       server,
@@ -1676,6 +1729,25 @@ export class FIOSDK {
         return this.getFioPublicKey()
       case 'getAccount':
         return this.getAccount(params.account)
+      case 'registerFioDomainAddress':
+        if (params.ownerPublicKey) {
+          return this.registerOwnerFioDomainAddress(
+              params.fioAddress,
+              params.isPublic ?? false,
+              params.maxFee,
+              params.ownerPublicKey,
+              params.technologyProviderId,
+              params.expirationOffset,
+          )
+        } else {
+          return this.registerFioDomainAddress(
+              params.fioAddress,
+              params.isPublic ?? false,
+              params.maxFee,
+              params.technologyProviderId,
+              params.expirationOffset,
+          )
+        }
       case 'registerFioAddress':
         if (params.ownerPublicKey) {
           return this.registerOwnerFioAddress(
