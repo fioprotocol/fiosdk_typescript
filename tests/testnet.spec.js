@@ -2,8 +2,12 @@ require('mocha')
 const { expect } = require('chai')
 const { FIOSDK } = require('../lib/FIOSDK')
 const { EndPoint } = require('../lib/entities/EndPoint')
+const dotenv = require('dotenv');
+const nodeFetch = require('node-fetch');
 
-fetch = require('node-fetch')
+dotenv.config();
+
+fetch = nodeFetch;
 
 const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
@@ -12,22 +16,22 @@ const fetchJson = async (uri, opts = {}) => {
 /**
  * Please set your private/public keys and existing fioAddresses
  */
-let privateKey = '',
-  publicKey = '',
-  privateKey2 = '',
-  publicKey2 = '',
-  testFioAddressName = '',
-  testFioAddressName2 = '',
-  testFioDomainName = '';
+let privateKey = process.env.PRIVATE_KEY,
+  publicKey = process.env.PUBLIC_KEY,
+  privateKey2 = process.env.PRIVATE_KEY_2,
+  publicKey2 = process.env.PUBLIC_KEY_2,
+  testFioAddressName = process.env.TEST_FIO_ADDRESS_NAME,
+  testFioAddressName2 = process.env.TEST_FIO_ADDRESS_NAME_2,
+  testFioDomainName = process.env.TEST_FIO_DOMAIN_NAME;
 
 /**
  * TODO: DASH-625 Uncomment when encrypt keys will be available on testnet
-let encPrivateKey,
-  encPublicKey,
-  encPrivateKey2,
-  encPublicKey2,
-  encTestFioAddressName,
-  encTestFioAddressName2;
+let encPrivateKey = process.env.ENC_PRIVATE_KEY,
+  encPublicKey = process.env.ENC_PUBLIC_KEY,
+  encPrivateKey2 = process.env.ENC_PRIVATE_KEY_2,
+  encPublicKey2 = process.env.ENC_PUBLIC_KEY_2,
+  encTestFioAddressName = process.env.ENC_TEST_FIO_ADDRESS_NAME,
+  encTestFioAddressName2 = process.env.ENC_TEST_FIO_ADDRESS_NAME_2;
 */
 
 /**
@@ -87,9 +91,9 @@ before(async () => {
     fetchJson
   );
 
-  /** 
+  /**
    * TODO: DASH-625 Uncomment when encrypt keys will be available on testnet
-   * Additionally handle transfer tokens 
+   * Additionally handle transfer tokens
     let encPrivateKeyRes = await FIOSDK.createPrivateKeyMnemonic(getMnemonic());
     encPrivateKey = encPrivateKeyRes.fioKey;
     let encPublicKeyRes = FIOSDK.derivedPublicKey(encPrivateKey);
@@ -165,7 +169,7 @@ describe('Raw Abi missing', () => {
     );
 
     FIOSDK.setCustomRawAbiAccountName(null);
-    
+
     expect(fioSdkAbiWarning).to.exist;
 
     expect(result).to.have.all.keys('balance', 'available', 'staked', 'srps', 'roe')
@@ -436,6 +440,17 @@ describe('Testing generic actions', () => {
 
   it(`Register fio domain`, async () => {
     const result = await fioSdk.genericAction('registerFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
+
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
+  })
+
+  it(`Register fio domain address`, async () => {
+    const result = await fioSdk.genericAction('registerFioDomainAddress', { fioDomainAddress: newFioAddress, maxFee: defaultFee })
 
     expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
@@ -880,7 +895,7 @@ describe('Testing generic actions', () => {
   // })
 
   // Uncomment when Get Ecrypted Key will be available on testnet servers
-  
+
   // it(`Get Ecrypted Key`, async () => {
   //   const result = await fioSdk.genericAction('getEncryptKey', {
   //     fioAddress: newFioAddress,
@@ -948,7 +963,7 @@ describe('Test addaddress on account with permissions', () => {
           max_fee: defaultFee,
         },
       });
-      
+
       expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time')
       expect(result.block_num).to.be.a('number')
       expect(result.transaction_id).to.be.a('string')
