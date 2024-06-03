@@ -740,7 +740,7 @@ export class FIOSDK {
   /**
    * This call cancels the specified fio funds request..
    *
-   * @param fioRequestID The id of the request.
+   * @param fioRequestId The id of the request.
    * @param maxFee Maximum amount of SUFs the user is willing to pay for fee. Should be preceded by /get_fee for correct value.
    * @param technologyProviderId FIO Address of the wallet which generates this transaction.
    */
@@ -1010,9 +1010,10 @@ export class FIOSDK {
   /**
    * Gets FIO permissions for the specified permission name and object name account.
    *
+   * @param permissionName string permission name ex register_address_on_domain
+   * @param objectName
    * @param limit Number of request to return. If omitted, all requests will be returned.
    * @param offset First request from list to return. If omitted, 0 is assumed.
-   * @param permissionName string permission name ex register_address_on_domain
    */
   public getObjectPermissions(permissionName: string, objectName: string, limit?: number, offset?: number): Promise<PermissionsResponse> {
     const getObjectPermissions = new queries.GetObjectPermissions( permissionName, objectName, limit, offset)
