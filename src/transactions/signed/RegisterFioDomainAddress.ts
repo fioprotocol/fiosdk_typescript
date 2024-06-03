@@ -2,6 +2,22 @@ import { Constants } from '../../utils/constants'
 import { validationRules } from '../../utils/validation'
 import { SignedTransaction } from './SignedTransaction'
 
+export type RegisterFioDomainAddressOptions = {
+  fioAddress: string;
+  maxFee: number;
+  isPublic?: boolean;
+  ownerPublicKey?: string | null;
+  technologyProviderId?: string | null;
+}
+
+export type RegisterFioDomainReturnType = {
+  fioAddress: string;
+  maxFee: number;
+  isPublic?: boolean;
+  ownerPublicKey?: string | null;
+  technologyProviderId?: string | null;
+}
+
 export class RegisterFioDomainAddress extends SignedTransaction {
 
   public ENDPOINT: string = 'chain/register_fio_domain_address'
@@ -9,25 +25,21 @@ export class RegisterFioDomainAddress extends SignedTransaction {
   public ACCOUNT: string = Constants.defaultAccount
 
   constructor(
-      public fioAddress: string,
-      public maxFee: number,
-      public isPublic: boolean = false,
-      public ownerPublicKey: string | null = null,
-      public technologyProviderId: string | null = null
+      public options: RegisterFioDomainAddressOptions,
   ) {
     super()
-    this.validationData = { fioAddress, tpid: technologyProviderId }
+    this.validationData = { fioAddress: options.fioAddress, tpid: options.technologyProviderId }
     this.validationRules = validationRules.registerFioDomainAddress
   }
 
   public getData(): any {
     const actor = this.getActor()
     return {
-      fio_address: this.fioAddress,
-      is_public: this.isPublic ? 1 : 0,
-      owner_fio_public_key: this.ownerPublicKey || this.publicKey,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
+      fio_address: this.options.fioAddress,
+      max_fee: this.options.maxFee,
+      is_public: this.options.isPublic ? 1 : 0,
+      owner_fio_public_key: this.options.ownerPublicKey || this.publicKey || null,
+      tpid: this.options.technologyProviderId || null,
       actor,
     }
   }

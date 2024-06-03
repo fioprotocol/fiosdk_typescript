@@ -1,11 +1,11 @@
 require('mocha')
+const dotenv = require('dotenv');
 const { expect } = require('chai')
 const { FIOSDK } = require('../lib/FIOSDK')
 const { EndPoint } = require('../lib/entities/EndPoint')
-const dotenv = require('dotenv');
 const nodeFetch = require('node-fetch');
 
-dotenv.config();
+dotenv.config({ path: ['.env.test', '.env'] });
 
 fetch = nodeFetch;
 
