@@ -47,7 +47,6 @@ import { SignedTransaction } from './transactions/signed/SignedTransaction'
 import { Transactions } from './transactions/Transactions'
 import { Constants } from './utils/constants'
 import { allRules, validate } from './utils/validation'
-import {RegisterFioDomainAddressOptions} from "./transactions/signed/RegisterFioDomainAddress";
 
 /**
  * @ignore
@@ -59,13 +58,6 @@ const { Ecc } = require('@fioprotocol/fiojs')
  * @ignore
  */
 type FetchJson = (uri: string, opts?: object) => Promise<object>
-
-/**
- * @ignore
- */
-type SignedTransactionOptions<T extends Record<string, unknown>> = T & {
-  expirationOffset?: number;
-}
 
 export class FIOSDK {
   private proxyHandle = {
@@ -526,7 +518,14 @@ export class FIOSDK {
    * @param options.expirationOffset Expiration time offset for this transaction in seconds. Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
    */
   public registerFioDomainAddress(
-      options: SignedTransactionOptions<RegisterFioDomainAddressOptions>,
+      options: {
+        fioAddress: string;
+        maxFee: number;
+        isPublic?: boolean;
+        ownerPublicKey?: string | null;
+        technologyProviderId?: string | null;
+        expirationOffset?: number;
+      },
   ): Promise<RegisterFioAddressResponse> {
     const registerFioDomainAddress = new SignedTransactions.RegisterFioDomainAddress(
         {...options, technologyProviderId: this.getTechnologyProviderId(options.technologyProviderId)}
