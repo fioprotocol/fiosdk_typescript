@@ -1,28 +1,32 @@
 require('mocha')
+const dotenv = require('dotenv')
 const { expect } = require('chai')
 const { FIOSDK } = require('../lib/FIOSDK')
 const { EndPoint } = require('../lib/entities/EndPoint')
+const nodeFetch = require('node-fetch')
 
-fetch = require('node-fetch')
+dotenv.config({ path: ['.env.test', '.env'] });
+
+fetch = nodeFetch
 
 const fetchJson = async (uri, opts = {}) => {
   return fetch(uri, opts)
 }
 
-let privateKey,
-  publicKey,
-  privateKey2,
-  publicKey2,
-  testFioAddressName,
-  testFioAddressName2,
-  testFioDomainName;
+let privateKey = process.env.LOCAL_PRIVATE_KEY,
+  publicKey = process.env.LOCAL_PUBLIC_KEY,
+  privateKey2 = process.env.LOCAL_PRIVATE_KEY_2,
+  publicKey2 = process.env.LOCAL_PUBLIC_KEY_2,
+  testFioAddressName = process.env.LOCAL_TEST_FIO_ADDRESS_NAME,
+  testFioAddressName2 = process.env.LOCAL_TEST_FIO_ADDRESS_NAME_2,
+  testFioDomainName = process.env.LOCAL_TEST_FIO_DOMAIN_NAME;
 
-let encPrivateKey,
-  encPublicKey,
-  encPrivateKey2,
-  encPublicKey2,
-  encTestFioAddressName,
-  encTestFioAddressName2;
+let encPrivateKey = process.env.LOCAL_ENC_PRIVATE_KEY,
+  encPublicKey = process.env.LOCAL_ENC_PUBLIC_KEY,
+  encPrivateKey2 = process.env.LOCAL_ENC_PRIVATE_KEY_2,
+  encPublicKey2 = process.env.LOCAL_ENC_PUBLIC_KEY_2,
+  encTestFioAddressName = process.env.LOCAL_ENC_TEST_FIO_ADDRESS_NAME,
+  encTestFioAddressName2 = process.env.LOCAL_ENC_TEST_FIO_ADDRESS_NAME_2;
 
 const mnemonic = 'property follow talent guilt uncover someone gain powder urge slot taxi sketch'
 const mnemonic2 = 'round work clump little air glue lemon gravity shed charge assault orbit'
@@ -624,7 +628,7 @@ describe('Testing generic actions', () => {
     expect(result).to.equal(publicKey)
   })
 
-  it(`getFioBalance`, async () => {
+  it(`Get fio balance`, async () => {
     const result = await fioSdk.genericAction('getFioBalance', {})
 
     expect(result).to.have.all.keys('balance', 'available', 'staked', 'srps', 'roe')
@@ -636,7 +640,22 @@ describe('Testing generic actions', () => {
   })
 
   it(`Register fio domain`, async () => {
-    const result = await fioSdk.genericAction('registerFioDomain', { fioDomain: newFioDomain, maxFee: defaultFee })
+    const result = await fioSdk.genericAction('registerFioDomain', {
+      fioDomain: newFioDomain,
+      maxFee: defaultFee,
+      technologyProviderId: '',
+    })
+
+    expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
+    expect(result.status).to.be.a('string')
+    expect(result.expiration).to.be.a('string')
+    expect(result.fee_collected).to.be.a('number')
+    expect(result.block_num).to.be.a('number')
+    expect(result.transaction_id).to.be.a('string')
+  })
+
+  it(`Register fio domain address`, async () => {
+    const result = await fioSdk.genericAction('registerFioDomainAddress', { fioAddress: newFioAddress, maxFee: defaultFee })
 
     expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'expiration', 'fee_collected')
     expect(result.status).to.be.a('string')
@@ -1075,7 +1094,7 @@ describe('Testing generic actions', () => {
   // })
 
   // Uncomment when Get Ecrypted Key will be available on testnet servers
-  
+
   // it(`Get Ecrypted Key`, async () => {
   //   const result = await fioSdk.genericAction('getEncryptKey', {
   //     fioAddress: newFioAddress
@@ -1217,7 +1236,7 @@ describe('Test addaddress on account with permissions', () => {
           actor: account1,
         },
       });
-      
+
       expect(result.status).to.equal('OK');
     } catch (e) {
       console.log(e);
