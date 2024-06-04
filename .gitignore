@@ -6,3 +6,4 @@ node_modules
 /android/build
 .idea/
 yarn.lock
+.env.test
