@@ -1,6 +1,26 @@
 import { validationRules } from '../../utils/validation'
 import { SignedTransaction } from './SignedTransaction'
 
+export type RecordObtDataOptions = {
+  amount: number,
+  chainCode: string,
+  encryptPrivateKey: string | null,
+  fioRequestId: number | null,
+  hash: string | null,
+  maxFee: number,
+  memo: string | null,
+  obtId: string,
+  offLineUrl: string | null,
+  payeeFioAddress: string,
+  payeeFioPublicKey: string,
+  payeeTokenPublicAddress: string,
+  payerFioAddress: string,
+  payerTokenPublicAddress: string,
+  status: string,
+  technologyProviderId: string | null,
+  tokenCode: string,
+}
+
 export class RecordObtData extends SignedTransaction {
 
   public ENDPOINT: string = 'chain/record_obt_data'
