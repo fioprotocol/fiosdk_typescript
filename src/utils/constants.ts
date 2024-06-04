@@ -1,10 +1,9 @@
 export class Constants {
-  public static endPoints = {
+  public static endPoints: any = {
     AddPublicAddress: 'add_pub_address',
     SetFioDomainVisibility: 'set_fio_domain_public',
     RecordObtData: 'record_obt_data',
     RegisterFioAddress: 'register_fio_address',
-    RegisterFioDomainAddress: 'register_fio_domain_address',
     RegisterFioDomain: 'register_fio_domain',
     RejectFundsRequest: 'reject_funds_request',
     RequestNewFunds: 'new_funds_request',
@@ -18,7 +17,6 @@ export class Constants {
   public static feeNoAddressOperation: string[] = [
     Constants.endPoints.RegisterFioDomain,
     Constants.endPoints.RegisterFioAddress,
-    Constants.endPoints.RegisterFioDomainAddress,
     Constants.endPoints.TransferTokensKey,
     Constants.endPoints.TransferTokensFioAddress,
   ]

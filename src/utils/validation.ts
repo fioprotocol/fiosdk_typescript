@@ -71,10 +71,6 @@ export const validationRules = {
     fioDomain: allRules.fioDomain,
     tpid: allRules.tpid,
   },
-  registerFioDomainAddress: {
-    fioAddress: allRules.fioAddress,
-    tpid: allRules.tpid,
-  },
   renewFioAddress: {
     fioAddress: allRules.fioAddress,
     tpid: allRules.tpid,
