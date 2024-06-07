@@ -2,6 +2,7 @@ export enum EndPoint {
   newFundsRequest = 'new_funds_request',
   registerFioAddress = 'register_fio_address',
   registerFioDomain = 'register_fio_domain',
+  registerFioDomainAddress = 'register_fio_domain_address',
   renewFioDomain = 'renew_fio_domain',
   renewFioAddress = 'renew_fio_address',
   burnFioAddress = 'burn_fio_address',
