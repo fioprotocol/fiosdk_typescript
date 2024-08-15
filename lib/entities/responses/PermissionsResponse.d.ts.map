@@ -1,0 +1,1 @@
+{"version":3,"file":"PermissionsResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/PermissionsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,wBAAwB,CAAA;AAEpD,MAAM,MAAM,mBAAmB,GAAG;IAC9B,QAAQ,EAAE,aAAa,EAAE,CAAA;IACzB,IAAI,EAAE,MAAM,CAAC;CAChB,CAAA"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"FundsRequestResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/FundsRequestResponse.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,oBAAoB,GAAG;IAC/B,cAAc,EAAE,MAAM,CAAA;IACtB,SAAS,EAAE,MAAM,CAAA;IACjB,cAAc,EAAE,MAAM,CAAA;IACtB,MAAM,EAAE,MAAM,CAAA;IACd,aAAa,EAAE,MAAM,CAAC;CACzB,CAAA"}

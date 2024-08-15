@@ -1,38 +1,48 @@
-import { Transactions } from '../Transactions'
+import {Request} from '../Request'
 
-export abstract class Query<T> extends Transactions {
-  public abstract ENDPOINT: string
+export abstract class Query<T = any, R = any> extends Request {
+    public abstract ENDPOINT: string
 
-  public isEncrypted = false
+    public isEncrypted = false
 
-  public requestTimeout = 5000
+    public requestTimeout = 5000
 
-  public abstract getData(): any
+    public abstract getData(): T
 
-  public decrypt(result: any): any {
-  }
+    public async execute(publicKey: string, privateKey: string = ''): Promise<R> {
+        this.publicKey = publicKey
+        this.privateKey = privateKey
 
-  public async execute(publicKey: string, privateKey: string = ''): Promise<any> {
-    this.publicKey = publicKey
-    this.privateKey = privateKey
-    if (!this.isEncrypted) {
-      try {
-        return this.multicastServers({ endpoint: this.getEndPoint(), body: JSON.stringify(this.getData()), requestTimeout: this.requestTimeout })
-      } catch (error) {
-        throw error
-      }
-    } else {
-      try {
-        const result = await this.multicastServers({ endpoint: this.getEndPoint(), body: JSON.stringify(this.getData()), requestTimeout: this.requestTimeout })
-        return await this.decrypt(result)
-      } catch (error) {
-        throw error
-      }
+        if (!this.isEncrypted) {
+            try {
+                return this.multicastServers({
+                    body: JSON.stringify(this.getData()),
+                    endpoint: this.getEndPoint(),
+                    requestTimeout: this.requestTimeout,
+                })
+            } catch (error) {
+                throw error
+            }
+        } else {
+            try {
+                const result = await this.multicastServers({
+                    body: JSON.stringify(this.getData()),
+                    endpoint: this.getEndPoint(),
+                    requestTimeout: this.requestTimeout,
+                })
+                // TODO if decrypt result undefined return result as default
+                return await this.decrypt(result)
+            } catch (error) {
+                throw error
+            }
+        }
     }
-  }
 
-  public getEndPoint(): string {
-    return this.ENDPOINT
-  }
+    public async decrypt(result: any): Promise<R> {
+        throw new Error('Not implemented')
+    }
 
+    public getEndPoint(): string {
+        return this.ENDPOINT
+    }
 }

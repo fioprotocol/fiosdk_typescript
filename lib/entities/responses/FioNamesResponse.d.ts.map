@@ -1,0 +1,1 @@
+{"version":3,"file":"FioNamesResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/FioNamesResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,UAAU,EAAC,MAAM,qBAAqB,CAAA;AAC9C,OAAO,EAAC,SAAS,EAAC,MAAM,oBAAoB,CAAA;AAE5C,MAAM,MAAM,gBAAgB,GAAG;IAC3B,WAAW,EAAE,SAAS,EAAE,CAAA;IACxB,aAAa,EAAE,UAAU,EAAE,CAAC;CAC/B,CAAA"}

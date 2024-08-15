@@ -1,0 +1,1 @@
+{"version":3,"file":"SetFioDomainVisibilityResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/SetFioDomainVisibilityResponse.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,8BAA8B,GAAG;IACzC,cAAc,EAAE,MAAM,CAAA;IACtB,SAAS,EAAE,MAAM,CAAA;IACjB,MAAM,EAAE,MAAM,CAAA;IACd,aAAa,EAAE,MAAM,CAAC;CACzB,CAAA"}

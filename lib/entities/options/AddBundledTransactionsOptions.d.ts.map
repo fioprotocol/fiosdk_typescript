@@ -1,0 +1,1 @@
+{"version":3,"file":"AddBundledTransactionsOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/AddBundledTransactionsOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,6BAA6B,GAAG;IACxC,UAAU,EAAE,MAAM,CAAA;IAClB,UAAU,EAAE,MAAM,CAAA;IAClB,MAAM,EAAE,MAAM,CAAA;IACd,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxC,CAAA"}

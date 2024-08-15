@@ -1,0 +1,1 @@
+{"version":3,"file":"RegisterFioAddressResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/RegisterFioAddressResponse.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,0BAA0B,GAAG;IACrC,cAAc,EAAE,MAAM,CAAA;IACtB,SAAS,EAAE,MAAM,CAAA;IACjB,MAAM,EAAE,MAAM,CAAA;IACd,UAAU,EAAE,MAAM,CAAA;IAClB,aAAa,EAAE,MAAM,CAAC;CACzB,CAAA"}

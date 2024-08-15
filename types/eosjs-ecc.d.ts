@@ -1,3 +1,4 @@
+// TODO delete not used
 export namespace Aes {
     function decrypt(private_key: any, public_key: any, nonce: any, message: any, checksum: any): any;
     function encrypt(private_key: any, public_key: any, message: any, ...args: any[]): any;

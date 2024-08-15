@@ -1,0 +1,1 @@
+{"version":3,"file":"CancelledFioRequestsResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/CancelledFioRequestsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,WAAW,EAAC,MAAM,sBAAsB,CAAA;AAEhD,MAAM,MAAM,4BAA4B,GAAG;IACvC,QAAQ,EAAE,WAAW,EAAE,CAAA;IACvB,IAAI,EAAE,MAAM,CAAC;CAChB,CAAA"}

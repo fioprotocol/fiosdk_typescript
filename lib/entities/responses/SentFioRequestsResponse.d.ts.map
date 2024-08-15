@@ -1,0 +1,1 @@
+{"version":3,"file":"SentFioRequestsResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/SentFioRequestsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,WAAW,EAAC,MAAM,sBAAsB,CAAA;AAEhD,MAAM,MAAM,uBAAuB,GAAG;IAClC,QAAQ,EAAE,WAAW,EAAE,CAAA;IACvB,IAAI,EAAE,MAAM,CAAC;CAChB,CAAA"}

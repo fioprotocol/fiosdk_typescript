@@ -1,17 +1,17 @@
 export class Constants {
   public static endPoints = {
     AddPublicAddress: 'add_pub_address',
-    SetFioDomainVisibility: 'set_fio_domain_public',
+    PushTransaction: 'push_transaction',
     RecordObtData: 'record_obt_data',
     RegisterFioAddress: 'register_fio_address',
-    RegisterFioDomainAddress: 'register_fio_domain_address',
     RegisterFioDomain: 'register_fio_domain',
+    RegisterFioDomainAddress: 'register_fio_domain_address',
     RejectFundsRequest: 'reject_funds_request',
     RequestNewFunds: 'new_funds_request',
-    TransferTokensKey: 'transfer_tokens_pub_key',
-    TransferTokensFioAddress: 'transfer_tokens_fio_address',
-    PushTransaction: 'push_transaction',
+    SetFioDomainVisibility: 'set_fio_domain_public',
     StakeFioTokens: 'stake_fio_tokens',
+    TransferTokensFioAddress: 'transfer_tokens_fio_address',
+    TransferTokensKey: 'transfer_tokens_pub_key',
     UnStakeFioTokens: 'unstake_fio_tokens',
   }
 
@@ -35,7 +35,7 @@ export class Constants {
     'fio.staking',
     'fio.perms',
     'fio.escrow',
-    'fio.oracle'
+    'fio.oracle',
   ]
 
   public static multiplier = 1000000000

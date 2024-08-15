@@ -1,0 +1,1 @@
+{"version":3,"file":"TransferFioAddressOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/TransferFioAddressOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,yBAAyB,GAAG;IACpC,UAAU,EAAE,MAAM,CAAA;IAClB,WAAW,EAAE,MAAM,CAAA;IACnB,MAAM,EAAE,MAAM,CAAA;IACd,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxC,CAAA"}

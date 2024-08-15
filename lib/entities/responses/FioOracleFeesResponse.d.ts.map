@@ -1,0 +1,1 @@
+{"version":3,"file":"FioOracleFeesResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/FioOracleFeesResponse.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,qBAAqB,GAAG;IAChC,WAAW,EAAE;QACT;YAAE,QAAQ,EAAE,iBAAiB,CAAC;YAAC,UAAU,EAAE,MAAM,CAAA;SAAE;QACnD;YAAE,QAAQ,EAAE,iBAAiB,CAAC;YAAC,UAAU,EAAE,MAAM,CAAA;SAAE;KACtD,CAAC;CACL,CAAA"}
