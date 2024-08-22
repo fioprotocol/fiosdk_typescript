@@ -480,15 +480,17 @@ export class FIOSDK {
      * @param registerMockUrl the url to the mock server
      * @param technologyProviderId Default FIO Address of the wallet which generates transactions.
      * @param returnPreparedTrx flag indicate that it should return prepared transaction or should be pushed to server.
+     * @param logger {@link FioLogger} FIO logger to handle all requests.
      */
     constructor(
         privateKey: string,
         publicKey: string,
         apiUrls: string[] | string,
         fetchJson: FetchJson,
-        registerMockUrl?: string,
-        technologyProviderId?: string,
-        returnPreparedTrx?: boolean,
+        registerMockUrl?: string | null,
+        technologyProviderId?: string | null,
+        returnPreparedTrx?: boolean | null,
+        logger?: boolean | null,
     )
     /**
      * @param options.privateKey the fio private key of the client sending requests to FIO API.
@@ -505,6 +507,7 @@ export class FIOSDK {
      * @param options.technologyProviderId Default FIO Address of the wallet which generates transactions.
      * @param options.returnPreparedTrx flag indicate that it should return prepared transaction
      * or should be pushed to server.
+     * @param options.logger FIO logger to handle all requests.
      */
     constructor(options: FioSdkOptions)
     constructor() {
@@ -516,9 +519,10 @@ export class FIOSDK {
             registerMockUrl = '',
             technologyProviderId = '',
             returnPreparedTrx = false,
+            logger,
         } = resolveOptions<FioSdkOptions>({
             arguments,
-            keys: ['privateKey', 'publicKey', 'apiUrls', 'fetchJson', 'registerMockUrl', 'technologyProviderId', 'returnPreparedTrx', 'throwValidationErrors'],
+            keys: ['privateKey', 'publicKey', 'apiUrls', 'fetchJson', 'registerMockUrl', 'technologyProviderId', 'returnPreparedTrx', 'throwValidationErrors', 'logger'],
         })
         this.config = {
             baseUrls: Array.isArray(apiUrls) ? apiUrls : [apiUrls],
@@ -526,6 +530,7 @@ export class FIOSDK {
             // TODO Double check chainId
             // @ts-ignore
             fioProvider: Fio,
+            logger,
         }
         this.registerMockUrl = registerMockUrl
         this.privateKey = privateKey

@@ -15,7 +15,7 @@ import {AbortSignal} from 'abort-controller'
 
 import {TextDecoder, TextEncoder} from 'text-encoding'
 
-import {AbiResponse, EndPoint, FioInfoResponse, RawRequest, ValidationError} from '../entities'
+import {AbiResponse, EndPoint, FioError, FioInfoResponse, FioLogger, RawRequest, ValidationError} from '../entities'
 
 import {defaultExpirationOffset} from '../utils/constants'
 import {asyncWaterfall, createAuthorization, createRawAction, createRawRequest} from '../utils/utils'
@@ -50,52 +50,14 @@ interface FioErrorJson {
     }>,
 }
 
-export class FioError extends Error {
-    public list: Array<{ field: string, message: string }> = []
-    public labelCode: string = ''
-    public errorCode: number = 0
-    public json: any
-
-    constructor(message: string, code?: number, labelCode?: string, json?: any) {
-        super(message)
-
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, FioError)
-        }
-
-        this.name = 'FioError'
-        if (code) {
-            this.errorCode = code
-        }
-        if (labelCode) {
-            this.labelCode = labelCode
-        }
-        if (json) {
-            this.json = json
-        }
-    }
-}
-
 export type ApiMap = Map<string, AbiResponse>
 
-export type LoggerContextType = 'request'
-
-export type LoggerRequestContext = {
-    endpoint: string
-    body?: string | null
-    fetchOptions?: any
-    requestTimeout?: number
-    res?: any
-    error?: FioError,
-}
-
-export type RequestLogger = (type: LoggerContextType, context: LoggerRequestContext) => void
-
+// TODO use fiojs type in future
 export type RequestConfig = {
     fioProvider: FioProvider;
     fetchJson: FetchJson;
     baseUrls: string[];
-    logger?: RequestLogger
+    logger?: FioLogger
 }
 
 export interface FioProvider {

@@ -182,8 +182,9 @@ export declare class FIOSDK {
      * @param registerMockUrl the url to the mock server
      * @param technologyProviderId Default FIO Address of the wallet which generates transactions.
      * @param returnPreparedTrx flag indicate that it should return prepared transaction or should be pushed to server.
+     * @param logger {@link FioLogger} FIO logger to handle all requests.
      */
-    constructor(privateKey: string, publicKey: string, apiUrls: string[] | string, fetchJson: FetchJson, registerMockUrl?: string, technologyProviderId?: string, returnPreparedTrx?: boolean);
+    constructor(privateKey: string, publicKey: string, apiUrls: string[] | string, fetchJson: FetchJson, registerMockUrl?: string | null, technologyProviderId?: string | null, returnPreparedTrx?: boolean | null, logger?: boolean | null);
     /**
      * @param options.privateKey the fio private key of the client sending requests to FIO API.
      * @param options.publicKey the fio public key of the client sending requests to FIO API.
@@ -199,6 +200,7 @@ export declare class FIOSDK {
      * @param options.technologyProviderId Default FIO Address of the wallet which generates transactions.
      * @param options.returnPreparedTrx flag indicate that it should return prepared transaction
      * or should be pushed to server.
+     * @param options.logger FIO logger to handle all requests.
      */
     constructor(options: FioSdkOptions);
     /**

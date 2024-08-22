@@ -25,6 +25,9 @@ export declare const rawAbiAccountName: string[];
 export declare const multiplier = 1000000000;
 export declare const defaultAccount: string;
 export declare const defaultExpirationOffset = 180;
+/**
+ * @ignore
+ */
 export declare const classMethodsToExcludeFromProxy: string[];
 export declare const missingAbiError = "unknown key";
 //# sourceMappingURL=constants.d.ts.map

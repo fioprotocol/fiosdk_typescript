@@ -53,6 +53,9 @@ export const defaultAccount: string = Account.address
 
 export const defaultExpirationOffset = 180
 
+/**
+ * @ignore
+ */
 export const classMethodsToExcludeFromProxy: string[] = [
     'constructor',
     'SUFUnit',

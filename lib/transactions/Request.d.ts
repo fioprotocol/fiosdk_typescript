@@ -2,7 +2,7 @@ import { Api as FioJsApi } from '@fioprotocol/fiojs';
 import { AbiProvider, AuthorityProvider } from '@fioprotocol/fiojs/dist/chain-api-interfaces';
 import { GetBlockResult, PushTransactionArgs } from '@fioprotocol/fiojs/dist/chain-rpc-interfaces';
 import { AbortSignal } from 'abort-controller';
-import { AbiResponse, FioInfoResponse, RawRequest } from '../entities';
+import { AbiResponse, FioInfoResponse, FioLogger, RawRequest } from '../entities';
 import { Rule } from '../utils/validation';
 type FetchJson = (uri: string, opts?: object) => any;
 interface SignedTxArgs {
@@ -15,32 +15,12 @@ export declare const signAllAuthorityProvider: AuthorityProvider;
 export declare const fioApiErrorCodes: number[];
 export declare const FIO_CHAIN_INFO_ERROR_CODE = 800;
 export declare const FIO_BLOCK_NUMBER_ERROR_CODE = 801;
-export declare class FioError extends Error {
-    list: Array<{
-        field: string;
-        message: string;
-    }>;
-    labelCode: string;
-    errorCode: number;
-    json: any;
-    constructor(message: string, code?: number, labelCode?: string, json?: any);
-}
 export type ApiMap = Map<string, AbiResponse>;
-export type LoggerContextType = 'request';
-export type LoggerRequestContext = {
-    endpoint: string;
-    body?: string | null;
-    fetchOptions?: any;
-    requestTimeout?: number;
-    res?: any;
-    error?: FioError;
-};
-export type RequestLogger = (type: LoggerContextType, context: LoggerRequestContext) => void;
 export type RequestConfig = {
     fioProvider: FioProvider;
     fetchJson: FetchJson;
     baseUrls: string[];
-    logger?: RequestLogger;
+    logger?: FioLogger;
 };
 export interface FioProvider {
     prepareTransaction(param: {
