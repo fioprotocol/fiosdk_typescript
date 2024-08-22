@@ -1,4 +1,4 @@
-import {NftsResponse} from '../../entities'
+import {EndPoint, NftsResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -19,7 +19,7 @@ export type NftsByContractQueryData = {
 }
 
 export class NftsByContractQuery extends Query<NftsByContractQueryData, NftsResponse> {
-    public ENDPOINT = 'chain/get_nfts_contract'
+    public ENDPOINT = `chain/${EndPoint.getNftsContract}` as const
 
     constructor(config: RequestConfig, public props: NftsByContractQueryProps) {
         super(config)

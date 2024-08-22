@@ -1,5 +1,4 @@
-import {RegisterFioDomainResponse} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {Account, Action, EndPoint, RegisterFioDomainResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -20,9 +19,9 @@ export type RegisterFioDomainRequestData = {
 }
 
 export class RegisterFioDomainRequest extends SignedRequest<RegisterFioDomainRequestData, RegisterFioDomainResponse> {
-    public ENDPOINT = 'chain/register_fio_domain'
-    public ACTION = 'regdomain'
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.registerFioDomain}` as const
+    public ACTION = Action.regDomain
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: RegisterFioDomainRequestProps) {
         super(config)

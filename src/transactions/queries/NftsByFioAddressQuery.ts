@@ -1,4 +1,4 @@
-import {NftsResponse} from '../../entities'
+import {EndPoint, NftsResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -15,7 +15,7 @@ export type NftsByFioAddressQueryData = {
 }
 
 export class NftsByFioAddressQuery extends Query<NftsByFioAddressQueryData, NftsResponse> {
-    public ENDPOINT = 'chain/get_nfts_fio_address'
+    public ENDPOINT = `chain/${EndPoint.getNftsFioAddress}` as const
 
     constructor(config: RequestConfig, public props: NftsByFioAddressQueryProps) {
         super(config)

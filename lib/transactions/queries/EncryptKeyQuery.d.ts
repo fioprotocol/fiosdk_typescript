@@ -9,7 +9,7 @@ export type EncryptKeyQueryData = {
 };
 export declare class EncryptKeyQuery extends Query<EncryptKeyQueryData, EncryptKeyResponse> {
     props: EncryptKeyQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_encrypt_key";
     constructor(config: RequestConfig, props: EncryptKeyQueryProps);
     getData: () => {
         fio_address: string;

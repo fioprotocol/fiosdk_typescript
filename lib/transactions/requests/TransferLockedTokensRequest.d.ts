@@ -1,4 +1,4 @@
-import { LockPeriod, TransferLockedTokensResponse } from '../../entities';
+import { Account, Action, LockPeriod, TransferLockedTokensResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type TransferLockedTokensRequestProps = {
@@ -20,9 +20,9 @@ export type TransferLockedTokensRequestData = {
 };
 export declare class TransferLockedTokensRequest extends SignedRequest<TransferLockedTokensRequestData, TransferLockedTokensResponse> {
     props: TransferLockedTokensRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/transfer_locked_tokens";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: TransferLockedTokensRequestProps);
     getData: () => {
         actor: string;

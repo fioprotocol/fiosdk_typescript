@@ -13,7 +13,7 @@ export type PublicAddressesQueryData = {
 };
 export declare class PublicAddressesQuery extends Query<PublicAddressesQueryData, PublicAddressesResponse> {
     props: PublicAddressesQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_pub_addresses";
     constructor(config: RequestConfig, props: PublicAddressesQueryProps);
     getData: () => {
         fio_address: string;

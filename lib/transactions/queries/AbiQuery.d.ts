@@ -9,7 +9,7 @@ export type AbiQueryData = {
 };
 export declare class AbiQuery extends Query<AbiQueryData, AbiResponse> {
     props: AbiQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_raw_abi";
     constructor(config: RequestConfig, props: AbiQueryProps);
     getData: () => {
         account_name: string;

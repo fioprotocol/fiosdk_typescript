@@ -1,5 +1,4 @@
-import {BurnFioAddressResponse} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {Account, Action, BurnFioAddressResponse, EndPoint} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -18,9 +17,9 @@ export type BurnFioAddressRequestData = {
 }
 
 export class BurnFioAddressRequest extends SignedRequest<BurnFioAddressRequestData, BurnFioAddressResponse> {
-    public ENDPOINT = 'chain/burn_fio_address'
-    public ACTION = 'burnaddress'
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.burnFioAddress}` as const
+    public ACTION = Action.burnAddress
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: BurnFioAddressRequestProps) {
         super(config)

@@ -19,7 +19,7 @@ export type ObtDataQueryData = {
     offset?: number;
 };
 export declare class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_obt_data";
     props: ReturnType<ObtDataQuery['getResolvedProps']>;
     constructor(config: RequestConfig, props: ObtDataQueryProps);
     getData: () => {

@@ -10,7 +10,7 @@ export type FioFeeQueryData = {
     fio_address?: string;
 };
 export declare class FioFeeQuery extends Query<FioFeeQueryData, FioFeeResponse> {
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_fee";
     props: ReturnType<FioFeeQuery['getResolvedProps']>;
     constructor(config: RequestConfig, props: FioFeeQueryProps);
     getData: () => {

@@ -1,4 +1,4 @@
-import {LocksResponse} from '../../entities'
+import {EndPoint, LocksResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -11,7 +11,7 @@ export type LocksQueryData = {
 }
 
 export class LocksQuery extends Query<LocksQueryData, LocksResponse> {
-    public ENDPOINT = 'chain/get_locks'
+    public ENDPOINT = `chain/${EndPoint.getLocks}` as const
 
     constructor(config: RequestConfig, public props: LocksQueryProps) {
         super(config)

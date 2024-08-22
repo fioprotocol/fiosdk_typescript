@@ -1,0 +1,1 @@
+{"version":3,"file":"Account.d.ts","sourceRoot":"","sources":["../../src/entities/Account.ts"],"names":[],"mappings":"AAAA,oBAAY,OAAO;IACf,OAAO,gBAAgB;IACvB,MAAM,eAAe;IACrB,KAAK,cAAc;IACnB,GAAG,YAAY;IACf,QAAQ,iBAAiB;IACzB,IAAI,aAAa;IACjB,OAAO,gBAAgB;IACvB,KAAK,cAAc;IACnB,MAAM,eAAe;IACrB,MAAM,eAAe;CACxB"}

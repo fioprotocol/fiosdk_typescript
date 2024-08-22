@@ -1,7 +1,9 @@
 /// <reference types="node" />
-import { AccountPubKeyResponse, AccountResponse, AddBundledResponse, AddBundledTransactionsOptions, AddPublicAddressesOptions, AddPublicAddressesResponse, AddPublicAddressOptions, AvailabilityCheckResponse, BurnFioAddressOptions, BurnFioAddressResponse, CancelFundsRequestOptions, CancelFundsRequestResponse, CancelledFioRequestsResponse, EncryptKeyResponse, EndPoint, FetchJson, FioAddressesResponse, FioBalanceResponse, FioDomainsResponse, FioFeeResponse, FioNamesResponse, FioOracleFeesResponse, FioSdkOptions, FundsRequestResponse, GetAccountOptions, GetAccountPubKeyOptions, GetCancelledFioRequestsOptions, GetEncryptKeyOptions, GetFeeForAddBundledTransactionsOptions, GetFeeForAddPublicAddressOptions, GetFeeForBurnFioAddressOptions, GetFeeForCancelFundsRequestOptions, GetFeeForNewFundsRequestOptions, GetFeeForRecordObtDataOptions, GetFeeForRejectFundsRequestOptions, GetFeeForRemoveAllPublicAddressesOptions, GetFeeForRemovePublicAddressesOptions, GetFeeForTransferFioAddressOptions, GetFeeForTransferFioDomainOptions, GetFeeForTransferLockedTokensOptions, GetFeeOptions, GetFioAddressesOptions, GetFioBalanceOptions, GetFioDomainsOptions, GetFioNamesOptions, GetFioPublicAddressOptions, GetGranteePermissionsOptions, GetGrantorPermissionsOptions, GetLocksOptions, GetNftsOptions, GetObjectPermissionsOptions, GetObtDataOptions, GetObtDataResponse, GetOracleFeesOptions, GetPendingFioRequestsOptions, GetPublicAddressesOptions, GetPublicAddressOptions, GetReceivedFioRequestsOptions, GetSentFioRequestsOptions, IsAvailableOptions, LockPeriod, LocksResponse, NftsResponse, PendingFioRequestsResponse, PermissionsResponse, PublicAddress, PublicAddressesResponse, PublicAddressResponse, PushTransactionOptions, ReceivedFioRequestsResponse, RecordObtDataOptions, RecordObtDataResponse, RegisterFioAddressOptions, RegisterFioAddressResponse, RegisterFioDomainAddressOptions, RegisterFioDomainOptions, RegisterFioDomainResponse, RegisterOwnerFioAddressOptions, RegisterOwnerFioDomainOptions, RejectFundsRequestOptions, RejectFundsRequestResponse, RemoveAllPublicAddressesOptions, RemoveAllPublicAddressesResponse, RemovePublicAddressesOptions, RemovePublicAddressesResponse, RenewFioAddressOptions, RenewFioAddressResponse, RenewFioDomainOptions, RenewFioDomainResponse, RequestFundsOptions, SentFioRequestsResponse, SetFioDomainVisibilityOptions, SetFioDomainVisibilityResponse, StakeFioTokensOptions, TransactionResponse, TransferFioAddressOptions, TransferFioAddressResponse, TransferFioDomainOptions, TransferFioDomainResponse, TransferLockedTokensOptions, TransferLockedTokensResponse, TransferTokensOptions, TransferTokensResponse, UnStakeFioTokensOptions } from './entities';
+import { AccountPubKeyResponse, AccountResponse, AddBundledTransactionsOptions, AddBundledTransactionsResponse, AddPublicAddressesOptions, AddPublicAddressesResponse, AddPublicAddressOptions, AvailabilityCheckResponse, BurnFioAddressOptions, BurnFioAddressResponse, CancelFundsRequestOptions, CancelFundsRequestResponse, CancelledFioRequestsResponse, EncryptKeyResponse, EndPoint, FetchJson, FioAddressesResponse, FioBalanceResponse, FioDomainsResponse, FioFeeResponse, FioNamesResponse, FioOracleFeesResponse, FioSdkOptions, FundsRequestResponse, GetAccountOptions, GetAccountPubKeyOptions, GetCancelledFioRequestsOptions, GetEncryptKeyOptions, GetFeeForAddBundledTransactionsOptions, GetFeeForAddPublicAddressOptions, GetFeeForBurnFioAddressOptions, GetFeeForCancelFundsRequestOptions, GetFeeForNewFundsRequestOptions, GetFeeForRecordObtDataOptions, GetFeeForRejectFundsRequestOptions, GetFeeForRemoveAllPublicAddressesOptions, GetFeeForRemovePublicAddressesOptions, GetFeeForTransferFioAddressOptions, GetFeeForTransferFioDomainOptions, GetFeeForTransferLockedTokensOptions, GetFeeOptions, GetFioAddressesOptions, GetFioBalanceOptions, GetFioDomainsOptions, GetFioNamesOptions, GetFioPublicAddressOptions, GetGranteePermissionsOptions, GetGrantorPermissionsOptions, GetLocksOptions, GetNftsOptions, GetObjectPermissionsOptions, GetObtDataOptions, GetObtDataResponse, GetOracleFeesOptions, GetPendingFioRequestsOptions, GetPublicAddressesOptions, GetPublicAddressOptions, GetReceivedFioRequestsOptions, GetSentFioRequestsOptions, IsAvailableOptions, LockPeriod, LocksResponse, NftsResponse, PendingFioRequestsResponse, PermissionsResponse, PublicAddress, PublicAddressesResponse, PublicAddressResponse, PushTransactionOptions, ReceivedFioRequestsResponse, RecordObtDataOptions, RecordObtDataResponse, RegisterFioAddressOptions, RegisterFioAddressResponse, RegisterFioDomainAddressOptions, RegisterFioDomainOptions, RegisterFioDomainResponse, RegisterOwnerFioAddressOptions, RegisterOwnerFioDomainOptions, RejectFundsRequestOptions, RejectFundsRequestResponse, RemoveAllPublicAddressesOptions, RemoveAllPublicAddressesResponse, RemovePublicAddressesOptions, RemovePublicAddressesResponse, RenewFioAddressOptions, RenewFioAddressResponse, RenewFioDomainOptions, RenewFioDomainResponse, RequestFundsOptions, SentFioRequestsResponse, SetFioDomainVisibilityOptions, SetFioDomainVisibilityResponse, StakeFioTokensOptions, TransactionResponse, TransferFioAddressOptions, TransferFioAddressResponse, TransferFioDomainOptions, TransferFioDomainResponse, TransferLockedTokensOptions, TransferLockedTokensResponse, TransferTokensKeyResponse, TransferTokensOptions, UnStakeFioTokensOptions } from './entities';
 import { RequestConfig } from './transactions/Request';
+import * as fioConstants from './utils/constants';
 export * from './entities';
+export { fioConstants };
 export declare class FIOSDK {
     /**
      * Needed for testing abi
@@ -56,53 +58,59 @@ export declare class FIOSDK {
         accountnm: string;
     };
     /**
+     * @deprecated use {@link FIOSDK#validateChainCode}
      * Is the Chain Code Valid?
      *
      * @param chainCode
      *
      * @returns Chain Code is Valid
      */
-    static isChainCodeValid(chainCode: string): boolean;
+    static isChainCodeValid(chainCode: string): true;
     /**
+     * @deprecated use {@link FIOSDK#validateTokenCode}
      * Is the Token Code Valid?
      *
      * @param tokenCode
      *
      * @returns Token Code is Valid
      */
-    static isTokenCodeValid(tokenCode: string): boolean;
+    static isTokenCodeValid(tokenCode: string): true;
     /**
+     * @deprecated use {@link FIOSDK#validateFioAddress}
      * Is the FIO Address Valid?
      *
      * @param fioAddress
      *
      * @returns Fio Address is Valid
      */
-    static isFioAddressValid(fioAddress: string): boolean;
+    static isFioAddressValid(fioAddress: string): true;
     /**
+     * @deprecated use {@link FIOSDK#validateFioDomain}
      * Is the FIO Domain Valid?
      *
      * @param fioDomain
      *
      * @returns FIO Domain is Valid
      */
-    static isFioDomainValid(fioDomain: string): boolean;
+    static isFioDomainValid(fioDomain: string): true;
     /**
+     * @deprecated use {@link FIOSDK#validateFioPublicKey}
      * Is the FIO Public Key Valid?
      *
      * @param fioPublicKey
      *
      * @returns FIO Public Key is Valid
      */
-    static isFioPublicKeyValid(fioPublicKey: string): boolean;
+    static isFioPublicKeyValid(fioPublicKey: string): true;
     /**
+     * @deprecated use {@link FIOSDK#validatePublicAddress}
      * Is the Public Address Valid?
      *
      * @param publicAddress
      *
      * @returns Public Address is Valid
      */
-    static isPublicAddressValid(publicAddress: string): boolean;
+    static isPublicAddressValid(publicAddress: string): true;
     /**
      * Convert a FIO Token Amount to FIO SUFs
      *
@@ -193,6 +201,54 @@ export declare class FIOSDK {
      * or should be pushed to server.
      */
     constructor(options: FioSdkOptions);
+    /**
+     * Is the Chain Code Valid?
+     *
+     * @param chainCode
+     *
+     * @returns Chain Code is Valid
+     */
+    validateChainCode(chainCode: string): boolean;
+    /**
+     * Is the Token Code Valid?
+     *
+     * @param tokenCode
+     *
+     * @returns Token Code is Valid
+     */
+    validateTokenCode(tokenCode: string): boolean;
+    /**
+     * Is the FIO Address Valid?
+     *
+     * @param fioAddress
+     *
+     * @returns Fio Address is Valid
+     */
+    validateFioAddress(fioAddress: string): boolean;
+    /**
+     * Is the FIO Domain Valid?
+     *
+     * @param fioDomain
+     *
+     * @returns FIO Domain is Valid
+     */
+    validateFioDomain(fioDomain: string): boolean;
+    /**
+     * Is the FIO Public Key Valid?
+     *
+     * @param fioPublicKey
+     *
+     * @returns FIO Public Key is Valid
+     */
+    validateFioPublicKey(fioPublicKey: string): boolean;
+    /**
+     * Is the Public Address Valid?
+     *
+     * @param publicAddress
+     *
+     * @returns Public Address is Valid
+     */
+    validatePublicAddress(publicAddress: string): boolean;
     /**
      * Retrieves the FIO public key assigned to the FIOSDK instance.
      */
@@ -399,7 +455,7 @@ export declare class FIOSDK {
      * Should be preceded by @ [getFee] for correct value.
      * @param technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    addBundledTransactions(fioAddress: string, bundleSets: number, maxFee: number, technologyProviderId?: string | null): Promise<AddBundledResponse>;
+    addBundledTransactions(fioAddress: string, bundleSets: number, maxFee: number, technologyProviderId?: string | null): Promise<AddBundledTransactionsResponse>;
     /**
      * Adds bundles of transactions to FIO Address.
      *
@@ -410,7 +466,7 @@ export declare class FIOSDK {
      * Should be preceded by @ [getFee] for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    addBundledTransactions(options: AddBundledTransactionsOptions): Promise<AddBundledResponse>;
+    addBundledTransactions(options: AddBundledTransactionsOptions): Promise<AddBundledTransactionsResponse>;
     /**
      * @deprecated
      * Renew a FIO Address on the FIO blockchain.
@@ -968,7 +1024,7 @@ export declare class FIOSDK {
      * Should be preceded by /get_fee for correct value.
      * @param technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    transferTokens(payeeFioPublicKey: string, amount: number, maxFee: number, technologyProviderId?: string | null): Promise<TransferTokensResponse>;
+    transferTokens(payeeFioPublicKey: string, amount: number, maxFee: number, technologyProviderId?: string | null): Promise<TransferTokensKeyResponse>;
     /**
      * Transfers FIO tokens from public key associated with the FIO SDK instance to
      * the payeePublicKey.
@@ -979,7 +1035,7 @@ export declare class FIOSDK {
      * Should be preceded by /get_fee for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    transferTokens(options: TransferTokensOptions): Promise<TransferTokensResponse>;
+    transferTokens(options: TransferTokensOptions): Promise<TransferTokensKeyResponse>;
     /**
      * @deprecated
      * Compute and return fee amount for specific call and specific user
@@ -1256,7 +1312,7 @@ export declare class FIOSDK {
     genericAction(action: 'burnFioAddress', params: BurnFioAddressOptions): Promise<BurnFioAddressResponse>;
     genericAction(action: 'transferFioAddress', params: TransferFioAddressOptions): Promise<TransferFioAddressResponse>;
     genericAction(action: 'transferFioDomain', params: TransferFioDomainOptions): Promise<TransferFioDomainResponse>;
-    genericAction(action: 'addBundledTransactions', params: AddBundledTransactionsOptions): Promise<AddBundledResponse>;
+    genericAction(action: 'addBundledTransactions', params: AddBundledTransactionsOptions): Promise<AddBundledTransactionsResponse>;
     genericAction(action: 'addPublicAddress', params: AddPublicAddressOptions): Promise<AddPublicAddressesResponse>;
     genericAction(action: 'addPublicAddresses', params: AddPublicAddressesOptions): Promise<AddPublicAddressesResponse>;
     genericAction(action: 'removePublicAddresses', params: RemovePublicAddressesOptions): Promise<RemovePublicAddressesResponse>;
@@ -1285,7 +1341,7 @@ export declare class FIOSDK {
     genericAction(action: 'getFioPublicAddress', params: GetFioPublicAddressOptions): Promise<PublicAddressResponse>;
     genericAction(action: 'getPublicAddresses', params: GetPublicAddressesOptions): Promise<PublicAddressesResponse>;
     genericAction(action: 'getNfts', params: GetNftsOptions): Promise<NftsResponse>;
-    genericAction(action: 'transferTokens', params: TransferTokensOptions): Promise<TransferTokensResponse>;
+    genericAction(action: 'transferTokens', params: TransferTokensOptions): Promise<TransferTokensKeyResponse>;
     genericAction(action: 'stakeFioTokens', params: StakeFioTokensOptions): Promise<TransactionResponse>;
     genericAction(action: 'unStakeFioTokens', params: UnStakeFioTokensOptions): Promise<TransactionResponse>;
     genericAction(action: 'getFee', params: GetFeeOptions): Promise<FioFeeResponse>;

@@ -1,4 +1,4 @@
-import {CancelledFioRequestsResponse, EncryptKeyResponse, FioItem, KeysPair} from '../../entities'
+import {CancelledFioRequestsResponse, EncryptKeyResponse, EndPoint, FioItem, KeysPair} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
@@ -22,7 +22,8 @@ export class CancelledFioRequestsQuery extends Query<
     CancelledFioRequestsQueryData,
     CancelledFioRequestsResponse | undefined
 > {
-    public ENDPOINT = 'chain/get_cancelled_fio_requests'
+    public ENDPOINT = `chain/${EndPoint.getCancelledFioRequests}` as const
+
     public isEncrypted = true
 
     constructor(config: RequestConfig, public props: CancelledFioRequestsQueryProps) {

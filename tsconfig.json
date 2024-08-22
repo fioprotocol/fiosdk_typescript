@@ -10,7 +10,6 @@
       "strict": true,
       "target": "es2015",
       "declaration": true,
-      "emitDeclarationOnly": true,
       "declarationMap": true,
       "lib": ["ES2021.Promise", "ES2020.Promise", "dom"],
     },

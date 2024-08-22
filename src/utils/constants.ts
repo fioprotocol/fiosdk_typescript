@@ -1,50 +1,59 @@
-export class Constants {
-  public static endPoints = {
-    AddPublicAddress: 'add_pub_address',
-    PushTransaction: 'push_transaction',
-    RecordObtData: 'record_obt_data',
-    RegisterFioAddress: 'register_fio_address',
-    RegisterFioDomain: 'register_fio_domain',
-    RegisterFioDomainAddress: 'register_fio_domain_address',
-    RejectFundsRequest: 'reject_funds_request',
-    RequestNewFunds: 'new_funds_request',
-    SetFioDomainVisibility: 'set_fio_domain_public',
-    StakeFioTokens: 'stake_fio_tokens',
-    TransferTokensFioAddress: 'transfer_tokens_fio_address',
-    TransferTokensKey: 'transfer_tokens_pub_key',
-    UnStakeFioTokens: 'unstake_fio_tokens',
-  }
+import {Account, EndPoint} from '../entities'
 
-  public static feeNoAddressOperation: string[] = [
-    Constants.endPoints.RegisterFioDomain,
-    Constants.endPoints.RegisterFioAddress,
-    Constants.endPoints.RegisterFioDomainAddress,
-    Constants.endPoints.TransferTokensKey,
-    Constants.endPoints.TransferTokensFioAddress,
-  ]
+/**
+ * @deprecated use {@link EndPoint}
+ */
+export const endPoints = {
+    AddPublicAddress: EndPoint.addPubAddress,
+    PushTransaction: EndPoint.pushTransaction,
+    RecordObtData: EndPoint.recordObtData,
+    RegisterFioAddress: EndPoint.registerFioAddress,
+    RegisterFioDomain: EndPoint.registerFioDomain,
+    RegisterFioDomainAddress: EndPoint.registerFioDomainAddress,
+    RejectFundsRequest: EndPoint.rejectFundsRequest,
+    RequestNewFunds: EndPoint.newFundsRequest,
+    SetFioDomainVisibility: EndPoint.setFioDomainPublic,
+    StakeFioTokens: EndPoint.stakeFioTokens,
+    TransferTokensFioAddress: EndPoint.transferTokensFioAddress,
+    TransferTokensKey: EndPoint.transferTokensKey,
+    UnStakeFioTokens: EndPoint.unStakeFioTokens,
+}
 
-  public static rawAbiAccountName: string[] = [
-    'fio.address',
-    'fio.reqobt',
-    'fio.token',
+export const feeNoAddressOperation: string[] = [
+    EndPoint.registerFioDomain,
+    EndPoint.registerFioAddress,
+    EndPoint.registerFioDomainAddress,
+    EndPoint.transferTokensKey,
+    EndPoint.transferTokensFioAddress,
+]
+
+/**
+ * @deprecated use {@link Account}
+ */
+export const rawAbiAccountName: string[] = [
+    // TODO we really need it?
     'eosio',
-    'fio.fee',
+    // TODO we really need it?
     'eosio.msig',
-    'fio.treasury',
-    'fio.tpid',
-    'fio.staking',
-    'fio.perms',
-    'fio.escrow',
-    'fio.oracle',
-  ]
+    Account.address,
+    Account.reqObt,
+    Account.token,
+    Account.fee,
+    Account.treasury,
+    Account.tpid,
+    Account.staking,
+    Account.perms,
+    Account.escrow,
+    Account.oracle,
+]
 
-  public static multiplier = 1000000000
+export const multiplier = 1000000000
 
-  public static defaultAccount: string = 'fio.address'
+export const defaultAccount: string = Account.address
 
-  public static defaultExpirationOffset = 180
+export const defaultExpirationOffset = 180
 
-  public static classMethodsToExcludeFromProxy: string[] = [
+export const classMethodsToExcludeFromProxy: string[] = [
     'constructor',
     'SUFUnit',
     'derivedPublicKey',
@@ -54,6 +63,12 @@ export class Constants {
     'isFioDomainValid',
     'isFioPublicKeyValid',
     'isPublicAddressValid',
+    'validateChainCode',
+    'validateTokenCode',
+    'validateFioAddress',
+    'validateFioDomain',
+    'validateFioPublicKey',
+    'validatePublicAddress',
     'amountToSUF',
     'SUFToAmount',
     'getFioPublicKey',
@@ -64,7 +79,6 @@ export class Constants {
     'getAbi',
     'customRawAbiAccountName',
     'setCustomRawAbiAccountName',
-  ]
+]
 
-  public static missingAbiError = 'unknown key'
-}
+export const missingAbiError = 'unknown key'

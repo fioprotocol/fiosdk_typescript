@@ -1,8 +1,8 @@
 import { Api as FioJsApi } from '@fioprotocol/fiojs';
 import { AbiProvider, AuthorityProvider } from '@fioprotocol/fiojs/dist/chain-api-interfaces';
-import { PushTransactionArgs } from '@fioprotocol/fiojs/dist/chain-rpc-interfaces';
+import { GetBlockResult, PushTransactionArgs } from '@fioprotocol/fiojs/dist/chain-rpc-interfaces';
 import { AbortSignal } from 'abort-controller';
-import { AbiResponse, RawRequest } from '../entities';
+import { AbiResponse, FioInfoResponse, RawRequest } from '../entities';
 import { Rule } from '../utils/validation';
 type FetchJson = (uri: string, opts?: object) => any;
 interface SignedTxArgs {
@@ -26,10 +26,21 @@ export declare class FioError extends Error {
     constructor(message: string, code?: number, labelCode?: string, json?: any);
 }
 export type ApiMap = Map<string, AbiResponse>;
+export type LoggerContextType = 'request';
+export type LoggerRequestContext = {
+    endpoint: string;
+    body?: string | null;
+    fetchOptions?: any;
+    requestTimeout?: number;
+    res?: any;
+    error?: FioError;
+};
+export type RequestLogger = (type: LoggerContextType, context: LoggerRequestContext) => void;
 export type RequestConfig = {
     fioProvider: FioProvider;
     fetchJson: FetchJson;
     baseUrls: string[];
+    logger?: RequestLogger;
 };
 export interface FioProvider {
     prepareTransaction(param: {
@@ -43,21 +54,19 @@ export interface FioProvider {
     accountHash(pubKey: string): string;
 }
 export declare class Request {
+    protected config: RequestConfig;
     static abiMap: ApiMap;
-    baseUrls: string[];
-    fioProvider: FioProvider;
-    fetchJson: FetchJson;
-    publicKey: string;
-    privateKey: string;
-    validationData: object;
-    validationRules: Record<string, Rule> | null;
-    expirationOffset: number;
-    authPermission: string | undefined;
-    signingAccount: string | undefined;
-    constructor({ fioProvider, fetchJson, baseUrls }: RequestConfig);
+    protected publicKey: string;
+    protected privateKey: string;
+    protected validationData: object;
+    protected validationRules: Record<string, Rule> | null;
+    protected expirationOffset: number;
+    protected authPermission: string | undefined;
+    protected signingAccount: string | undefined;
+    constructor(config: RequestConfig);
     getActor(publicKey?: string): string;
-    getChainInfo(): Promise<any>;
-    getBlock(chain: any): Promise<any>;
+    getChainInfo(): Promise<FioInfoResponse>;
+    getBlock(chain: FioInfoResponse): Promise<GetBlockResult>;
     getChainDataForTx(): Promise<{
         chain_id: number;
         ref_block_num: number;
@@ -120,7 +129,7 @@ export declare class Request {
         fetchOptions?: any;
         signal: AbortSignal;
     }): Promise<any>;
-    multicastServers({ endpoint, body, fetchOptions, requestTimeout }: {
+    multicastServers(req: {
         endpoint: string;
         body?: string | null;
         fetchOptions?: any;

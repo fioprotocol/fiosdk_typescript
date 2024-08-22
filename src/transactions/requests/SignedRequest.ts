@@ -1,4 +1,5 @@
-import {Constants} from '../../utils/constants'
+import {Account, Action, EndPoint} from '../../entities'
+import {defaultExpirationOffset} from '../../utils/constants'
 import {Request} from '../Request'
 
 export abstract class SignedRequest<T = any, R = any> extends Request {
@@ -39,9 +40,9 @@ export abstract class SignedRequest<T = any, R = any> extends Request {
         return {}
     }
 
-    protected abstract ENDPOINT: string
-    protected abstract ACTION: string
-    protected abstract ACCOUNT: string
+    protected abstract ENDPOINT: `chain/${EndPoint}`
+    protected abstract ACTION: Action
+    protected abstract ACCOUNT: Account
 
     public abstract getData(): T
 
@@ -49,7 +50,7 @@ export abstract class SignedRequest<T = any, R = any> extends Request {
         privateKey: string,
         publicKey: string,
         dryRun = false,
-        expirationOffset = Constants.defaultExpirationOffset,
+        expirationOffset = defaultExpirationOffset,
     ): Promise<R> {
         this.privateKey = privateKey
         this.publicKey = publicKey
@@ -73,11 +74,11 @@ export abstract class SignedRequest<T = any, R = any> extends Request {
         return SignedRequest.prepareResponse(result)
     }
 
-    public getAction(): string {
+    public getAction(): Action {
         return this.ACTION
     }
 
-    public getAccount(): string {
+    public getAccount(): Account {
         return this.ACCOUNT
     }
 

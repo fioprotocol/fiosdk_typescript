@@ -1,4 +1,4 @@
-import { RegisterFioAddressResponse } from '../../entities';
+import { Account, Action, RegisterFioAddressResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type RegisterFioAddressRequestData = {
@@ -16,9 +16,9 @@ export type RegisterFioAddressRequestProps = {
 };
 export declare class RegisterFioAddressRequest extends SignedRequest<RegisterFioAddressRequestData, RegisterFioAddressResponse> {
     props: RegisterFioAddressRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/register_fio_address";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: RegisterFioAddressRequestProps);
     getData: () => {
         actor: string;

@@ -15,7 +15,7 @@ export type CancelledFioRequestsQueryData = {
 };
 export declare class CancelledFioRequestsQuery extends Query<CancelledFioRequestsQueryData, CancelledFioRequestsResponse | undefined> {
     props: CancelledFioRequestsQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_cancelled_fio_requests";
     isEncrypted: boolean;
     constructor(config: RequestConfig, props: CancelledFioRequestsQueryProps);
     getData: () => {

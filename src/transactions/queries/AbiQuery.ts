@@ -1,4 +1,4 @@
-import {AbiResponse} from '../../entities'
+import {AbiResponse, EndPoint} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -11,7 +11,7 @@ export type AbiQueryData = {
 }
 
 export class AbiQuery extends Query<AbiQueryData, AbiResponse> {
-    public ENDPOINT = 'chain/get_raw_abi'
+    public ENDPOINT = `chain/${EndPoint.getRawAbi}` as const
 
     constructor(config: RequestConfig, public props: AbiQueryProps) {
         super(config)

@@ -13,7 +13,7 @@ export type NftsByHashQueryData = {
 };
 export declare class NftsByHashQuery extends Query<NftsByHashQueryData, NftsResponse> {
     props: NftsByHashQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_nfts_hash";
     constructor(config: RequestConfig, props: NftsByHashQueryProps);
     getData: () => {
         hash: string;

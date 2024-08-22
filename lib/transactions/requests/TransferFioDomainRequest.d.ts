@@ -1,4 +1,4 @@
-import { TransferFioDomainResponse } from '../../entities';
+import { Account, Action, TransferFioDomainResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type TransferFioDomainRequestProps = {
@@ -16,9 +16,9 @@ export type TransferFioDomainRequestData = {
 };
 export declare class TransferFioDomainRequest extends SignedRequest<TransferFioDomainRequestData, TransferFioDomainResponse> {
     props: TransferFioDomainRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/transfer_fio_domain";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: TransferFioDomainRequestProps);
     getData: () => {
         actor: string;

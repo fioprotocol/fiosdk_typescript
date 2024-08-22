@@ -1,5 +1,4 @@
-import {PublicAddress, RemovePublicAddressesResponse} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {Account, Action, EndPoint, PublicAddress, RemovePublicAddressesResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -23,9 +22,9 @@ export class RemovePublicAddressesRequest extends SignedRequest<
     RemovePublicAddressesRequestData,
     RemovePublicAddressesResponse
 > {
-    public ENDPOINT = 'chain/remove_pub_address'
-    public ACTION = 'remaddress'
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.removePubAddress}` as const
+    public ACTION = Action.removeAddress
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: RemovePublicAddressesRequestProps) {
         super(config)

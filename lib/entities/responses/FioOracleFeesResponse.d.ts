@@ -1,11 +1,12 @@
+import { EndPoint } from '../EndPoint';
 export type FioOracleFeesResponse = {
     oracle_fees: [
         {
-            fee_name: 'wrap_fio_domain';
+            fee_name: EndPoint.wrapFioDomain;
             fee_amount: number;
         },
         {
-            fee_name: 'wrap_fio_tokens';
+            fee_name: EndPoint.wrapFioTokens;
             fee_amount: number;
         }
     ];

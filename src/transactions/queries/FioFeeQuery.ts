@@ -1,5 +1,5 @@
-import {FioFeeResponse} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {EndPoint, FioFeeResponse} from '../../entities'
+import {feeNoAddressOperation} from '../../utils/constants'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
@@ -15,7 +15,7 @@ export type FioFeeQueryData = {
 }
 
 export class FioFeeQuery extends Query<FioFeeQueryData, FioFeeResponse> {
-    public ENDPOINT = 'chain/get_fee'
+    public ENDPOINT = `chain/${EndPoint.getFee}` as const
 
     public props: ReturnType<FioFeeQuery['getResolvedProps']>
 
@@ -24,7 +24,7 @@ export class FioFeeQuery extends Query<FioFeeQueryData, FioFeeResponse> {
 
         this.props = this.getResolvedProps(props)
 
-        if (Constants.feeNoAddressOperation.findIndex((element) => element === this.props.endPoint) > -1
+        if (feeNoAddressOperation.findIndex((element) => element === this.props.endPoint) > -1
             && this.props.fioAddress.length > 0) {
             throw new Error(`End point ${this.props.endPoint} should not have any fio address, when requesting fee`)
         }

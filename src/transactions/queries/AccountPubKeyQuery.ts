@@ -1,4 +1,4 @@
-import {AccountPubKeyResponse} from '../../entities'
+import {AccountPubKeyResponse, EndPoint} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -11,7 +11,7 @@ export type AccountPubKeyQueryData = {
 }
 
 export class AccountPubKeyQuery extends Query<AccountPubKeyQueryData, AccountPubKeyResponse> {
-    public ENDPOINT = 'chain/get_account_fio_public_key'
+    public ENDPOINT = `chain/${EndPoint.getAccountFioPublicKey}` as const
 
     constructor(config: RequestConfig, public props: AccountPubKeyQueryProps) {
         super(config)

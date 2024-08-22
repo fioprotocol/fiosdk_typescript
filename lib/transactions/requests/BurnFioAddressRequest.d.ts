@@ -1,4 +1,4 @@
-import { BurnFioAddressResponse } from '../../entities';
+import { Account, Action, BurnFioAddressResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type BurnFioAddressRequestProps = {
@@ -14,9 +14,9 @@ export type BurnFioAddressRequestData = {
 };
 export declare class BurnFioAddressRequest extends SignedRequest<BurnFioAddressRequestData, BurnFioAddressResponse> {
     props: BurnFioAddressRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/burn_fio_address";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: BurnFioAddressRequestProps);
     getData: () => {
         actor: string;

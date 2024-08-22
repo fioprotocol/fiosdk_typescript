@@ -1,4 +1,4 @@
-import { RenewFioAddressResponse } from '../../entities';
+import { Account, Action, RenewFioAddressResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type RenewFioAddressRequestProps = {
@@ -14,9 +14,9 @@ export type RenewFioAddressRequestData = {
 };
 export declare class RenewFioAddressRequest extends SignedRequest<RenewFioAddressRequestData, RenewFioAddressResponse> {
     props: RenewFioAddressRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/renew_fio_address";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: RenewFioAddressRequestProps);
     getData: () => {
         actor: string;

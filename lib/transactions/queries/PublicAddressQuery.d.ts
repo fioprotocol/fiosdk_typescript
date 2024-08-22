@@ -13,7 +13,7 @@ export type PublicAddressQueryData = {
 };
 export declare class PublicAddressQuery extends Query<PublicAddressQueryData, PublicAddressResponse> {
     props: PublicAddressQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_pub_address";
     constructor(config: RequestConfig, props: PublicAddressQueryProps);
     getData: () => {
         chain_code: string;

@@ -15,7 +15,7 @@ export type ObjectPermissionsQueryData = {
 };
 export declare class ObjectPermissionsQuery extends Query<ObjectPermissionsQueryData, PermissionsResponse> {
     props: ObjectPermissionsQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_object_permissions";
     constructor(config: RequestConfig, props: ObjectPermissionsQueryProps);
     getData: () => {
         limit: number | undefined;

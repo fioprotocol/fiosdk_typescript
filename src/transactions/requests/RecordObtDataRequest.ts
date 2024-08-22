@@ -1,4 +1,4 @@
-import {RecordObtDataResponse} from '../../entities'
+import {Account, Action, EndPoint, FioRequestStatus, RecordObtDataResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -34,9 +34,9 @@ export type RecordObtDataRequestProps = {
 }
 
 export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData, RecordObtDataResponse> {
-    public ENDPOINT = 'chain/record_obt_data'
-    public ACTION = 'recordobt'
-    public ACCOUNT = 'fio.reqobt'
+    public ENDPOINT = `chain/${EndPoint.recordObtData}` as const
+    public ACTION = Action.recordObt
+    public ACCOUNT = Account.reqObt
 
     public props: ReturnType<RecordObtDataRequest['getResolvedProps']>
     public content: ReturnType<RecordObtDataRequest['getResolvedContent']>
@@ -81,7 +81,7 @@ export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData
         offline_url: this.props.offLineUrl,
         payee_public_address: this.props.payeeTokenPublicAddress,
         payer_public_address: this.props.payerTokenPublicAddress,
-        status: this.props.status || 'sent_to_blockchain',
+        status: this.props.status || FioRequestStatus.sent_to_blockchain,
         token_code: this.props.tokenCode,
     })
 
@@ -92,8 +92,8 @@ export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData
         hash: props.hash ?? null,
         memo: props.memo ?? null,
         offLineUrl: props.offLineUrl ?? null,
-        status: props.status ?? '',
         payeeFioPublicKey: props.payeeFioPublicKey ?? '',
+        status: props.status ?? '',
     })
 
 }

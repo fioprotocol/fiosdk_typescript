@@ -13,7 +13,7 @@ export type FioDomainsQueryData = {
 };
 export declare class FioDomainsQuery extends Query<FioDomainsQueryData, FioDomainsResponse> {
     props: FioDomainsQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_fio_domains";
     constructor(config: RequestConfig, props: FioDomainsQueryProps);
     getData: () => {
         fio_public_key: string;

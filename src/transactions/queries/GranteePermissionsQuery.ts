@@ -1,4 +1,4 @@
-import {PermissionsResponse} from '../../entities'
+import {EndPoint, PermissionsResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -15,7 +15,7 @@ export type GranteePermissionsQueryData = {
 }
 
 export class GranteePermissionsQuery extends Query<GranteePermissionsQueryData, PermissionsResponse> {
-    public ENDPOINT = 'chain/get_grantee_permissions'
+    public ENDPOINT = `chain/${EndPoint.getGranteePermissions}` as const
 
     constructor(config: RequestConfig, public props: GranteePermissionsQueryProps) {
         super(config)

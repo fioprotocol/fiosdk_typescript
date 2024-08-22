@@ -1,4 +1,4 @@
-import {FioDomainsResponse} from '../../entities'
+import {EndPoint, FioDomainsResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -15,7 +15,7 @@ export type FioDomainsQueryData = {
 }
 
 export class FioDomainsQuery extends Query<FioDomainsQueryData, FioDomainsResponse> {
-    public ENDPOINT = 'chain/get_fio_domains'
+    public ENDPOINT = `chain/${EndPoint.getFioDomains}` as const
 
     constructor(config: RequestConfig, public props: FioDomainsQueryProps) {
         super(config)

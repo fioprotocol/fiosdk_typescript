@@ -1,5 +1,3 @@
-import {Constants} from '../../utils/constants'
-
 export type MockRegisterFioNameRequestProps = {
     fioName: string
     publicKey: string
@@ -11,11 +9,11 @@ export type MockRegisterFioNameRequestData = {
     owner_fio_public_key: string,
 }
 
+// TODO we really need this?
 // TODO add some Transaction interface
 export class MockRegisterFioNameRequest {
+    // TODO why here not present chain/?
     public ENDPOINT = '/register_fio_name'
-    public ACTION = 'regaddress'
-    public ACOUNT: string = Constants.defaultAccount
 
     constructor(public props: MockRegisterFioNameRequestProps) {
         // TODO add some validation

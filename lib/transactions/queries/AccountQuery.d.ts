@@ -9,7 +9,7 @@ export type AccountQueryData = {
 };
 export declare class AccountQuery extends Query<AccountQueryData, AccountResponse> {
     props: AccountQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_account";
     constructor(config: RequestConfig, props: AccountQueryProps);
     getData: () => {
         account_name: string;

@@ -1,10 +1,12 @@
 import {Ecc, Fio} from '@fioprotocol/fiojs'
 import {
     AbiResponse,
+    Account,
     AccountPubKeyResponse,
     AccountResponse,
-    AddBundledResponse,
+    Action,
     AddBundledTransactionsOptions,
+    AddBundledTransactionsResponse,
     AddPublicAddressesOptions,
     AddPublicAddressesResponse,
     AddPublicAddressOptions,
@@ -102,8 +104,8 @@ import {
     TransferFioDomainResponse,
     TransferLockedTokensOptions,
     TransferLockedTokensResponse,
+    TransferTokensKeyResponse,
     TransferTokensOptions,
-    TransferTokensResponse,
     UnStakeFioTokensOptions,
     ValidationError,
 } from './entities'
@@ -111,16 +113,13 @@ import * as queries from './transactions/queries'
 import {Request, RequestConfig} from './transactions/Request'
 import * as requests from './transactions/requests'
 import {SignedRequest} from './transactions/requests/SignedRequest'
-import {Constants} from './utils/constants'
+import * as fioConstants from './utils/constants'
 import {cleanupObject, resolveOptions} from './utils/utils'
 import {allRules, validate} from './utils/validation'
 
 export * from './entities'
+export { fioConstants }
 
-// TODO move all stuff for testing to another class and extend from FIOSDK
-// TODO discus maybe add additional parameter notThrowValidationErrors {boolean} to constructor?
-// true - validate methods return true or false
-// false - validate methods return true or throw ValidationError
 // TODO discus maybe add additional parameter useCamelCaseResponses {boolean} to constructor?
 // true - transform all responses to camelcase
 // false - left default responses
@@ -202,112 +201,112 @@ export class FIOSDK {
      *
      * @returns FIO account derived from pub key.
      */
-    // TODO add return type
+    // TODO Why we wrap result in object
     public static accountHash(fioPublicKey: string) {
         const accountnm = Fio.accountHash(fioPublicKey)
         return {accountnm}
     }
 
     /**
+     * @deprecated use {@link FIOSDK#validateChainCode}
      * Is the Chain Code Valid?
      *
      * @param chainCode
      *
      * @returns Chain Code is Valid
      */
-    // TODO change throw error to return boolean
     public static isChainCodeValid(chainCode: string) {
         const validation = validate({chainCode}, {chainCode: allRules.chain})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors, `Validation error`)
         }
 
-        return true
+        return validation.isValid
     }
 
     /**
+     * @deprecated use {@link FIOSDK#validateTokenCode}
      * Is the Token Code Valid?
      *
      * @param tokenCode
      *
      * @returns Token Code is Valid
      */
-    // TODO change throw error to return boolean
     public static isTokenCodeValid(tokenCode: string) {
         const validation = validate({tokenCode}, {tokenCode: allRules.chain})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors)
         }
 
-        return true
+        return validation.isValid
     }
 
     /**
+     * @deprecated use {@link FIOSDK#validateFioAddress}
      * Is the FIO Address Valid?
      *
      * @param fioAddress
      *
      * @returns Fio Address is Valid
      */
-    // TODO change throw error to return boolean
     public static isFioAddressValid(fioAddress: string) {
         const validation = validate({fioAddress}, {fioAddress: allRules.fioAddress})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors)
         }
 
-        return true
+        return validation.isValid
     }
 
     /**
+     * @deprecated use {@link FIOSDK#validateFioDomain}
      * Is the FIO Domain Valid?
      *
      * @param fioDomain
      *
      * @returns FIO Domain is Valid
      */
-    // TODO change throw error to return boolean
     public static isFioDomainValid(fioDomain: string) {
         const validation = validate({fioDomain}, {fioDomain: allRules.fioDomain})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors)
         }
 
-        return true
+        return validation.isValid
     }
 
     /**
+     * @deprecated use {@link FIOSDK#validateFioPublicKey}
      * Is the FIO Public Key Valid?
      *
      * @param fioPublicKey
      *
      * @returns FIO Public Key is Valid
      */
-    // TODO change throw error to return boolean
     public static isFioPublicKeyValid(fioPublicKey: string) {
         const validation = validate({fioPublicKey}, {fioPublicKey: allRules.fioPublicKey})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors)
         }
 
-        return true
+        return validation.isValid
     }
 
     /**
+     * @deprecated use {@link FIOSDK#validatePublicAddress}
      * Is the Public Address Valid?
      *
      * @param publicAddress
      *
      * @returns Public Address is Valid
      */
-    // TODO change throw error to return boolean
     public static isPublicAddressValid(publicAddress: string) {
         const validation = validate({publicAddress}, {publicAddress: allRules.nativeBlockchainPublicAddress})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors)
         }
 
-        return true
+        return validation.isValid
     }
 
     /**
@@ -404,9 +403,11 @@ export class FIOSDK {
             }
             let rawAbiAccountNameList = []
             if (FIOSDK.customRawAbiAccountName) {
-                rawAbiAccountNameList = [...Constants.rawAbiAccountName, ...FIOSDK.customRawAbiAccountName]
+                // TODO if not use eos use Object.values(Account)
+                rawAbiAccountNameList = [...fioConstants.rawAbiAccountName, ...FIOSDK.customRawAbiAccountName]
             } else {
-                rawAbiAccountNameList = Constants.rawAbiAccountName
+                // TODO if not use eos use Object.values(Account)
+                rawAbiAccountNameList = fioConstants.rawAbiAccountName
             }
 
             const setAbiPromises = rawAbiAccountNameList.map((accountName) => setAbi(accountName))
@@ -425,7 +426,7 @@ export class FIOSDK {
                         error = reason.message
                     }
 
-                    if (error.includes(Constants.missingAbiError)) {
+                    if (error.includes(fioConstants.missingAbiError)) {
                         const abiAccountName = reason.requestParams
                             && reason.requestParams.body
                             && reason.requestParams.body
@@ -458,7 +459,7 @@ export class FIOSDK {
      * @ignore
      * Defines whether SignedTransaction would execute or return prepared transaction
      */
-    private returnPreparedTrx: boolean = false
+    private returnPreparedTrx: boolean
 
     /**
      * @deprecated
@@ -517,7 +518,7 @@ export class FIOSDK {
             returnPreparedTrx = false,
         } = resolveOptions<FioSdkOptions>({
             arguments,
-            keys: ['privateKey', 'publicKey', 'apiUrls', 'fetchJson', 'registerMockUrl', 'technologyProviderId', 'returnPreparedTrx'],
+            keys: ['privateKey', 'publicKey', 'apiUrls', 'fetchJson', 'registerMockUrl', 'technologyProviderId', 'returnPreparedTrx', 'throwValidationErrors'],
         })
         this.config = {
             baseUrls: Array.isArray(apiUrls) ? apiUrls : [apiUrls],
@@ -537,9 +538,83 @@ export class FIOSDK {
 
         // Replace all methods with Proxy methods
         // Find and remove constructor as we don't need Proxy on it
-        methods.filter((method) => !Constants.classMethodsToExcludeFromProxy.includes(method)).forEach((methodName) => {
-            this[methodName as keyof FIOSDK] = new Proxy(this[methodName as keyof FIOSDK], this.proxyHandle)
-        })
+        methods.filter((method) => !fioConstants.classMethodsToExcludeFromProxy
+            .includes(method))
+            .forEach((methodName) => {
+                this[methodName as keyof FIOSDK] = new Proxy(this[methodName as keyof FIOSDK], this.proxyHandle)
+            })
+    }
+
+    /**
+     * Is the Chain Code Valid?
+     *
+     * @param chainCode
+     *
+     * @returns Chain Code is Valid
+     */
+    public validateChainCode(chainCode: string) {
+        const validation = validate({chainCode}, {chainCode: allRules.chain})
+        return validation.isValid
+    }
+
+    /**
+     * Is the Token Code Valid?
+     *
+     * @param tokenCode
+     *
+     * @returns Token Code is Valid
+     */
+    public validateTokenCode(tokenCode: string) {
+        const validation = validate({tokenCode}, {tokenCode: allRules.chain})
+        return validation.isValid
+    }
+
+    /**
+     * Is the FIO Address Valid?
+     *
+     * @param fioAddress
+     *
+     * @returns Fio Address is Valid
+     */
+    public validateFioAddress(fioAddress: string) {
+        const validation = validate({fioAddress}, {fioAddress: allRules.fioAddress})
+        return validation.isValid
+    }
+
+    /**
+     * Is the FIO Domain Valid?
+     *
+     * @param fioDomain
+     *
+     * @returns FIO Domain is Valid
+     */
+    public validateFioDomain(fioDomain: string) {
+        const validation = validate({fioDomain}, {fioDomain: allRules.fioDomain})
+        return validation.isValid
+    }
+
+    /**
+     * Is the FIO Public Key Valid?
+     *
+     * @param fioPublicKey
+     *
+     * @returns FIO Public Key is Valid
+     */
+    public validateFioPublicKey(fioPublicKey: string) {
+        const validation = validate({fioPublicKey}, {fioPublicKey: allRules.fioPublicKey})
+        return validation.isValid
+    }
+
+    /**
+     * Is the Public Address Valid?
+     *
+     * @param publicAddress
+     *
+     * @returns Public Address is Valid
+     */
+    public validatePublicAddress(publicAddress: string) {
+        const validation = validate({publicAddress}, {publicAddress: allRules.nativeBlockchainPublicAddress})
+        return validation.isValid
     }
 
     /**
@@ -937,7 +1012,7 @@ export class FIOSDK {
         bundleSets: number,
         maxFee: number,
         technologyProviderId?: string | null,
-    ): Promise<AddBundledResponse>
+    ): Promise<AddBundledTransactionsResponse>
     /**
      * Adds bundles of transactions to FIO Address.
      *
@@ -948,13 +1023,13 @@ export class FIOSDK {
      * Should be preceded by @ [getFee] for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    public addBundledTransactions(options: AddBundledTransactionsOptions): Promise<AddBundledResponse>
-    public addBundledTransactions(): Promise<AddBundledResponse> {
+    public addBundledTransactions(options: AddBundledTransactionsOptions): Promise<AddBundledTransactionsResponse>
+    public addBundledTransactions(): Promise<AddBundledTransactionsResponse> {
         const args = resolveOptions<AddBundledTransactionsOptions>({
             arguments,
             keys: ['fioAddress', 'bundleSets', 'maxFee', 'technologyProviderId'],
         })
-        const addBundledTransactions = new requests.AddBundledRequest(
+        const addBundledTransactions = new requests.AddBundledTransactionsRequest(
             this.config,
             {
                 ...args,
@@ -1982,7 +2057,7 @@ export class FIOSDK {
         amount: number,
         maxFee: number,
         technologyProviderId?: string | null,
-    ): Promise<TransferTokensResponse>
+    ): Promise<TransferTokensKeyResponse>
     /**
      * Transfers FIO tokens from public key associated with the FIO SDK instance to
      * the payeePublicKey.
@@ -1993,13 +2068,13 @@ export class FIOSDK {
      * Should be preceded by /get_fee for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    public transferTokens(options: TransferTokensOptions): Promise<TransferTokensResponse>
-    public transferTokens(): Promise<TransferTokensResponse> {
+    public transferTokens(options: TransferTokensOptions): Promise<TransferTokensKeyResponse>
+    public transferTokens(): Promise<TransferTokensKeyResponse> {
         const args = resolveOptions<TransferTokensOptions>({
             arguments,
             keys: ['payeeFioPublicKey', 'amount', 'maxFee', 'technologyProviderId'],
         })
-        const transferTokens = new requests.TransferTokensRequest(
+        const transferTokens = new requests.TransferTokensKeyRequest(
             this.config,
             {
                 ...args,
@@ -2321,8 +2396,8 @@ export class FIOSDK {
             resolvedMaxFee = stakeFee
         }
         return this.pushTransaction({
-            account: 'fio.staking',
-            action: 'stakefio',
+            account: Account.staking,
+            action: Action.stake,
             data: {
                 amount,
                 fio_address: fioAddress,
@@ -2378,8 +2453,8 @@ export class FIOSDK {
             resolvedMaxFee = stakeFee
         }
         return this.pushTransaction({
-            account: 'fio.staking',
-            action: 'unstakefio',
+            account: Account.staking,
+            action: Action.unstake,
             data: {
                 amount,
                 fio_address: fioAddress,
@@ -2391,7 +2466,7 @@ export class FIOSDK {
 
     // TODO add more documentation
     public getMultiplier() {
-        return Constants.multiplier
+        return fioConstants.multiplier
     }
 
     /**
@@ -2507,7 +2582,7 @@ export class FIOSDK {
     public genericAction(
         action: 'addBundledTransactions',
         params: AddBundledTransactionsOptions,
-    ): Promise<AddBundledResponse>
+    ): Promise<AddBundledTransactionsResponse>
     public genericAction(
         action: 'addPublicAddress',
         params: AddPublicAddressOptions,
@@ -2587,7 +2662,7 @@ export class FIOSDK {
         params: GetPublicAddressesOptions,
     ): Promise<PublicAddressesResponse>
     public genericAction(action: 'getNfts', params: GetNftsOptions): Promise<NftsResponse>
-    public genericAction(action: 'transferTokens', params: TransferTokensOptions): Promise<TransferTokensResponse>
+    public genericAction(action: 'transferTokens', params: TransferTokensOptions): Promise<TransferTokensKeyResponse>
     public genericAction(action: 'stakeFioTokens', params: StakeFioTokensOptions): Promise<TransactionResponse>
     public genericAction(action: 'unStakeFioTokens', params: UnStakeFioTokensOptions): Promise<TransactionResponse>
     public genericAction(action: 'getFee', params: GetFeeOptions): Promise<FioFeeResponse>

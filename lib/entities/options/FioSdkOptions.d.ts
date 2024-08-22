@@ -7,5 +7,6 @@ export type FioSdkOptions = {
     registerMockUrl?: string | null;
     technologyProviderId?: string | null;
     returnPreparedTrx?: boolean | null;
+    throwValidationErrors?: boolean | null;
 };
 //# sourceMappingURL=FioSdkOptions.d.ts.map

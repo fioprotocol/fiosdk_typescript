@@ -1,4 +1,4 @@
-import {CancelFundsRequestResponse} from '../../entities'
+import {Account, Action, CancelFundsRequestResponse, EndPoint} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -16,10 +16,13 @@ export type CancelFundsRequestRequestData = {
     actor: string;
 }
 
-export class CancelFundsRequestRequest extends SignedRequest<CancelFundsRequestRequestData, CancelFundsRequestResponse> {
-    public ENDPOINT = 'chain/cancel_funds_request'
-    public ACTION = 'cancelfndreq'
-    public ACCOUNT = 'fio.reqobt'
+export class CancelFundsRequestRequest extends SignedRequest<
+    CancelFundsRequestRequestData,
+    CancelFundsRequestResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.cancelFundsRequest}` as const
+    public ACTION = Action.cancelFundsRequest
+    public ACCOUNT = Account.reqObt
 
     constructor(config: RequestConfig, public props: CancelFundsRequestRequestProps) {
         super(config)

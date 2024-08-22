@@ -1,4 +1,4 @@
-import { CancelFundsRequestResponse } from '../../entities';
+import { Account, Action, CancelFundsRequestResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type CancelFundsRequestRequestProps = {
@@ -14,9 +14,9 @@ export type CancelFundsRequestRequestData = {
 };
 export declare class CancelFundsRequestRequest extends SignedRequest<CancelFundsRequestRequestData, CancelFundsRequestResponse> {
     props: CancelFundsRequestRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/cancel_funds_request";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: CancelFundsRequestRequestProps);
     getData: () => {
         actor: string;

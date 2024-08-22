@@ -10,8 +10,6 @@ export type MockRegisterFioNameRequestData = {
 export declare class MockRegisterFioNameRequest {
     props: MockRegisterFioNameRequestProps;
     ENDPOINT: string;
-    ACTION: string;
-    ACOUNT: string;
     constructor(props: MockRegisterFioNameRequestProps);
     execute(): Promise<any>;
 }

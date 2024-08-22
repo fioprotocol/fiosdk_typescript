@@ -1,4 +1,4 @@
-import {FioAddressesResponse} from '../../entities'
+import {EndPoint, FioAddressesResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -15,7 +15,7 @@ export type FioAddressesQueryData = {
 }
 
 export class FioAddressesQuery extends Query<FioAddressesQueryData, FioAddressesResponse> {
-    public ENDPOINT = 'chain/get_fio_addresses'
+    public ENDPOINT = `chain/${EndPoint.getFioAddresses}` as const
 
     constructor(config: RequestConfig, public props: FioAddressesQueryProps) {
         super(config)

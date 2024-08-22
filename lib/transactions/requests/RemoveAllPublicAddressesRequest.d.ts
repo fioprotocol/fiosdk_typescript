@@ -1,4 +1,4 @@
-import { RemoveAllPublicAddressesResponse } from '../../entities';
+import { Account, Action, RemoveAllPublicAddressesResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type RemoveAllPublicAddressesRequestProps = {
@@ -14,9 +14,9 @@ export type RemoveAllPublicAddressesRequestData = {
 };
 export declare class RemoveAllPublicAddressesRequest extends SignedRequest<RemoveAllPublicAddressesRequestData, RemoveAllPublicAddressesResponse> {
     props: RemoveAllPublicAddressesRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/remove_all_pub_addresses";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: RemoveAllPublicAddressesRequestProps);
     getData: () => {
         actor: string;

@@ -13,7 +13,7 @@ export type NftsByFioAddressQueryData = {
 };
 export declare class NftsByFioAddressQuery extends Query<NftsByFioAddressQueryData, NftsResponse> {
     props: NftsByFioAddressQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_nfts_fio_address";
     constructor(config: RequestConfig, props: NftsByFioAddressQueryProps);
     getData: () => {
         fio_address: string;

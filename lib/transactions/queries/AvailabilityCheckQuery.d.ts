@@ -9,7 +9,7 @@ export type AvailabilityCheckQueryData = {
 };
 export declare class AvailabilityCheckQuery extends Query<AvailabilityCheckQueryData, AvailabilityCheckResponse> {
     props: AvailabilityCheckQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/avail_check";
     constructor(config: RequestConfig, props: AvailabilityCheckQueryProps);
     getData: () => {
         fio_name: string;

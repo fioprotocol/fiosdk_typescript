@@ -1,4 +1,4 @@
-import {LockPeriod, TransferLockedTokensResponse} from '../../entities'
+import {Account, Action, EndPoint, LockPeriod, TransferLockedTokensResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -26,9 +26,9 @@ export class TransferLockedTokensRequest extends SignedRequest<
     TransferLockedTokensRequestData,
     TransferLockedTokensResponse
 > {
-    public ENDPOINT = 'chain/transfer_locked_tokens'
-    public ACTION = 'trnsloctoks'
-    public ACCOUNT = 'fio.token'
+    public ENDPOINT = `chain/${EndPoint.transferLockedTokens}` as const
+    public ACTION = Action.transferLockedTokens
+    public ACCOUNT = Account.token
 
     constructor(config: RequestConfig, public props: TransferLockedTokensRequestProps) {
         super(config)

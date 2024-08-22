@@ -1,4 +1,4 @@
-import {FundsRequestResponse} from '../../entities'
+import {Account, Action, EndPoint, FundsRequestResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -33,9 +33,9 @@ export class FundsRequestRequest extends SignedRequest<
     FundsRequestResponse
 > {
 
-    public ENDPOINT = 'chain/new_funds_request'
-    public ACTION = 'newfundsreq'
-    public ACCOUNT = 'fio.reqobt'
+    public ENDPOINT = `chain/${EndPoint.newFundsRequest}` as const
+    public ACTION = Action.newFundsRequest
+    public ACCOUNT = Account.reqObt
 
     public props: ReturnType<FundsRequestRequest['getResolvedProps']>
     public content: ReturnType<FundsRequestRequest['getResolvedContent']>

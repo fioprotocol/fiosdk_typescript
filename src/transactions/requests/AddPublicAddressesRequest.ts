@@ -1,5 +1,4 @@
-import {AddPublicAddressesResponse, PublicAddress} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {Account, Action, AddPublicAddressesResponse, EndPoint, PublicAddress} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -19,10 +18,13 @@ export type AddPublicAddressesRequestData = {
     max_fee: number
 }
 
-export class AddPublicAddressesRequest extends SignedRequest<AddPublicAddressesRequestData, AddPublicAddressesResponse> {
-    public ENDPOINT = 'chain/add_pub_address'
-    public ACTION = 'addaddress'
-    public ACCOUNT = Constants.defaultAccount
+export class AddPublicAddressesRequest extends SignedRequest<
+    AddPublicAddressesRequestData,
+    AddPublicAddressesResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.addPubAddress}` as const
+    public ACTION = Action.addPublicAddresses
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: AddPublicAddressesRequestProps) {
         super(config)

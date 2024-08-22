@@ -1,4 +1,4 @@
-import { FundsRequestResponse } from '../../entities';
+import { Account, Action, FundsRequestResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type FundsRequestRequestProps = {
@@ -25,9 +25,9 @@ export type FundsRequestRequestData = {
     tpid: string;
 };
 export declare class FundsRequestRequest extends SignedRequest<FundsRequestRequestData, FundsRequestResponse> {
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/new_funds_request";
+    ACTION: Action;
+    ACCOUNT: Account;
     props: ReturnType<FundsRequestRequest['getResolvedProps']>;
     content: ReturnType<FundsRequestRequest['getResolvedContent']>;
     constructor(config: RequestConfig, props: FundsRequestRequestProps);

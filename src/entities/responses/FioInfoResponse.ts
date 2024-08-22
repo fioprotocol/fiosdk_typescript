@@ -1,4 +1,3 @@
-// TODO maybe here "public async getChainInfo(): Promise<any>"?
 export type FioInfoResponse = {
     server_version: string
     chain_id: string

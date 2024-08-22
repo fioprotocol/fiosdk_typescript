@@ -1,5 +1,4 @@
-import {TransferFioDomainResponse} from '../../entities'
-import { Constants } from '../../utils/constants'
+import {Account, Action, EndPoint, TransferFioDomainResponse} from '../../entities'
 import { validationRules } from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import { SignedRequest } from './SignedRequest'
@@ -20,9 +19,9 @@ export type TransferFioDomainRequestData = {
 }
 
 export class TransferFioDomainRequest extends SignedRequest<TransferFioDomainRequestData, TransferFioDomainResponse> {
-    public ENDPOINT = 'chain/transfer_fio_domain'
-    public ACTION = 'xferdomain'
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.transferFioDomain}` as const
+    public ACTION = Action.transferDomain
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: TransferFioDomainRequestProps) {
         super(config)

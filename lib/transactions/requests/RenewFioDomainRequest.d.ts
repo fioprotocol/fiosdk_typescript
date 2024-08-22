@@ -1,4 +1,4 @@
-import { RenewFioDomainResponse } from '../../entities';
+import { Account, Action, RenewFioDomainResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type RenewFioDomainRequestProps = {
@@ -14,9 +14,9 @@ export type RenewFioDomainRequestData = {
 };
 export declare class RenewFioDomainRequest extends SignedRequest<RenewFioDomainRequestData, RenewFioDomainResponse> {
     props: RenewFioDomainRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/renew_fio_domain";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: RenewFioDomainRequestProps);
     getData: () => {
         actor: string;

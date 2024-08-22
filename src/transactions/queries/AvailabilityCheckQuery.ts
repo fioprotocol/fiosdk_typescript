@@ -1,4 +1,4 @@
-import {AvailabilityCheckResponse} from '../../entities'
+import {AvailabilityCheckResponse, EndPoint} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -11,7 +11,7 @@ export type AvailabilityCheckQueryData = {
 }
 
 export class AvailabilityCheckQuery extends Query<AvailabilityCheckQueryData, AvailabilityCheckResponse> {
-    public ENDPOINT = 'chain/avail_check'
+    public ENDPOINT = `chain/${EndPoint.availCheck}` as const
 
     constructor(config: RequestConfig, public props: AvailabilityCheckQueryProps) {
         super(config)

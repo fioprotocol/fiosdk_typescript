@@ -1,5 +1,4 @@
-import {RenewFioAddressResponse} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {Account, Action, EndPoint, RenewFioAddressResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -18,9 +17,9 @@ export type RenewFioAddressRequestData = {
 }
 
 export class RenewFioAddressRequest extends SignedRequest<RenewFioAddressRequestData, RenewFioAddressResponse> {
-    public ENDPOINT = 'chain/renew_fio_address'
-    public ACTION = 'renewaddress'
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.renewFioAddress}` as const
+    public ACTION = Action.renewAddress
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: RenewFioAddressRequestProps) {
         super(config)

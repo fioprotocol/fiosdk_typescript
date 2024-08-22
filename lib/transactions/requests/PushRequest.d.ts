@@ -1,13 +1,9 @@
+import { Account, Action, EncryptOptions } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
-export type EncryptOptions = {
-    publicKey?: string;
-    privateKey?: string;
-    contentType?: string;
-};
 export type PushRequestProps = {
-    action: string;
-    account?: string;
+    action: Action;
+    account?: Account;
     data: any;
     encryptOptions: EncryptOptions;
     authPermission: string | undefined;
@@ -15,9 +11,9 @@ export type PushRequestProps = {
 };
 export declare class PushRequest extends SignedRequest {
     props: PushRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/push_transaction";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: PushRequestProps);
     getData(): any;
 }

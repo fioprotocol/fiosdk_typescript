@@ -6,17 +6,18 @@ import {
     BinaryAbi,
 } from '@fioprotocol/fiojs/dist/chain-api-interfaces'
 
+// TODO fix types import when update fiojs lib
 import {JsSignatureProvider} from '@fioprotocol/fiojs/dist/chain-jssig'
 import {arrayToHex, base64ToBinary} from '@fioprotocol/fiojs/dist/chain-numeric'
-import {PushTransactionArgs} from '@fioprotocol/fiojs/dist/chain-rpc-interfaces'
+import {GetBlockResult, PushTransactionArgs} from '@fioprotocol/fiojs/dist/chain-rpc-interfaces'
 
 import {AbortSignal} from 'abort-controller'
 
 import {TextDecoder, TextEncoder} from 'text-encoding'
 
-import {AbiResponse, RawRequest, ValidationError} from '../entities'
+import {AbiResponse, EndPoint, FioInfoResponse, RawRequest, ValidationError} from '../entities'
 
-import {Constants} from '../utils/constants'
+import {defaultExpirationOffset} from '../utils/constants'
 import {asyncWaterfall, createAuthorization, createRawAction, createRawRequest} from '../utils/utils'
 import {Rule, validate} from '../utils/validation'
 
@@ -77,10 +78,24 @@ export class FioError extends Error {
 
 export type ApiMap = Map<string, AbiResponse>
 
+export type LoggerContextType = 'request'
+
+export type LoggerRequestContext = {
+    endpoint: string
+    body?: string | null
+    fetchOptions?: any
+    requestTimeout?: number
+    res?: any
+    error?: FioError,
+}
+
+export type RequestLogger = (type: LoggerContextType, context: LoggerRequestContext) => void
+
 export type RequestConfig = {
     fioProvider: FioProvider;
     fetchJson: FetchJson;
     baseUrls: string[];
+    logger?: RequestLogger
 }
 
 export interface FioProvider {
@@ -99,31 +114,23 @@ export interface FioProvider {
 export class Request {
     public static abiMap: ApiMap = new Map()
 
-    public baseUrls: string[]
-    public fioProvider: FioProvider
+    protected publicKey: string = ''
+    protected privateKey: string = ''
 
-    public fetchJson: FetchJson
-    public publicKey: string = ''
-    public privateKey: string = ''
+    protected validationData: object = {}
+    protected validationRules: Record<string, Rule> | null = null
 
-    public validationData: object = {}
-    public validationRules: Record<string, Rule> | null = null
+    protected expirationOffset: number = defaultExpirationOffset
+    protected authPermission: string | undefined
+    protected signingAccount: string | undefined
 
-    public expirationOffset: number = Constants.defaultExpirationOffset
-    public authPermission: string | undefined
-    public signingAccount: string | undefined
-
-    constructor({fioProvider, fetchJson, baseUrls}: RequestConfig) {
-        this.baseUrls = baseUrls
-        this.fetchJson = fetchJson
-        this.fioProvider = fioProvider
-    }
+    constructor(protected config: RequestConfig) {}
 
     public getActor(publicKey: string = ''): string {
-        return this.fioProvider.accountHash((publicKey === '' || !publicKey) ? this.publicKey : publicKey)
+        return this.config.fioProvider.accountHash((publicKey === '' || !publicKey) ? this.publicKey : publicKey)
     }
 
-    public async getChainInfo(): Promise<any> {
+    public async getChainInfo(): Promise<FioInfoResponse> {
         const options = {
             headers: {
                 'Accept': 'application/json',
@@ -131,10 +138,10 @@ export class Request {
             },
             method: 'GET',
         }
-        return await this.multicastServers({endpoint: 'chain/get_info', fetchOptions: options})
+        return await this.multicastServers({endpoint: `chain/${EndPoint.getInfo}`, fetchOptions: options})
     }
 
-    public async getBlock(chain: any): Promise<any> {
+    public async getBlock(chain: FioInfoResponse): Promise<GetBlockResult> {
         if (chain === undefined || !chain) {
             throw new Error('chain undefined')
         }
@@ -142,7 +149,7 @@ export class Request {
             throw new Error('chain.last_irreversible_block_num undefined')
         }
         return await this.multicastServers({
-            endpoint: 'chain/get_block', fetchOptions: {
+            endpoint: `chain/${EndPoint.getBlock}`, fetchOptions: {
                 body: JSON.stringify({
                     block_num_or_id: chain.last_irreversible_block_num,
                 }),
@@ -150,6 +157,7 @@ export class Request {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
+                // TODO for get request we use POST?
                 method: 'POST',
             },
         })
@@ -161,8 +169,8 @@ export class Request {
         ref_block_prefix: number,
         expiration: string,
     }> {
-        let chain
-        let block
+        let chain: FioInfoResponse
+        let block: GetBlockResult
         try {
             chain = await this.getChainInfo()
         } catch (error) {
@@ -188,6 +196,8 @@ export class Request {
         expiration.setSeconds(expiration.getSeconds() + this.expirationOffset)
         const expirationStr = expiration.toISOString()
         return {
+            // TODO Double check chainId
+            // @ts-ignore
             chain_id: chain.chain_id,
             expiration: expirationStr.substring(0, expirationStr.length - 1),
             // tslint:disable-next-line:no-bitwise
@@ -397,7 +407,7 @@ export class Request {
         this.setRawRequestExp(transaction, chainData)
 
         if (dryRun) {
-            return this.fioProvider.prepareTransaction({
+            return this.config.fioProvider.prepareTransaction({
                 abiMap: Request.abiMap,
                 chainId: chainData.chain_id,
                 privateKeys,
@@ -406,7 +416,7 @@ export class Request {
                 transaction,
             })
         } else {
-            const signedTransaction = await this.fioProvider.prepareTransaction({
+            const signedTransaction = await this.config.fioProvider.prepareTransaction({
                 abiMap: Request.abiMap,
                 chainId: chainData.chain_id,
                 privateKeys,
@@ -419,12 +429,12 @@ export class Request {
     }
 
     public async executeCall({
-                                 baseUrl,
-                                 endPoint,
-                                 body,
-                                 fetchOptions,
-                                 signal,
-                             }: {
+        baseUrl,
+        endPoint,
+        body,
+        fetchOptions,
+        signal,
+    }: {
         baseUrl: string,
         endPoint: string,
         body?: string | null,
@@ -450,7 +460,7 @@ export class Request {
         }
         options.signal = signal
         try {
-            const res = await this.fetchJson(baseUrl + endPoint, options)
+            const res = await this.config.fetchJson(baseUrl + endPoint, options)
             if (res === undefined) {
                 const error = new Error(`Error: Can't reach the site ${baseUrl}${endPoint}. Possible wrong url.`)
                 return {
@@ -507,27 +517,35 @@ export class Request {
         }
     }
 
-    public async multicastServers({endpoint, body, fetchOptions, requestTimeout}: {
+    public async multicastServers(req: {
         endpoint: string,
         body?: string | null,
         fetchOptions?: any,
         requestTimeout?: number,
     }): Promise<any> {
+        const {endpoint, body, fetchOptions, requestTimeout} = req
+
+        // TODO Method can throw errors sometimes maybe change behavior?
         const res = await asyncWaterfall({
-            asyncFunctions: this.baseUrls.map((apiUrl) => (signal: AbortSignal) =>
+            asyncFunctions: this.config.baseUrls.map((apiUrl) => (signal: AbortSignal) =>
                 this.executeCall({baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal}),
             ),
             requestTimeout,
         })
 
+        // TODO asyncWaterfall can throw errors and error interface can be different
         if (res.isError) {
             const error = new FioError(res.errorMessage || res.data.message)
             error.json = res.data.json
             error.list = res.data.list
             error.errorCode = res.data.code
 
+            this.config.logger?.('request', {...req, error})
+
             throw error
         }
+
+        this.config.logger?.('request', {...req, res})
 
         return res
     }

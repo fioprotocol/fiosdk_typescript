@@ -13,7 +13,7 @@ export type GrantorPermissionsQueryData = {
 };
 export declare class GrantorPermissionsQuery extends Query<GrantorPermissionsQueryData, PermissionsResponse> {
     props: GrantorPermissionsQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_grantor_permissions";
     constructor(config: RequestConfig, props: GrantorPermissionsQueryProps);
     getData: () => {
         grantor_account: string;

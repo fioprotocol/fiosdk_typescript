@@ -1,4 +1,4 @@
-import { AddPublicAddressesResponse, PublicAddress } from '../../entities';
+import { Account, Action, AddPublicAddressesResponse, PublicAddress } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type AddPublicAddressesRequestProps = {
@@ -16,9 +16,9 @@ export type AddPublicAddressesRequestData = {
 };
 export declare class AddPublicAddressesRequest extends SignedRequest<AddPublicAddressesRequestData, AddPublicAddressesResponse> {
     props: AddPublicAddressesRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/add_pub_address";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: AddPublicAddressesRequestProps);
     getData: () => {
         actor: string;

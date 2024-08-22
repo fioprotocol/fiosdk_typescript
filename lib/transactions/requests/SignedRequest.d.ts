@@ -1,3 +1,4 @@
+import { Account, Action, EndPoint } from '../../entities';
 import { Request } from '../Request';
 export declare abstract class SignedRequest<T = any, R = any> extends Request {
     static prepareResponse(result: {
@@ -18,9 +19,9 @@ export declare abstract class SignedRequest<T = any, R = any> extends Request {
             };
         }>;
     }): any;
-    protected abstract ENDPOINT: string;
-    protected abstract ACTION: string;
-    protected abstract ACCOUNT: string;
+    protected abstract ENDPOINT: `chain/${EndPoint}`;
+    protected abstract ACTION: Action;
+    protected abstract ACCOUNT: Account;
     abstract getData(): T;
     execute(privateKey: string, publicKey: string, dryRun?: boolean, expirationOffset?: number): Promise<R>;
     prepareResponse(result: {
@@ -32,8 +33,8 @@ export declare abstract class SignedRequest<T = any, R = any> extends Request {
             }>;
         };
     } | any): R;
-    getAction(): string;
-    getAccount(): string;
+    getAction(): Action;
+    getAccount(): Account;
     getAuthPermission(): string | undefined;
     getSigningAccount(): string | undefined;
     getEndPoint(): string;

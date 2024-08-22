@@ -1,4 +1,4 @@
-import { SetFioDomainVisibilityResponse } from '../../entities';
+import { Account, Action, SetFioDomainVisibilityResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type SetFioDomainVisibilityRequestProps = {
@@ -16,9 +16,9 @@ export type SetFioDomainVisibilityRequestData = {
 };
 export declare class SetFioDomainVisibilityRequest extends SignedRequest<SetFioDomainVisibilityRequestData, SetFioDomainVisibilityResponse> {
     props: SetFioDomainVisibilityRequestProps;
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/set_fio_domain_public";
+    ACTION: Action;
+    ACCOUNT: Account;
     constructor(config: RequestConfig, props: SetFioDomainVisibilityRequestProps);
     getData: () => {
         actor: string;

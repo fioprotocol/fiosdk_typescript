@@ -9,7 +9,7 @@ export type LocksQueryData = {
 };
 export declare class LocksQuery extends Query<LocksQueryData, LocksResponse> {
     props: LocksQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_locks";
     constructor(config: RequestConfig, props: LocksQueryProps);
     getData: () => {
         fio_public_key: string;

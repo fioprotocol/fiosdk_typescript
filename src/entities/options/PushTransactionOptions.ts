@@ -1,8 +1,11 @@
-import {EncryptOptions} from '../../transactions/requests/PushRequest'
+import {Account} from '../Account'
+import {Action} from '../Action'
+
+export type EncryptOptions = { publicKey?: string; privateKey?: string; contentType?: string }
 
 export type PushTransactionOptions = {
-    account: string
-    action: string
+    account: Account
+    action: Action
     data: any
     authPermission?: string | null
     encryptOptions?: EncryptOptions | null

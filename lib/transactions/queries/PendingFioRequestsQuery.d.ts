@@ -18,7 +18,7 @@ export type PendingFioRequestsQueryData = {
 };
 export declare class PendingFioRequestsQuery extends Query<PendingFioRequestsQueryData, PendingFioRequestsResponse | undefined> {
     props: PendingFioRequestsQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_pending_fio_requests";
     constructor(config: RequestConfig, props: PendingFioRequestsQueryProps);
     getData: () => {
         fio_public_key: string;

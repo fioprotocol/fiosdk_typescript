@@ -1,4 +1,4 @@
-import {AccountResponse} from '../../entities'
+import {AccountResponse, EndPoint} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -11,7 +11,7 @@ export type AccountQueryData = {
 }
 
 export class AccountQuery extends Query<AccountQueryData, AccountResponse> {
-    public ENDPOINT = 'chain/get_account'
+    public ENDPOINT = `chain/${EndPoint.getAccount}` as const
 
     constructor(config: RequestConfig, public props: AccountQueryProps) {
         super(config)

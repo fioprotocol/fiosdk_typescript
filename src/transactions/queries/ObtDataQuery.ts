@@ -1,4 +1,4 @@
-import {EncryptKeyResponse, GetObtDataRecord, GetObtDataResponse} from '../../entities'
+import {EncryptKeyResponse, EndPoint, GetObtDataRecord, GetObtDataResponse} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
@@ -20,7 +20,7 @@ export type ObtDataQueryData = {
 }
 
 export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
-    public ENDPOINT = 'chain/get_obt_data'
+    public ENDPOINT = `chain/${EndPoint.getObtData}` as const
 
     public props: ReturnType<ObtDataQuery['getResolvedProps']>
 

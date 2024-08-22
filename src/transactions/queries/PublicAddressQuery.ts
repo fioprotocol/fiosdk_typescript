@@ -1,4 +1,4 @@
-import {PublicAddressResponse} from '../../entities'
+import {EndPoint, PublicAddressResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -15,7 +15,7 @@ export type PublicAddressQueryData = {
 }
 
 export class PublicAddressQuery extends Query<PublicAddressQueryData, PublicAddressResponse> {
-    public ENDPOINT = 'chain/get_pub_address'
+    public ENDPOINT = `chain/${EndPoint.getPubAddress}` as const
 
     constructor(config: RequestConfig, public props: PublicAddressQueryProps) {
         super(config)

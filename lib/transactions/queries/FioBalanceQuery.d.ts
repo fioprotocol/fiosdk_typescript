@@ -9,7 +9,7 @@ export type FioBalanceQueryData = {
 };
 export declare class FioBalanceQuery extends Query<FioBalanceQueryData, FioBalanceResponse> {
     props: FioBalanceQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_fio_balance";
     constructor(config: RequestConfig, props: FioBalanceQueryProps);
     getData: () => {
         fio_public_key: string;

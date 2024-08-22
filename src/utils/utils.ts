@@ -4,9 +4,9 @@ import {Authorization, EncryptKeyResponse, RawAction, RawRequest} from '../entit
 const DEFAULT_REQUEST_TIMEOUT = 60000
 
 export async function asyncWaterfall({
-                                         asyncFunctions,
-                                         requestTimeout = DEFAULT_REQUEST_TIMEOUT,
-                                     }: {
+    asyncFunctions,
+    requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+}: {
     asyncFunctions: Array<(signal: AbortSignal) => Promise<any>>
     requestTimeout?: number,
 }): Promise<any> {
@@ -37,6 +37,7 @@ export async function asyncWaterfall({
                 }
             } catch (error: any) {
                 clearTimeout(timeoutId!)
+                // TODO Unexpected behavior
                 if (i === asyncFunctions.length - 1) {
                     throw error
                 }
@@ -48,10 +49,10 @@ export async function asyncWaterfall({
 }
 
 export async function getEncryptKeyForUnCipherContent({
-                                                          getEncryptKey,
-                                                          method = '',
-                                                          fioAddress,
-                                                      }: {
+    getEncryptKey,
+    method = '',
+    fioAddress,
+}: {
     getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>,
     method?: string,
     fioAddress: string;

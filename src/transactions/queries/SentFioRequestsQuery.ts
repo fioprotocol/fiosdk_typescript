@@ -1,4 +1,4 @@
-import {EncryptKeyResponse, FioSentItem, SentFioRequestsResponse} from '../../entities'
+import {EncryptKeyResponse, EndPoint, FioSentItem, SentFioRequestsResponse} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
@@ -20,7 +20,7 @@ export type SentFioRequestsQueryData = {
 }
 
 export class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFioRequestsResponse | undefined> {
-    public ENDPOINT = 'chain/get_sent_fio_requests'
+    public ENDPOINT = `chain/${EndPoint.getSentFioRequests}` as const
 
     constructor(config: RequestConfig, public props: SentFioRequestsQueryProps) {
         super(config)

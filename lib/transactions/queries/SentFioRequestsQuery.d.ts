@@ -19,7 +19,7 @@ export type SentFioRequestsQueryData = {
 };
 export declare class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFioRequestsResponse | undefined> {
     props: SentFioRequestsQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_sent_fio_requests";
     constructor(config: RequestConfig, props: SentFioRequestsQueryProps);
     getData: () => {
         fio_public_key: string;

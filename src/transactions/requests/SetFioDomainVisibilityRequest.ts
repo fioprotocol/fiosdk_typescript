@@ -1,5 +1,4 @@
-import {SetFioDomainVisibilityResponse} from '../../entities'
-import {Constants} from '../../utils/constants'
+import {Account, Action, EndPoint, SetFioDomainVisibilityResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -23,9 +22,9 @@ export class SetFioDomainVisibilityRequest extends SignedRequest<
     SetFioDomainVisibilityRequestData,
     SetFioDomainVisibilityResponse
 > {
-    public ENDPOINT = 'chain/set_fio_domain_public'
-    public ACTION = 'setdomainpub'
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.setFioDomainPublic}` as const
+    public ACTION = Action.setDomainPublic
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: SetFioDomainVisibilityRequestProps) {
         super(config)

@@ -17,7 +17,7 @@ export type NftsByContractQueryData = {
 };
 export declare class NftsByContractQuery extends Query<NftsByContractQueryData, NftsResponse> {
     props: NftsByContractQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_nfts_contract";
     constructor(config: RequestConfig, props: NftsByContractQueryProps);
     getData: () => {
         chain_code: string;

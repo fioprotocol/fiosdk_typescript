@@ -1,7 +1,8 @@
+import {EndPoint} from '../../entities'
 import {Request} from '../Request'
 
 export abstract class Query<T = any, R = any> extends Request {
-    public abstract ENDPOINT: string
+    public abstract ENDPOINT: `chain/${EndPoint}`
 
     public isEncrypted = false
 

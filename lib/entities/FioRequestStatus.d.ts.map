@@ -1,1 +1,1 @@
-{"version":3,"file":"FioRequestStatus.d.ts","sourceRoot":"","sources":["../../src/entities/FioRequestStatus.ts"],"names":[],"mappings":"AAAA,oBAAY,gBAAgB;IACxB,kBAAkB,IAAA;CACrB"}
+{"version":3,"file":"FioRequestStatus.d.ts","sourceRoot":"","sources":["../../src/entities/FioRequestStatus.ts"],"names":[],"mappings":"AAAA,oBAAY,gBAAgB;IACxB,kBAAkB,uBAAuB;CAC5C"}

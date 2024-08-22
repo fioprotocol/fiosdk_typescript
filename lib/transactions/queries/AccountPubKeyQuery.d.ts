@@ -9,7 +9,7 @@ export type AccountPubKeyQueryData = {
 };
 export declare class AccountPubKeyQuery extends Query<AccountPubKeyQueryData, AccountPubKeyResponse> {
     props: AccountPubKeyQueryProps;
-    ENDPOINT: string;
+    ENDPOINT: "chain/get_account_fio_public_key";
     constructor(config: RequestConfig, props: AccountPubKeyQueryProps);
     getData: () => {
         account: string;

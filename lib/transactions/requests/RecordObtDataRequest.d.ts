@@ -1,4 +1,4 @@
-import { RecordObtDataResponse } from '../../entities';
+import { Account, Action, RecordObtDataResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type RecordObtDataRequestData = {
@@ -30,9 +30,9 @@ export type RecordObtDataRequestProps = {
     tokenCode: string;
 };
 export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData, RecordObtDataResponse> {
-    ENDPOINT: string;
-    ACTION: string;
-    ACCOUNT: string;
+    ENDPOINT: "chain/record_obt_data";
+    ACTION: Action;
+    ACCOUNT: Account;
     props: ReturnType<RecordObtDataRequest['getResolvedProps']>;
     content: ReturnType<RecordObtDataRequest['getResolvedContent']>;
     constructor(config: RequestConfig, props: RecordObtDataRequestProps);
@@ -63,8 +63,8 @@ export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataReq
         hash: string | null;
         memo: string | null;
         offLineUrl: string | null;
-        status: string;
         payeeFioPublicKey: string;
+        status: string;
         amount: number;
         chainCode: string;
         maxFee: number;

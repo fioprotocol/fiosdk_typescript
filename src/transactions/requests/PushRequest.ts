@@ -1,14 +1,10 @@
-import {Constants} from '../../utils/constants'
+import {Account, Action, EncryptOptions, EndPoint} from '../../entities'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
 
-export type EncryptOptions = { publicKey?: string; privateKey?: string; contentType?: string }
-
 export type PushRequestProps = {
-    // TODO create or use exist action enum
-    action: string;
-    // TODO create or use account enum
-    account?: string;
+    action: Action;
+    account?: Account;
     data: any;
     encryptOptions: EncryptOptions;
     authPermission: string | undefined;
@@ -17,9 +13,10 @@ export type PushRequestProps = {
 
 // TODO add typings
 export class PushRequest extends SignedRequest {
-    public ENDPOINT = 'chain/push_transaction'
-    public ACTION = ''
-    public ACCOUNT = Constants.defaultAccount
+    public ENDPOINT = `chain/${EndPoint.pushTransaction}` as const
+    // TODO optimize type
+    public ACTION: Action
+    public ACCOUNT = Account.address
 
     constructor(config: RequestConfig, public props: PushRequestProps) {
         super(config)

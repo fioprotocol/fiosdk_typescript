@@ -1,4 +1,4 @@
-import {NftsResponse} from '../../entities'
+import {EndPoint, NftsResponse} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -15,7 +15,7 @@ export type NftsByHashQueryData = {
 }
 
 export class NftsByHashQuery extends Query<NftsByHashQueryData, NftsResponse> {
-    public ENDPOINT = 'chain/get_nfts_hash'
+    public ENDPOINT = `chain/${EndPoint.getNftsHash}` as const
 
     constructor(config: RequestConfig, public props: NftsByHashQueryProps) {
         super(config)

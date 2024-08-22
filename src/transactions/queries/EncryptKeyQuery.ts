@@ -1,4 +1,4 @@
-import {EncryptKeyResponse} from '../../entities'
+import {EncryptKeyResponse, EndPoint} from '../../entities'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
 
@@ -11,7 +11,7 @@ export type EncryptKeyQueryData = {
 }
 
 export class EncryptKeyQuery extends Query<EncryptKeyQueryData, EncryptKeyResponse> {
-    public ENDPOINT = 'chain/get_encrypt_key'
+    public ENDPOINT = `chain/${EndPoint.getEncryptKey}` as const
 
     constructor(config: RequestConfig, public props: EncryptKeyQueryProps) {
         super(config)
