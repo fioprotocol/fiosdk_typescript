@@ -1,5 +1,4 @@
-
-typedoc --out documentation ./src/FIOSDK.ts
+typedoc --plugin typedoc-github-theme --out documentation ./src/FIOSDK.ts
 
 echo "If typedoc command is not found, install typedoc using the npm global command:"
 echo "npm install --global typedoc"

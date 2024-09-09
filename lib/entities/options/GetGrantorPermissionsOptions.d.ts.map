@@ -1,0 +1,1 @@
+{"version":3,"file":"GetGrantorPermissionsOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/GetGrantorPermissionsOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,4BAA4B,GAAG;IACvC,cAAc,EAAE,MAAM,CAAA;IACtB,KAAK,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;IACrB,MAAM,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CAC1B,CAAA"}

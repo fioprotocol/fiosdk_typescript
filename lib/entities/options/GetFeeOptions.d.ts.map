@@ -1,0 +1,1 @@
+{"version":3,"file":"GetFeeOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/GetFeeOptions.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,QAAQ,EAAC,MAAM,aAAa,CAAA;AAEpC,MAAM,MAAM,aAAa,GAAG;IACxB,QAAQ,EAAE,QAAQ,CAAA;IAClB,UAAU,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CAC9B,CAAA"}
