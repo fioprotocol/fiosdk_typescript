@@ -1,0 +1,1 @@
+{"version":3,"file":"OracleFeesQuery.d.ts","sourceRoot":"","sources":["../../../src/transactions/queries/OracleFeesQuery.ts"],"names":[],"mappings":"AAAA,OAAO,EAAW,qBAAqB,EAAC,MAAM,gBAAgB,CAAA;AAC9D,OAAO,EAAC,KAAK,EAAC,MAAM,SAAS,CAAA;AAE7B,qBAAa,eAAgB,SAAQ,KAAK,CAAC,IAAI,EAAE,qBAAqB,CAAC;IAC5D,QAAQ,0BAA6C;IAErD,OAAO;CAGjB"}

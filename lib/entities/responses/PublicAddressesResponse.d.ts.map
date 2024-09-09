@@ -1,0 +1,1 @@
+{"version":3,"file":"PublicAddressesResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/PublicAddressesResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,wBAAwB,CAAA;AAEpD,MAAM,MAAM,uBAAuB,GAAG;IAClC,gBAAgB,EAAE,aAAa,EAAE,CAAA;IACjC,IAAI,EAAE,OAAO,CAAC;CACjB,CAAA"}
