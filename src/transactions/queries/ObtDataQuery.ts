@@ -1,4 +1,11 @@
-import {EncryptKeyResponse, EndPoint, GetObtDataRecord, GetObtDataResponse} from '../../entities'
+import {
+    EncryptKeyResponse,
+    EndPoint,
+    FioItem,
+    FioSentItem, FioSentItemContent,
+    GetObtDataDecryptedResponse,
+    GetObtDataResponse,
+} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 import {Query} from './Query'
@@ -19,8 +26,10 @@ export type ObtDataQueryData = {
     offset?: number,
 }
 
-export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
+export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataDecryptedResponse> {
     public ENDPOINT = `chain/${EndPoint.getObtData}` as const
+
+    public isEncrypted = true
 
     public props: ReturnType<ObtDataQuery['getResolvedProps']>
 
@@ -42,15 +51,12 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
         tokenCode: props.tokenCode ?? '',
     })
 
-    public async decrypt(result: GetObtDataResponse): Promise<GetObtDataResponse> {
+    public async decrypt(result: GetObtDataResponse): Promise<GetObtDataDecryptedResponse> {
         return new Promise(async (resolve, reject) => {
             if (result.obt_data_records && result.obt_data_records.length > 0) {
-                let content: {
-                    token_code: string;
-                } | null = null
                 try {
                     const requests = await Promise.allSettled(result.obt_data_records.map(
-                        async (obtDataRecord: GetObtDataRecord) => {
+                        async (obtDataRecord: FioItem) => {
                             const encryptPublicKeysArray: string[] = []
                             let encryptPrivateKeysArray: string[] = []
 
@@ -115,6 +121,8 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
                             encryptPublicKeysArray.push(this.publicKey)
                             encryptPrivateKeysArray.push(this.privateKey)
 
+                            let content: FioSentItemContent | null = null
+
                             try {
                                 for (const publicKey of encryptPublicKeysArray) {
                                     for (const privateKey of encryptPrivateKeysArray) {
@@ -143,10 +151,6 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
                                     throw new Error(`GetObtData: Get UnCipher Content for account ${account} failed.`)
                                 }
                             } catch (error) {
-                                if (this.props.includeEncrypted) {
-                                    return obtDataRecord
-                                }
-
                                 // tslint:disable-next-line:no-console
                                 console.error(error)
                                 throw error
@@ -158,14 +162,15 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
                                     && content.token_code !== this.props.tokenCode) {
                                     return null
                                 }
-                                obtDataRecord.content = content
+
+                                return { ...obtDataRecord, content }
                             }
 
                             return obtDataRecord
                         },
                     ))
 
-                    const fulfilledRequests: GetObtDataRecord[] = []
+                    const fulfilledRequests: Array<FioItem | FioSentItem> = []
 
                     requests.forEach(
                         (req) => req.status === 'fulfilled' && req.value && fulfilledRequests.push(req.value),
@@ -176,7 +181,7 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
                     reject(error)
                 }
             } else {
-                resolve(result)
+                resolve({...result, obt_data_records: []})
             }
         })
     }

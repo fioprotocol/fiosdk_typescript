@@ -6,12 +6,12 @@
       "noImplicitReturns": true,
       "noUnusedLocals": true,
       "outDir": "lib",
-      "sourceMap": false,
+      "sourceMap": true,
       "strict": true,
       "target": "es2015",
       "declaration": true,
       "declarationMap": true,
-      "lib": ["ES2021.Promise", "ES2020.Promise", "dom"],
+      "lib": ["ES2020.Promise", "dom"]
     },
     "compileOnSave": true,
     "include": [

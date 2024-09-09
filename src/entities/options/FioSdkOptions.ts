@@ -1,8 +1,7 @@
 import {FioError} from '../types/FioError'
+import {ErrObj} from '../utils/ErrObj'
 
 export type FetchJson = (uri: string, opts?: object) => Promise<object>
-
-export type FioLoggerContextType = 'request'
 
 export type FioLoggerRequestContext = {
     endpoint: string
@@ -13,7 +12,20 @@ export type FioLoggerRequestContext = {
     error?: FioError,
 }
 
-export type FioLogger = (type: FioLoggerContextType, context: FioLoggerRequestContext) => void
+export type FioLoggerValidationContext = {
+    name: string
+    errors?: ErrObj[],
+}
+
+export type FioLoggerMessage = {
+    type: 'request'
+    context: FioLoggerRequestContext,
+} | {
+    type: 'validation'
+    context: FioLoggerValidationContext,
+}
+
+export type FioLogger = (message: FioLoggerMessage) => void
 
 export type FioSdkOptions = {
     privateKey: string

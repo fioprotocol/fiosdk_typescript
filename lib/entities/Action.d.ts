@@ -19,6 +19,12 @@ export declare enum Action {
     transferTokensKey = "trnsfiopubky",
     transferLockedTokens = "trnsloctoks",
     unstake = "unstakefio",
-    stake = "stakefio"
+    stake = "stakefio",
+    linkAuth = "linkauth",
+    updateAuth = "updateauth",
+    addNft = "addnft",
+    addPerm = "addperm",
+    voteProducer = "voteproducer",
+    updateCryptKey = "updcryptkey"
 }
 //# sourceMappingURL=Action.d.ts.map

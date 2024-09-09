@@ -14,17 +14,7 @@ export abstract class Query<T = any, R = any> extends Request {
         this.publicKey = publicKey
         this.privateKey = privateKey
 
-        if (!this.isEncrypted) {
-            try {
-                return this.multicastServers({
-                    body: JSON.stringify(this.getData()),
-                    endpoint: this.getEndPoint(),
-                    requestTimeout: this.requestTimeout,
-                })
-            } catch (error) {
-                throw error
-            }
-        } else {
+        if (this.isEncrypted) {
             try {
                 const result = await this.multicastServers({
                     body: JSON.stringify(this.getData()),
@@ -36,6 +26,16 @@ export abstract class Query<T = any, R = any> extends Request {
             } catch (error) {
                 throw error
             }
+        }
+
+        try {
+            return this.multicastServers({
+                body: JSON.stringify(this.getData()),
+                endpoint: this.getEndPoint(),
+                requestTimeout: this.requestTimeout,
+            })
+        } catch (error) {
+            throw error
         }
     }
 

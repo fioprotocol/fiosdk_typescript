@@ -1,6 +1,11 @@
+import { FioItem } from '../types/FioItem';
 import { FioSentItem } from '../types/FioSentItem';
 export type SentFioRequestsResponse = {
-    requests: FioSentItem[];
+    requests: FioItem[];
+    more: number;
+};
+export type SentFioRequestsDecryptedResponse = {
+    requests: Array<FioItem | FioSentItem>;
     more: number;
 };
 //# sourceMappingURL=SentFioRequestsResponse.d.ts.map

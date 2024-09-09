@@ -9,10 +9,7 @@ export type MockRegisterFioNameRequestData = {
     owner_fio_public_key: string,
 }
 
-// TODO we really need this?
-// TODO add some Transaction interface
 export class MockRegisterFioNameRequest {
-    // TODO why here not present chain/?
     public ENDPOINT = '/register_fio_name'
 
     constructor(public props: MockRegisterFioNameRequestProps) {

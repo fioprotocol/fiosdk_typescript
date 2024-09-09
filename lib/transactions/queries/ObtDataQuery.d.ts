@@ -1,4 +1,4 @@
-import { EncryptKeyResponse, GetObtDataResponse } from '../../entities';
+import { EncryptKeyResponse, GetObtDataDecryptedResponse, GetObtDataResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type ObtDataQueryProps = {
@@ -18,8 +18,9 @@ export type ObtDataQueryData = {
     limit?: number;
     offset?: number;
 };
-export declare class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResponse> {
+export declare class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataDecryptedResponse> {
     ENDPOINT: "chain/get_obt_data";
+    isEncrypted: boolean;
     props: ReturnType<ObtDataQuery['getResolvedProps']>;
     constructor(config: RequestConfig, props: ObtDataQueryProps);
     getData: () => {
@@ -31,14 +32,14 @@ export declare class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataResp
         includeEncrypted: boolean;
         tokenCode: string;
         fioPublicKey: string;
-        limit?: number | undefined;
-        offset?: number | undefined;
-        encryptKeys?: Map<string, {
+        limit?: number;
+        offset?: number;
+        encryptKeys?: Map<string, Array<{
             privateKey: string;
             publicKey: string;
-        }[]> | undefined;
+        }>>;
         getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;
     };
-    decrypt(result: GetObtDataResponse): Promise<GetObtDataResponse>;
+    decrypt(result: GetObtDataResponse): Promise<GetObtDataDecryptedResponse>;
 }
 //# sourceMappingURL=ObtDataQuery.d.ts.map

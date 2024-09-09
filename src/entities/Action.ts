@@ -20,4 +20,10 @@ export enum Action {
     transferLockedTokens = 'trnsloctoks',
     unstake = 'unstakefio',
     stake = 'stakefio',
+    linkAuth = 'linkauth',
+    updateAuth = 'updateauth',
+    addNft = 'addnft',
+    addPerm = 'addperm',
+    voteProducer = 'voteproducer',
+    updateCryptKey = 'updcryptkey',
 }

@@ -3,5 +3,6 @@ export type RegisterOwnerFioDomainOptions = {
     maxFee: number;
     ownerPublicKey: string;
     technologyProviderId?: string | null;
+    expirationOffset?: number | null;
 };
 //# sourceMappingURL=RegisterOwnerFioDomainOptions.d.ts.map

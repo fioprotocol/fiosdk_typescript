@@ -8,6 +8,8 @@ export declare enum Account {
     staking = "fio.staking",
     perms = "fio.perms",
     escrow = "fio.escrow",
-    oracle = "fio.oracle"
+    oracle = "fio.oracle",
+    eosio = "eosio",
+    eosioMsig = "eosio.msig"
 }
 //# sourceMappingURL=Account.d.ts.map

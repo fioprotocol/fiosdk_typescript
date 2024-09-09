@@ -1,4 +1,4 @@
-import {Api as FioJsApi, Fio} from '@fioprotocol/fiojs'
+import {Api as FioJsApi} from '@fioprotocol/fiojs'
 import {
     AbiProvider,
     AuthorityProvider,
@@ -15,10 +15,28 @@ import {AbortSignal} from 'abort-controller'
 
 import {TextDecoder, TextEncoder} from 'text-encoding'
 
-import {AbiResponse, EndPoint, FioError, FioInfoResponse, FioLogger, RawRequest, ValidationError} from '../entities'
+import {
+    AbiResponse,
+    Account, Action,
+    EndPoint,
+    FioError,
+    FioInfoResponse,
+    FioLogger,
+    RawRequest,
+    ValidationError,
+} from '../entities'
 
 import {defaultExpirationOffset} from '../utils/constants'
-import {asyncWaterfall, createAuthorization, createRawAction, createRawRequest} from '../utils/utils'
+import {
+    asyncWaterfall,
+    createAuthorization,
+    createRawAction,
+    createRawRequest,
+    defaultTextDecoder,
+    defaultTextEncoder,
+    getCipherContent,
+    getUnCipherContent,
+} from '../utils/utils'
 import {Rule, validate} from '../utils/validation'
 
 type FetchJson = (uri: string, opts?: object) => any
@@ -29,9 +47,6 @@ interface SignedTxArgs {
     packed_trx: string,
     signatures: string[],
 }
-
-const defaultTextEncoder: TextEncoder = new TextEncoder()
-const defaultTextDecoder: TextDecoder = new TextDecoder()
 
 export const signAllAuthorityProvider: AuthorityProvider = {
     async getRequiredKeys(authorityProviderArgs: AuthorityProviderArgs) {
@@ -63,7 +78,7 @@ export type RequestConfig = {
 export interface FioProvider {
     prepareTransaction(param: {
         abiMap: ApiMap,
-        chainId: number,
+        chainId: string,
         privateKeys: string[],
         textDecoder?: TextDecoder,
         textEncoder?: TextEncoder,
@@ -119,14 +134,13 @@ export class Request {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
-                // TODO for get request we use POST?
                 method: 'POST',
             },
         })
     }
 
     public async getChainDataForTx(): Promise<{
-        chain_id: number,
+        chain_id: string,
         ref_block_num: number,
         ref_block_prefix: number,
         expiration: string,
@@ -158,8 +172,6 @@ export class Request {
         expiration.setSeconds(expiration.getSeconds() + this.expirationOffset)
         const expirationStr = expiration.toISOString()
         return {
-            // TODO Double check chainId
-            // @ts-ignore
             chain_id: chain.chain_id,
             expiration: expirationStr.substring(0, expirationStr.length - 1),
             // tslint:disable-next-line:no-bitwise
@@ -224,8 +236,8 @@ export class Request {
 
     public async createRawTransaction(
         {account, action, authPermission, data, publicKey, chainData, signingAccount}: {
-            account: string;
-            action: string;
+            account: Account;
+            action: Action;
             authPermission?: string;
             data: any;
             publicKey?: string;
@@ -487,7 +499,6 @@ export class Request {
     }): Promise<any> {
         const {endpoint, body, fetchOptions, requestTimeout} = req
 
-        // TODO Method can throw errors sometimes maybe change behavior?
         const res = await asyncWaterfall({
             asyncFunctions: this.config.baseUrls.map((apiUrl) => (signal: AbortSignal) =>
                 this.executeCall({baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal}),
@@ -502,34 +513,22 @@ export class Request {
             error.list = res.data.list
             error.errorCode = res.data.code
 
-            this.config.logger?.('request', {...req, error})
+            this.config.logger?.({ type: 'request', context: {...req, error} })
 
             throw error
         }
 
-        this.config.logger?.('request', {...req, res})
+        this.config.logger?.({ type: 'request', context: {...req, res} })
 
         return res
     }
 
     public getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
-        const cipher = Fio.createSharedCipher({
-            privateKey,
-            publicKey,
-            textDecoder: defaultTextDecoder,
-            textEncoder: defaultTextEncoder,
-        })
-        return cipher.encrypt(contentType, content)
+        return getCipherContent(contentType, content, privateKey, publicKey)
     }
 
     public getUnCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
-        const cipher = Fio.createSharedCipher({
-            privateKey,
-            publicKey,
-            textDecoder: defaultTextDecoder,
-            textEncoder: defaultTextEncoder,
-        })
-        return cipher.decrypt(contentType, content)
+        return getUnCipherContent(contentType, content, privateKey, publicKey)
     }
 
     public validate() {

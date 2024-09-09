@@ -40,7 +40,6 @@ export * from './responses/AccountPubKeyResponse'
 export * from './responses/EncryptKeyResponse'
 export * from './responses/NftsResponse'
 
-export * from './types/GetObtDataRecord'
 export * from './types/FioPermission'
 export * from './types/PublicAddress'
 export * from './types/Authorization'

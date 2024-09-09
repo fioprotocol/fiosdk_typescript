@@ -2,5 +2,6 @@ export type RegisterFioDomainOptions = {
     fioDomain: string;
     maxFee: number;
     technologyProviderId?: string | null;
+    expirationOffset?: number | null;
 };
 //# sourceMappingURL=RegisterFioDomainOptions.d.ts.map

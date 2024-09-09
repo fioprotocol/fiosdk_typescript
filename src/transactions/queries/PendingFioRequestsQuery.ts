@@ -1,4 +1,12 @@
-import {EncryptKeyResponse, EndPoint, FioItem, PendingFioRequestsResponse} from '../../entities'
+import {
+    EncryptKeyResponse,
+    EndPoint,
+    FioItem,
+    FioSentItem,
+    FioSentItemContent,
+    PendingFioRequestsDecryptedResponse,
+    PendingFioRequestsResponse,
+} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
@@ -20,9 +28,11 @@ export type PendingFioRequestsQueryData = {
 
 export class PendingFioRequestsQuery extends Query<
     PendingFioRequestsQueryData,
-    PendingFioRequestsResponse | undefined
+    PendingFioRequestsDecryptedResponse | undefined
 > {
     public ENDPOINT = `chain/${EndPoint.getPendingFioRequests}` as const
+
+    public isEncrypted = true
 
     constructor(config: RequestConfig, public props: PendingFioRequestsQueryProps) {
         super(config)
@@ -34,7 +44,7 @@ export class PendingFioRequestsQuery extends Query<
         offset: this.props.offset,
     })
 
-    public async decrypt(result: PendingFioRequestsResponse): Promise<PendingFioRequestsResponse | undefined> {
+    public async decrypt(result: PendingFioRequestsResponse): Promise<PendingFioRequestsDecryptedResponse | undefined> {
         return new Promise(async (resolve, reject) => {
             if (result.requests.length > 0) {
                 try {
@@ -80,7 +90,7 @@ export class PendingFioRequestsQuery extends Query<
                         encryptPublicKeysArray.push(this.publicKey)
                         encryptPrivateKeysArray.push(this.privateKey)
 
-                        let content = null
+                        let content: FioSentItemContent | null = null
 
                         try {
                             for (const publicKey of encryptPublicKeysArray) {
@@ -108,19 +118,17 @@ export class PendingFioRequestsQuery extends Query<
                             if (content === null) {
                                 // Throw an error if all keys failed
                                 throw new Error(`PendingFioRequests: Get UnCipher Content for account ${account} failed.`)
-                            } else {
-                                value.content = content
                             }
+
+                            return {...value, content}
                         } catch (error) {
                             // tslint:disable-next-line:no-console
                             console.error(error)
                             throw error
                         }
-
-                        return value
                     }))
 
-                    const fulfilledRequests: FioItem[] = []
+                    const fulfilledRequests: FioSentItem[] = []
 
                     requests.forEach((req) => req.status === 'fulfilled' && fulfilledRequests.push(req.value))
 

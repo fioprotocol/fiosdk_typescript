@@ -1,4 +1,11 @@
-import {EncryptKeyResponse, EndPoint, FioItem, ReceivedFioRequestsResponse} from '../../entities'
+import {
+    EncryptKeyResponse,
+    EndPoint,
+    FioItem,
+    FioSentItem,
+    ReceivedFioRequestsDecryptedResponse,
+    ReceivedFioRequestsResponse,
+} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
@@ -21,9 +28,11 @@ export type ReceivedFioRequestsQueryData = {
 
 export class ReceivedFioRequestsQuery extends Query<
     ReceivedFioRequestsQueryData,
-    ReceivedFioRequestsResponse | undefined
+    ReceivedFioRequestsDecryptedResponse | undefined
 > {
     public ENDPOINT = `chain/${EndPoint.getReceivedFioRequests}` as const
+
+    public isEncrypted = true
 
     constructor(config: RequestConfig, public props: ReceivedFioRequestsQueryProps) {
         super(config)
@@ -35,7 +44,9 @@ export class ReceivedFioRequestsQuery extends Query<
         offset: this.props.offset,
     })
 
-    public async decrypt(result: ReceivedFioRequestsResponse): Promise<ReceivedFioRequestsResponse | undefined> {
+    public async decrypt(
+        result: ReceivedFioRequestsResponse,
+    ): Promise<ReceivedFioRequestsDecryptedResponse | undefined> {
         return new Promise(async (resolve, reject) => {
             if (result.requests.length > 0) {
                 try {
@@ -107,9 +118,9 @@ export class ReceivedFioRequestsQuery extends Query<
 
                             if (content === null) {
                                 throw new Error(`ReceivedFioRequests: Get UnCipher Content for account ${account} failed.`) // Throw an error if all keys failed
-                            } else {
-                                value.content = content
                             }
+
+                            return { ...value, content }
                         } catch (error) {
                             if (this.props.includeEncrypted) {
                                 return value
@@ -119,11 +130,9 @@ export class ReceivedFioRequestsQuery extends Query<
                             console.error(error)
                             throw error
                         }
-
-                        return value
                     }))
 
-                    const fulfilledRequests: FioItem[] = []
+                    const fulfilledRequests: FioSentItem[] = []
 
                     requests.forEach((req) => req.status === 'fulfilled' && fulfilledRequests.push(req.value))
 

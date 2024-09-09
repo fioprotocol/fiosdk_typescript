@@ -30,22 +30,7 @@ export const feeNoAddressOperation: string[] = [
 /**
  * @deprecated use {@link Account}
  */
-export const rawAbiAccountName: string[] = [
-    // TODO we really need it?
-    'eosio',
-    // TODO we really need it?
-    'eosio.msig',
-    Account.address,
-    Account.reqObt,
-    Account.token,
-    Account.fee,
-    Account.treasury,
-    Account.tpid,
-    Account.staking,
-    Account.perms,
-    Account.escrow,
-    Account.oracle,
-]
+export const rawAbiAccountName: string[] = Object.values(Account)
 
 export const multiplier = 1000000000
 

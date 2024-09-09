@@ -1,4 +1,11 @@
-import {EncryptKeyResponse, EndPoint, FioSentItem, SentFioRequestsResponse} from '../../entities'
+import {
+    EncryptKeyResponse,
+    EndPoint,
+    FioItem,
+    FioSentItem, FioSentItemContent,
+    SentFioRequestsDecryptedResponse,
+    SentFioRequestsResponse,
+} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
@@ -19,8 +26,13 @@ export type SentFioRequestsQueryData = {
     offset?: number,
 }
 
-export class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFioRequestsResponse | undefined> {
+export class SentFioRequestsQuery extends Query<
+    SentFioRequestsQueryData,
+    SentFioRequestsDecryptedResponse | undefined
+> {
     public ENDPOINT = `chain/${EndPoint.getSentFioRequests}` as const
+
+    public isEncrypted = true
 
     constructor(config: RequestConfig, public props: SentFioRequestsQueryProps) {
         super(config)
@@ -32,11 +44,11 @@ export class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFi
         offset: this.props.offset,
     })
 
-    public async decrypt(result: SentFioRequestsResponse): Promise<SentFioRequestsResponse | undefined> {
+    public async decrypt(result: SentFioRequestsResponse): Promise<SentFioRequestsDecryptedResponse | undefined> {
         return new Promise(async (resolve, reject) => {
             if (result.requests.length > 0) {
                 try {
-                    const requests = await Promise.allSettled(result.requests.map(async (value: FioSentItem) => {
+                    const requests = await Promise.allSettled(result.requests.map(async (value: FioItem) => {
                         const encryptPublicKeysArray: string[] = []
                         let encryptPrivateKeysArray: string[] = []
 
@@ -78,7 +90,7 @@ export class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFi
                         encryptPublicKeysArray.push(this.publicKey)
                         encryptPrivateKeysArray.push(this.privateKey)
 
-                        let content = null
+                        let content: FioSentItemContent | null = null
 
                         try {
                             for (const publicKey of encryptPublicKeysArray) {
@@ -105,9 +117,9 @@ export class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFi
                             if (content === null) {
                                 // Throw an error if all keys failed
                                 throw new Error(`SentFioRequests: Get UnCipher Content for account ${account} failed.`)
-                            } else {
-                                value.content = content
                             }
+
+                            return {...value, content}
                         } catch (error) {
                             if (this.props.includeEncrypted) {
                                 return value
@@ -117,11 +129,9 @@ export class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFi
                             console.error(error)
                             throw error
                         }
-
-                        return value
                     }))
 
-                    const fulfilledRequests: FioSentItem[] = []
+                    const fulfilledRequests: Array<FioItem | FioSentItem> = []
 
                     requests.forEach(
                         (req) => req.status === 'fulfilled' && fulfilledRequests.push(req.value),

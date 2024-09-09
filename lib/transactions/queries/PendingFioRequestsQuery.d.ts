@@ -1,4 +1,4 @@
-import { EncryptKeyResponse, PendingFioRequestsResponse } from '../../entities';
+import { EncryptKeyResponse, PendingFioRequestsDecryptedResponse, PendingFioRequestsResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type PendingFioRequestsQueryProps = {
@@ -16,15 +16,16 @@ export type PendingFioRequestsQueryData = {
     limit?: number;
     offset?: number;
 };
-export declare class PendingFioRequestsQuery extends Query<PendingFioRequestsQueryData, PendingFioRequestsResponse | undefined> {
+export declare class PendingFioRequestsQuery extends Query<PendingFioRequestsQueryData, PendingFioRequestsDecryptedResponse | undefined> {
     props: PendingFioRequestsQueryProps;
     ENDPOINT: "chain/get_pending_fio_requests";
+    isEncrypted: boolean;
     constructor(config: RequestConfig, props: PendingFioRequestsQueryProps);
     getData: () => {
         fio_public_key: string;
         limit: number | undefined;
         offset: number | undefined;
     };
-    decrypt(result: PendingFioRequestsResponse): Promise<PendingFioRequestsResponse | undefined>;
+    decrypt(result: PendingFioRequestsResponse): Promise<PendingFioRequestsDecryptedResponse | undefined>;
 }
 //# sourceMappingURL=PendingFioRequestsQuery.d.ts.map

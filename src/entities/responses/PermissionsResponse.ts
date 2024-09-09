@@ -1,6 +1,6 @@
 import {FioPermission} from '../types/FioPermission'
 
 export type PermissionsResponse = {
-    requests: FioPermission[]
+    permissions: FioPermission[]
     more: number,
 }

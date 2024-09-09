@@ -11,10 +11,8 @@ export type PushRequestProps = {
     signingAccount: string | undefined;
 }
 
-// TODO add typings
 export class PushRequest extends SignedRequest {
     public ENDPOINT = `chain/${EndPoint.pushTransaction}` as const
-    // TODO optimize type
     public ACTION: Action
     public ACCOUNT = Account.address
 
@@ -25,8 +23,6 @@ export class PushRequest extends SignedRequest {
         if (props.account) {
             this.ACCOUNT = props.account
         }
-
-        // TODO No validation?
     }
 
     public getData() {

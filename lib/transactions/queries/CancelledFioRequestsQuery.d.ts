@@ -1,4 +1,4 @@
-import { CancelledFioRequestsResponse, EncryptKeyResponse, KeysPair } from '../../entities';
+import { CancelledFioRequestsDecryptedResponse, CancelledFioRequestsResponse, EncryptKeyResponse, KeysPair } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type CancelledFioRequestsQueryProps = {
@@ -13,7 +13,7 @@ export type CancelledFioRequestsQueryData = {
     limit?: number;
     offset?: number;
 };
-export declare class CancelledFioRequestsQuery extends Query<CancelledFioRequestsQueryData, CancelledFioRequestsResponse | undefined> {
+export declare class CancelledFioRequestsQuery extends Query<CancelledFioRequestsQueryData, CancelledFioRequestsDecryptedResponse | undefined> {
     props: CancelledFioRequestsQueryProps;
     ENDPOINT: "chain/get_cancelled_fio_requests";
     isEncrypted: boolean;
@@ -23,6 +23,6 @@ export declare class CancelledFioRequestsQuery extends Query<CancelledFioRequest
         limit: number | undefined;
         offset: number | undefined;
     };
-    decrypt(result: CancelledFioRequestsResponse): Promise<CancelledFioRequestsResponse | undefined>;
+    decrypt(result: CancelledFioRequestsResponse): Promise<CancelledFioRequestsDecryptedResponse | undefined>;
 }
 //# sourceMappingURL=CancelledFioRequestsQuery.d.ts.map

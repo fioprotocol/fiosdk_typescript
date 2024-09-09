@@ -1,10 +1,10 @@
+import {Account} from '../Account'
+import {Action} from '../Action'
 import {Authorization} from './Authorization'
 
 export type RawAction = {
-    // TODO use Account
-    account: string // 'testeostoken',
-    // TODO use Action?
-    name: string // 'transfer',
+    account: Account,
+    name: Action,
     authorization: Authorization[]
     data: any
     actor: string | undefined,

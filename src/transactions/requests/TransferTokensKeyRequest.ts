@@ -12,8 +12,7 @@ export type TransferTokensKeyRequestProps = {
 
 export type TransferTokensKeyRequestData = {
     actor: string
-    // TODO why amount is string?
-    amount: string
+    amount: number
     max_fee: number
     payee_public_key: string
     tpid: string,
@@ -24,13 +23,8 @@ export class TransferTokensKeyRequest extends SignedRequest<TransferTokensKeyReq
     public ACTION = Action.transferTokensKey
     public ACCOUNT = Account.token
 
-    // TODO if change amount from type string to number remove
-    public props: ReturnType<TransferTokensKeyRequest['getResolvedProps']>
-
-    constructor(config: RequestConfig, props: TransferTokensKeyRequestProps) {
+    constructor(config: RequestConfig, private props: TransferTokensKeyRequestProps) {
         super(config)
-
-        this.props = this.getResolvedProps(props)
 
         this.validationData = {tpid: props.technologyProviderId}
         this.validationRules = validationRules.transferTokens
@@ -55,11 +49,5 @@ export class TransferTokensKeyRequest extends SignedRequest<TransferTokensKeyReq
         max_fee: this.props.maxFee,
         payee_public_key: this.props.payeeFioPublicKey,
         tpid: this.props.technologyProviderId,
-    })
-
-    private getResolvedProps = (props: TransferTokensKeyRequestProps) => ({
-        ...props,
-        // TODO why amount is string?
-        amount: `${props.amount}`,
     })
 }

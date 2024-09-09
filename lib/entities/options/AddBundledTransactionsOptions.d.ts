@@ -3,5 +3,6 @@ export type AddBundledTransactionsOptions = {
     bundleSets: number;
     maxFee: number;
     technologyProviderId?: string | null;
+    expirationOffset?: number | null;
 };
 //# sourceMappingURL=AddBundledTransactionsOptions.d.ts.map

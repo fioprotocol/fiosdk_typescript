@@ -2,7 +2,7 @@ import { Api as FioJsApi } from '@fioprotocol/fiojs';
 import { AbiProvider, AuthorityProvider } from '@fioprotocol/fiojs/dist/chain-api-interfaces';
 import { GetBlockResult, PushTransactionArgs } from '@fioprotocol/fiojs/dist/chain-rpc-interfaces';
 import { AbortSignal } from 'abort-controller';
-import { AbiResponse, FioInfoResponse, FioLogger, RawRequest } from '../entities';
+import { AbiResponse, Account, Action, FioInfoResponse, FioLogger, RawRequest } from '../entities';
 import { Rule } from '../utils/validation';
 type FetchJson = (uri: string, opts?: object) => any;
 interface SignedTxArgs {
@@ -25,7 +25,7 @@ export type RequestConfig = {
 export interface FioProvider {
     prepareTransaction(param: {
         abiMap: ApiMap;
-        chainId: number;
+        chainId: string;
         privateKeys: string[];
         textDecoder?: TextDecoder;
         textEncoder?: TextEncoder;
@@ -48,7 +48,7 @@ export declare class Request {
     getChainInfo(): Promise<FioInfoResponse>;
     getBlock(chain: FioInfoResponse): Promise<GetBlockResult>;
     getChainDataForTx(): Promise<{
-        chain_id: number;
+        chain_id: string;
         ref_block_num: number;
         ref_block_prefix: number;
         expiration: string;
@@ -67,8 +67,8 @@ export declare class Request {
         textEncoder?: TextEncoder;
     }): FioJsApi;
     createRawTransaction({ account, action, authPermission, data, publicKey, chainData, signingAccount }: {
-        account: string;
-        action: string;
+        account: Account;
+        action: Action;
         authPermission?: string;
         data: any;
         publicKey?: string;

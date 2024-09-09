@@ -1,4 +1,13 @@
-import {CancelledFioRequestsResponse, EncryptKeyResponse, EndPoint, FioItem, KeysPair} from '../../entities'
+import {
+    CancelledFioRequestsDecryptedResponse,
+    CancelledFioRequestsResponse,
+    EncryptKeyResponse,
+    EndPoint,
+    FioItem,
+    FioSentItem,
+    FioSentItemContent,
+    KeysPair,
+} from '../../entities'
 import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
@@ -20,7 +29,7 @@ export type CancelledFioRequestsQueryData = {
 
 export class CancelledFioRequestsQuery extends Query<
     CancelledFioRequestsQueryData,
-    CancelledFioRequestsResponse | undefined
+    CancelledFioRequestsDecryptedResponse | undefined
 > {
     public ENDPOINT = `chain/${EndPoint.getCancelledFioRequests}` as const
 
@@ -36,7 +45,9 @@ export class CancelledFioRequestsQuery extends Query<
         offset: this.props.offset,
     })
 
-    public async decrypt(result: CancelledFioRequestsResponse): Promise<CancelledFioRequestsResponse | undefined> {
+    public async decrypt(
+        result: CancelledFioRequestsResponse,
+    ): Promise<CancelledFioRequestsDecryptedResponse | undefined> {
         return new Promise(async (resolve, reject) => {
             if (result.requests.length > 0) {
                 try {
@@ -82,7 +93,7 @@ export class CancelledFioRequestsQuery extends Query<
                         encryptPublicKeysArray.push(this.publicKey)
                         encryptPrivateKeysArray.push(this.privateKey)
 
-                        let content = null
+                        let content: FioSentItemContent | null = null
 
                         try {
                             for (const publicKey of encryptPublicKeysArray) {
@@ -110,22 +121,20 @@ export class CancelledFioRequestsQuery extends Query<
                             if (content === null) {
                                 // Throw an error if all keys failed
                                 throw new Error(`CancelledFioRequests: Get UnCipher Content for account ${account} failed.`)
-                            } else {
-                                value.content = content
                             }
+
+                            return {...value, content}
                         } catch (error) {
                             // tslint:disable-next-line:no-console
                             console.error(error)
                             throw error
                         }
-
-                        return value
                     }))
 
-                    const fulfilledRequests: FioItem[] = []
+                    const fulfilledRequests: FioSentItem[] = []
 
                     requests.forEach(
-                        (req) => req.status === 'fulfilled' && fulfilledRequests.push(req.value),
+                        (req) => req.status === 'fulfilled' && fulfilledRequests.push(req.value as FioSentItem),
                     )
 
                     resolve({requests: fulfilledRequests, more: result.more})

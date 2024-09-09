@@ -1,4 +1,4 @@
-import { EncryptKeyResponse, SentFioRequestsResponse } from '../../entities';
+import { EncryptKeyResponse, SentFioRequestsDecryptedResponse, SentFioRequestsResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type SentFioRequestsQueryProps = {
@@ -17,15 +17,16 @@ export type SentFioRequestsQueryData = {
     limit?: number;
     offset?: number;
 };
-export declare class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFioRequestsResponse | undefined> {
+export declare class SentFioRequestsQuery extends Query<SentFioRequestsQueryData, SentFioRequestsDecryptedResponse | undefined> {
     props: SentFioRequestsQueryProps;
     ENDPOINT: "chain/get_sent_fio_requests";
+    isEncrypted: boolean;
     constructor(config: RequestConfig, props: SentFioRequestsQueryProps);
     getData: () => {
         fio_public_key: string;
         limit: number | undefined;
         offset: number | undefined;
     };
-    decrypt(result: SentFioRequestsResponse): Promise<SentFioRequestsResponse | undefined>;
+    decrypt(result: SentFioRequestsResponse): Promise<SentFioRequestsDecryptedResponse | undefined>;
 }
 //# sourceMappingURL=SentFioRequestsQuery.d.ts.map

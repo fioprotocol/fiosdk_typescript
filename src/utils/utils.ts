@@ -1,4 +1,6 @@
+import {Fio} from '@fioprotocol/fiojs'
 import AbortController, {AbortSignal} from 'abort-controller'
+import {TextDecoder, TextEncoder} from 'text-encoding'
 import {Authorization, EncryptKeyResponse, RawAction, RawRequest} from '../entities'
 
 const DEFAULT_REQUEST_TIMEOUT = 60000
@@ -37,7 +39,6 @@ export async function asyncWaterfall({
                 }
             } catch (error: any) {
                 clearTimeout(timeoutId!)
-                // TODO Unexpected behavior
                 if (i === asyncFunctions.length - 1) {
                     throw error
                 }
@@ -126,24 +127,21 @@ export const resolveOptions = <T extends Record<string, unknown>>(options: Resol
     return cleanupObject(result as T)
 }
 
-// TODO check is default values really needed?
 export const createAuthorization = (actor: string, permission = 'active'): Authorization => ({
     actor,
     permission,
 })
 
-// TODO check is default values really needed?
 export const createRawAction = (
-    data: Pick<RawAction, 'data' | 'actor'> & Partial<Pick<RawAction, 'account' | 'name' | 'authorization'>>,
+    data: Pick<RawAction, 'data' | 'actor' | 'account' | 'name'> & Partial<Pick<RawAction, 'authorization'>>,
 ): RawAction => ({
-    account: data.account ?? '',
+    account: data.account,
     actor: data.actor,
     authorization: data.authorization ?? [],
     data: data.data,
-    name: data.name ?? '',
+    name: data.name,
 })
 
-// TODO check is default values really needed?
 export const createRawRequest = (data: Partial<RawRequest>): RawRequest => ({
     actions: data.actions ?? [],
     context_free_actions: data.context_free_actions ?? [],
@@ -155,3 +153,26 @@ export const createRawRequest = (data: Partial<RawRequest>): RawRequest => ({
     ref_block_prefix: data.ref_block_prefix ?? 0,
     transaction_extensions: data.transaction_extensions ?? [],
 })
+
+export const defaultTextEncoder: TextEncoder = new TextEncoder()
+export const defaultTextDecoder: TextDecoder = new TextDecoder()
+
+export const getCipherContent = (contentType: string, content: any, privateKey: string, publicKey: string) => {
+    const cipher = Fio.createSharedCipher({
+        privateKey,
+        publicKey,
+        textDecoder: defaultTextDecoder,
+        textEncoder: defaultTextEncoder,
+    })
+    return cipher.encrypt(contentType, content)
+}
+
+export const getUnCipherContent = (contentType: string, content: any, privateKey: string, publicKey: string) => {
+    const cipher = Fio.createSharedCipher({
+        privateKey,
+        publicKey,
+        textDecoder: defaultTextDecoder,
+        textEncoder: defaultTextEncoder,
+    })
+    return cipher.decrypt(contentType, content)
+}

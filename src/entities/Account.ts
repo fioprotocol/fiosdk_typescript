@@ -9,4 +9,6 @@ export enum Account {
     perms = 'fio.perms',
     escrow = 'fio.escrow',
     oracle = 'fio.oracle',
+    eosio = 'eosio',
+    eosioMsig = 'eosio.msig',
 }
