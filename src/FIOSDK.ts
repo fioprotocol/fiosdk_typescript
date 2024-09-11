@@ -23,10 +23,11 @@ import {
     FioBalanceResponse,
     FioDomainsResponse,
     FioFeeResponse,
+    FioLogger,
     FioNamesResponse,
     FioOracleFeesResponse,
     FioSdkOptions,
-    FundsRequestResponse,
+    FundsRequestResponse, GetAbiOptions,
     GetAccountOptions,
     GetAccountPubKeyOptions,
     GetCancelledFioRequestsOptions,
@@ -113,10 +114,12 @@ import * as queries from './transactions/queries'
 import {Request, RequestConfig} from './transactions/Request'
 import * as requests from './transactions/requests'
 import {SignedRequest} from './transactions/requests/SignedRequest'
+import {ClassMethodsToExcludeFromProxy} from './utils/constants'
 import * as fioConstants from './utils/constants'
 import {cleanupObject, getCipherContent, getUnCipherContent, resolveOptions} from './utils/utils'
 import {allRules, validate} from './utils/validation'
 
+export * from './utils/validation'
 export * from './entities'
 export { fioConstants }
 
@@ -309,6 +312,10 @@ type GenericActions = {
         options: [GetFeeOptions]
         response: Promise<FioFeeResponse>,
     }
+    getAbi: {
+        options: [GetAbiOptions]
+        response: Promise<AbiResponse>,
+    }
     getFeeForRecordObtData: {
         options: [GetFeeForRecordObtDataOptions]
         response: Promise<FioFeeResponse>,
@@ -370,6 +377,8 @@ type GenericActions = {
         response: Promise<EncryptKeyResponse>,
     },
 }
+
+export type GenericAction = keyof GenericActions
 
 export class FIOSDK {
 
@@ -599,9 +608,22 @@ export class FIOSDK {
 
     public config: RequestConfig
 
-    public transactions = {
-        getCipherContent,
-        getUnCipherContent,
+    public static get abiMap() {
+        return Request.abiMap
+    }
+
+    public get transactions() {
+        const request = new Request(this.config)
+        return {
+            createRawTransaction: request.createRawTransaction.bind(request),
+            getActor: request.getActor.bind(request),
+            getBlock: request.getBlock.bind(request),
+            getChainDataForTx: request.getChainDataForTx.bind(request),
+            getChainInfo: request.getChainInfo.bind(request),
+            getCipherContent,
+            getUnCipherContent,
+            serialize: request.serialize.bind(request),
+        }
     }
 
     /**
@@ -739,7 +761,7 @@ export class FIOSDK {
         registerMockUrl?: string | null,
         technologyProviderId?: string | null,
         returnPreparedTrx?: boolean | null,
-        logger?: boolean | null,
+        logger?: FioLogger | null,
     )
     /**
      * @param options.privateKey the fio private key of the client sending requests to FIO API.
@@ -779,7 +801,6 @@ export class FIOSDK {
             fioProvider: Fio,
             logger,
         }
-        this.transactions = new Request(this.config)
         this.registerMockUrl = registerMockUrl
         this.privateKey = privateKey
         this.publicKey = publicKey
@@ -787,15 +808,18 @@ export class FIOSDK {
         this.returnPreparedTrx = returnPreparedTrx
         this.rawAbiMissingWarnings = []
 
-        const methods = Object.getOwnPropertyNames(FIOSDK.prototype)
+        const methods = Object.getOwnPropertyNames(FIOSDK.prototype).filter(
+            (name) => !fioConstants.classMethodsToExcludeFromProxy.includes(name as ClassMethodsToExcludeFromProxy),
+        )
 
         // Replace all methods with Proxy methods
         // Find and remove constructor as we don't need Proxy on it
-        methods.filter((method) => !fioConstants.classMethodsToExcludeFromProxy
-            .includes(method))
-            .forEach((methodName) => {
-                this[methodName as keyof FIOSDK] = new Proxy(this[methodName as keyof FIOSDK], this.proxyHandle)
-            })
+        methods.forEach((methodName) => {
+            this[methodName as keyof Omit<FIOSDK, ClassMethodsToExcludeFromProxy>] = new Proxy(
+                this[methodName as keyof FIOSDK],
+                this.proxyHandle,
+            )
+        })
     }
 
     /**
@@ -961,8 +985,8 @@ export class FIOSDK {
      * @param preparedTrx
      */
     public async executePreparedTrx(
-        endPoint: string,
-        preparedTrx: object,
+        endPoint: EndPoint,
+        preparedTrx: unknown,
     ): Promise<any> {
         const response = await new Request(this.config).multicastServers({
             body: JSON.stringify(preparedTrx),
@@ -1126,6 +1150,7 @@ export class FIOSDK {
      * with the FIO SDK instance.
      * @param options.maxFee Maximum amount of SUFs the user is willing to pay for fee.
      * Should be preceded by @ [getFee] for correct value.
+     * @param options.ownerPublicKey Owner FIO Public Key.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      * @param options.expirationOffset Expiration time offset for this transaction in seconds.
      * Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
@@ -2887,7 +2912,7 @@ export class FIOSDK {
         return getEncryptKey.execute(this.publicKey)
     }
 
-    public genericAction<T extends keyof GenericActions>(
+    public genericAction<T extends GenericAction>(
         action: T,
         ...args: GenericActions[T]['options']
     ): GenericActions[T]['response'] {
@@ -2994,6 +3019,8 @@ export class FIOSDK {
                 return this.getOracleFees(params as GetOracleFeesOptions)
             case 'getFee':
                 return this.getFee(params as GetFeeOptions)
+            case 'getAbi':
+                return this.getAbi(params as GetAbiOptions)
             case 'getFeeForRecordObtData':
                 return this.getFeeForRecordObtData(params as GetFeeForRecordObtDataOptions)
             case 'getFeeForNewFundsRequest':
@@ -3043,10 +3070,13 @@ export class FIOSDK {
     }
 
     /**
-     * @ignore
+     * @deprecated
      */
-    private getAbi(accountName: string): Promise<AbiResponse> {
-        const abi = new queries.AbiQuery(this.config, {accountName})
+    public getAbi(accountName: string): Promise<AbiResponse>
+    public getAbi(options: GetAbiOptions): Promise<AbiResponse>
+    public getAbi(): Promise<AbiResponse> {
+        const args = resolveOptions<GetAbiOptions>({keys: ['accountName'], arguments})
+        const abi = new queries.AbiQuery(this.config, args)
         return abi.execute(this.publicKey)
     }
 }

@@ -2,5 +2,5 @@ import {NftItem} from '../types/NftItem'
 
 export type NftsResponse = {
     nfts: NftItem[]
-    more: boolean,
+    more: number,
 }

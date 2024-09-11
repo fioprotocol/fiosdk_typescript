@@ -1,1 +1,1 @@
-{"version":3,"file":"FioAddressesResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/FioAddressesResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,UAAU,EAAC,MAAM,qBAAqB,CAAA;AAE9C,MAAM,MAAM,oBAAoB,GAAG;IAC/B,aAAa,EAAE,UAAU,EAAE,CAAC;CAC/B,CAAA"}
+{"version":3,"file":"FioAddressesResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/FioAddressesResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,UAAU,EAAC,MAAM,qBAAqB,CAAA;AAE9C,MAAM,MAAM,oBAAoB,GAAG;IAC/B,aAAa,EAAE,UAAU,EAAE,CAAA;IAC3B,IAAI,EAAE,MAAM,CAAC;CAChB,CAAA"}

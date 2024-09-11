@@ -507,7 +507,7 @@ export class Request {
         })
 
         // TODO asyncWaterfall can throw errors and error interface can be different
-        if (res.isError) {
+        if (res?.isError) {
             const error = new FioError(res.errorMessage || res.data.message)
             error.json = res.data.json
             error.list = res.data.list
