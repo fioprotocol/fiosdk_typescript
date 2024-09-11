@@ -1,4 +1,4 @@
-import Schema, {ValidationError} from 'validate'
+import Schema, { ValidationError } from 'validate'
 import {ErrObj} from '../entities'
 
 export type Rule = {

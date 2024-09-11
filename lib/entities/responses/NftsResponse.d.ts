@@ -1,6 +1,6 @@
 import { NftItem } from '../types/NftItem';
 export type NftsResponse = {
     nfts: NftItem[];
-    more: boolean;
+    more: number;
 };
 //# sourceMappingURL=NftsResponse.d.ts.map

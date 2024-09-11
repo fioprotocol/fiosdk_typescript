@@ -41,8 +41,9 @@ export const defaultExpirationOffset = 180
 /**
  * @ignore
  */
-export const classMethodsToExcludeFromProxy: string[] = [
+export const classMethodsToExcludeFromProxy = [
     'constructor',
+    'transactions',
     'SUFUnit',
     'derivedPublicKey',
     'isChainCodeValid',
@@ -67,6 +68,8 @@ export const classMethodsToExcludeFromProxy: string[] = [
     'getAbi',
     'customRawAbiAccountName',
     'setCustomRawAbiAccountName',
-]
+] as const
+
+export type ClassMethodsToExcludeFromProxy = typeof classMethodsToExcludeFromProxy[number]
 
 export const missingAbiError = 'unknown key'

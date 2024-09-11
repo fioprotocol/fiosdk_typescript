@@ -1,1 +1,1 @@
-{"version":3,"file":"NftsResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/NftsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,OAAO,EAAC,MAAM,kBAAkB,CAAA;AAExC,MAAM,MAAM,YAAY,GAAG;IACvB,IAAI,EAAE,OAAO,EAAE,CAAA;IACf,IAAI,EAAE,OAAO,CAAC;CACjB,CAAA"}
+{"version":3,"file":"NftsResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/NftsResponse.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,OAAO,EAAC,MAAM,kBAAkB,CAAA;AAExC,MAAM,MAAM,YAAY,GAAG;IACvB,IAAI,EAAE,OAAO,EAAE,CAAA;IACf,IAAI,EAAE,MAAM,CAAC;CAChB,CAAA"}
