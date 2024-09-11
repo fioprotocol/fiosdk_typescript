@@ -58,6 +58,7 @@ export * from './options/AddPublicAddressOptions';
 export * from './options/BurnFioAddressOptions';
 export * from './options/CancelFundsRequestOptions';
 export * from './options/FioSdkOptions';
+export * from './options/GetAbiOptions';
 export * from './options/RequestFundsOptions';
 export * from './options/GetAccountOptions';
 export * from './options/GetAccountPubKeyOptions';

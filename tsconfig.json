@@ -11,6 +11,7 @@
       "target": "es2015",
       "declaration": true,
       "declarationMap": true,
+      "esModuleInterop": true,
       "lib": ["ES2020.Promise", "dom"]
     },
     "compileOnSave": true,

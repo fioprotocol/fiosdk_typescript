@@ -28,6 +28,7 @@ export declare const defaultExpirationOffset = 180;
 /**
  * @ignore
  */
-export declare const classMethodsToExcludeFromProxy: string[];
+export declare const classMethodsToExcludeFromProxy: readonly ["constructor", "transactions", "SUFUnit", "derivedPublicKey", "isChainCodeValid", "isTokenCodeValid", "isFioAddressValid", "isFioDomainValid", "isFioPublicKeyValid", "isPublicAddressValid", "validateChainCode", "validateTokenCode", "validateFioAddress", "validateFioDomain", "validateFioPublicKey", "validatePublicAddress", "amountToSUF", "SUFToAmount", "getFioPublicKey", "getTechnologyProviderId", "setSignedTrxReturnOption", "setApiUrls", "getMultiplier", "getAbi", "customRawAbiAccountName", "setCustomRawAbiAccountName"];
+export type ClassMethodsToExcludeFromProxy = typeof classMethodsToExcludeFromProxy[number];
 export declare const missingAbiError = "unknown key";
 //# sourceMappingURL=constants.d.ts.map
