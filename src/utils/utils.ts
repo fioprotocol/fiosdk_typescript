@@ -1,7 +1,7 @@
 import {Fio} from '@fioprotocol/fiojs'
 import AbortController, {AbortSignal} from 'abort-controller'
 import {TextDecoder, TextEncoder} from 'text-encoding'
-import {Authorization, ContentType, EncryptKeyResponse, RawAction, RawRequest} from '../entities'
+import {Authorization, ContentType, EncryptKeyResponse, KeysPair, RawAction, RawRequest} from '../entities'
 
 const DEFAULT_REQUEST_TIMEOUT = 60000
 
@@ -157,6 +157,50 @@ export const createRawRequest = (data: Partial<RawRequest>): RawRequest => ({
 export const defaultTextEncoder: TextEncoder = new TextEncoder()
 export const defaultTextDecoder: TextDecoder = new TextDecoder()
 
+export const getAccountPrivateKeys = (account: string, encryptKeys?: Map<string, KeysPair[]>) => {
+    if (encryptKeys) {
+        const accountEncryptKeys = encryptKeys.get(account)
+        if (accountEncryptKeys && accountEncryptKeys.length > 0) {
+            return accountEncryptKeys.map(
+                (accountEncryptKey) =>
+                    accountEncryptKey.privateKey,
+            )
+        }
+    }
+    return []
+}
+
+export const getDecryptedContent = <T>(
+    type: ContentType,
+    value: string,
+    publicKeys: string[],
+    privateKeys: string[] = publicKeys,
+): T | null => {
+    let unCipherContent: T | null = null
+
+    for (const publicKey of publicKeys) {
+        for (const privateKey of privateKeys) {
+            try {
+                unCipherContent = getUnCipherContent(
+                    type,
+                    value,
+                    privateKey,
+                    publicKey,
+                )
+
+                if (unCipherContent !== null) {
+                    return unCipherContent
+                }
+            } catch (error) {
+                // tslint:disable-next-line:no-console
+                console.error(error)
+            }
+        }
+    }
+
+    return unCipherContent
+}
+
 export const getCipherContent = (contentType: ContentType, content: any, privateKey: string, publicKey: string) => {
     const cipher = Fio.createSharedCipher({
         privateKey,
@@ -167,7 +211,8 @@ export const getCipherContent = (contentType: ContentType, content: any, private
     return cipher.encrypt(contentType, content)
 }
 
-export const getUnCipherContent = (contentType: ContentType, content: any, privateKey: string, publicKey: string) => {
+export const getUnCipherContent = <T = any>(
+    contentType: ContentType, content: string, privateKey: string, publicKey: string): T => {
     const cipher = Fio.createSharedCipher({
         privateKey,
         publicKey,

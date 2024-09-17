@@ -525,12 +525,22 @@ export class Request {
         return res
     }
 
-    public getCipherContent(contentType: ContentType, content: any, privateKey: string, publicKey: string) {
+    public getCipherContent(
+        contentType: ContentType,
+        content: any,
+        privateKey: string,
+        publicKey: string,
+    ) {
         return getCipherContent(contentType, content, privateKey, publicKey)
     }
 
-    public getUnCipherContent(contentType: ContentType, content: any, privateKey: string, publicKey: string) {
-        return getUnCipherContent(contentType, content, privateKey, publicKey)
+    public getUnCipherContent<T = any>(
+        contentType: ContentType,
+        content: string,
+        privateKey: string,
+        publicKey: string,
+    ) {
+        return getUnCipherContent<T>(contentType, content, privateKey, publicKey)
     }
 
     public validate() {

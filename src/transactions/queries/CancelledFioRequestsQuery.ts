@@ -9,7 +9,7 @@ import {
     FioSentItemContent,
     KeysPair,
 } from '../../entities'
-import {getEncryptKeyForUnCipherContent} from '../../utils/utils'
+import {getAccountPrivateKeys, getDecryptedContent, getEncryptKeyForUnCipherContent} from '../../utils/utils'
 import {RequestConfig} from '../Request'
 
 import {Query} from './Query'
@@ -53,8 +53,12 @@ export class CancelledFioRequestsQuery extends Query<
             if (result.requests.length > 0) {
                 try {
                     const requests = await Promise.allSettled(result.requests.map(async (value: FioItem) => {
-                        const encryptPublicKeysArray: string[] = []
-                        let encryptPrivateKeysArray: string[] = []
+                        const account = this.getActor()
+
+                        const encryptPublicKeysArray = [this.publicKey]
+                        const encryptPrivateKeysArray = [this.privateKey]
+
+                        encryptPrivateKeysArray.push(...getAccountPrivateKeys(account, this.props.encryptKeys))
 
                         const {payer_fio_address, payer_fio_public_key} = value || {}
 
@@ -72,64 +76,23 @@ export class CancelledFioRequestsQuery extends Query<
                             console.error(error)
                         }
 
-                        const account = this.getActor()
-
-                        if (this.props.encryptKeys) {
-                            const accountEncryptKeys = this.props.encryptKeys.get(account)
-                            if (accountEncryptKeys && accountEncryptKeys.length > 0) {
-                                encryptPrivateKeysArray =
-                                    encryptPrivateKeysArray.concat(
-                                        accountEncryptKeys.map(
-                                            (accountEncryptKey) =>
-                                                accountEncryptKey.privateKey,
-                                        ),
-                                    )
-                            }
-                        }
-
                         if (payer_fio_public_key) {
                             encryptPublicKeysArray.push(payer_fio_public_key)
                         }
 
-                        encryptPublicKeysArray.push(this.publicKey)
-                        encryptPrivateKeysArray.push(this.privateKey)
+                        const content = getDecryptedContent<FioSentItemContent>(
+                            ContentType.newFundsContent,
+                            value.content,
+                            encryptPublicKeysArray,
+                            encryptPrivateKeysArray,
+                        )
 
-                        let content: FioSentItemContent | null = null
-
-                        try {
-                            for (const publicKey of encryptPublicKeysArray) {
-                                for (const privateKey of encryptPrivateKeysArray) {
-                                    let unCipherContent = null
-                                    try {
-                                        unCipherContent = this.getUnCipherContent(
-                                            ContentType.newFundsContent,
-                                            value.content,
-                                            privateKey,
-                                            publicKey,
-                                        )
-                                        if (unCipherContent !== null) {
-                                            content = unCipherContent
-                                            // Exit the inner loop if a successful result is obtained
-                                            break
-                                        }
-                                    } catch (error) {
-                                        // tslint:disable-next-line:no-console
-                                        console.error(error)
-                                    }
-                                }
-                            }
-
-                            if (content === null) {
-                                // Throw an error if all keys failed
-                                throw new Error(`CancelledFioRequests: Get UnCipher Content for account ${account} failed.`)
-                            }
-
-                            return {...value, content}
-                        } catch (error) {
-                            // tslint:disable-next-line:no-console
-                            console.error(error)
-                            throw error
+                        if (content === null) {
+                            // Throw an error if all keys failed
+                            throw new Error(`CancelledFioRequests: Get UnCipher Content for account ${account} failed.`)
                         }
+
+                        return {...value, content}
                     }))
 
                     const fulfilledRequests: FioSentItem[] = []

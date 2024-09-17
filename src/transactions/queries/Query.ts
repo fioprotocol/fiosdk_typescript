@@ -20,7 +20,13 @@ export abstract class Query<T = any, R = any> extends Request {
             requestTimeout: this.requestTimeout,
         })
 
-        return this.isEncrypted ? await this.decrypt(result) : result
+        try {
+            return this.isEncrypted ? await this.decrypt(result) : result
+        } catch (error) {
+            // tslint:disable-next-line:no-console
+            console.error(error)
+            throw error
+        }
     }
 
     public async decrypt(result: any): Promise<R> {

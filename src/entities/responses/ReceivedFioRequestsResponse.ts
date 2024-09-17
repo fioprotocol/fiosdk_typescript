@@ -7,6 +7,6 @@ export type ReceivedFioRequestsResponse = {
 }
 
 export type ReceivedFioRequestsDecryptedResponse = {
-    requests: FioSentItem[]
+    requests: Array<FioItem | FioSentItem>
     more: number,
 }

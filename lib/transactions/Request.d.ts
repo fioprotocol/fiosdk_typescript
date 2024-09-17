@@ -116,7 +116,7 @@ export declare class Request {
         requestTimeout?: number;
     }): Promise<any>;
     getCipherContent(contentType: ContentType, content: any, privateKey: string, publicKey: string): string;
-    getUnCipherContent(contentType: ContentType, content: any, privateKey: string, publicKey: string): any;
+    getUnCipherContent<T = any>(contentType: ContentType, content: string, privateKey: string, publicKey: string): T;
     validate(): void;
 }
 export {};

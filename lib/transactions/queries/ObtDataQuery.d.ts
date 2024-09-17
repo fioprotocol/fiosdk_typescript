@@ -1,4 +1,4 @@
-import { EncryptKeyResponse, GetObtDataDecryptedResponse, GetObtDataResponse } from '../../entities';
+import { EncryptKeyResponse, GetObtDataDecryptedResponse, GetObtDataResponse, KeysPair } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type ObtDataQueryProps = {
@@ -7,10 +7,7 @@ export type ObtDataQueryProps = {
     offset?: number;
     tokenCode?: string;
     includeEncrypted?: boolean;
-    encryptKeys?: Map<string, Array<{
-        privateKey: string;
-        publicKey: string;
-    }>>;
+    encryptKeys?: Map<string, KeysPair[]>;
     getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;
 };
 export type ObtDataQueryData = {
@@ -34,10 +31,7 @@ export declare class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataDecr
         fioPublicKey: string;
         limit?: number;
         offset?: number;
-        encryptKeys?: Map<string, Array<{
-            privateKey: string;
-            publicKey: string;
-        }>>;
+        encryptKeys?: Map<string, KeysPair[]>;
         getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;
     };
     decrypt(result: GetObtDataResponse): Promise<GetObtDataDecryptedResponse>;

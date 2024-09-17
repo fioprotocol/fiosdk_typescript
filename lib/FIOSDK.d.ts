@@ -416,7 +416,7 @@ export declare class FIOSDK {
         }>;
         getChainInfo: () => Promise<import("./entities").FioInfoResponse>;
         getCipherContent: (contentType: ContentType, content: any, privateKey: string, publicKey: string) => string;
-        getUnCipherContent: (contentType: ContentType, content: any, privateKey: string, publicKey: string) => any;
+        getUnCipherContent: <T = any>(contentType: ContentType, content: string, privateKey: string, publicKey: string) => T;
         serialize: ({ chainId, abiMap, transaction, textDecoder, textEncoder, }: {
             transaction: import("./entities").RawRequest;
             chainId: string;
