@@ -1,4 +1,5 @@
 import {
+    ContentType,
     EncryptKeyResponse,
     EndPoint,
     FioItem,
@@ -129,7 +130,7 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataDecryptedRes
                                         let unCipherContent = null
                                         try {
                                             unCipherContent = this.getUnCipherContent(
-                                                'record_obt_data_content',
+                                                ContentType.recordObtDataContent,
                                                 obtDataRecordContent,
                                                 privateKey,
                                                 publicKey,

@@ -1,7 +1,7 @@
 import {Fio} from '@fioprotocol/fiojs'
 import AbortController, {AbortSignal} from 'abort-controller'
 import {TextDecoder, TextEncoder} from 'text-encoding'
-import {Authorization, EncryptKeyResponse, RawAction, RawRequest} from '../entities'
+import {Authorization, ContentType, EncryptKeyResponse, RawAction, RawRequest} from '../entities'
 
 const DEFAULT_REQUEST_TIMEOUT = 60000
 
@@ -157,7 +157,7 @@ export const createRawRequest = (data: Partial<RawRequest>): RawRequest => ({
 export const defaultTextEncoder: TextEncoder = new TextEncoder()
 export const defaultTextDecoder: TextDecoder = new TextDecoder()
 
-export const getCipherContent = (contentType: string, content: any, privateKey: string, publicKey: string) => {
+export const getCipherContent = (contentType: ContentType, content: any, privateKey: string, publicKey: string) => {
     const cipher = Fio.createSharedCipher({
         privateKey,
         publicKey,
@@ -167,7 +167,7 @@ export const getCipherContent = (contentType: string, content: any, privateKey: 
     return cipher.encrypt(contentType, content)
 }
 
-export const getUnCipherContent = (contentType: string, content: any, privateKey: string, publicKey: string) => {
+export const getUnCipherContent = (contentType: ContentType, content: any, privateKey: string, publicKey: string) => {
     const cipher = Fio.createSharedCipher({
         privateKey,
         publicKey,

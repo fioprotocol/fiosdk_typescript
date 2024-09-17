@@ -1,5 +1,5 @@
 import { AbortSignal } from 'abort-controller';
-import { Authorization, EncryptKeyResponse, RawAction, RawRequest } from '../entities';
+import { Authorization, ContentType, EncryptKeyResponse, RawAction, RawRequest } from '../entities';
 export declare function asyncWaterfall({ asyncFunctions, requestTimeout, }: {
     asyncFunctions: Array<(signal: AbortSignal) => Promise<any>>;
     requestTimeout?: number;
@@ -23,6 +23,6 @@ export declare const createRawAction: (data: Pick<RawAction, "data" | "actor" | 
 export declare const createRawRequest: (data: Partial<RawRequest>) => RawRequest;
 export declare const defaultTextEncoder: TextEncoder;
 export declare const defaultTextDecoder: TextDecoder;
-export declare const getCipherContent: (contentType: string, content: any, privateKey: string, publicKey: string) => string;
-export declare const getUnCipherContent: (contentType: string, content: any, privateKey: string, publicKey: string) => any;
+export declare const getCipherContent: (contentType: ContentType, content: any, privateKey: string, publicKey: string) => string;
+export declare const getUnCipherContent: (contentType: ContentType, content: any, privateKey: string, publicKey: string) => any;
 //# sourceMappingURL=utils.d.ts.map

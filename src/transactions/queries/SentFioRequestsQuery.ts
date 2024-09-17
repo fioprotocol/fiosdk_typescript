@@ -1,8 +1,10 @@
 import {
+    ContentType,
     EncryptKeyResponse,
     EndPoint,
     FioItem,
-    FioSentItem, FioSentItemContent,
+    FioSentItem,
+    FioSentItemContent,
     SentFioRequestsDecryptedResponse,
     SentFioRequestsResponse,
 } from '../../entities'
@@ -98,7 +100,7 @@ export class SentFioRequestsQuery extends Query<
                                     let unCipherContent = null
                                     try {
                                         unCipherContent = this.getUnCipherContent(
-                                            'new_funds_content',
+                                            ContentType.newFundsContent,
                                             value.content,
                                             privateKey,
                                             publicKey,

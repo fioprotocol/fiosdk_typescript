@@ -6,13 +6,14 @@ import nodeFetch from 'node-fetch'
 import {
     Account,
     Action,
+    ContentType,
     EndPoint,
     FioError,
     FIOSDK,
     FioSentItem,
     RenewFioAddressResponse,
     TransactionResponse,
-} from '../lib/FIOSDK'
+} from '../src/FIOSDK'
 
 dotenv.config({path: ['.env.test', '.env']})
 
@@ -2826,8 +2827,6 @@ describe('Encrypting/Decrypting', () => {
 
     const nonPartyPrivateKey = '5HujRtqceTPo4awwHAEdHRTWdMTgA6s39dJjwWcjhNdSjVWUqMk'
     const nonPartyPublicKey = 'FIO5mh1UqE5v9TKdYm2Ro6JXCXpSxj1Sm4vKUeydaLd7Cu5aqiSSp'
-    const NEW_FUNDS_CONTENT = 'new_funds_content'
-    const RECORD_OBT_DATA_CONTENT = 'record_obt_data_content'
 
     const fioSDKBob = new FIOSDK(
         bobPrivateKey,
@@ -2856,7 +2855,7 @@ describe('Encrypting/Decrypting', () => {
         }
 
         const cipherContent = fioSDKBob.transactions.getCipherContent(
-            NEW_FUNDS_CONTENT,
+            ContentType.newFundsContent,
             content,
             bobPrivateKey,
             alicePublicKey,
@@ -2864,7 +2863,7 @@ describe('Encrypting/Decrypting', () => {
         expect(cipherContent).to.be.a('string')
 
         const uncipherContent = fioSDKBob.transactions.getUnCipherContent(
-            NEW_FUNDS_CONTENT,
+            ContentType.newFundsContent,
             cipherContent,
             alicePrivateKey,
             bobPublicKey,
@@ -2874,7 +2873,7 @@ describe('Encrypting/Decrypting', () => {
         // same party, ensure cannot decipher
         try {
             const uncipherContentSameParty = fioSDKBob.transactions.getUnCipherContent(
-                NEW_FUNDS_CONTENT,
+                ContentType.newFundsContent,
                 cipherContent,
                 alicePrivateKey,
                 alicePublicKey,
@@ -2887,7 +2886,7 @@ describe('Encrypting/Decrypting', () => {
         // non party, ensure cannot decipher
         try {
             const uncipherContentNonParty = fioSDKBob.transactions.getUnCipherContent(
-                NEW_FUNDS_CONTENT,
+                ContentType.newFundsContent,
                 cipherContent,
                 nonPartyPrivateKey,
                 bobPublicKey,
@@ -2899,7 +2898,7 @@ describe('Encrypting/Decrypting', () => {
 
         try {
             const uncipherContentNonPartyA = fioSDKBob.transactions.getUnCipherContent(
-                NEW_FUNDS_CONTENT,
+                ContentType.newFundsContent,
                 cipherContent,
                 bobPrivateKey,
                 nonPartyPublicKey,
@@ -2916,7 +2915,7 @@ describe('Encrypting/Decrypting', () => {
         expect(cipherContent).to.be.a('string')
 
         const uncipherContent = fioSDKBob.transactions.getUnCipherContent(
-            NEW_FUNDS_CONTENT,
+            ContentType.newFundsContent,
             cipherContent,
             alicePrivateKey,
             bobPublicKey,
@@ -2924,7 +2923,7 @@ describe('Encrypting/Decrypting', () => {
         expect(uncipherContent.payee_public_address).to.equal(bobPublicKey)
 
         const uncipherContentA = fioSDKBob.transactions.getUnCipherContent(
-            NEW_FUNDS_CONTENT,
+            ContentType.newFundsContent,
             cipherContent,
             bobPrivateKey,
             alicePublicKey,
@@ -2938,7 +2937,7 @@ describe('Encrypting/Decrypting', () => {
         expect(cipherContent).to.be.a('string')
 
         const uncipherContent = fioSDKBob.transactions.getUnCipherContent(
-            NEW_FUNDS_CONTENT,
+            ContentType.newFundsContent,
             cipherContent,
             alicePrivateKey,
             bobPublicKey,
@@ -2946,7 +2945,7 @@ describe('Encrypting/Decrypting', () => {
         expect(uncipherContent.payee_public_address).to.equal(bobPublicKey)
 
         const uncipherContentA = fioSDKBob.transactions.getUnCipherContent(
-            NEW_FUNDS_CONTENT,
+            ContentType.newFundsContent,
             cipherContent,
             bobPrivateKey,
             alicePublicKey,
@@ -2979,7 +2978,7 @@ describe('Encrypting/Decrypting', () => {
         }
 
         const cipherContent = fioSDKBob.transactions.getCipherContent(
-            RECORD_OBT_DATA_CONTENT,
+            ContentType.recordObtDataContent,
             content,
             bobPrivateKey,
             alicePublicKey,
@@ -2987,7 +2986,7 @@ describe('Encrypting/Decrypting', () => {
         expect(cipherContent).to.be.a('string')
 
         const uncipherContent = fioSDKBob.transactions.getUnCipherContent(
-            RECORD_OBT_DATA_CONTENT,
+            ContentType.recordObtDataContent,
             cipherContent,
             alicePrivateKey,
             bobPublicKey,
@@ -2997,7 +2996,7 @@ describe('Encrypting/Decrypting', () => {
         // same party, ensure cannot decipher
         try {
             const uncipherContentSameParty = fioSDKBob.transactions.getUnCipherContent(
-                RECORD_OBT_DATA_CONTENT,
+                ContentType.recordObtDataContent,
                 cipherContent,
                 alicePrivateKey,
                 alicePublicKey,
@@ -3010,7 +3009,7 @@ describe('Encrypting/Decrypting', () => {
         // non party, ensure cannot decipher
         try {
             const uncipherContentNonParty = fioSDKBob.transactions.getUnCipherContent(
-                RECORD_OBT_DATA_CONTENT,
+                ContentType.recordObtDataContent,
                 cipherContent,
                 nonPartyPrivateKey,
                 bobPublicKey,
@@ -3022,7 +3021,7 @@ describe('Encrypting/Decrypting', () => {
 
         try {
             const uncipherContentNonPartyA = fioSDKBob.transactions.getUnCipherContent(
-                RECORD_OBT_DATA_CONTENT,
+                ContentType.recordObtDataContent,
                 cipherContent,
                 bobPrivateKey,
                 nonPartyPublicKey,
@@ -3039,7 +3038,7 @@ describe('Encrypting/Decrypting', () => {
         expect(cipherContent).to.be.a('string')
 
         const uncipherContent = fioSDKBob.transactions.getUnCipherContent(
-            RECORD_OBT_DATA_CONTENT,
+            ContentType.recordObtDataContent,
             cipherContent,
             alicePrivateKey,
             bobPublicKey,
@@ -3047,7 +3046,7 @@ describe('Encrypting/Decrypting', () => {
         expect(uncipherContent.payee_public_address).to.equal(bobPublicKey)
 
         const uncipherContentA = fioSDKBob.transactions.getUnCipherContent(
-            RECORD_OBT_DATA_CONTENT,
+            ContentType.recordObtDataContent,
             cipherContent,
             bobPrivateKey,
             alicePublicKey,
@@ -3061,7 +3060,7 @@ describe('Encrypting/Decrypting', () => {
         expect(cipherContent).to.be.a('string')
 
         const uncipherContent = fioSDKBob.transactions.getUnCipherContent(
-            RECORD_OBT_DATA_CONTENT,
+            ContentType.recordObtDataContent,
             cipherContent,
             alicePrivateKey,
             bobPublicKey,
@@ -3069,7 +3068,7 @@ describe('Encrypting/Decrypting', () => {
         expect(uncipherContent.payee_public_address).to.equal(bobPublicKey)
 
         const uncipherContentA = fioSDKBob.transactions.getUnCipherContent(
-            RECORD_OBT_DATA_CONTENT,
+            ContentType.recordObtDataContent,
             cipherContent,
             bobPrivateKey,
             alicePublicKey,

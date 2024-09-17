@@ -1,6 +1,7 @@
 import {
     CancelledFioRequestsDecryptedResponse,
     CancelledFioRequestsResponse,
+    ContentType,
     EncryptKeyResponse,
     EndPoint,
     FioItem,
@@ -101,7 +102,7 @@ export class CancelledFioRequestsQuery extends Query<
                                     let unCipherContent = null
                                     try {
                                         unCipherContent = this.getUnCipherContent(
-                                            'new_funds_content',
+                                            ContentType.newFundsContent,
                                             value.content,
                                             privateKey,
                                             publicKey,

@@ -13,17 +13,16 @@ export abstract class SignedRequest<T = any, R = any> extends Request {
         } | any,
         includeTrxId: boolean = false,
     ) {
-        if (result.processed) {
-            const processed = SignedRequest.parseProcessedResult(result.processed)
-            return {
-                block_num: result.processed.block_num,
-                block_time: result.processed.block_time,
-                transaction_id: result.transaction_id,
-                ...processed,
-            }
-
+        if (!result.processed) {
+            return result
         }
-        return result
+        const processed = SignedRequest.parseProcessedResult(result.processed)
+        return {
+            block_num: result.processed.block_num,
+            block_time: result.processed.block_time,
+            transaction_id: result.transaction_id,
+            ...processed,
+        }
     }
 
     public static parseProcessedResult(processed: { action_traces: Array<{ receipt: { response: string } }> }) {
@@ -65,6 +64,7 @@ export abstract class SignedRequest<T = any, R = any> extends Request {
         })
 
         const result = await this.pushToServer(rawTransaction, this.getEndPoint(), dryRun)
+
         return this.prepareResponse(result)
     }
 

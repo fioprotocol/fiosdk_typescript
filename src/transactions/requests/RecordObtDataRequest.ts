@@ -1,4 +1,4 @@
-import {Account, Action, EndPoint, FioRequestStatus, RecordObtDataResponse} from '../../entities'
+import {Account, Action, ContentType, EndPoint, FioRequestStatus, RecordObtDataResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -60,7 +60,7 @@ export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData
     public getData = () => ({
         actor: this.getActor(),
         content: this.getCipherContent(
-            'record_obt_data_content',
+            ContentType.recordObtDataContent,
             this.content,
             this.props.encryptPrivateKey || this.privateKey,
             this.props.payeeFioPublicKey,
