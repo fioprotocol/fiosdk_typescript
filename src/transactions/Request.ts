@@ -17,7 +17,9 @@ import {TextDecoder, TextEncoder} from 'text-encoding'
 
 import {
     AbiResponse,
-    Account, Action,
+    Account,
+    Action,
+    ContentType,
     EndPoint,
     FioError,
     FioInfoResponse,
@@ -523,12 +525,22 @@ export class Request {
         return res
     }
 
-    public getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
+    public getCipherContent(
+        contentType: ContentType,
+        content: any,
+        privateKey: string,
+        publicKey: string,
+    ) {
         return getCipherContent(contentType, content, privateKey, publicKey)
     }
 
-    public getUnCipherContent(contentType: string, content: any, privateKey: string, publicKey: string) {
-        return getUnCipherContent(contentType, content, privateKey, publicKey)
+    public getUnCipherContent<T = any>(
+        contentType: ContentType,
+        content: string,
+        privateKey: string,
+        publicKey: string,
+    ) {
+        return getUnCipherContent<T>(contentType, content, privateKey, publicKey)
     }
 
     public validate() {

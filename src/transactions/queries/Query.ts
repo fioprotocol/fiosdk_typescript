@@ -14,27 +14,17 @@ export abstract class Query<T = any, R = any> extends Request {
         this.publicKey = publicKey
         this.privateKey = privateKey
 
-        if (this.isEncrypted) {
-            try {
-                const result = await this.multicastServers({
-                    body: JSON.stringify(this.getData()),
-                    endpoint: this.getEndPoint(),
-                    requestTimeout: this.requestTimeout,
-                })
-                // TODO if decrypt result undefined return result as default
-                return await this.decrypt(result)
-            } catch (error) {
-                throw error
-            }
-        }
+        const result = await this.multicastServers({
+            body: JSON.stringify(this.getData()),
+            endpoint: this.getEndPoint(),
+            requestTimeout: this.requestTimeout,
+        })
 
         try {
-            return this.multicastServers({
-                body: JSON.stringify(this.getData()),
-                endpoint: this.getEndPoint(),
-                requestTimeout: this.requestTimeout,
-            })
+            return this.isEncrypted ? await this.decrypt(result) : result
         } catch (error) {
+            // tslint:disable-next-line:no-console
+            console.error(error)
             throw error
         }
     }

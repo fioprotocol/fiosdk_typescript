@@ -2,7 +2,7 @@ import { Api as FioJsApi } from '@fioprotocol/fiojs';
 import { AbiProvider, AuthorityProvider } from '@fioprotocol/fiojs/dist/chain-api-interfaces';
 import { GetBlockResult, PushTransactionArgs } from '@fioprotocol/fiojs/dist/chain-rpc-interfaces';
 import { AbortSignal } from 'abort-controller';
-import { AbiResponse, Account, Action, FioInfoResponse, FioLogger, RawRequest } from '../entities';
+import { AbiResponse, Account, Action, ContentType, FioInfoResponse, FioLogger, RawRequest } from '../entities';
 import { Rule } from '../utils/validation';
 type FetchJson = (uri: string, opts?: object) => any;
 interface SignedTxArgs {
@@ -115,8 +115,8 @@ export declare class Request {
         fetchOptions?: any;
         requestTimeout?: number;
     }): Promise<any>;
-    getCipherContent(contentType: string, content: any, privateKey: string, publicKey: string): string;
-    getUnCipherContent(contentType: string, content: any, privateKey: string, publicKey: string): any;
+    getCipherContent(contentType: ContentType, content: any, privateKey: string, publicKey: string): string;
+    getUnCipherContent<T = any>(contentType: ContentType, content: string, privateKey: string, publicKey: string): T;
     validate(): void;
 }
 export {};

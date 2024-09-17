@@ -43,7 +43,7 @@
         "typescript": "5.5.4"
     },
     "dependencies": {
-        "@fioprotocol/fiojs": "1.0.1",
+        "@fioprotocol/fiojs": "github:fioprotocol/fiojs#82de180a6781b7a654d21b5e33f624ef63848ead",
         "abort-controller": "3.0.0",
         "bip39": "3.1.0",
         "hdkey": "1.1.2",

@@ -5,7 +5,7 @@ export type ReceivedFioRequestsResponse = {
     more: number;
 };
 export type ReceivedFioRequestsDecryptedResponse = {
-    requests: FioSentItem[];
+    requests: Array<FioItem | FioSentItem>;
     more: number;
 };
 //# sourceMappingURL=ReceivedFioRequestsResponse.d.ts.map

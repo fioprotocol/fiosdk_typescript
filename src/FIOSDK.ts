@@ -16,6 +16,7 @@ import {
     CancelFundsRequestOptions,
     CancelFundsRequestResponse,
     CancelledFioRequestsDecryptedResponse,
+    ContentType,
     EncryptKeyResponse,
     EndPoint,
     FetchJson,
@@ -676,20 +677,28 @@ export class FIOSDK {
             // Remember that you have to exclude methods which you are going to use
             // inside here to avoid “too much recursion” error
 
-            const setAbi = async (accountName: string) => {
-                if (!Request.abiMap.get(accountName)) {
-                    const response = await this.main.getAbi(accountName)
-                    Request.abiMap.set(response.account_name, response)
+            const setAbi = async (accountName: string): Promise<AbiResponse | undefined> => {
+                const abi = Request.abiMap.get(accountName)
+                if (abi) {
+                    return abi
                 }
+                const newAbi = await this.main.getAbi({accountName})
+                if (newAbi) {
+                    Request.abiMap.set(newAbi.account_name, newAbi)
+                    return newAbi
+                }
+                return
             }
+
             let rawAbiAccountNameList = []
+
             if (FIOSDK.customRawAbiAccountName) {
                 rawAbiAccountNameList = [...Object.values(Account), ...FIOSDK.customRawAbiAccountName]
             } else {
                 rawAbiAccountNameList = Object.values(Account)
             }
 
-            const setAbiPromises = rawAbiAccountNameList.map((accountName) => setAbi(accountName))
+            const setAbiPromises = rawAbiAccountNameList.map((accountName) => setAbi(accountName)).filter((it) => !!it)
 
             await Promise.allSettled(setAbiPromises).then((results) => results.forEach((result) => {
                 if (result.status === 'rejected') {
@@ -2857,20 +2866,20 @@ export class FIOSDK {
         data.tpid = this.getTechnologyProviderId(data.tpid)
         if (data.content && !encryptOptions.publicKey) {
             switch (action) {
-                case 'newfundsreq': {
+                case Action.newFundsRequest: {
                     const payerKey = await this.getEncryptKey({
                         fioAddress: data.payer_fio_address,
                     })
                     encryptOptions.publicKey = payerKey.encrypt_public_key
-                    encryptOptions.contentType = 'new_funds_content'
+                    encryptOptions.contentType = ContentType.newFundsContent
                     break
                 }
-                case 'recordobt': {
+                case Action.recordObt: {
                     const payeeKey = await this.getEncryptKey({
                         fioAddress: data.payee_fio_address,
                     })
                     encryptOptions.publicKey = payeeKey.encrypt_public_key
-                    encryptOptions.contentType = 'record_obt_data_content'
+                    encryptOptions.contentType = ContentType.recordObtDataContent
                     break
                 }
             }

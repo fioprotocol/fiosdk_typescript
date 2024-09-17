@@ -1,4 +1,4 @@
-import {Account, Action, EndPoint, FundsRequestResponse} from '../../entities'
+import {Account, Action, ContentType, EndPoint, FundsRequestResponse} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -58,7 +58,7 @@ export class FundsRequestRequest extends SignedRequest<
     public getData = () => ({
         actor: this.getActor(),
         content: this.getCipherContent(
-            'new_funds_content',
+            ContentType.newFundsContent,
             this.content,
             this.props.encryptPrivateKey || this.privateKey,
             this.props.payerFioPublicKey,
