@@ -1,4 +1,4 @@
-import { EncryptKeyResponse, SentFioRequestsDecryptedResponse, SentFioRequestsResponse } from '../../entities';
+import { EncryptKeyResponse, KeysPair, SentFioRequestsDecryptedResponse, SentFioRequestsResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type SentFioRequestsQueryProps = {
@@ -6,10 +6,7 @@ export type SentFioRequestsQueryProps = {
     limit?: number;
     offset?: number;
     includeEncrypted?: boolean;
-    encryptKeys?: Map<string, Array<{
-        privateKey: string;
-        publicKey: string;
-    }>>;
+    encryptKeys?: Map<string, KeysPair[]>;
     getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;
 };
 export type SentFioRequestsQueryData = {

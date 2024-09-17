@@ -10,10 +10,11 @@ export type PushRequestProps = {
     signingAccount: string | undefined;
 };
 export declare class PushRequest extends SignedRequest {
-    props: PushRequestProps;
     ENDPOINT: "chain/push_transaction";
     ACTION: Action;
     ACCOUNT: Account;
+    private readonly data;
+    private readonly encryptOptions;
     constructor(config: RequestConfig, props: PushRequestProps);
     getData(): any;
 }

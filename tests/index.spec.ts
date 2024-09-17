@@ -13,7 +13,7 @@ import {
     KeysPair,
     RenewFioAddressResponse,
     TransactionResponse,
-} from '../lib/FIOSDK'
+} from '../src/FIOSDK'
 
 dotenv.config({path: ['.env.test', '.env']})
 

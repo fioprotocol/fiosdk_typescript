@@ -119,5 +119,6 @@ export * from './utils/ErrObj';
 export * from './Action';
 export * from './Account';
 export * from './EndPoint';
+export * from './ContentType';
 export * from './FioRequestStatus';
 //# sourceMappingURL=index.d.ts.map

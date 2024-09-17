@@ -16,40 +16,44 @@ export class PushRequest extends SignedRequest {
     public ACTION: Action
     public ACCOUNT = Account.address
 
-    constructor(config: RequestConfig, public props: PushRequestProps) {
+    private readonly data: any
+    private readonly encryptOptions: EncryptOptions
+
+    constructor(config: RequestConfig, props: PushRequestProps) {
         super(config)
 
         this.ACTION = props.action
+
         if (props.account) {
             this.ACCOUNT = props.account
         }
+
+        this.data = props.data
+        this.encryptOptions = props.encryptOptions
+        this.authPermission = props.authPermission
+        this.signingAccount = props.signingAccount
     }
 
     public getData() {
-        const data = {...this.props.data}
-
-        const {encryptOptions} = this.props
+        const data = {...this.data}
 
         if (data.content
-            && encryptOptions
-            && encryptOptions.publicKey
-            && encryptOptions.contentType) {
+            && this.encryptOptions
+            && this.encryptOptions.publicKey
+            && this.encryptOptions.contentType) {
             data.content = this.getCipherContent(
-                encryptOptions.contentType,
+                this.encryptOptions.contentType,
                 data.content,
-                encryptOptions.privateKey || this.privateKey,
-                encryptOptions.publicKey,
+                this.encryptOptions.privateKey || this.privateKey,
+                this.encryptOptions.publicKey,
             )
         }
 
-        return {
-            ...data,
-            actor:
-                this.props.data.actor != null
-                && this.props.data.actor !== ''
-                    ? this.props.data.actor
-                    : this.getActor(),
+        if (data.actor === null || data.actor === '') {
+            data.content = this.getActor()
         }
+
+        return data
     }
 
 }

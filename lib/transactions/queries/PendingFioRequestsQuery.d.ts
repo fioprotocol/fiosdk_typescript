@@ -1,14 +1,11 @@
-import { EncryptKeyResponse, PendingFioRequestsDecryptedResponse, PendingFioRequestsResponse } from '../../entities';
+import { EncryptKeyResponse, KeysPair, PendingFioRequestsDecryptedResponse, PendingFioRequestsResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { Query } from './Query';
 export type PendingFioRequestsQueryProps = {
     fioPublicKey: string;
     limit?: number;
     offset?: number;
-    encryptKeys?: Map<string, Array<{
-        privateKey: string;
-        publicKey: string;
-    }>>;
+    encryptKeys?: Map<string, KeysPair[]>;
     getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;
 };
 export type PendingFioRequestsQueryData = {
