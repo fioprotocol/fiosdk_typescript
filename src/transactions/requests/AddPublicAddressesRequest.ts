@@ -22,7 +22,7 @@ export class AddPublicAddressesRequest extends SignedRequest<
     AddPublicAddressesRequestData,
     AddPublicAddressesResponse
 > {
-    public ENDPOINT = `chain/${EndPoint.addPubAddress}` as const
+    public ENDPOINT = `chain/${EndPoint.addPublicAddress}` as const
     public ACTION = Action.addPublicAddresses
     public ACCOUNT = Account.address
 

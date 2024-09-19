@@ -124,262 +124,326 @@ export * from './utils/validation'
 export * from './entities'
 export { fioConstants }
 
+export enum GenericAction {
+    getFioPublicKey = 'getFioPublicKey',
+    getAccount = 'getAccount',
+    registerFioDomainAddress = 'registerFioDomainAddress',
+    registerFioAddress = 'registerFioAddress',
+    registerOwnerFioAddress = 'registerOwnerFioAddress',
+    transferLockedTokens = 'transferLockedTokens',
+    registerFioDomain = 'registerFioDomain',
+    registerOwnerFioDomain = 'registerOwnerFioDomain',
+    renewFioDomain = 'renewFioDomain',
+    renewFioAddress = 'renewFioAddress',
+    burnFioAddress = 'burnFioAddress',
+    transferFioAddress = 'transferFioAddress',
+    transferFioDomain = 'transferFioDomain',
+    addBundledTransactions = 'addBundledTransactions',
+    addPublicAddress = 'addPublicAddress',
+    addPublicAddresses = 'addPublicAddresses',
+    removePublicAddresses = 'removePublicAddresses',
+    getLocks = 'getLocks',
+    cancelFundsRequest = 'cancelFundsRequest',
+    removeAllPublicAddresses = 'removeAllPublicAddresses',
+    setFioDomainVisibility = 'setFioDomainVisibility',
+    recordObtData = 'recordObtData',
+    getObtData = 'getObtData',
+    getGranteePermissions = 'getGranteePermissions',
+    getGrantorPermissions = 'getGrantorPermissions',
+    getObjectPermissions = 'getObjectPermissions',
+    rejectFundsRequest = 'rejectFundsRequest',
+    requestFunds = 'requestFunds',
+    isAvailable = 'isAvailable',
+    getFioBalance = 'getFioBalance',
+    getFioNames = 'getFioNames',
+    getFioDomains = 'getFioDomains',
+    getFioAddresses = 'getFioAddresses',
+    getPendingFioRequests = 'getPendingFioRequests',
+    getReceivedFioRequests = 'getReceivedFioRequests',
+    getCancelledFioRequests = 'getCancelledFioRequests',
+    getSentFioRequests = 'getSentFioRequests',
+    getPublicAddress = 'getPublicAddress',
+    getFioPublicAddress = 'getFioPublicAddress',
+    getPublicAddresses = 'getPublicAddresses',
+    getNfts = 'getNfts',
+    transferTokens = 'transferTokens',
+    stakeFioTokens = 'stakeFioTokens',
+    unStakeFioTokens = 'unStakeFioTokens',
+    getOracleFees = 'getOracleFees',
+    getAbi = 'getAbi',
+    getFee = 'getFee',
+    getFeeForRecordObtData = 'getFeeForRecordObtData',
+    getFeeForNewFundsRequest = 'getFeeForNewFundsRequest',
+    getFeeForRejectFundsRequest = 'getFeeForRejectFundsRequest',
+    getFeeForBurnFioAddress = 'getFeeForBurnFioAddress',
+    getFeeForTransferFioAddress = 'getFeeForTransferFioAddress',
+    getFeeForTransferFioDomain = 'getFeeForTransferFioDomain',
+    getFeeForAddBundledTransactions = 'getFeeForAddBundledTransactions',
+    getFeeForAddPublicAddress = 'getFeeForAddPublicAddress',
+    getFeeForCancelFundsRequest = 'getFeeForCancelFundsRequest',
+    getFeeForRemovePublicAddresses = 'getFeeForRemovePublicAddresses',
+    getFeeForRemoveAllPublicAddresses = 'getFeeForRemoveAllPublicAddresses',
+    getFeeForTransferLockedTokens = 'getFeeForTransferLockedTokens',
+    getMultiplier = 'getMultiplier',
+    pushTransaction = 'pushTransaction',
+    getAccountPubKey = 'getAccountPubKey',
+    getEncryptKey = 'getEncryptKey',
+}
+
 type GenericActions = {
-    getFioPublicKey: {
+    [GenericAction.getFioPublicKey]: {
         options: []
         response: string,
     }
-    getAccount: {
+    [GenericAction.getAccount]: {
         options: [GetAccountOptions]
         response: Promise<AccountResponse>,
     }
-    registerFioDomainAddress: {
+    [GenericAction.registerFioDomainAddress]: {
         options: [RegisterFioDomainAddressOptions]
         response: Promise<RegisterFioAddressResponse>,
     }
-    registerFioAddress: {
+    [GenericAction.registerFioAddress]: {
         options: [Omit<RegisterOwnerFioAddressOptions, 'ownerPublicKey'> & Partial<Pick<RegisterOwnerFioAddressOptions, 'ownerPublicKey'>>]
         response: Promise<RegisterFioAddressResponse>,
     }
-    registerOwnerFioAddress: {
+    [GenericAction.registerOwnerFioAddress]: {
         options: [RegisterOwnerFioAddressOptions]
         response: Promise<RegisterFioAddressResponse>,
     }
-    transferLockedTokens: {
+    [GenericAction.transferLockedTokens]: {
         options: [TransferLockedTokensOptions]
         response: Promise<TransferLockedTokensResponse>,
     }
-    registerFioDomain: {
+    [GenericAction.registerFioDomain]: {
         options: [RegisterFioDomainOptions]
         response: Promise<RegisterFioDomainResponse>,
     }
-    registerOwnerFioDomain: {
+    [GenericAction.registerOwnerFioDomain]: {
         options: [RegisterOwnerFioDomainOptions]
         response: Promise<RegisterFioDomainResponse>,
     }
-    renewFioDomain: {
+    [GenericAction.renewFioDomain]: {
         options: [RenewFioDomainOptions]
         response: Promise<RenewFioDomainResponse>,
     }
-    renewFioAddress: {
+    [GenericAction.renewFioAddress]: {
         options: [RenewFioAddressOptions]
         response: Promise<RenewFioAddressResponse>,
     }
-    burnFioAddress: {
+    [GenericAction.burnFioAddress]: {
         options: [BurnFioAddressOptions]
         response: Promise<BurnFioAddressResponse>,
     }
-    transferFioAddress: {
+    [GenericAction.transferFioAddress]: {
         options: [TransferFioAddressOptions]
         response: Promise<TransferFioAddressResponse>,
     }
-    transferFioDomain: {
+    [GenericAction.transferFioDomain]: {
         options: [TransferFioDomainOptions]
         response: Promise<TransferFioDomainResponse>,
     }
-    addBundledTransactions: {
+    [GenericAction.addBundledTransactions]: {
         options: [AddBundledTransactionsOptions]
         response: Promise<AddBundledTransactionsResponse>,
     }
-    addPublicAddress: {
+    [GenericAction.addPublicAddress]: {
         options: [AddPublicAddressOptions]
         response: Promise<AddPublicAddressesResponse>,
     }
-    addPublicAddresses: {
+    [GenericAction.addPublicAddresses]: {
         options: [AddPublicAddressesOptions]
         response: Promise<AddPublicAddressesResponse>,
     }
-    removePublicAddresses: {
+    [GenericAction.removePublicAddresses]: {
         options: [RemovePublicAddressesOptions]
         response: Promise<RemovePublicAddressesResponse>,
     }
-    getLocks: {
+    [GenericAction.getLocks]: {
         options: [GetLocksOptions]
         response: Promise<LocksResponse>,
     }
-    cancelFundsRequest: {
+    [GenericAction.cancelFundsRequest]: {
         options: [CancelFundsRequestOptions]
         response: Promise<CancelFundsRequestResponse>,
     }
-    removeAllPublicAddresses: {
+    [GenericAction.removeAllPublicAddresses]: {
         options: [RemoveAllPublicAddressesOptions]
         response: Promise<RemoveAllPublicAddressesResponse>,
     }
-    setFioDomainVisibility: {
+    [GenericAction.setFioDomainVisibility]: {
         options: [SetFioDomainVisibilityOptions]
         response: Promise<SetFioDomainVisibilityResponse>,
     }
-    recordObtData: {
+    [GenericAction.recordObtData]: {
         options: [RecordObtDataOptions]
         response: Promise<RecordObtDataResponse>,
     }
-    getFeeForTransferLockedTokens: {
-        options: [GetFeeForTransferLockedTokensOptions]
-        response: Promise<FioFeeResponse>,
-    }
-    getObtData: {
+    [GenericAction.getObtData]: {
         options: [GetObtDataOptions]
         response: Promise<GetObtDataDecryptedResponse>,
     }
-    getGranteePermissions: {
+    [GenericAction.getGranteePermissions]: {
         options: [GetGranteePermissionsOptions]
         response: Promise<PermissionsResponse>,
     }
-    getGrantorPermissions: {
+    [GenericAction.getGrantorPermissions]: {
         options: [GetGrantorPermissionsOptions]
         response: Promise<PermissionsResponse>,
     }
-    getObjectPermissions: {
+    [GenericAction.getObjectPermissions]: {
         options: [GetObjectPermissionsOptions]
         response: Promise<PermissionsResponse>,
     }
-    rejectFundsRequest: {
+    [GenericAction.rejectFundsRequest]: {
         options: [RejectFundsRequestOptions]
         response: Promise<RejectFundsRequestResponse>,
     }
-    requestFunds: {
+    [GenericAction.requestFunds]: {
         options: [RequestFundsOptions]
         response: Promise<FundsRequestResponse>,
     }
-    isAvailable: {
+    [GenericAction.isAvailable]: {
         options: [IsAvailableOptions]
         response: Promise<AvailabilityCheckResponse>,
     }
-    getFioBalance: {
+    [GenericAction.getFioBalance]: {
         options: [GetFioBalanceOptions]
         response: Promise<FioBalanceResponse>,
     }
-    getFioNames: {
+    [GenericAction.getFioNames]: {
         options: [GetFioNamesOptions]
         response: Promise<FioNamesResponse>,
     }
-    getFioDomains: {
+    [GenericAction.getFioDomains]: {
         options: [GetFioDomainsOptions]
         response: Promise<FioDomainsResponse>,
     }
-    getFioAddresses: {
+    [GenericAction.getFioAddresses]: {
         options: [GetFioAddressesOptions]
         response: Promise<FioAddressesResponse>,
     }
-    getPendingFioRequests: {
+    [GenericAction.getPendingFioRequests]: {
         options: [GetPendingFioRequestsOptions]
         response: Promise<PendingFioRequestsDecryptedResponse>,
     }
-    getReceivedFioRequests: {
+    [GenericAction.getReceivedFioRequests]: {
         options: [GetReceivedFioRequestsOptions]
         response: Promise<ReceivedFioRequestsDecryptedResponse>,
     }
-    getCancelledFioRequests: {
+    [GenericAction.getCancelledFioRequests]: {
         options: [GetCancelledFioRequestsOptions]
         response: Promise<CancelledFioRequestsDecryptedResponse>,
     }
-    getSentFioRequests: {
+    [GenericAction.getSentFioRequests]: {
         options: [GetSentFioRequestsOptions]
         response: Promise<SentFioRequestsDecryptedResponse>,
     }
-    getPublicAddress: {
+    [GenericAction.getPublicAddress]: {
         options: [GetPublicAddressOptions]
         response: Promise<PublicAddressResponse>,
     }
-    getFioPublicAddress: {
+    [GenericAction.getFioPublicAddress]: {
         options: [GetFioPublicAddressOptions]
         response: Promise<PublicAddressResponse>,
     }
-    getPublicAddresses: {
+    [GenericAction.getPublicAddresses]: {
         options: [GetPublicAddressesOptions]
         response: Promise<PublicAddressesResponse>,
     }
-    getNfts: {
+    [GenericAction.getNfts]: {
         options: [GetNftsOptions]
         response: Promise<NftsResponse>,
     }
-    transferTokens: {
+    [GenericAction.transferTokens]: {
         options: [TransferTokensOptions]
         response: Promise<TransferTokensKeyResponse>,
     }
-    stakeFioTokens: {
+    [GenericAction.stakeFioTokens]: {
         options: [StakeFioTokensOptions]
         response: Promise<TransactionResponse>,
     }
-    unStakeFioTokens: {
+    [GenericAction.unStakeFioTokens]: {
         options: [UnStakeFioTokensOptions]
         response: Promise<TransactionResponse>,
     }
-    getOracleFees: {
+    [GenericAction.getOracleFees]: {
         options: [GetOracleFeesOptions]
         response: Promise<FioOracleFeesResponse>,
     }
-    getFee: {
+    [GenericAction.getFee]: {
         options: [GetFeeOptions]
         response: Promise<FioFeeResponse>,
     }
-    getAbi: {
+    [GenericAction.getAbi]: {
         options: [GetAbiOptions]
         response: Promise<AbiResponse>,
     }
-    getFeeForRecordObtData: {
+    [GenericAction.getFeeForRecordObtData]: {
         options: [GetFeeForRecordObtDataOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForNewFundsRequest: {
+    [GenericAction.getFeeForNewFundsRequest]: {
         options: [GetFeeForNewFundsRequestOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForRejectFundsRequest: {
+    [GenericAction.getFeeForRejectFundsRequest]: {
         options: [GetFeeForRejectFundsRequestOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForBurnFioAddress: {
+    [GenericAction.getFeeForBurnFioAddress]: {
         options: [GetFeeForBurnFioAddressOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForTransferFioAddress: {
+    [GenericAction.getFeeForTransferFioAddress]: {
         options: [GetFeeForTransferFioAddressOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForTransferFioDomain: {
+    [GenericAction.getFeeForTransferFioDomain]: {
         options: [GetFeeForTransferFioDomainOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForAddBundledTransactions: {
+    [GenericAction.getFeeForAddBundledTransactions]: {
         options: [GetFeeForAddBundledTransactionsOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForAddPublicAddress: {
+    [GenericAction.getFeeForAddPublicAddress]: {
         options: [GetFeeForAddPublicAddressOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForCancelFundsRequest: {
+    [GenericAction.getFeeForCancelFundsRequest]: {
         options: [GetFeeForCancelFundsRequestOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForRemovePublicAddresses: {
+    [GenericAction.getFeeForRemovePublicAddresses]: {
         options: [GetFeeForRemovePublicAddressesOptions]
         response: Promise<FioFeeResponse>,
     }
-    getFeeForRemoveAllPublicAddresses: {
+    [GenericAction.getFeeForRemoveAllPublicAddresses]: {
         options: [GetFeeForRemoveAllPublicAddressesOptions]
         response: Promise<FioFeeResponse>,
     }
-    getMultiplier: {
+    [GenericAction.getFeeForTransferLockedTokens]: {
+        options: [GetFeeForTransferLockedTokensOptions]
+        response: Promise<FioFeeResponse>,
+    }
+    [GenericAction.getMultiplier]: {
         options: []
         response: number,
     }
-    pushTransaction: {
+    [GenericAction.pushTransaction]: {
         options: [PushTransactionOptions]
         response: Promise<unknown>,
     }
-    getAccountPubKey: {
+    [GenericAction.getAccountPubKey]: {
         options: [GetAccountPubKeyOptions]
         response: Promise<AccountPubKeyResponse>,
     }
-    getEncryptKey: {
+    [GenericAction.getEncryptKey]: {
         options: [GetEncryptKeyOptions]
         response: Promise<EncryptKeyResponse>,
     },
 }
-
-export type GenericAction = keyof GenericActions
 
 export class FIOSDK {
 
@@ -677,17 +741,11 @@ export class FIOSDK {
             // Remember that you have to exclude methods which you are going to use
             // inside here to avoid “too much recursion” error
 
-            const setAbi = async (accountName: string): Promise<AbiResponse | undefined> => {
-                const abi = Request.abiMap.get(accountName)
-                if (abi) {
-                    return abi
-                }
-                const newAbi = await this.main.getAbi({accountName})
-                if (newAbi) {
+            const setAbi = async (accountName: string): Promise<void> => {
+                if (!Request.abiMap.get(accountName)) {
+                    const newAbi = await this.main.getAbi({accountName})
                     Request.abiMap.set(newAbi.account_name, newAbi)
-                    return newAbi
                 }
-                return
             }
 
             let rawAbiAccountNameList = []
@@ -698,7 +756,7 @@ export class FIOSDK {
                 rawAbiAccountNameList = Object.values(Account)
             }
 
-            const setAbiPromises = rawAbiAccountNameList.map((accountName) => setAbi(accountName)).filter((it) => !!it)
+            const setAbiPromises = rawAbiAccountNameList.map((accountName) => setAbi(accountName))
 
             await Promise.allSettled(setAbiPromises).then((results) => results.forEach((result) => {
                 if (result.status === 'rejected') {
@@ -809,7 +867,7 @@ export class FIOSDK {
             returnPreparedTrx = false,
             logger,
         } = resolveOptions<FioSdkOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['privateKey', 'publicKey', 'apiUrls', 'fetchJson', 'registerMockUrl', 'technologyProviderId', 'returnPreparedTrx', 'throwValidationErrors', 'logger'],
         })
         this.config = {
@@ -1044,7 +1102,7 @@ export class FIOSDK {
     public registerFioAddress(options: RegisterFioAddressOptions): Promise<RegisterFioAddressResponse>
     public registerFioAddress(): Promise<RegisterFioAddressResponse> {
         const args = resolveOptions<RegisterFioAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
         const registerFioAddress = new requests.RegisterFioAddressRequest(this.config, {
@@ -1094,7 +1152,7 @@ export class FIOSDK {
     public registerOwnerFioAddress(options: RegisterOwnerFioAddressOptions): Promise<RegisterFioAddressResponse>
     public registerOwnerFioAddress(): Promise<RegisterFioAddressResponse> {
         const args = resolveOptions<RegisterOwnerFioAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'ownerPublicKey', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
         const registerFioAddress = new requests.RegisterFioAddressRequest(
@@ -1175,7 +1233,7 @@ export class FIOSDK {
     public registerFioDomain(options: RegisterFioDomainOptions): Promise<RegisterFioDomainResponse>
     public registerFioDomain(): Promise<RegisterFioDomainResponse> {
         const args = resolveOptions<RegisterFioDomainOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioDomain', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
         const registerFioDomain = new requests.RegisterFioDomainRequest(
@@ -1222,7 +1280,7 @@ export class FIOSDK {
     public registerOwnerFioDomain(options: RegisterOwnerFioDomainOptions): Promise<RegisterFioDomainResponse>
     public registerOwnerFioDomain(): Promise<RegisterFioDomainResponse> {
         const args = resolveOptions<RegisterOwnerFioDomainOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioDomain', 'ownerPublicKey', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
         const registerFioDomain = new requests.RegisterFioDomainRequest(this.config, {
@@ -1259,7 +1317,7 @@ export class FIOSDK {
     public burnFioAddress(options: BurnFioAddressOptions): Promise<BurnFioAddressResponse>
     public burnFioAddress(): Promise<BurnFioAddressResponse> {
         const args = resolveOptions<BurnFioAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId'],
         })
         const burnFioAddress = new requests.BurnFioAddressRequest(
@@ -1301,7 +1359,7 @@ export class FIOSDK {
     public transferFioDomain(options: TransferFioDomainOptions): Promise<TransferFioDomainResponse>
     public transferFioDomain(): Promise<TransferFioDomainResponse> {
         const args = resolveOptions<TransferFioDomainOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioDomain', 'newOwnerKey', 'maxFee', 'technologyProviderId'],
         })
         const transferFioDomain = new requests.TransferFioDomainRequest(
@@ -1343,7 +1401,7 @@ export class FIOSDK {
     public transferFioAddress(options: TransferFioAddressOptions): Promise<TransferFioAddressResponse>
     public transferFioAddress(): Promise<TransferFioAddressResponse> {
         const args = resolveOptions<TransferFioAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'newOwnerKey', 'maxFee', 'technologyProviderId'],
         })
         const transferFioAddress = new requests.TransferFioAddressRequest(
@@ -1390,7 +1448,7 @@ export class FIOSDK {
     public addBundledTransactions(options: AddBundledTransactionsOptions): Promise<AddBundledTransactionsResponse>
     public addBundledTransactions(): Promise<AddBundledTransactionsResponse> {
         const args = resolveOptions<AddBundledTransactionsOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'bundleSets', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
         const addBundledTransactions = new requests.AddBundledTransactionsRequest(
@@ -1433,7 +1491,7 @@ export class FIOSDK {
     public renewFioAddress(options: RenewFioAddressOptions): Promise<RenewFioAddressResponse>
     public renewFioAddress(): Promise<RenewFioAddressResponse> {
         const args = resolveOptions<RenewFioAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId'],
         })
         const renewFioAddress = new requests.RenewFioAddressRequest(
@@ -1476,7 +1534,7 @@ export class FIOSDK {
     public renewFioDomain(options: RenewFioDomainOptions): Promise<RenewFioDomainResponse>
     public renewFioDomain(): Promise<RenewFioDomainResponse> {
         const args = resolveOptions<RenewFioDomainOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioDomain', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
         const renewFioDomain = new requests.RenewFioDomainRequest(
@@ -1523,7 +1581,7 @@ export class FIOSDK {
     public addPublicAddress(options: AddPublicAddressOptions): Promise<AddPublicAddressesResponse>
     public addPublicAddress(): Promise<AddPublicAddressesResponse> {
         const args = resolveOptions<AddPublicAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'chainCode', 'tokenCode', 'publicAddress', 'maxFee', 'technologyProviderId'],
         })
         const addPublicAddress = new requests.AddPublicAddressesRequest(
@@ -1566,7 +1624,7 @@ export class FIOSDK {
     public cancelFundsRequest(options: CancelFundsRequestOptions): Promise<CancelFundsRequestResponse>
     public cancelFundsRequest(): Promise<CancelFundsRequestResponse> {
         const args = resolveOptions<CancelFundsRequestOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioRequestId', 'maxFee', 'technologyProviderId'],
         })
         const cancelFundsRequest = new requests.CancelFundsRequestRequest(
@@ -1610,7 +1668,7 @@ export class FIOSDK {
     public removePublicAddresses(options: RemovePublicAddressesOptions): Promise<RemovePublicAddressesResponse>
     public removePublicAddresses(): Promise<RemovePublicAddressesResponse> {
         const args = resolveOptions<RemovePublicAddressesOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'publicAddresses', 'maxFee', 'technologyProviderId'],
         })
         const removePublicAddresses = new requests.RemovePublicAddressesRequest(
@@ -1660,7 +1718,7 @@ export class FIOSDK {
     public transferLockedTokens(options: TransferLockedTokensOptions): Promise<TransferLockedTokensResponse>
     public transferLockedTokens(): Promise<TransferLockedTokensResponse> {
         const args = resolveOptions<TransferLockedTokensOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['payeePublicKey', 'canVote', 'periods', 'amount', 'maxFee', 'technologyProviderId'],
         })
         const transferLockedTokens = new requests.TransferLockedTokensRequest(
@@ -1700,7 +1758,7 @@ export class FIOSDK {
     public removeAllPublicAddresses(options: RemoveAllPublicAddressesOptions): Promise<RemoveAllPublicAddressesResponse>
     public removeAllPublicAddresses(): Promise<RemoveAllPublicAddressesResponse> {
         const args = resolveOptions<RemoveAllPublicAddressesOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId'],
         })
         const removeAllPublicAddresses = new requests.RemoveAllPublicAddressesRequest(
@@ -1741,7 +1799,7 @@ export class FIOSDK {
     public addPublicAddresses(options: AddPublicAddressesOptions): Promise<AddPublicAddressesResponse>
     public addPublicAddresses(): Promise<AddPublicAddressesResponse> {
         const args = resolveOptions<AddPublicAddressesOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'publicAddresses', 'maxFee', 'technologyProviderId'],
         })
         const addPublicAddress = new requests.AddPublicAddressesRequest(
@@ -1788,7 +1846,7 @@ export class FIOSDK {
     public setFioDomainVisibility(options: SetFioDomainVisibilityOptions): Promise<SetFioDomainVisibilityResponse>
     public setFioDomainVisibility(): Promise<SetFioDomainVisibilityResponse> {
         const args = resolveOptions<SetFioDomainVisibilityOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioDomain', 'isPublic', 'maxFee', 'technologyProviderId'],
         })
         const SetFioDomainVisibility = new requests.SetFioDomainVisibilityRequest(
@@ -1884,7 +1942,7 @@ export class FIOSDK {
     public getGranteePermissions(options: GetGranteePermissionsOptions): Promise<PermissionsResponse>
     public getGranteePermissions(): Promise<PermissionsResponse> {
         const args = resolveOptions<GetGranteePermissionsOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['granteeAccount', 'limit', 'offset'],
         })
         const getGranteePermissions = new queries.GranteePermissionsQuery(this.config, args)
@@ -1914,7 +1972,7 @@ export class FIOSDK {
     public getGrantorPermissions(options: GetGrantorPermissionsOptions): Promise<PermissionsResponse>
     public getGrantorPermissions(): Promise<PermissionsResponse> {
         const args = resolveOptions<GetGrantorPermissionsOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['grantorAccount', 'limit', 'offset'],
         })
         const getGrantorPermissions = new queries.GrantorPermissionsQuery(this.config, args)
@@ -1947,7 +2005,7 @@ export class FIOSDK {
     public getObjectPermissions(options: GetObjectPermissionsOptions): Promise<PermissionsResponse>
     public getObjectPermissions(): Promise<PermissionsResponse> {
         const args = resolveOptions<GetObjectPermissionsOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['permissionName', 'objectName', 'limit', 'offset'],
         })
         const getObjectPermissions = new queries.ObjectPermissionsQuery(this.config, args)
@@ -1979,7 +2037,7 @@ export class FIOSDK {
     public rejectFundsRequest(options: RejectFundsRequestOptions): Promise<RejectFundsRequestResponse>
     public rejectFundsRequest(): Promise<RejectFundsRequestResponse> {
         const args = resolveOptions<RejectFundsRequestOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioRequestId', 'maxFee', 'technologyProviderId'],
         })
         const rejectFundsRequest = new requests.RejectFundsRequestRequest(
@@ -2042,7 +2100,7 @@ export class FIOSDK {
      */
     public getLocks(options: GetLocksOptions): Promise<LocksResponse>
     public getLocks(): Promise<LocksResponse> {
-        const args = resolveOptions<GetLocksOptions>({keys: ['fioPublicKey'], arguments})
+        const args = resolveOptions<GetLocksOptions>({keys: ['fioPublicKey'], arguments: Array.from(arguments)})
         const getLocks = new queries.LocksQuery(this.config, args)
         return getLocks.execute(this.publicKey)
     }
@@ -2061,7 +2119,7 @@ export class FIOSDK {
      */
     public getAccount(options: GetAccountOptions): Promise<AccountResponse>
     public getAccount(): Promise<AccountResponse> {
-        const args = resolveOptions<GetAccountOptions>({keys: ['actor'], arguments})
+        const args = resolveOptions<GetAccountOptions>({keys: ['actor'], arguments: Array.from(arguments)})
         const getAccount = new queries.AccountQuery(this.config, args)
         return getAccount.execute(this.publicKey)
     }
@@ -2080,7 +2138,7 @@ export class FIOSDK {
      */
     public isAvailable(options: IsAvailableOptions): Promise<AvailabilityCheckResponse>
     public isAvailable(): Promise<AvailabilityCheckResponse> {
-        const args = resolveOptions<IsAvailableOptions>({keys: ['fioName'], arguments})
+        const args = resolveOptions<IsAvailableOptions>({keys: ['fioName'], arguments: Array.from(arguments)})
         const availabilityCheck = new queries.AvailabilityCheckQuery(this.config, args)
         return availabilityCheck.execute(this.publicKey)
     }
@@ -2099,7 +2157,7 @@ export class FIOSDK {
      */
     public getFioBalance(options: GetFioBalanceOptions): Promise<FioBalanceResponse>
     public getFioBalance(): Promise<FioBalanceResponse> {
-        const args = resolveOptions<GetFioBalanceOptions>({keys: ['fioPublicKey'], arguments})
+        const args = resolveOptions<GetFioBalanceOptions>({keys: ['fioPublicKey'], arguments: Array.from(arguments)})
         const getFioBalance = new queries.FioBalanceQuery(this.config, args)
         return getFioBalance.execute(this.publicKey)
     }
@@ -2118,7 +2176,7 @@ export class FIOSDK {
      */
     public getFioNames(options: GetFioNamesOptions): Promise<FioNamesResponse>
     public getFioNames(): Promise<FioNamesResponse> {
-        const args = resolveOptions<GetFioNamesOptions>({keys: ['fioPublicKey'], arguments})
+        const args = resolveOptions<GetFioNamesOptions>({keys: ['fioPublicKey'], arguments: Array.from(arguments)})
         const getNames = new queries.FioNamesQuery(this.config, args)
         return getNames.execute(this.publicKey)
     }
@@ -2145,7 +2203,10 @@ export class FIOSDK {
      */
     public getFioAddresses(options: GetFioAddressesOptions): Promise<FioAddressesResponse>
     public getFioAddresses(): Promise<FioAddressesResponse> {
-        const args = resolveOptions<GetFioAddressesOptions>({keys: ['fioPublicKey', 'limit', 'offset'], arguments})
+        const args = resolveOptions<GetFioAddressesOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioPublicKey', 'limit', 'offset'],
+        })
         const getNames = new queries.FioAddressesQuery(this.config, args)
         return getNames.execute(this.publicKey)
     }
@@ -2172,7 +2233,10 @@ export class FIOSDK {
      */
     public getFioDomains(options: GetFioDomainsOptions): Promise<FioDomainsResponse>
     public getFioDomains(): Promise<FioDomainsResponse> {
-        const args = resolveOptions<GetFioDomainsOptions>({keys: ['fioPublicKey', 'limit', 'offset'], arguments})
+        const args = resolveOptions<GetFioDomainsOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioPublicKey', 'limit', 'offset'],
+        })
         const getNames = new queries.FioDomainsQuery(this.config, args)
         return getNames.execute(this.publicKey)
     }
@@ -2277,7 +2341,7 @@ export class FIOSDK {
     public getPublicAddress(options: GetPublicAddressOptions): Promise<PublicAddressResponse>
     public getPublicAddress(): Promise<PublicAddressResponse> {
         const args = resolveOptions<GetPublicAddressOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['fioAddress', 'chainCode', 'tokenCode'],
         })
         const publicAddressLookUp = new queries.PublicAddressQuery(this.config, args)
@@ -2306,7 +2370,10 @@ export class FIOSDK {
      */
     public getPublicAddresses(options: GetPublicAddressesOptions): Promise<PublicAddressesResponse>
     public getPublicAddresses(): Promise<PublicAddressesResponse> {
-        const args = resolveOptions<GetPublicAddressesOptions>({keys: ['fioAddress', 'limit', 'offset'], arguments})
+        const args = resolveOptions<GetPublicAddressesOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress', 'limit', 'offset'],
+        })
         const publicAddressesLookUp = new queries.PublicAddressesQuery(this.config, args)
         return publicAddressesLookUp.execute(this.publicKey)
     }
@@ -2325,7 +2392,10 @@ export class FIOSDK {
      */
     public getFioPublicAddress(options: GetFioPublicAddressOptions): Promise<PublicAddressResponse>
     public getFioPublicAddress(): Promise<PublicAddressResponse> {
-        const {fioAddress} = resolveOptions<GetFioPublicAddressOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFioPublicAddressOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getPublicAddress({fioAddress, chainCode: 'FIO', tokenCode: 'FIO'})
     }
 
@@ -2378,7 +2448,7 @@ export class FIOSDK {
             limit,
             offset,
         } = resolveOptions<GetNftsOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['$base', 'limit', 'offset'],
         })
 
@@ -2447,7 +2517,7 @@ export class FIOSDK {
     public transferTokens(options: TransferTokensOptions): Promise<TransferTokensKeyResponse>
     public transferTokens(): Promise<TransferTokensKeyResponse> {
         const args = resolveOptions<TransferTokensOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['payeeFioPublicKey', 'amount', 'maxFee', 'technologyProviderId'],
         })
         const transferTokens = new requests.TransferTokensKeyRequest(
@@ -2474,7 +2544,10 @@ export class FIOSDK {
      */
     public getFeeForTransferLockedTokens(options: GetFeeForTransferLockedTokensOptions): Promise<FioFeeResponse>
     public getFeeForTransferLockedTokens(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForTransferLockedTokensOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFeeForTransferLockedTokensOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getFee({fioAddress, endPoint: EndPoint.transferLockedTokens})
     }
 
@@ -2487,7 +2560,10 @@ export class FIOSDK {
     // TODO Add new js doc
     public getOracleFees(options: GetOracleFeesOptions): Promise<FioOracleFeesResponse>
     public getOracleFees(): Promise<FioOracleFeesResponse> {
-        const {publicKey} = resolveOptions<GetOracleFeesOptions>({keys: ['publicKey'], arguments})
+        const {publicKey} = resolveOptions<GetOracleFeesOptions>({
+            arguments: Array.from(arguments),
+            keys: ['publicKey'],
+        })
         const fioFee = new queries.OracleFeesQuery(this.config)
         return fioFee.execute(publicKey || this.publicKey)
     }
@@ -2524,7 +2600,7 @@ export class FIOSDK {
      */
     public getFee(options: GetFeeOptions): Promise<FioFeeResponse>
     public getFee(): Promise<FioFeeResponse> {
-        const args = resolveOptions<GetFeeOptions>({keys: ['endPoint', 'fioAddress'], arguments})
+        const args = resolveOptions<GetFeeOptions>({keys: ['endPoint', 'fioAddress'], arguments: Array.from(arguments)})
         const fioFee = new queries.FioFeeQuery(this.config, args)
         return fioFee.execute(this.publicKey)
     }
@@ -2543,7 +2619,10 @@ export class FIOSDK {
      */
     public getFeeForRecordObtData(options: GetFeeForRecordObtDataOptions): Promise<FioFeeResponse>
     public getFeeForRecordObtData(): Promise<FioFeeResponse> {
-        const args = resolveOptions<GetFeeForRecordObtDataOptions>({keys: ['payerFioAddress'], arguments})
+        const args = resolveOptions<GetFeeForRecordObtDataOptions>({
+            arguments: Array.from(arguments),
+            keys: ['payerFioAddress'],
+        })
         return this.getFee({fioAddress: args.payerFioAddress, endPoint: EndPoint.recordObtData})
     }
 
@@ -2561,7 +2640,10 @@ export class FIOSDK {
      */
     public getFeeForNewFundsRequest(options: GetFeeForNewFundsRequestOptions): Promise<FioFeeResponse>
     public getFeeForNewFundsRequest(): Promise<FioFeeResponse> {
-        const args = resolveOptions<GetFeeForNewFundsRequestOptions>({keys: ['payeeFioAddress'], arguments})
+        const args = resolveOptions<GetFeeForNewFundsRequestOptions>({
+            arguments: Array.from(arguments),
+            keys: ['payeeFioAddress'],
+        })
         return this.getFee({fioAddress: args.payeeFioAddress, endPoint: EndPoint.newFundsRequest})
     }
 
@@ -2579,7 +2661,10 @@ export class FIOSDK {
      */
     public getFeeForRejectFundsRequest(options: GetFeeForRejectFundsRequestOptions): Promise<FioFeeResponse>
     public getFeeForRejectFundsRequest(): Promise<FioFeeResponse> {
-        const args = resolveOptions<GetFeeForRejectFundsRequestOptions>({keys: ['payerFioAddress'], arguments})
+        const args = resolveOptions<GetFeeForRejectFundsRequestOptions>({
+            arguments: Array.from(arguments),
+            keys: ['payerFioAddress'],
+        })
         return this.getFee({fioAddress: args.payerFioAddress, endPoint: EndPoint.rejectFundsRequest})
     }
 
@@ -2597,8 +2682,11 @@ export class FIOSDK {
      */
     public getFeeForAddPublicAddress(options: GetFeeForAddPublicAddressOptions): Promise<FioFeeResponse>
     public getFeeForAddPublicAddress(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForAddPublicAddressOptions>({keys: ['fioAddress'], arguments})
-        return this.getFee({fioAddress, endPoint: EndPoint.addPubAddress})
+        const {fioAddress} = resolveOptions<GetFeeForAddPublicAddressOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
+        return this.getFee({fioAddress, endPoint: EndPoint.addPublicAddress})
     }
 
     /**
@@ -2615,7 +2703,10 @@ export class FIOSDK {
      */
     public getFeeForCancelFundsRequest(options: GetFeeForCancelFundsRequestOptions): Promise<FioFeeResponse>
     public getFeeForCancelFundsRequest(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForCancelFundsRequestOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFeeForCancelFundsRequestOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getFee({fioAddress, endPoint: EndPoint.cancelFundsRequest})
     }
 
@@ -2633,8 +2724,11 @@ export class FIOSDK {
      */
     public getFeeForRemovePublicAddresses(options: GetFeeForRemovePublicAddressesOptions): Promise<FioFeeResponse>
     public getFeeForRemovePublicAddresses(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForRemovePublicAddressesOptions>({keys: ['fioAddress'], arguments})
-        return this.getFee({fioAddress, endPoint: EndPoint.removePubAddress})
+        const {fioAddress} = resolveOptions<GetFeeForRemovePublicAddressesOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
+        return this.getFee({fioAddress, endPoint: EndPoint.removePublicAddress})
     }
 
     /**
@@ -2651,8 +2745,11 @@ export class FIOSDK {
      */
     public getFeeForRemoveAllPublicAddresses(options: GetFeeForRemoveAllPublicAddressesOptions): Promise<FioFeeResponse>
     public getFeeForRemoveAllPublicAddresses(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForRemoveAllPublicAddressesOptions>({keys: ['fioAddress'], arguments})
-        return this.getFee({fioAddress, endPoint: EndPoint.removeAllPubAddresses})
+        const {fioAddress} = resolveOptions<GetFeeForRemoveAllPublicAddressesOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
+        return this.getFee({fioAddress, endPoint: EndPoint.removeAllPublicAddresses})
     }
 
     /**
@@ -2669,7 +2766,10 @@ export class FIOSDK {
      */
     public getFeeForBurnFioAddress(options: GetFeeForBurnFioAddressOptions): Promise<FioFeeResponse>
     public getFeeForBurnFioAddress(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForBurnFioAddressOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFeeForBurnFioAddressOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getFee({fioAddress, endPoint: EndPoint.burnFioAddress})
     }
 
@@ -2687,7 +2787,10 @@ export class FIOSDK {
      */
     public getFeeForTransferFioAddress(options: GetFeeForTransferFioAddressOptions): Promise<FioFeeResponse>
     public getFeeForTransferFioAddress(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForTransferFioAddressOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFeeForTransferFioAddressOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getFee({fioAddress, endPoint: EndPoint.transferFioAddress})
     }
 
@@ -2705,7 +2808,10 @@ export class FIOSDK {
      */
     public getFeeForAddBundledTransactions(options: GetFeeForAddBundledTransactionsOptions): Promise<FioFeeResponse>
     public getFeeForAddBundledTransactions(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForAddBundledTransactionsOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFeeForAddBundledTransactionsOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getFee({fioAddress, endPoint: EndPoint.addBundledTransactions})
     }
 
@@ -2723,7 +2829,10 @@ export class FIOSDK {
      */
     public getFeeForTransferFioDomain(options: GetFeeForTransferFioDomainOptions): Promise<FioFeeResponse>
     public getFeeForTransferFioDomain(): Promise<FioFeeResponse> {
-        const {fioAddress} = resolveOptions<GetFeeForTransferFioDomainOptions>({keys: ['fioAddress'], arguments})
+        const {fioAddress} = resolveOptions<GetFeeForTransferFioDomainOptions>({
+            arguments: Array.from(arguments),
+            keys: ['fioAddress'],
+        })
         return this.getFee({fioAddress, endPoint: EndPoint.transferFioDomain})
     }
 
@@ -2763,7 +2872,7 @@ export class FIOSDK {
             maxFee,
             technologyProviderId,
         } = resolveOptions<StakeFioTokensOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['amount', 'fioAddress', 'maxFee', 'technologyProviderId'],
         })
         let resolvedMaxFee = maxFee ?? 0
@@ -2819,7 +2928,7 @@ export class FIOSDK {
             maxFee,
             technologyProviderId,
         } = resolveOptions<UnStakeFioTokensOptions>({
-            arguments,
+            arguments: Array.from(arguments),
             keys: ['amount', 'fioAddress', 'maxFee', 'technologyProviderId'],
         })
         let resolvedMaxFee = maxFee ?? 0
@@ -2905,7 +3014,7 @@ export class FIOSDK {
      */
     public getAccountPubKey(options: GetAccountPubKeyOptions): Promise<AccountPubKeyResponse>
     public getAccountPubKey(): Promise<AccountPubKeyResponse> {
-        const args = resolveOptions<GetAccountPubKeyOptions>({keys: ['account'], arguments})
+        const args = resolveOptions<GetAccountPubKeyOptions>({keys: ['account'], arguments: Array.from(arguments)})
         const getAccountPubKey = new queries.AccountPubKeyQuery(this.config, args)
         return getAccountPubKey.execute(this.publicKey)
     }
@@ -2924,15 +3033,15 @@ export class FIOSDK {
      */
     public getEncryptKey(options: GetEncryptKeyOptions): Promise<EncryptKeyResponse>
     public getEncryptKey(): Promise<EncryptKeyResponse> {
-        const args = resolveOptions<GetEncryptKeyOptions>({keys: ['fioAddress'], arguments})
+        const args = resolveOptions<GetEncryptKeyOptions>({keys: ['fioAddress'], arguments: Array.from(arguments)})
         const getEncryptKey = new queries.EncryptKeyQuery(this.config, args)
         return getEncryptKey.execute(this.publicKey)
     }
 
-    public genericAction<T extends GenericAction>(
+    public genericAction<T extends GenericAction | `${GenericAction}`>(
         action: T,
-        ...args: GenericActions[T]['options']
-    ): GenericActions[T]['response'] {
+        ...args: GenericActions[typeof GenericAction[T]]['options']
+    ): GenericActions[typeof GenericAction[T]]['response'] {
         const [params] = args
         switch (action) {
             case 'getFioPublicKey':
@@ -3092,7 +3201,10 @@ export class FIOSDK {
     public getAbi(accountName: string): Promise<AbiResponse>
     public getAbi(options: GetAbiOptions): Promise<AbiResponse>
     public getAbi(): Promise<AbiResponse> {
-        const args = resolveOptions<GetAbiOptions>({keys: ['accountName'], arguments})
+        const args = resolveOptions<GetAbiOptions>({
+            arguments: Array.from(arguments),
+            keys: ['accountName'],
+        })
         const abi = new queries.AbiQuery(this.config, args)
         return abi.execute(this.publicKey)
     }

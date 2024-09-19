@@ -4,261 +4,325 @@ import * as fioConstants from './utils/constants';
 export * from './utils/validation';
 export * from './entities';
 export { fioConstants };
+export declare enum GenericAction {
+    getFioPublicKey = "getFioPublicKey",
+    getAccount = "getAccount",
+    registerFioDomainAddress = "registerFioDomainAddress",
+    registerFioAddress = "registerFioAddress",
+    registerOwnerFioAddress = "registerOwnerFioAddress",
+    transferLockedTokens = "transferLockedTokens",
+    registerFioDomain = "registerFioDomain",
+    registerOwnerFioDomain = "registerOwnerFioDomain",
+    renewFioDomain = "renewFioDomain",
+    renewFioAddress = "renewFioAddress",
+    burnFioAddress = "burnFioAddress",
+    transferFioAddress = "transferFioAddress",
+    transferFioDomain = "transferFioDomain",
+    addBundledTransactions = "addBundledTransactions",
+    addPublicAddress = "addPublicAddress",
+    addPublicAddresses = "addPublicAddresses",
+    removePublicAddresses = "removePublicAddresses",
+    getLocks = "getLocks",
+    cancelFundsRequest = "cancelFundsRequest",
+    removeAllPublicAddresses = "removeAllPublicAddresses",
+    setFioDomainVisibility = "setFioDomainVisibility",
+    recordObtData = "recordObtData",
+    getObtData = "getObtData",
+    getGranteePermissions = "getGranteePermissions",
+    getGrantorPermissions = "getGrantorPermissions",
+    getObjectPermissions = "getObjectPermissions",
+    rejectFundsRequest = "rejectFundsRequest",
+    requestFunds = "requestFunds",
+    isAvailable = "isAvailable",
+    getFioBalance = "getFioBalance",
+    getFioNames = "getFioNames",
+    getFioDomains = "getFioDomains",
+    getFioAddresses = "getFioAddresses",
+    getPendingFioRequests = "getPendingFioRequests",
+    getReceivedFioRequests = "getReceivedFioRequests",
+    getCancelledFioRequests = "getCancelledFioRequests",
+    getSentFioRequests = "getSentFioRequests",
+    getPublicAddress = "getPublicAddress",
+    getFioPublicAddress = "getFioPublicAddress",
+    getPublicAddresses = "getPublicAddresses",
+    getNfts = "getNfts",
+    transferTokens = "transferTokens",
+    stakeFioTokens = "stakeFioTokens",
+    unStakeFioTokens = "unStakeFioTokens",
+    getOracleFees = "getOracleFees",
+    getAbi = "getAbi",
+    getFee = "getFee",
+    getFeeForRecordObtData = "getFeeForRecordObtData",
+    getFeeForNewFundsRequest = "getFeeForNewFundsRequest",
+    getFeeForRejectFundsRequest = "getFeeForRejectFundsRequest",
+    getFeeForBurnFioAddress = "getFeeForBurnFioAddress",
+    getFeeForTransferFioAddress = "getFeeForTransferFioAddress",
+    getFeeForTransferFioDomain = "getFeeForTransferFioDomain",
+    getFeeForAddBundledTransactions = "getFeeForAddBundledTransactions",
+    getFeeForAddPublicAddress = "getFeeForAddPublicAddress",
+    getFeeForCancelFundsRequest = "getFeeForCancelFundsRequest",
+    getFeeForRemovePublicAddresses = "getFeeForRemovePublicAddresses",
+    getFeeForRemoveAllPublicAddresses = "getFeeForRemoveAllPublicAddresses",
+    getFeeForTransferLockedTokens = "getFeeForTransferLockedTokens",
+    getMultiplier = "getMultiplier",
+    pushTransaction = "pushTransaction",
+    getAccountPubKey = "getAccountPubKey",
+    getEncryptKey = "getEncryptKey"
+}
 type GenericActions = {
-    getFioPublicKey: {
+    [GenericAction.getFioPublicKey]: {
         options: [];
         response: string;
     };
-    getAccount: {
+    [GenericAction.getAccount]: {
         options: [GetAccountOptions];
         response: Promise<AccountResponse>;
     };
-    registerFioDomainAddress: {
+    [GenericAction.registerFioDomainAddress]: {
         options: [RegisterFioDomainAddressOptions];
         response: Promise<RegisterFioAddressResponse>;
     };
-    registerFioAddress: {
+    [GenericAction.registerFioAddress]: {
         options: [Omit<RegisterOwnerFioAddressOptions, 'ownerPublicKey'> & Partial<Pick<RegisterOwnerFioAddressOptions, 'ownerPublicKey'>>];
         response: Promise<RegisterFioAddressResponse>;
     };
-    registerOwnerFioAddress: {
+    [GenericAction.registerOwnerFioAddress]: {
         options: [RegisterOwnerFioAddressOptions];
         response: Promise<RegisterFioAddressResponse>;
     };
-    transferLockedTokens: {
+    [GenericAction.transferLockedTokens]: {
         options: [TransferLockedTokensOptions];
         response: Promise<TransferLockedTokensResponse>;
     };
-    registerFioDomain: {
+    [GenericAction.registerFioDomain]: {
         options: [RegisterFioDomainOptions];
         response: Promise<RegisterFioDomainResponse>;
     };
-    registerOwnerFioDomain: {
+    [GenericAction.registerOwnerFioDomain]: {
         options: [RegisterOwnerFioDomainOptions];
         response: Promise<RegisterFioDomainResponse>;
     };
-    renewFioDomain: {
+    [GenericAction.renewFioDomain]: {
         options: [RenewFioDomainOptions];
         response: Promise<RenewFioDomainResponse>;
     };
-    renewFioAddress: {
+    [GenericAction.renewFioAddress]: {
         options: [RenewFioAddressOptions];
         response: Promise<RenewFioAddressResponse>;
     };
-    burnFioAddress: {
+    [GenericAction.burnFioAddress]: {
         options: [BurnFioAddressOptions];
         response: Promise<BurnFioAddressResponse>;
     };
-    transferFioAddress: {
+    [GenericAction.transferFioAddress]: {
         options: [TransferFioAddressOptions];
         response: Promise<TransferFioAddressResponse>;
     };
-    transferFioDomain: {
+    [GenericAction.transferFioDomain]: {
         options: [TransferFioDomainOptions];
         response: Promise<TransferFioDomainResponse>;
     };
-    addBundledTransactions: {
+    [GenericAction.addBundledTransactions]: {
         options: [AddBundledTransactionsOptions];
         response: Promise<AddBundledTransactionsResponse>;
     };
-    addPublicAddress: {
+    [GenericAction.addPublicAddress]: {
         options: [AddPublicAddressOptions];
         response: Promise<AddPublicAddressesResponse>;
     };
-    addPublicAddresses: {
+    [GenericAction.addPublicAddresses]: {
         options: [AddPublicAddressesOptions];
         response: Promise<AddPublicAddressesResponse>;
     };
-    removePublicAddresses: {
+    [GenericAction.removePublicAddresses]: {
         options: [RemovePublicAddressesOptions];
         response: Promise<RemovePublicAddressesResponse>;
     };
-    getLocks: {
+    [GenericAction.getLocks]: {
         options: [GetLocksOptions];
         response: Promise<LocksResponse>;
     };
-    cancelFundsRequest: {
+    [GenericAction.cancelFundsRequest]: {
         options: [CancelFundsRequestOptions];
         response: Promise<CancelFundsRequestResponse>;
     };
-    removeAllPublicAddresses: {
+    [GenericAction.removeAllPublicAddresses]: {
         options: [RemoveAllPublicAddressesOptions];
         response: Promise<RemoveAllPublicAddressesResponse>;
     };
-    setFioDomainVisibility: {
+    [GenericAction.setFioDomainVisibility]: {
         options: [SetFioDomainVisibilityOptions];
         response: Promise<SetFioDomainVisibilityResponse>;
     };
-    recordObtData: {
+    [GenericAction.recordObtData]: {
         options: [RecordObtDataOptions];
         response: Promise<RecordObtDataResponse>;
     };
-    getFeeForTransferLockedTokens: {
-        options: [GetFeeForTransferLockedTokensOptions];
-        response: Promise<FioFeeResponse>;
-    };
-    getObtData: {
+    [GenericAction.getObtData]: {
         options: [GetObtDataOptions];
         response: Promise<GetObtDataDecryptedResponse>;
     };
-    getGranteePermissions: {
+    [GenericAction.getGranteePermissions]: {
         options: [GetGranteePermissionsOptions];
         response: Promise<PermissionsResponse>;
     };
-    getGrantorPermissions: {
+    [GenericAction.getGrantorPermissions]: {
         options: [GetGrantorPermissionsOptions];
         response: Promise<PermissionsResponse>;
     };
-    getObjectPermissions: {
+    [GenericAction.getObjectPermissions]: {
         options: [GetObjectPermissionsOptions];
         response: Promise<PermissionsResponse>;
     };
-    rejectFundsRequest: {
+    [GenericAction.rejectFundsRequest]: {
         options: [RejectFundsRequestOptions];
         response: Promise<RejectFundsRequestResponse>;
     };
-    requestFunds: {
+    [GenericAction.requestFunds]: {
         options: [RequestFundsOptions];
         response: Promise<FundsRequestResponse>;
     };
-    isAvailable: {
+    [GenericAction.isAvailable]: {
         options: [IsAvailableOptions];
         response: Promise<AvailabilityCheckResponse>;
     };
-    getFioBalance: {
+    [GenericAction.getFioBalance]: {
         options: [GetFioBalanceOptions];
         response: Promise<FioBalanceResponse>;
     };
-    getFioNames: {
+    [GenericAction.getFioNames]: {
         options: [GetFioNamesOptions];
         response: Promise<FioNamesResponse>;
     };
-    getFioDomains: {
+    [GenericAction.getFioDomains]: {
         options: [GetFioDomainsOptions];
         response: Promise<FioDomainsResponse>;
     };
-    getFioAddresses: {
+    [GenericAction.getFioAddresses]: {
         options: [GetFioAddressesOptions];
         response: Promise<FioAddressesResponse>;
     };
-    getPendingFioRequests: {
+    [GenericAction.getPendingFioRequests]: {
         options: [GetPendingFioRequestsOptions];
         response: Promise<PendingFioRequestsDecryptedResponse>;
     };
-    getReceivedFioRequests: {
+    [GenericAction.getReceivedFioRequests]: {
         options: [GetReceivedFioRequestsOptions];
         response: Promise<ReceivedFioRequestsDecryptedResponse>;
     };
-    getCancelledFioRequests: {
+    [GenericAction.getCancelledFioRequests]: {
         options: [GetCancelledFioRequestsOptions];
         response: Promise<CancelledFioRequestsDecryptedResponse>;
     };
-    getSentFioRequests: {
+    [GenericAction.getSentFioRequests]: {
         options: [GetSentFioRequestsOptions];
         response: Promise<SentFioRequestsDecryptedResponse>;
     };
-    getPublicAddress: {
+    [GenericAction.getPublicAddress]: {
         options: [GetPublicAddressOptions];
         response: Promise<PublicAddressResponse>;
     };
-    getFioPublicAddress: {
+    [GenericAction.getFioPublicAddress]: {
         options: [GetFioPublicAddressOptions];
         response: Promise<PublicAddressResponse>;
     };
-    getPublicAddresses: {
+    [GenericAction.getPublicAddresses]: {
         options: [GetPublicAddressesOptions];
         response: Promise<PublicAddressesResponse>;
     };
-    getNfts: {
+    [GenericAction.getNfts]: {
         options: [GetNftsOptions];
         response: Promise<NftsResponse>;
     };
-    transferTokens: {
+    [GenericAction.transferTokens]: {
         options: [TransferTokensOptions];
         response: Promise<TransferTokensKeyResponse>;
     };
-    stakeFioTokens: {
+    [GenericAction.stakeFioTokens]: {
         options: [StakeFioTokensOptions];
         response: Promise<TransactionResponse>;
     };
-    unStakeFioTokens: {
+    [GenericAction.unStakeFioTokens]: {
         options: [UnStakeFioTokensOptions];
         response: Promise<TransactionResponse>;
     };
-    getOracleFees: {
+    [GenericAction.getOracleFees]: {
         options: [GetOracleFeesOptions];
         response: Promise<FioOracleFeesResponse>;
     };
-    getFee: {
+    [GenericAction.getFee]: {
         options: [GetFeeOptions];
         response: Promise<FioFeeResponse>;
     };
-    getAbi: {
+    [GenericAction.getAbi]: {
         options: [GetAbiOptions];
         response: Promise<AbiResponse>;
     };
-    getFeeForRecordObtData: {
+    [GenericAction.getFeeForRecordObtData]: {
         options: [GetFeeForRecordObtDataOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForNewFundsRequest: {
+    [GenericAction.getFeeForNewFundsRequest]: {
         options: [GetFeeForNewFundsRequestOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForRejectFundsRequest: {
+    [GenericAction.getFeeForRejectFundsRequest]: {
         options: [GetFeeForRejectFundsRequestOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForBurnFioAddress: {
+    [GenericAction.getFeeForBurnFioAddress]: {
         options: [GetFeeForBurnFioAddressOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForTransferFioAddress: {
+    [GenericAction.getFeeForTransferFioAddress]: {
         options: [GetFeeForTransferFioAddressOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForTransferFioDomain: {
+    [GenericAction.getFeeForTransferFioDomain]: {
         options: [GetFeeForTransferFioDomainOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForAddBundledTransactions: {
+    [GenericAction.getFeeForAddBundledTransactions]: {
         options: [GetFeeForAddBundledTransactionsOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForAddPublicAddress: {
+    [GenericAction.getFeeForAddPublicAddress]: {
         options: [GetFeeForAddPublicAddressOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForCancelFundsRequest: {
+    [GenericAction.getFeeForCancelFundsRequest]: {
         options: [GetFeeForCancelFundsRequestOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForRemovePublicAddresses: {
+    [GenericAction.getFeeForRemovePublicAddresses]: {
         options: [GetFeeForRemovePublicAddressesOptions];
         response: Promise<FioFeeResponse>;
     };
-    getFeeForRemoveAllPublicAddresses: {
+    [GenericAction.getFeeForRemoveAllPublicAddresses]: {
         options: [GetFeeForRemoveAllPublicAddressesOptions];
         response: Promise<FioFeeResponse>;
     };
-    getMultiplier: {
+    [GenericAction.getFeeForTransferLockedTokens]: {
+        options: [GetFeeForTransferLockedTokensOptions];
+        response: Promise<FioFeeResponse>;
+    };
+    [GenericAction.getMultiplier]: {
         options: [];
         response: number;
     };
-    pushTransaction: {
+    [GenericAction.pushTransaction]: {
         options: [PushTransactionOptions];
         response: Promise<unknown>;
     };
-    getAccountPubKey: {
+    [GenericAction.getAccountPubKey]: {
         options: [GetAccountPubKeyOptions];
         response: Promise<AccountPubKeyResponse>;
     };
-    getEncryptKey: {
+    [GenericAction.getEncryptKey]: {
         options: [GetEncryptKeyOptions];
         response: Promise<EncryptKeyResponse>;
     };
 };
-export type GenericAction = keyof GenericActions;
 export declare class FIOSDK {
     /**
      * @ignore
@@ -1621,7 +1685,7 @@ export declare class FIOSDK {
      * @param options.fioAddress FIO public key
      */
     getEncryptKey(options: GetEncryptKeyOptions): Promise<EncryptKeyResponse>;
-    genericAction<T extends GenericAction>(action: T, ...args: GenericActions[T]['options']): GenericActions[T]['response'];
+    genericAction<T extends GenericAction | `${GenericAction}`>(action: T, ...args: GenericActions[typeof GenericAction[T]]['options']): GenericActions[typeof GenericAction[T]]['response'];
     /**
      * @ignore
      */

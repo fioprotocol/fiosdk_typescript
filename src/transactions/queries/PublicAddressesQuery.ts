@@ -15,7 +15,7 @@ export type PublicAddressesQueryData = {
 }
 
 export class PublicAddressesQuery extends Query<PublicAddressesQueryData, PublicAddressesResponse> {
-    public ENDPOINT = `chain/${EndPoint.getPubAddresses}` as const
+    public ENDPOINT = `chain/${EndPoint.getPublicAddresses}` as const
 
     constructor(config: RequestConfig, public props: PublicAddressesQueryProps) {
         super(config)
