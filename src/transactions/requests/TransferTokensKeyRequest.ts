@@ -19,7 +19,7 @@ export type TransferTokensKeyRequestData = {
 }
 
 export class TransferTokensKeyRequest extends SignedRequest<TransferTokensKeyRequestData, TransferTokensKeyResponse> {
-    public ENDPOINT = `chain/${EndPoint.transferTokensKey}` as const
+    public ENDPOINT = `chain/${EndPoint.transferTokensPublicKey}` as const
     public ACTION = Action.transferTokensKey
     public ACCOUNT = Account.token
 

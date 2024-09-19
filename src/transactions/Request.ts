@@ -382,26 +382,20 @@ export class Request {
 
         this.setRawRequestExp(transaction, chainData)
 
+        const signedTransaction = await this.config.fioProvider.prepareTransaction({
+            abiMap: Request.abiMap,
+            chainId: chainData.chain_id,
+            privateKeys,
+            textDecoder: new TextDecoder(),
+            textEncoder: new TextEncoder(),
+            transaction,
+        })
+
         if (dryRun) {
-            return this.config.fioProvider.prepareTransaction({
-                abiMap: Request.abiMap,
-                chainId: chainData.chain_id,
-                privateKeys,
-                textDecoder: new TextDecoder(),
-                textEncoder: new TextEncoder(),
-                transaction,
-            })
-        } else {
-            const signedTransaction = await this.config.fioProvider.prepareTransaction({
-                abiMap: Request.abiMap,
-                chainId: chainData.chain_id,
-                privateKeys,
-                textDecoder: new TextDecoder(),
-                textEncoder: new TextEncoder(),
-                transaction,
-            })
-            return this.multicastServers({endpoint, body: JSON.stringify(signedTransaction)})
+            return signedTransaction
         }
+
+        return this.multicastServers({endpoint, body: JSON.stringify(signedTransaction)})
     }
 
     public async executeCall({

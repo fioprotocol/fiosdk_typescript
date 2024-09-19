@@ -18,6 +18,8 @@ export enum Action {
     transferDomain = 'xferdomain',
     transferTokensKey = 'trnsfiopubky',
     transferLockedTokens = 'trnsloctoks',
+    wrapTokens = 'wraptokens',
+    wrapDomain = 'wrapdomain',
     unstake = 'unstakefio',
     stake = 'stakefio',
     linkAuth = 'linkauth',

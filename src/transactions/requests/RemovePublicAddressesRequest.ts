@@ -22,7 +22,7 @@ export class RemovePublicAddressesRequest extends SignedRequest<
     RemovePublicAddressesRequestData,
     RemovePublicAddressesResponse
 > {
-    public ENDPOINT = `chain/${EndPoint.removePubAddress}` as const
+    public ENDPOINT = `chain/${EndPoint.removePublicAddress}` as const
     public ACTION = Action.removeAddress
     public ACCOUNT = Account.address
 

@@ -1,4 +1,4 @@
-import { Account, Action, RecordObtDataResponse } from '../../entities';
+import { Account, Action, FioSentItemContent, RecordObtDataResponse, RequestStatus } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type RecordObtDataRequestData = {
@@ -25,7 +25,7 @@ export type RecordObtDataRequestProps = {
     payeeTokenPublicAddress: string;
     payerTokenPublicAddress: string;
     payeeFioPublicKey?: string;
-    status?: string;
+    status?: RequestStatus;
     technologyProviderId: string;
     tokenCode: string;
 };
@@ -45,18 +45,7 @@ export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataReq
         payer_fio_address: string;
         tpid: string;
     };
-    getResolvedContent: () => {
-        amount: string;
-        chain_code: string;
-        hash: string | null;
-        memo: string | null;
-        obt_id: string;
-        offline_url: string | null;
-        payee_public_address: string;
-        payer_public_address: string;
-        status: string;
-        token_code: string;
-    };
+    getResolvedContent: () => FioSentItemContent;
     getResolvedProps: (props: RecordObtDataRequestProps) => {
         encryptPrivateKey: string | null;
         fioRequestId: number;
@@ -64,7 +53,7 @@ export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataReq
         memo: string | null;
         offLineUrl: string | null;
         payeeFioPublicKey: string;
-        status: string;
+        status: RequestStatus;
         amount: number;
         chainCode: string;
         maxFee: number;

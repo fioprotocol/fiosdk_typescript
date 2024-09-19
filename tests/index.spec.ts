@@ -10,8 +10,9 @@ import {
     FioError,
     FIOSDK,
     FioSentItem,
+    FioSentItemContent,
     KeysPair,
-    RenewFioAddressResponse,
+    RenewFioAddressResponse, RequestStatus,
     TransactionResponse,
 } from '../src/FIOSDK'
 
@@ -1538,7 +1539,7 @@ describe('Request funds, approve and send', () => {
                 payeeTokenPublicAddress: publicKey2,
                 payerFioAddress: testFioAddressName,
                 payerTokenPublicAddress: publicKey,
-                status: 'sent_to_blockchain',
+                status: RequestStatus.paid,
                 tokenCode: fioTokenCode,
             })
             expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
@@ -1565,7 +1566,7 @@ describe('Request funds, approve and send', () => {
         expect(receivedReq.payer_fio_address).to.equal(testFioAddressName)
         expect(receivedReq.payee_fio_address).to.be.a('string')
         expect(receivedReq.payee_fio_address).to.equal(testFioAddressName2)
-        expect(receivedReq.content.memo).to.be.equal(memo)
+        expect((receivedReq.content as FioSentItemContent).memo).to.be.equal(memo)
     })
 
     it(`Payer getObtData`, async () => {
@@ -2162,7 +2163,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
             expect(firstReceivedReq.payee_fio_public_key).to.equal(
                 user2EncryptKeys.publicKey,
             )
-            expect(firstReceivedReq.content.memo).to.equal(memo3)
+            expect((firstReceivedReq.content as FioSentItemContent).memo).to.equal(memo3)
 
             expect(secondReceivedReq).to.have.all.keys(
                 'fio_request_id',
@@ -2191,7 +2192,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
             expect(secondReceivedReq.payee_fio_public_key).to.equal(
                 user2EncryptKeys2.publicKey,
             )
-            expect(secondReceivedReq.content.memo).to.equal(memo4)
+            expect((secondReceivedReq.content as FioSentItemContent).memo).to.equal(memo4)
         } catch (err) {
             expect(err).to.equal(null)
         }
@@ -2242,7 +2243,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
             expect(firstReceivedReq.payee_fio_public_key).to.equal(
                 user1EncryptKeys.publicKey,
             )
-            expect(firstReceivedReq.content.memo).to.equal(memo)
+            expect((firstReceivedReq.content as FioSentItemContent).memo).to.equal(memo)
 
             expect(secondReceivedReq).to.have.all.keys(
                 'fio_request_id',
@@ -2271,7 +2272,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
             expect(secondReceivedReq.payee_fio_public_key).to.equal(
                 user1EncryptKeys2.publicKey,
             )
-            expect(secondReceivedReq.content.memo).to.equal(memo2)
+            expect((secondReceivedReq.content as FioSentItemContent).memo).to.equal(memo2)
         } catch (err) {
             expect(err).to.equal(null)
         }
@@ -2415,7 +2416,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
                 payeeTokenPublicAddress: encPublicKey2,
                 payerFioAddress: encTestFioAddressName,
                 payerTokenPublicAddress: encPublicKey,
-                status: 'sent_to_blockchain',
+                status: RequestStatus.paid,
                 tokenCode: fioTokenCode,
             })
             expect(result).to.have.all.keys(
@@ -2453,7 +2454,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
             payeeTokenPublicAddress: encFioSdk.publicKey,
             payerFioAddress: encTestFioAddressName2,
             payerTokenPublicAddress: encFioSdk2.publicKey,
-            status: 'sent_to_blockchain',
+            status: RequestStatus.paid,
             tokenCode: fioTokenCode,
         })
         expect(result).to.have.all.keys(
@@ -2824,7 +2825,7 @@ describe('Record obt data, check', () => {
             payeeTokenPublicAddress: publicKey2,
             payerFioAddress: testFioAddressName,
             payerTokenPublicAddress: publicKey,
-            status: 'sent_to_blockchain',
+            status: RequestStatus.paid,
             tokenCode: fioTokenCode,
         })
         expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')

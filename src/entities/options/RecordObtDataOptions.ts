@@ -1,3 +1,5 @@
+import {RequestStatus} from '../RequestStatus'
+
 export type RecordObtDataOptions = {
     obtId: string
     amount: number
@@ -13,7 +15,7 @@ export type RecordObtDataOptions = {
     memo?: string | null
     offLineUrl?: string | null
     payeeFioPublicKey?: string | null
-    status?: string | null
+    status?: RequestStatus | null
     encryptPrivateKey?: string | null
     technologyProviderId?: string | null,
 }

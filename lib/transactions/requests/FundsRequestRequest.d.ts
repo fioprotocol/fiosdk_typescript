@@ -1,4 +1,4 @@
-import { Account, Action, FundsRequestResponse } from '../../entities';
+import { Account, Action, FioSentItemContent, FundsRequestResponse } from '../../entities';
 import { RequestConfig } from '../Request';
 import { SignedRequest } from './SignedRequest';
 export type FundsRequestRequestProps = {
@@ -54,14 +54,6 @@ export declare class FundsRequestRequest extends SignedRequest<FundsRequestReque
         payeeTokenPublicAddress: string;
         technologyProviderId: string;
     };
-    getResolvedContent: () => {
-        amount: string;
-        chain_code: string;
-        hash: string | null;
-        memo: string | null;
-        offline_url: string | null;
-        payee_public_address: string;
-        token_code: string;
-    };
+    getResolvedContent: () => FioSentItemContent;
 }
 //# sourceMappingURL=FundsRequestRequest.d.ts.map
