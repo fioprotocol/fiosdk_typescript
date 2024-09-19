@@ -120,5 +120,5 @@ export * from './Action';
 export * from './Account';
 export * from './EndPoint';
 export * from './ContentType';
-export * from './FioRequestStatus';
+export * from './RequestStatus';
 //# sourceMappingURL=index.d.ts.map

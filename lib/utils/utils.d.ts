@@ -15,7 +15,7 @@ export type CleanObject<T extends Record<string, unknown>, K extends keyof T = k
 export declare const cleanupObject: <T extends Record<string, unknown>>(obj: T) => CleanObject<T>;
 export type ResolveArgsSettings<T extends Record<string, unknown>> = {
     keys: Array<keyof T | '$base'>;
-    arguments: IArguments;
+    arguments: unknown[];
 };
 export declare const resolveOptions: <T extends Record<string, unknown>>(options: ResolveArgsSettings<T>) => CleanObject<T>;
 export declare const createAuthorization: (actor: string, permission?: string) => Authorization;

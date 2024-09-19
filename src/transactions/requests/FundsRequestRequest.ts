@@ -1,4 +1,12 @@
-import {Account, Action, ContentType, EndPoint, FundsRequestResponse} from '../../entities'
+import {
+    Account,
+    Action,
+    ContentType,
+    EndPoint,
+    FioSentItemContent,
+    FundsRequestResponse,
+    RequestStatus,
+} from '../../entities'
 import {validationRules} from '../../utils/validation'
 import {RequestConfig} from '../Request'
 import {SignedRequest} from './SignedRequest'
@@ -78,13 +86,14 @@ export class FundsRequestRequest extends SignedRequest<
         payerFioPublicKey: props.payerFioPublicKey ?? '',
     })
 
-    public getResolvedContent = () => ({
+    public getResolvedContent = (): FioSentItemContent => ({
         amount: `${this.props.amount}`,
         chain_code: this.props.chainCode,
         hash: this.props.hash,
         memo: this.props.memo,
         offline_url: this.props.offlineUrl,
         payee_public_address: this.props.payeeTokenPublicAddress,
+        status: RequestStatus.pending,
         token_code: this.props.tokenCode,
     })
 

@@ -94,13 +94,14 @@ export const cleanupObject = <T extends Record<string, unknown>>(
 
 export type ResolveArgsSettings<T extends Record<string, unknown>> = {
     keys: Array<keyof T | '$base'>
-    arguments: IArguments,
+    arguments: unknown[],
 }
 
 export const resolveOptions = <T extends Record<string, unknown>>(options: ResolveArgsSettings<T>): CleanObject<T> => {
     if (options.arguments.length === 0) {
         return {} as CleanObject<T>
     }
+
     if (options.arguments.length === 1
         && typeof options.arguments[0] === 'object'
         && typeof options.arguments[0] !== null
@@ -108,7 +109,9 @@ export const resolveOptions = <T extends Record<string, unknown>>(options: Resol
     ) {
         return cleanupObject(options.arguments[0] as T)
     }
+
     let result: Record<string, unknown> = {}
+
     for (const key of options.keys) {
         const i = options.keys.indexOf(key)
         if (key === '$base') {
@@ -119,11 +122,12 @@ export const resolveOptions = <T extends Record<string, unknown>>(options: Resol
             if (typeof base !== 'object' || Array.isArray(base)) {
                 throw new Error('Not supported base field')
             }
-            result = {...result, ...options.arguments[i]}
+            result = {...result, ...base}
         } else {
             result[key as string] = options.arguments[i]
         }
     }
+
     return cleanupObject(result as T)
 }
 

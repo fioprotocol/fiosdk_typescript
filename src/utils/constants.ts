@@ -4,7 +4,7 @@ import {Account, EndPoint} from '../entities'
  * @deprecated use {@link EndPoint}
  */
 export const endPoints = {
-    AddPublicAddress: EndPoint.addPubAddress,
+    AddPublicAddress: EndPoint.addPublicAddress,
     PushTransaction: EndPoint.pushTransaction,
     RecordObtData: EndPoint.recordObtData,
     RegisterFioAddress: EndPoint.registerFioAddress,
@@ -15,7 +15,7 @@ export const endPoints = {
     SetFioDomainVisibility: EndPoint.setFioDomainPublic,
     StakeFioTokens: EndPoint.stakeFioTokens,
     TransferTokensFioAddress: EndPoint.transferTokensFioAddress,
-    TransferTokensKey: EndPoint.transferTokensKey,
+    TransferTokensKey: EndPoint.transferTokensPublicKey,
     UnStakeFioTokens: EndPoint.unStakeFioTokens,
 }
 
@@ -23,7 +23,7 @@ export const feeNoAddressOperation: string[] = [
     EndPoint.registerFioDomain,
     EndPoint.registerFioAddress,
     EndPoint.registerFioDomainAddress,
-    EndPoint.transferTokensKey,
+    EndPoint.transferTokensPublicKey,
     EndPoint.transferTokensFioAddress,
 ]
 
