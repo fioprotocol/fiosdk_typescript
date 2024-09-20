@@ -5,7 +5,7 @@ export type RecordObtDataRequestData = {
     payer_fio_address: string;
     payee_fio_address: string;
     content: string;
-    fio_request_id: number;
+    fio_request_id?: number;
     max_fee: number;
     actor: string;
     tpid: string;
@@ -34,12 +34,11 @@ export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataReq
     ACTION: Action;
     ACCOUNT: Account;
     props: ReturnType<RecordObtDataRequest['getResolvedProps']>;
-    content: ReturnType<RecordObtDataRequest['getResolvedContent']>;
     constructor(config: RequestConfig, props: RecordObtDataRequestProps);
     getData: () => {
         actor: string;
         content: string;
-        fio_request_id: number;
+        fio_request_id: number | undefined;
         max_fee: number;
         payee_fio_address: string;
         payer_fio_address: string;
@@ -48,7 +47,6 @@ export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataReq
     getResolvedContent: () => FioSentItemContent;
     getResolvedProps: (props: RecordObtDataRequestProps) => {
         encryptPrivateKey: string | null;
-        fioRequestId: number;
         hash: string | null;
         memo: string | null;
         offLineUrl: string | null;
@@ -56,6 +54,7 @@ export declare class RecordObtDataRequest extends SignedRequest<RecordObtDataReq
         status: RequestStatus;
         amount: number;
         chainCode: string;
+        fioRequestId?: number;
         maxFee: number;
         obtId: string;
         payeeFioAddress: string;

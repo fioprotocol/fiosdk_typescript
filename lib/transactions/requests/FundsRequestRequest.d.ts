@@ -29,7 +29,6 @@ export declare class FundsRequestRequest extends SignedRequest<FundsRequestReque
     ACTION: Action;
     ACCOUNT: Account;
     props: ReturnType<FundsRequestRequest['getResolvedProps']>;
-    content: ReturnType<FundsRequestRequest['getResolvedContent']>;
     constructor(config: RequestConfig, props: FundsRequestRequestProps);
     getData: () => {
         actor: string;
