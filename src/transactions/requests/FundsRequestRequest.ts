@@ -46,13 +46,11 @@ export class FundsRequestRequest extends SignedRequest<
     public ACCOUNT = Account.reqObt
 
     public props: ReturnType<FundsRequestRequest['getResolvedProps']>
-    public content: ReturnType<FundsRequestRequest['getResolvedContent']>
 
     constructor(config: RequestConfig, props: FundsRequestRequestProps) {
         super(config)
 
         this.props = this.getResolvedProps(props)
-        this.content = this.getResolvedContent()
 
         this.validationData = {
             payeeFioAddress: this.props.payeeFioAddress,
@@ -67,7 +65,7 @@ export class FundsRequestRequest extends SignedRequest<
         actor: this.getActor(),
         content: this.getCipherContent(
             ContentType.newFundsContent,
-            this.content,
+            this.getResolvedContent(),
             this.props.encryptPrivateKey || this.privateKey,
             this.props.payerFioPublicKey,
         ),
@@ -93,7 +91,7 @@ export class FundsRequestRequest extends SignedRequest<
         memo: this.props.memo,
         offline_url: this.props.offlineUrl,
         payee_public_address: this.props.payeeTokenPublicAddress,
-        status: RequestStatus.pending,
+        status: RequestStatus.requested,
         token_code: this.props.tokenCode,
     })
 

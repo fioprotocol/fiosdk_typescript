@@ -14,7 +14,7 @@ export type RecordObtDataRequestData = {
     payer_fio_address: string;
     payee_fio_address: string;
     content: string;
-    fio_request_id: number;
+    fio_request_id?: number;
     max_fee: number;
     actor: string;
     tpid: string;
@@ -46,13 +46,11 @@ export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData
     public ACCOUNT = Account.reqObt
 
     public props: ReturnType<RecordObtDataRequest['getResolvedProps']>
-    public content: ReturnType<RecordObtDataRequest['getResolvedContent']>
 
     constructor(config: RequestConfig, props: RecordObtDataRequestProps) {
         super(config)
 
         this.props = this.getResolvedProps(props)
-        this.content = this.getResolvedContent()
 
         this.validationData = {
             payeeFioAddress: this.props.payeeFioAddress,
@@ -61,14 +59,13 @@ export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData
             tpid: this.props.technologyProviderId,
         }
         this.validationRules = validationRules.recordObtData
-
     }
 
     public getData = () => ({
         actor: this.getActor(),
         content: this.getCipherContent(
             ContentType.recordObtDataContent,
-            this.content,
+            this.getResolvedContent(),
             this.props.encryptPrivateKey || this.privateKey,
             this.props.payeeFioPublicKey,
         ),
@@ -95,12 +92,11 @@ export class RecordObtDataRequest extends SignedRequest<RecordObtDataRequestData
     public getResolvedProps = (props: RecordObtDataRequestProps) => ({
         ...props,
         encryptPrivateKey: props.encryptPrivateKey ?? null,
-        fioRequestId: props.fioRequestId ?? 0,
         hash: props.hash ?? null,
         memo: props.memo ?? null,
         offLineUrl: props.offLineUrl ?? null,
         payeeFioPublicKey: props.payeeFioPublicKey ?? '',
-        status: props.status ?? RequestStatus.paid,
+        status: props.status ?? RequestStatus.sentToBlockchain,
     })
 
 }
