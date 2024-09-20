@@ -1,6 +1,6 @@
 export enum RequestStatus {
     rejected = 'rejected',
-    paid = 'sent_to_blockchain',
-    pending = 'requested',
+    sentToBlockchain = 'sent_to_blockchain',
+    requested = 'requested',
     canceled = 'cancelled',
 }

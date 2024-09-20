@@ -1,1 +1,1 @@
-{"version":3,"file":"RequestStatus.js","sourceRoot":"","sources":["../../src/entities/RequestStatus.ts"],"names":[],"mappings":";;;AAAA,IAAY,aAKX;AALD,WAAY,aAAa;IACrB,sCAAqB,CAAA;IACrB,4CAA2B,CAAA;IAC3B,sCAAqB,CAAA;IACrB,uCAAsB,CAAA;AAC1B,CAAC,EALW,aAAa,6BAAb,aAAa,QAKxB"}
+{"version":3,"file":"RequestStatus.js","sourceRoot":"","sources":["../../src/entities/RequestStatus.ts"],"names":[],"mappings":";;;AAAA,IAAY,aAKX;AALD,WAAY,aAAa;IACrB,sCAAqB,CAAA;IACrB,wDAAuC,CAAA;IACvC,wCAAuB,CAAA;IACvB,uCAAsB,CAAA;AAC1B,CAAC,EALW,aAAa,6BAAb,aAAa,QAKxB"}
