@@ -20,7 +20,7 @@ import {
     Account,
     Action,
     ContentType,
-    EndPoint,
+    EndPoint, ExecuteCallError,
     FioError,
     FioInfoResponse,
     FioLogger,
@@ -60,12 +60,6 @@ export const signAllAuthorityProvider: AuthorityProvider = {
 export const fioApiErrorCodes = [400, 403, 404, 409]
 export const FIO_CHAIN_INFO_ERROR_CODE = 800
 export const FIO_BLOCK_NUMBER_ERROR_CODE = 801
-
-interface FioErrorJson {
-    fields?: Array<{
-        error: string,
-    }>,
-}
 
 export type ApiMap = Map<string, AbiResponse>
 
@@ -442,15 +436,10 @@ export class Request {
                 }
             }
             if (!res.ok) {
-                const error: Error & {
-                    json?: FioErrorJson,
-                    errorCode?: string,
-                    requestParams?: {
-                        endPoint: string,
-                        body: string,
-                        fetchOptions?: any,
-                    },
-                } = new Error(`Error ${res.status} while fetching ${baseUrl + endPoint}`)
+                const error = new ExecuteCallError(
+                    `Error ${res.status} while fetching ${baseUrl + endPoint}`,
+                    res.status,
+                )
                 try {
                     error.json = await res.json()
                     if (fioApiErrorCodes.indexOf(res.status) > -1) {
@@ -472,11 +461,15 @@ export class Request {
                         }
                     }
                 } catch (e) {
-                    // tslint:disable-next-line:no-console
-                    console.log(e)
                     error.json = {}
+                    this.config.logger?.({
+                        context: {
+                            endpoint: endPoint,
+                            error,
+                        },
+                        type: 'execute',
+                    })
                 }
-                error.errorCode = res.status
                 throw error
             }
             return res.json()

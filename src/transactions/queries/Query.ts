@@ -23,8 +23,10 @@ export abstract class Query<T = any, R = any> extends Request {
         try {
             return this.isEncrypted ? await this.decrypt(result) : result
         } catch (error) {
-            // tslint:disable-next-line:no-console
-            console.error(error)
+            this.config.logger?.({
+                context: {error: error as Error},
+                type: 'decrypt',
+            })
             throw error
         }
     }
