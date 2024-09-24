@@ -656,12 +656,12 @@ export class FIOSDK {
     /**
      * Convert FIO SUFs to a FIO Token amount
      *
-     * @param suf
+     * @param suf {string | number}
      *
      * @returns FIO Token amount
      */
-    public static SUFToAmount(suf: number): number {
-        return parseInt(`${suf}`, 10) / this.SUFUnit
+    public static SUFToAmount(suf: number | string): number {
+        return (typeof suf === 'number' ? suf : parseInt(suf, 10)) / this.SUFUnit
     }
 
     /**
@@ -736,7 +736,9 @@ export class FIOSDK {
             const setAbi = async (accountName: string): Promise<void> => {
                 if (!Request.abiMap.get(accountName)) {
                     const newAbi = await this.main.getAbi({accountName})
-                    Request.abiMap.set(newAbi.account_name, newAbi)
+                    if (newAbi && newAbi.account_name) {
+                        Request.abiMap.set(newAbi.account_name, newAbi)
+                    }
                 }
             }
 
@@ -850,8 +852,8 @@ export class FIOSDK {
     constructor(options: FioSdkOptions)
     constructor() {
         const {
-            privateKey,
-            publicKey,
+            privateKey = '',
+            publicKey = '',
             apiUrls,
             fetchJson,
             registerMockUrl = '',

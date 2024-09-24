@@ -42,6 +42,7 @@ export * from './responses/NftsResponse';
 export * from './types/FioPermission';
 export * from './types/PublicAddress';
 export * from './types/Authorization';
+export * from './types/ExecuteCallError';
 export * from './types/RawRequest';
 export * from './types/KeysPair';
 export * from './types/LockPeriod';

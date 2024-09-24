@@ -445,11 +445,11 @@ export declare class FIOSDK {
     /**
      * Convert FIO SUFs to a FIO Token amount
      *
-     * @param suf
+     * @param suf {string | number}
      *
      * @returns FIO Token amount
      */
-    static SUFToAmount(suf: number): number;
+    static SUFToAmount(suf: number | string): number;
     /**
      * Set stored raw abi missing warnings
      */
