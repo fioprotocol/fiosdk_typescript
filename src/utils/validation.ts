@@ -1,69 +1,47 @@
-import Schema, { ValidationError } from 'validate'
+import {Ecc} from '@fioprotocol/fiojs'
+import Schema, { PropertyDefinition, ValidationError } from 'validate'
 import {ErrObj} from '../entities'
 
-export type Rule = {
-    length?: {min?: number, max: number},
-    matchParams?: {
-        opt?: string,
-        regex: string,
-    },
-    required?: boolean,
-    type: StringConstructor | NumberConstructor | ObjectConstructor | BooleanConstructor,
-}
+const testNativePublicKey = (key: string) => Ecc.PublicKey.isValid(key)
+const testFioPublicKey = (key: string) => key.startsWith('FIO') && Ecc.PublicKey.isValid(key)
 
 export const allRules = {
     chain: {
         length: {min: 1, max: 10},
-        matchParams: {
-            opt: 'i',
-            regex: '^[a-z0-9]+$',
-        },
+        match: /^[a-z0-9]+$/i,
         required: true,
         type: String,
     },
     fioAddress: {
         length: {min: 3, max: 64},
-        matchParams: {
-            opt: 'gim',
-            regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
-        },
+        match: /^(?=.{3,64}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?@[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/gim,
         required: true,
         type: String,
     },
     fioDomain: {
         length: {min: 1, max: 62},
-        matchParams: {
-            opt: 'i',
-            regex: '^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$',
-        },
+        match: /^[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/i,
         required: true,
         type: String,
     },
     fioPublicKey: {
         length: {min: 1, max: 62},
-        matchParams: {
-            regex: '^FIO\\w+$',
-        },
         required: true,
         type: String,
+        use: {testFioPublicKey},
     },
     nativeBlockchainPublicAddress: {
         length: {min: 1, max: 128},
-        matchParams: {
-            regex: '^\\w+$',
-        },
         required: true,
         type: String,
+        use: {testNativePublicKey},
     },
     tpid: {
         length: {min: 3, max: 64},
-        matchParams: {
-            opt: 'gim',
-            regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
-        },
+        match: /^(?=.{3,64}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?@[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/gim,
         type: String,
     },
-} satisfies Record<string, Rule>
+} satisfies Record<string, PropertyDefinition>
 
 export const validationRules = {
     addPublicAddressRules: {
@@ -121,20 +99,20 @@ export const validationRules = {
     transferTokens: {
         tpid: allRules.tpid,
     },
-} satisfies Record<string, Record<string, Rule>>
+} satisfies Record<string, Record<string, PropertyDefinition>>
 
 export function validate(
     data: any,
-    rules: Record<string, Rule>,
+    rules: Record<string, PropertyDefinition>,
 ): { isValid: boolean, errors: ErrObj[] } {
     const schema: any = {}
 
+    // ATTENTION! Don't change this code. This code fix error when regexp rules not working correctly if used directly
     Object.keys(rules).forEach((ruleKey) => {
         schema[ruleKey] = {...rules[ruleKey]}
-        const matchParams = rules[ruleKey].matchParams
-        if (matchParams && matchParams.regex) {
-            schema[ruleKey].match = new RegExp(matchParams.regex, matchParams.opt)
-            delete schema[ruleKey].matchParams
+        const match = rules[ruleKey].match
+        if (match) {
+            schema[ruleKey].match = new RegExp(match.source, match.flags)
         }
     })
 
