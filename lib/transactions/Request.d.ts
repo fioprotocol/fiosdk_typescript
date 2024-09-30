@@ -1,9 +1,9 @@
 import { Api as FioJsApi } from '@fioprotocol/fiojs';
 import { AbiProvider, AuthorityProvider } from '@fioprotocol/fiojs/dist/chain-api-interfaces';
 import { GetBlockResult, PushTransactionArgs } from '@fioprotocol/fiojs/dist/chain-rpc-interfaces';
+import { PropertyDefinition } from 'validate';
 import { AbortSignal } from 'abort-controller';
 import { AbiResponse, Account, Action, ContentType, FioInfoResponse, FioLogger, RawRequest } from '../entities';
-import { Rule } from '../utils/validation';
 type FetchJson = (uri: string, opts?: object) => any;
 interface SignedTxArgs {
     compression: number;
@@ -39,7 +39,7 @@ export declare class Request {
     protected publicKey: string;
     protected privateKey: string;
     protected validationData: object;
-    protected validationRules: Record<string, Rule> | null;
+    protected validationRules: Record<string, PropertyDefinition> | null;
     protected expirationOffset: number;
     protected authPermission: string | undefined;
     protected signingAccount: string | undefined;
