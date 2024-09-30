@@ -10,6 +10,7 @@ import {
 import {JsSignatureProvider} from '@fioprotocol/fiojs/dist/chain-jssig'
 import {arrayToHex, base64ToBinary} from '@fioprotocol/fiojs/dist/chain-numeric'
 import {GetBlockResult, PushTransactionArgs} from '@fioprotocol/fiojs/dist/chain-rpc-interfaces'
+import { PropertyDefinition } from 'validate'
 
 import {AbortSignal} from 'abort-controller'
 
@@ -39,7 +40,7 @@ import {
     getCipherContent,
     getUnCipherContent,
 } from '../utils/utils'
-import {Rule, validate} from '../utils/validation'
+import {validate} from '../utils/validation'
 
 type FetchJson = (uri: string, opts?: object) => any
 
@@ -91,7 +92,7 @@ export class Request {
     protected privateKey: string = ''
 
     protected validationData: object = {}
-    protected validationRules: Record<string, Rule> | null = null
+    protected validationRules: Record<string, PropertyDefinition> | null = null
 
     protected expirationOffset: number = defaultExpirationOffset
     protected authPermission: string | undefined

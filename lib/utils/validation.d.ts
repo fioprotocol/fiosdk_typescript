@@ -1,26 +1,12 @@
+import { PropertyDefinition } from 'validate';
 import { ErrObj } from '../entities';
-export type Rule = {
-    length?: {
-        min?: number;
-        max: number;
-    };
-    matchParams?: {
-        opt?: string;
-        regex: string;
-    };
-    required?: boolean;
-    type: StringConstructor | NumberConstructor | ObjectConstructor | BooleanConstructor;
-};
 export declare const allRules: {
     chain: {
         length: {
             min: number;
             max: number;
         };
-        matchParams: {
-            opt: string;
-            regex: string;
-        };
+        match: RegExp;
         required: true;
         type: StringConstructor;
     };
@@ -29,10 +15,7 @@ export declare const allRules: {
             min: number;
             max: number;
         };
-        matchParams: {
-            opt: string;
-            regex: string;
-        };
+        match: RegExp;
         required: true;
         type: StringConstructor;
     };
@@ -41,10 +24,7 @@ export declare const allRules: {
             min: number;
             max: number;
         };
-        matchParams: {
-            opt: string;
-            regex: string;
-        };
+        match: RegExp;
         required: true;
         type: StringConstructor;
     };
@@ -53,32 +33,29 @@ export declare const allRules: {
             min: number;
             max: number;
         };
-        matchParams: {
-            regex: string;
-        };
         required: true;
         type: StringConstructor;
+        use: {
+            testFioPublicKey: (key: string) => any;
+        };
     };
     nativeBlockchainPublicAddress: {
         length: {
             min: number;
             max: number;
         };
-        matchParams: {
-            regex: string;
-        };
         required: true;
         type: StringConstructor;
+        use: {
+            testNativePublicKey: (key: string) => any;
+        };
     };
     tpid: {
         length: {
             min: number;
             max: number;
         };
-        matchParams: {
-            opt: string;
-            regex: string;
-        };
+        match: RegExp;
         type: StringConstructor;
     };
 };
@@ -89,10 +66,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -101,10 +75,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -114,10 +85,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -127,10 +95,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -141,10 +106,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -153,10 +115,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -165,10 +124,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -177,10 +133,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -190,10 +143,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -202,10 +152,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -214,10 +161,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -226,10 +170,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -239,10 +180,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -251,10 +189,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -264,10 +199,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -276,10 +208,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -289,10 +218,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -301,10 +227,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -314,10 +237,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -327,10 +247,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -339,10 +256,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -352,10 +266,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -364,10 +275,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -377,10 +285,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             required: true;
             type: StringConstructor;
         };
@@ -389,10 +294,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -402,10 +304,7 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
@@ -415,15 +314,12 @@ export declare const validationRules: {
                 min: number;
                 max: number;
             };
-            matchParams: {
-                opt: string;
-                regex: string;
-            };
+            match: RegExp;
             type: StringConstructor;
         };
     };
 };
-export declare function validate(data: any, rules: Record<string, Rule>): {
+export declare function validate(data: any, rules: Record<string, PropertyDefinition>): {
     isValid: boolean;
     errors: ErrObj[];
 };
