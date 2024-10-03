@@ -24,6 +24,12 @@ export const allRules = {
         required: true,
         type: String,
     },
+    fioName: {
+        length: {min: 1, max: 62},
+        match: /^(?=.{1,62}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/i,
+        required: true,
+        type: String,
+    },
     fioPublicKey: {
         length: {min: 1, max: 62},
         required: true,
