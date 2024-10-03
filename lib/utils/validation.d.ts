@@ -28,6 +28,15 @@ export declare const allRules: {
         required: true;
         type: StringConstructor;
     };
+    fioName: {
+        length: {
+            min: number;
+            max: number;
+        };
+        match: RegExp;
+        required: true;
+        type: StringConstructor;
+    };
     fioPublicKey: {
         length: {
             min: number;
