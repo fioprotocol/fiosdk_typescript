@@ -53,11 +53,9 @@ export declare const allRules: {
             min: number;
             max: number;
         };
+        match: RegExp;
         required: true;
         type: StringConstructor;
-        use: {
-            testNativePublicKey: (key: string) => any;
-        };
     };
     tpid: {
         length: {

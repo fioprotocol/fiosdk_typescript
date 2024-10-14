@@ -2,7 +2,6 @@ import {Ecc} from '@fioprotocol/fiojs'
 import Schema, { PropertyDefinition, ValidationError } from 'validate'
 import {ErrObj} from '../entities'
 
-const testNativePublicKey = (key: string) => Ecc.PublicKey.isValid(key)
 const testFioPublicKey = (key: string) => key.startsWith('FIO') && Ecc.PublicKey.isValid(key)
 
 export const allRules = {
@@ -38,9 +37,9 @@ export const allRules = {
     },
     nativeBlockchainPublicAddress: {
         length: {min: 1, max: 128},
+        match: /^\w+$/,
         required: true,
         type: String,
-        use: {testNativePublicKey},
     },
     tpid: {
         length: {min: 3, max: 64},
