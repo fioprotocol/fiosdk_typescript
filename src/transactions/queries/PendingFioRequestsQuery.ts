@@ -52,10 +52,14 @@ export class PendingFioRequestsQuery extends Query<
                     const requests = await Promise.allSettled(result.requests.map(async (value: FioItem) => {
                         const account = this.getActor()
 
-                        const encryptPublicKeysArray = [this.publicKey]
-                        const encryptPrivateKeysArray = [this.privateKey]
+                        const encryptPublicKeysArray = this.publicKey ? [this.publicKey] : []
+                        const encryptPrivateKeysArray = this.privateKey ? [this.privateKey] : []
 
-                        encryptPrivateKeysArray.push(...getAccountPrivateKeys(account, this.props.encryptKeys))
+                        const accountPrivateKeys = getAccountPrivateKeys(account, this.props.encryptKeys)
+
+                        if (accountPrivateKeys.length > 0) {
+                            encryptPrivateKeysArray.push(...accountPrivateKeys)
+                        }
 
                         const {payee_fio_address, payee_fio_public_key} = value || {}
 

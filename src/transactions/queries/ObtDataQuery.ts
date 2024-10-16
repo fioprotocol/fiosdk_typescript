@@ -60,10 +60,14 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataDecryptedRes
                         async (obtDataRecord: FioItem) => {
                             const account = this.getActor()
 
-                            const encryptPublicKeysArray = [this.publicKey]
-                            const encryptPrivateKeysArray = [this.privateKey]
+                            const encryptPublicKeysArray = this.publicKey ? [this.publicKey] : []
+                            const encryptPrivateKeysArray = this.privateKey ? [this.privateKey] : []
 
-                            encryptPrivateKeysArray.push(...getAccountPrivateKeys(account, this.props.encryptKeys))
+                            const accountPrivateKeys = getAccountPrivateKeys(account, this.props.encryptKeys)
+
+                            if (accountPrivateKeys.length > 0) {
+                                encryptPrivateKeysArray.push(...accountPrivateKeys)
+                            }
 
                             const {
                                 content: obtDataRecordContent,
