@@ -109,6 +109,9 @@ export class ObtDataQuery extends Query<ObtDataQueryData, GetObtDataDecryptedRes
                             )
 
                             if (content === null) {
+                                if (this.props.includeEncrypted) {
+                                    return obtDataRecord
+                                }
                                 // Throw an error if all keys failed
                                 throw new Error(`GetObtData: Get UnCipher Content for account ${account} failed.`)
                             }
