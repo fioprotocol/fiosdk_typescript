@@ -229,22 +229,5 @@ This is the expected Public Key:
 
 
 # Versions
-## Version 1.9.0
-- Set new parameter `authPermission` for sign and push transactions
-- `pushTransaction` receives object params instead of multiple arguments
-
-## Version 1.0.2
-Bug Fix to method: addPublicAddresses - TechnologyProviderId (i.e. TPID), was not being set correctly for this method.
-
-## Version 1.0.1
-Added method: registerOwnerFioAddress - allows a wallet to register a fio address owned by a different public key
-Updated Validation Methods
-Updated Documentation on FIOSDK instantiation
-
-## Version 1.0.0
-Added additional Unit Tests for Encryption.  Comparing and Validating results across the kotlin, iOS and typescript SDKs.
-No changes to the SDK code base.
-
-## Version 0.9.2
-Updated and cleaned up SDK code base.
-Finalization of method names and parameter names and order
+## Check for release versions and details here:
+https://github.com/fioprotocol/fiosdk_typescript/releases
