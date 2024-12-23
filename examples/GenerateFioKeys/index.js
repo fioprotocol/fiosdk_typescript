@@ -8,6 +8,7 @@ async function genKeysFromMnemonic () {
 	console.log(mnemonic)
 	console.log("")
 
+	// Private key generation in the SDK is available for testing purposes only. Do not generate private keys for production application using these methods. Instead pass securely generated private keys or seed phrase to the SDK constructor.
 	const privateKeyRes = await fio.FIOSDK.createPrivateKeyMnemonic(mnemonic)
 	console.log("Private key generated:")
 	console.log((privateKeyRes.fioKey))
