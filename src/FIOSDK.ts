@@ -1,4 +1,5 @@
 import {Ecc, Fio} from '@fioprotocol/fiojs'
+import Big from 'big.js';
 import {
     AbiResponse,
     Account,
@@ -662,6 +663,44 @@ export class FIOSDK {
      */
     public static SUFToAmount(suf: number | string): number {
         return (typeof suf === 'number' ? suf : parseInt(suf, 10)) / this.SUFUnit
+    }
+
+    /**
+     * Convert a FIO Token Amount to FIO SUFs
+     *
+     * @param amount
+     *
+     * 2.568 FIO should be 2568000000 SUFs
+     *
+     * @returns {string} FIO SUFs
+     */
+    public static amountToSUFString(amount: number | string): string {
+        const floor = new Big(amount).round(0, 0).toString();
+        const tempResult = new Big(floor).mul(this.SUFUnit).toString();
+    
+        // get remainder
+        const remainder = new Big(amount)
+          .mod(1)
+          .round(9, 2)
+          .toString();
+    
+        const remainderResult = new Big(remainder).mul(this.SUFUnit).toString();
+    
+        const floorRemainder = new Big(remainderResult).round(0, 0).toString();
+    
+        // add integer and remainder
+        return new Big(tempResult).add(floorRemainder).toString();
+    }
+
+    /**
+     * Convert FIO SUFs to a FIO Token amount
+     *
+     * @param suf {string | number}
+     *
+     * @returns {string} FIO Token amount
+     */
+    public static SUFToAmountString(suf: number | string): string {
+        return new Big(suf).div(this.SUFUnit).toString();
     }
 
     /**
