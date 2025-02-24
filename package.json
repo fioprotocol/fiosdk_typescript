@@ -25,6 +25,7 @@
         "url": "https://github.com/fioprotocol/fiosdk_typescript.git"
     },
     "devDependencies": {
+        "@types/big.js": "6.2.1",
         "@types/chai": "4.3.19",
         "@types/mocha": "10.0.7",
         "@types/node": "12.20.55",
@@ -45,6 +46,7 @@
     "dependencies": {
         "@fioprotocol/fiojs": "github:fioprotocol/fiojs#82de180a6781b7a654d21b5e33f624ef63848ead",
         "abort-controller": "3.0.0",
+        "big.js": "6.2.1",
         "bip39": "3.1.0",
         "hdkey": "1.1.2",
         "validate": "5.2.0",
