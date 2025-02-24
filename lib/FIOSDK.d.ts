@@ -451,6 +451,24 @@ export declare class FIOSDK {
      */
     static SUFToAmount(suf: number | string): number;
     /**
+     * Convert a FIO Token Amount to FIO SUFs
+     *
+     * @param amount
+     *
+     * 2.568 FIO should be 2568000000 SUFs
+     *
+     * @returns {string} FIO SUFs
+     */
+    static amountToSUFString(amount: number | string): string;
+    /**
+     * Convert FIO SUFs to a FIO Token amount
+     *
+     * @param suf {string | number}
+     *
+     * @returns {string} FIO Token amount
+     */
+    static SUFToAmountString(suf: number | string): string;
+    /**
      * Set stored raw abi missing warnings
      */
     static setRawAbiMissingWarnings(rawAbiName: string, fioSdkInstance: FIOSDK): void;
