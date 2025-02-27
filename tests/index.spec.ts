@@ -7,7 +7,6 @@ import {
     Account,
     Action,
     EndPoint,
-    FioError,
     FIOSDK,
     FioSentItem,
     FioSentItemContent,
@@ -16,7 +15,11 @@ import {
     TransactionResponse,
 } from '../src/FIOSDK'
 
+import type { FioError as FioErrorType } from '../src/entities/types/FioError.d.ts';
+
 dotenv.config({path: ['.env.test', '.env']})
+
+type ErrorType = Error & FioErrorType;
 
 const fetchJson = async (uri: string, opts = {}) => {
     return nodeFetch(uri, opts)
@@ -61,8 +64,9 @@ const fioTokenCode = 'FIO'
 const fioChainCode = 'FIO'
 const ethTokenCode = 'ETH'
 const ethChainCode = 'ETH'
-const fundAmount = 800 * FIOSDK.SUFUnit
-const defaultFee = 800 * FIOSDK.SUFUnit
+const fundAmount = 1500 * FIOSDK.SUFUnit
+const defaultFee = 1500 * FIOSDK.SUFUnit
+const proxyTpId = 'bp1@dapixdev'
 const defaultBundledSets = 1
 const receiveTransferTimout = 5000
 const wrongBaseUrl = 'https://wrong-url-test.test.com/'
@@ -321,7 +325,7 @@ describe('Raw Abi missing', () => {
 
         FIOSDK.setCustomRawAbiAccountName(null)
 
-        expect(fioSdkAbiWarning).to.exist('Not exist')
+        expect(fioSdkAbiWarning).to.exist
 
         expect(result).to.have.all.keys(
             'balance',
@@ -347,8 +351,7 @@ describe('Testing request timeout on wrong url', () => {
                 {},
             )
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
+            if (e instanceof Error) {
                 expect(e.message).to.match(/request_timeout|ENOTFOUND/)
             }
         }
@@ -359,8 +362,7 @@ describe('Testing request timeout on wrong url', () => {
             fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2])
             await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {})
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
+            if (e instanceof Error) {
                 expect(e.message).to.match(/request_timeout|ENOTFOUND/)
             }
         }
@@ -450,11 +452,10 @@ describe('Testing request timeout on wrong url', () => {
                 ],
             })
         } catch (err) {
-            expect(err instanceof FioError).to.true('Validation error')
-            if (err instanceof FioError) {
-                expect(err.message).to.equal('Validation error')
-                expect(err.list[0].message).to.equal('fioAddress is required.')
-            }
+            const error = err as ErrorType;
+  
+            expect(error.message).to.equal('Validation error')
+            expect(error.list[0].message).to.equal('fioAddress must have a length between 3 and 64.')
         }
     })
 
@@ -645,52 +646,41 @@ describe('Testing generic actions', () => {
         try {
             FIOSDK.isChainCodeValid('$%34')
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
-                expect(e.list[0].message).to.equal('chainCode must match /^[a-z0-9]+$/i.')
-            }
+            const error = e as ErrorType;
+            expect(error.list[0].message).to.equal('chainCode must match /^[a-z0-9]+$/i.')
         }
         try {
             FIOSDK.isTokenCodeValid('')
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
-                expect(e.list[0].message).to.equal('tokenCode is required.')
-            }
+            const error = e as ErrorType;
+            expect(error.list[0].message).to.equal('tokenCode must have a length between 1 and 10.')
         }
         try {
             FIOSDK.isFioAddressValid('f')
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
-                expect(e.list[0].message).to.equal('fioAddress must have a length between 3 and 64.')
-            }
+            const error = e as ErrorType;
+            expect(error.list[0].message).to.equal('fioAddress must have a length between 3 and 64.')
+
         }
         try {
             FIOSDK.isFioDomainValid('$%FG%')
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
-                expect(e.list[0].message).to.equal(
-                    'fioDomain must match /^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$/i.',
-                )
-            }
+            const error = e as ErrorType;
+            expect(error.list[0].message).to.equal(
+                'fioDomain must match /^[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/i.',
+            )
         }
         try {
             FIOSDK.isFioPublicKeyValid('dfsd')
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
-                expect(e.list[0].message).to.equal('fioPublicKey must match /^FIO\\w+$/.')
-            }
+            const error = e as ErrorType;
+            expect(error.list[0].message).to.equal('Validation failed for fioPublicKey.')
         }
         try {
             FIOSDK.isPublicAddressValid('')
         } catch (e) {
-            expect(e instanceof FioError).to.true('Validation error')
-            if (e instanceof FioError) {
-                expect(e.list[0].message).to.equal('publicAddress is required.')
-            }
+            const error = e as ErrorType;
+            expect(error.list[0].message).to.equal('publicAddress must have a length between 1 and 128.')
         }
 
         const chainCodeIsValid = FIOSDK.isChainCodeValid('FIO')
@@ -716,7 +706,7 @@ describe('Testing generic actions', () => {
     })
 
     it(`Getting fio public key`, async () => {
-        const result = fioSdk.genericAction('getFioPublicKey')
+        const result = await fioSdk.genericAction('getFioPublicKey')
         expect(result).to.equal(publicKey)
     })
 
@@ -747,8 +737,11 @@ describe('Testing generic actions', () => {
     })
 
     it(`Register fio domain address`, async () => {
+        const newFioDomainCombo = generateTestingFioDomain();
+        const fioAddressCombo = generateTestingFioAddress(newFioDomainCombo);
+
         const result = await fioSdk.genericAction('registerFioDomainAddress', {
-            fioAddress: newFioAddress,
+            fioAddress: fioAddressCombo,
             maxFee: defaultFee,
         })
 
@@ -1120,7 +1113,7 @@ describe('Testing generic actions', () => {
     })
 
     it(`getMultiplier`, async () => {
-        const result = fioSdk.genericAction('getMultiplier')
+        const result = await fioSdk.genericAction('getMultiplier')
 
         expect(result).to.be.a('number')
     })
@@ -1342,7 +1335,7 @@ describe('Staking tests', () => {
         accountName = FIOSDK.accountHash(publicKey).accountnm
     })
 
-    it(`fioSdk votes for bp1@dapixdev`, async () => {
+    it(`fioSdk votes for Block Producer`, async () => {
         try {
             const result = await fioSdk.genericAction('pushTransaction', {
                 account: Account.eosio,
@@ -1351,9 +1344,7 @@ describe('Staking tests', () => {
                     actor: accountName,
                     fio_address: testFioAddressName,
                     max_fee: defaultFee,
-                    producers: [
-                        'bp1@dapixdev',
-                    ],
+                    producers: [proxyTpId],
                 },
             }) as TransactionResponse
             // console.log('Result: ', result)

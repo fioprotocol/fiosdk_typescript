@@ -15,8 +15,8 @@
     },
     "types": "lib/FIOSDK.d.ts",
     "scripts": {
-        "test": "mocha --require ts-node/register -t 80000 tests/testnet.spec.js",
-        "localtest": "mocha --require ts-node/register -t 80000 tests/index.spec.js"
+        "test": "mocha --require ts-node/register -t 80000 tests/testnet.spec.ts",
+        "localtest": "mocha --require ts-node/register -t 80000 tests/index.spec.ts"
     },
     "author": "",
     "license": "MIT",
@@ -31,7 +31,7 @@
         "@types/node": "12.20.55",
         "@types/text-encoding": "0.0.35",
         "@types/node-fetch": "2.6.11",
-        "chai": "5.1.1",
+        "chai": "4.5.0",
         "dotenv": "16.4.5",
         "mocha": "10.7.3",
         "node-fetch": "2.7.0",
@@ -44,7 +44,7 @@
         "typescript": "5.5.4"
     },
     "dependencies": {
-        "@fioprotocol/fiojs": "github:fioprotocol/fiojs#82de180a6781b7a654d21b5e33f624ef63848ead",
+        "@fioprotocol/fiojs": "1.0.2",
         "abort-controller": "3.0.0",
         "big.js": "6.2.1",
         "bip39": "3.1.0",
