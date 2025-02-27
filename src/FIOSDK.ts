@@ -727,6 +727,7 @@ export class FIOSDK {
             getCipherContent,
             getUnCipherContent,
             serialize: request.serialize.bind(request),
+            deserialize: request.deserialize.bind(request),
         }
     }
 
