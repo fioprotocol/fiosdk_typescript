@@ -506,6 +506,13 @@ export declare class FIOSDK {
             textDecoder?: TextDecoder;
             textEncoder?: TextEncoder;
         }) => Promise<import("@fioprotocol/fiojs/dist/chain-rpc-interfaces").PushTransactionArgs>;
+        deserialize: ({ chainId, abiMap, serializedTransaction, textDecoder, textEncoder, }: {
+            serializedTransaction: Uint8Array;
+            chainId: string;
+            abiMap?: Map<string, any>;
+            textDecoder?: TextDecoder;
+            textEncoder?: TextEncoder;
+        }) => Promise<import("./entities").RawRequest>;
     };
     /**
      * @ignore
