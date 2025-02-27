@@ -64,6 +64,7 @@ export declare const allRules: {
         };
         match: RegExp;
         type: StringConstructor;
+        required: false;
     };
 };
 export declare const validationRules: {
@@ -84,6 +85,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     cancelFundsRequestRules: {
@@ -94,6 +96,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     getFee: {
@@ -142,6 +145,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     recordObtData: {
@@ -179,6 +183,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     registerFioAddress: {
@@ -198,6 +203,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     registerFioDomain: {
@@ -217,6 +223,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     registerFioDomainAddress: {
@@ -236,6 +243,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     rejectFunds: {
@@ -246,6 +254,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     renewFioAddress: {
@@ -265,6 +274,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     renewFioDomain: {
@@ -284,6 +294,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     setFioDomainVisibility: {
@@ -303,6 +314,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     transferLockedTokensRequest: {
@@ -313,6 +325,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
     transferTokens: {
@@ -323,6 +336,7 @@ export declare const validationRules: {
             };
             match: RegExp;
             type: StringConstructor;
+            required: false;
         };
     };
 };
