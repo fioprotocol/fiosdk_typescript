@@ -45,6 +45,7 @@ export const allRules = {
         length: {min: 3, max: 64},
         match: /^(?=.{3,64}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?@[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/gim,
         type: String,
+        required: false,
     },
 } satisfies Record<string, PropertyDefinition>
 
@@ -111,18 +112,25 @@ export function validate(
     rules: Record<string, PropertyDefinition>,
 ): { isValid: boolean, errors: ErrObj[] } {
     const schema: any = {}
+    const dataToValidate = {...data}
 
     // ATTENTION! Don't change this code. This code fix error when regexp rules not working correctly if used directly
     Object.keys(rules).forEach((ruleKey) => {
         schema[ruleKey] = {...rules[ruleKey]}
+
         const match = rules[ruleKey].match
         if (match) {
             schema[ruleKey].match = new RegExp(match.source, match.flags)
         }
+        
+        // Remove undefined/null optional fields from validation
+        if (!schema[ruleKey].required && (dataToValidate[ruleKey] == null || dataToValidate[ruleKey] === '')) {
+            delete dataToValidate[ruleKey]
+        }
     })
 
     const validator = new Schema(schema)
-    const errors: ValidationError[] = validator.validate(data)
+    const errors: ValidationError[] = validator.validate(dataToValidate)
     const validationResult: { isValid: boolean, errors: ErrObj[] } = {isValid: true, errors: []}
 
     if (errors.length) {
