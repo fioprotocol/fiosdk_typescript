@@ -6,7 +6,6 @@ import {
     BinaryAbi,
 } from '@fioprotocol/fiojs/dist/chain-api-interfaces'
 
-// TODO fix types import when update fiojs lib
 import {JsSignatureProvider} from '@fioprotocol/fiojs/dist/chain-jssig'
 import {arrayToHex, base64ToBinary} from '@fioprotocol/fiojs/dist/chain-numeric'
 import {GetBlockResult, PushTransactionArgs} from '@fioprotocol/fiojs/dist/chain-rpc-interfaces'
