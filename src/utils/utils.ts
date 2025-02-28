@@ -2,6 +2,7 @@ import {Fio} from '@fioprotocol/fiojs'
 import AbortController, {AbortSignal} from 'abort-controller'
 import {TextDecoder, TextEncoder} from 'text-encoding'
 import {Authorization, ContentType, EncryptKeyResponse, KeysPair, RawAction, RawRequest} from '../entities'
+import { API_ERROR_CODES } from './constants'
 
 const DEFAULT_REQUEST_TIMEOUT = 60000
 
@@ -39,6 +40,11 @@ export async function asyncWaterfall({
                 }
             } catch (error: any) {
                 clearTimeout(timeoutId!)
+
+                if (error?.code && [API_ERROR_CODES.NOT_FOUND, API_ERROR_CODES.BAD_REQUEST].includes(error.code)
+                || error?.errorCode && [API_ERROR_CODES.NOT_FOUND, API_ERROR_CODES.BAD_REQUEST].includes(error.errorCode)) {
+                    throw error
+                }
                 if (i === asyncFunctions.length - 1) {
                     throw error
                 }

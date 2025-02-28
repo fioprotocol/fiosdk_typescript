@@ -3,6 +3,8 @@ import chai from 'chai';
 import * as dotenv from 'dotenv'
 import 'mocha'
 import nodeFetch from 'node-fetch'
+// Add import for 400 error test
+import { test400Error } from './common/400-error.spec'
 import {
     Account,
     Action,
@@ -48,7 +50,7 @@ const testFioDomainName = process.env.TEST_FIO_DOMAIN_NAME as string
  */
 
 /**
- * Public Testnet API nodes can be found at: https://github.com/fioprotocol/fio.mainnet
+ * Public Testnet API nodes can be found at: https://bpmonitor.fio.net/?chain=Testnet
  */
 
 const baseUrls = ['https://test.fio.eosusa.io/v1/']
@@ -63,9 +65,9 @@ const defaultFee = 1500 * FIOSDK.SUFUnit
 const wrongBaseUrl = 'https://wrong-url-test.test.com/'
 const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
-let fioSdk: FIOSDK
-let fioSdk2: FIOSDK
-let fioSdkWithWrongBaseUrl: FIOSDK
+let fioSdk: FIOSDK = new FIOSDK({ privateKey, publicKey, apiUrls: baseUrls, fetchJson })
+let fioSdk2: FIOSDK = new FIOSDK({ privateKey: privateKey2, publicKey: publicKey2, apiUrls: baseUrls, fetchJson })
+let fioSdkWithWrongBaseUrl: FIOSDK = new FIOSDK({ privateKey: privateKey2, publicKey: publicKey2, apiUrls: baseUrls, fetchJson })
 
 const generateTestingFioAddress = (customDomain = fioTestnetDomain) => {
     return `testing${Date.now()}@${customDomain}`
@@ -91,18 +93,6 @@ const timeout = async (ms: number) => {
 }
 
 before(async () => {
-    fioSdk = new FIOSDK(privateKey, publicKey, baseUrls, fetchJson)
-
-    await timeout(1000)
-    fioSdk2 = new FIOSDK(privateKey2, publicKey2, baseUrls, fetchJson)
-
-    fioSdkWithWrongBaseUrl = new FIOSDK(
-        privateKey2,
-        publicKey2,
-        baseUrls,
-        fetchJson,
-    )
-
     /*
      // TODO: DASH-625 Uncomment when encrypt keys will be available on testnet
      // Additionally handle transfer tokens
@@ -192,6 +182,8 @@ describe('Raw Abi missing', () => {
         expect(result.roe).to.be.a('string')
     })
 })
+
+test400Error({ fioSdk, baseUrls })
 
 describe('Testing request timeout on wrong url', () => {
     it(`Get Fio Balance with wrong base url`, async () => {
