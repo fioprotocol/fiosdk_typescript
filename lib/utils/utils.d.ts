@@ -1,8 +1,9 @@
 import { AbortSignal } from 'abort-controller';
 import { Authorization, ContentType, EncryptKeyResponse, KeysPair, RawAction, RawRequest } from '../entities';
-export declare function asyncWaterfall({ asyncFunctions, requestTimeout, }: {
+export declare function asyncWaterfall({ asyncFunctions, requestTimeout, baseUrls, }: {
     asyncFunctions: Array<(signal: AbortSignal) => Promise<any>>;
     requestTimeout?: number;
+    baseUrls?: string[];
 }): Promise<any>;
 export declare function getEncryptKeyForUnCipherContent({ getEncryptKey, method, fioAddress, }: {
     getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;

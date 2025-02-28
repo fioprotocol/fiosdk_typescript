@@ -493,6 +493,7 @@ export class Request {
                 this.executeCall({baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal}),
             ),
             requestTimeout,
+            baseUrls: this.config.baseUrls,
         })
 
         // TODO asyncWaterfall can throw errors and error interface can be different

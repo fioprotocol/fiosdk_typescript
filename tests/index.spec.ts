@@ -15,13 +15,11 @@ import {
     TransactionResponse,
 } from '../src/FIOSDK'
 
-import type { FioError as FioErrorType } from '../src/entities/types/FioError.d.ts';
-
-import { test400Error } from './common/400-error.spec'
+import { wrongRequestsTests } from './common/wrong-requests.spec'
 
 dotenv.config({path: ['.env.test', '.env']})
 
-type ErrorType = Error & FioErrorType;
+import type { ErrorType } from './utils';
 
 const fetchJson = async (uri: string, opts = {}) => {
     return nodeFetch(uri, opts)
@@ -72,7 +70,6 @@ const proxyTpId = 'bp1@dapixdev'
 const defaultBundledSets = 1
 const receiveTransferTimout = 5000
 const wrongBaseUrl = 'https://wrong-url-test.test.com/'
-const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
 let fioSdk: FIOSDK
 let fioSdk2: FIOSDK
@@ -344,129 +341,9 @@ describe('Raw Abi missing', () => {
     })
 })
 
-describe('Testing request timeout on wrong url and 400 error', () => {
-    it('Test 400 error', async () => {
-        test400Error({ fioSdk, baseUrls })
-    })
-
-    it(`Get Fio Balance with wrong base url`, async () => {
-        try {
-            fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl])
-            await fioSdkWithWrongBaseUrl.genericAction(
-                'getFioBalance',
-                {},
-            )
-        } catch (e) {
-            if (e instanceof Error) {
-                expect(e.message).to.match(/request_timeout|ENOTFOUND/)
-            }
-        }
-    })
-
-    it(`Get Fio Balance with 2 wrong base urls`, async () => {
-        try {
-            fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, wrongBaseUrl2])
-            await fioSdkWithWrongBaseUrl.genericAction('getFioBalance', {})
-        } catch (e) {
-            if (e instanceof Error) {
-                expect(e.message).to.match(/request_timeout|ENOTFOUND/)
-            }
-        }
-    })
-
-    it(`Get Fio Balance with one wrong and correct base urls`, async () => {
-        fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, ...baseUrls])
-
-        const result = await fioSdkWithWrongBaseUrl.genericAction(
-            'getFioBalance',
-            {},
-        )
-        expect(result).to.have.all.keys(
-            'balance',
-            'available',
-            'staked',
-            'srps',
-            'roe',
-        )
-        expect(result.balance).to.be.a('number')
-        expect(result.available).to.be.a('number')
-        expect(result.staked).to.be.a('number')
-        expect(result.srps).to.be.a('number')
-        expect(result.roe).to.be.a('string')
-    })
-
-    it(`Get Fio Balance with one correct and wrong base urls`, async () => {
-        fioSdkWithWrongBaseUrl.setApiUrls([...baseUrls, wrongBaseUrl])
-
-        const result = await fioSdkWithWrongBaseUrl.genericAction(
-            'getFioBalance',
-            {},
-        )
-        expect(result).to.have.all.keys(
-            'balance',
-            'available',
-            'staked',
-            'srps',
-            'roe',
-        )
-        expect(result.balance).to.be.a('number')
-        expect(result.available).to.be.a('number')
-        expect(result.staked).to.be.a('number')
-        expect(result.srps).to.be.a('number')
-        expect(result.roe).to.be.a('string')
-    })
-
-    it(`Get Fio Balance with one wrong, correct and wrong base urls`, async () => {
-        fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl, baseUrls[0], wrongBaseUrl2])
-
-        const result = await fioSdkWithWrongBaseUrl.genericAction(
-            'getFioBalance',
-            {},
-        )
-        expect(result).to.have.all.keys(
-            'balance',
-            'available',
-            'staked',
-            'srps',
-            'roe',
-        )
-        expect(result.balance).to.be.a('number')
-        expect(result.available).to.be.a('number')
-        expect(result.staked).to.be.a('number')
-        expect(result.srps).to.be.a('number')
-        expect(result.roe).to.be.a('string')
-    })
-
-    it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
-        fioSdkWithWrongBaseUrl.setApiUrls(baseUrls)
-        try {
-            await fioSdk.genericAction('removePublicAddresses', {
-                fioAddress: '',
-                maxFee: 600000000,
-                publicAddresses: [
-                    {
-                        chain_code: 'BCH',
-                        public_address:
-                            'bitcoincash:qzf8zha74ahdh9j0xnwlffdn0zuyaslx3c90q7n9g9',
-                        token_code: 'BCH',
-                    },
-                    {
-                        chain_code: 'DASH',
-                        public_address: 'XyCyPKzTWvW2XdcYjPaPXGQDCGk946ywEv',
-                        token_code: 'DASH',
-                    },
-                ],
-            })
-        } catch (err) {
-            const error = err as ErrorType;
-  
-            expect(error.message).to.equal('Validation error')
-            expect(error.list[0].message).to.equal('fioAddress must have a length between 3 and 64.')
-        }
-    })
-
-    it(`Return back correct baseUrls`, () => {
-        fioSdkWithWrongBaseUrl.setApiUrls(baseUrls)
+describe.only('Testing request timeout on wrong url and 400 error', () => {
+    it('Test wrong requests', async () => {
+        wrongRequestsTests({ fioSdk, baseUrls, fioSdkWithWrongBaseUrl })
     })
 })
 
