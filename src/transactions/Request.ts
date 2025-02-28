@@ -28,7 +28,7 @@ import {
     ValidationError,
 } from '../entities'
 
-import {defaultExpirationOffset} from '../utils/constants'
+import {API_ERROR_CODES, defaultExpirationOffset} from '../utils/constants'
 import {
     asyncWaterfall,
     createAuthorization,
@@ -57,7 +57,7 @@ export const signAllAuthorityProvider: AuthorityProvider = {
     },
 }
 
-export const fioApiErrorCodes = [400, 403, 404, 409]
+export const fioApiErrorCodes = [API_ERROR_CODES.BAD_REQUEST, API_ERROR_CODES.FORBIDDEN, API_ERROR_CODES.NOT_FOUND, API_ERROR_CODES.CONFLICT]
 export const FIO_CHAIN_INFO_ERROR_CODE = 800
 export const FIO_BLOCK_NUMBER_ERROR_CODE = 801
 

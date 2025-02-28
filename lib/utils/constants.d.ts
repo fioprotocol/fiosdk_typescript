@@ -31,4 +31,10 @@ export declare const defaultExpirationOffset = 180;
 export declare const classMethodsToExcludeFromProxy: readonly ["constructor", "transactions", "SUFUnit", "derivedPublicKey", "isChainCodeValid", "isTokenCodeValid", "isFioAddressValid", "isFioDomainValid", "isFioPublicKeyValid", "isPublicAddressValid", "validateChainCode", "validateTokenCode", "validateFioAddress", "validateFioDomain", "validateFioPublicKey", "validatePublicAddress", "amountToSUF", "SUFToAmount", "getFioPublicKey", "getTechnologyProviderId", "setSignedTrxReturnOption", "setApiUrls", "getMultiplier", "getAbi", "customRawAbiAccountName", "setCustomRawAbiAccountName"];
 export type ClassMethodsToExcludeFromProxy = typeof classMethodsToExcludeFromProxy[number];
 export declare const missingAbiError = "unknown key";
+export declare const API_ERROR_CODES: {
+    NOT_FOUND: number;
+    BAD_REQUEST: number;
+    FORBIDDEN: number;
+    CONFLICT: number;
+};
 //# sourceMappingURL=constants.d.ts.map

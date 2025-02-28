@@ -17,6 +17,8 @@ import {
 
 import type { FioError as FioErrorType } from '../src/entities/types/FioError.d.ts';
 
+import { test400Error } from './common/400-error.spec'
+
 dotenv.config({path: ['.env.test', '.env']})
 
 type ErrorType = Error & FioErrorType;
@@ -342,7 +344,11 @@ describe('Raw Abi missing', () => {
     })
 })
 
-describe('Testing request timeout on wrong url', () => {
+describe('Testing request timeout on wrong url and 400 error', () => {
+    it('Test 400 error', async () => {
+        test400Error({ fioSdk, baseUrls })
+    })
+
     it(`Get Fio Balance with wrong base url`, async () => {
         try {
             fioSdkWithWrongBaseUrl.setApiUrls([wrongBaseUrl])
