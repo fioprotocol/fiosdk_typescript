@@ -9,9 +9,11 @@ const DEFAULT_REQUEST_TIMEOUT = 60000
 export async function asyncWaterfall({
     asyncFunctions,
     requestTimeout = DEFAULT_REQUEST_TIMEOUT,
+    baseUrls,
 }: {
     asyncFunctions: Array<(signal: AbortSignal) => Promise<any>>
     requestTimeout?: number,
+    baseUrls?: string[],
 }): Promise<any> {
     const timeoutIds: NodeJS.Timeout[] = []
 
@@ -41,11 +43,19 @@ export async function asyncWaterfall({
             } catch (error: any) {
                 clearTimeout(timeoutId!)
 
-                if (error?.code && [API_ERROR_CODES.NOT_FOUND, API_ERROR_CODES.BAD_REQUEST].includes(error.code)
-                || error?.errorCode && [API_ERROR_CODES.NOT_FOUND, API_ERROR_CODES.BAD_REQUEST].includes(error.errorCode)) {
+                const errorCode = error?.code || error?.errorCode;
+
+                if (errorCode && [API_ERROR_CODES.NOT_FOUND, API_ERROR_CODES.BAD_REQUEST].includes(errorCode)) {
                     throw error
                 }
-                if (i === asyncFunctions.length - 1) {
+                // If this isn't the last function and we have baseUrls, reorder them
+                if (baseUrls && i !== asyncFunctions.length - 1) {
+                    // Move failed URL to the end and next call will use the next url from the list not thefailed one
+                    // Works only for current instance of the sdk
+                    const failedUrl = baseUrls[i]
+                    baseUrls.splice(i, 1)
+                    baseUrls.push(failedUrl)
+                } else if (i === asyncFunctions.length - 1) {
                     throw error
                 }
             }
