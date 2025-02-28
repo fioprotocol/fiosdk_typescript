@@ -73,3 +73,10 @@ export const classMethodsToExcludeFromProxy = [
 export type ClassMethodsToExcludeFromProxy = typeof classMethodsToExcludeFromProxy[number]
 
 export const missingAbiError = 'unknown key'
+
+export const API_ERROR_CODES = {
+    NOT_FOUND: 404,
+    BAD_REQUEST: 400,
+    FORBIDDEN: 403,
+    CONFLICT: 409,
+}
