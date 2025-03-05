@@ -1,5 +1,5 @@
 import { NftsResponse } from '../../entities';
-import { RequestConfig } from '../Request';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type NftsByContractQueryProps = {
     chainCode: string;

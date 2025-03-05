@@ -1,7 +1,7 @@
 import {Fio} from '@fioprotocol/fiojs'
 import AbortController, {AbortSignal} from 'abort-controller'
 import {TextDecoder, TextEncoder} from 'text-encoding'
-import {Authorization, ContentType, EncryptKeyResponse, KeysPair, RawAction, RawRequest} from '../entities'
+import {Authorization, ContentType, GetEncryptKeyResponse, KeysPair, RawAction, RawRequest} from '../entities'
 import { API_ERROR_CODES } from './constants'
 
 const DEFAULT_REQUEST_TIMEOUT = 60000
@@ -70,7 +70,7 @@ export async function getEncryptKeyForUnCipherContent({
     method = '',
     fioAddress,
 }: {
-    getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>,
+    getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>,
     method?: string,
     fioAddress: string;
 }) {

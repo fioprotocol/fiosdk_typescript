@@ -1,4 +1,4 @@
-import { LockPeriod } from '../types/LockPeriod';
+import { LockPeriod } from '../LockPeriod';
 export type TransferLockedTokensOptions = {
     payeePublicKey: string;
     canVote: boolean;

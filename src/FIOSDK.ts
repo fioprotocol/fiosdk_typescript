@@ -3,7 +3,6 @@ import Big from 'big.js';
 import {
     AbiResponse,
     Account,
-    AccountPubKeyResponse,
     AccountResponse,
     Action,
     AddBundledTransactionsOptions,
@@ -11,25 +10,25 @@ import {
     AddPublicAddressesOptions,
     AddPublicAddressesResponse,
     AddPublicAddressOptions,
-    AvailabilityCheckResponse,
+    AvailabilityResponse,
     BurnFioAddressOptions,
     BurnFioAddressResponse,
     CancelFundsRequestOptions,
     CancelFundsRequestResponse,
     CancelledFioRequestsDecryptedResponse,
     ContentType,
-    EncryptKeyResponse,
+    GetEncryptKeyResponse,
     EndPoint,
     FetchJson,
     FioAddressesResponse,
-    FioBalanceResponse,
+    BalanceResponse,
     FioDomainsResponse,
     FioFeeResponse,
     FioLogger,
     FioNamesResponse,
     FioOracleFeesResponse,
     FioSdkOptions,
-    FundsRequestResponse, GetAbiOptions,
+    RequestFundsResponse, GetAbiOptions,
     GetAccountOptions,
     GetAccountPubKeyOptions,
     GetCancelledFioRequestsOptions,
@@ -86,7 +85,7 @@ import {
     RegisterOwnerFioAddressOptions,
     RegisterOwnerFioDomainOptions,
     RejectFundsRequestOptions,
-    RejectFundsRequestResponse,
+    RejectFundsResponse,
     RemoveAllPublicAddressesOptions,
     RemoveAllPublicAddressesResponse,
     RemovePublicAddressesOptions,
@@ -107,15 +106,15 @@ import {
     TransferFioDomainResponse,
     TransferLockedTokensOptions,
     TransferLockedTokensResponse,
-    TransferTokensKeyResponse,
+    TransferTokensResponse,
     TransferTokensOptions,
     UnStakeFioTokensOptions,
     ValidationError,
 } from './entities'
 import * as queries from './transactions/queries'
-import {Request, RequestConfig} from './transactions/Request'
-import * as requests from './transactions/requests'
-import {SignedRequest} from './transactions/requests/SignedRequest'
+import {Transactions, RequestConfig} from './transactions/Transactions'
+import * as requests from './transactions/signed'
+import {SignedTransaction} from './transactions/signed/SignedTransaction'
 import {ClassMethodsToExcludeFromProxy} from './utils/constants'
 import * as fioConstants from './utils/constants'
 import {cleanupObject, getCipherContent, getUnCipherContent, resolveOptions} from './utils/utils'
@@ -298,19 +297,19 @@ type GenericActions = {
     }
     [GenericAction.rejectFundsRequest]: {
         options: [RejectFundsRequestOptions]
-        response: Promise<RejectFundsRequestResponse>,
+        response: Promise<RejectFundsResponse>,
     }
     [GenericAction.requestFunds]: {
         options: [RequestFundsOptions]
-        response: Promise<FundsRequestResponse>,
+        response: Promise<RequestFundsResponse>,
     }
     [GenericAction.isAvailable]: {
         options: [IsAvailableOptions]
-        response: Promise<AvailabilityCheckResponse>,
+        response: Promise<AvailabilityResponse>,
     }
     [GenericAction.getFioBalance]: {
         options: [GetFioBalanceOptions]
-        response: Promise<FioBalanceResponse>,
+        response: Promise<BalanceResponse>,
     }
     [GenericAction.getFioNames]: {
         options: [GetFioNamesOptions]
@@ -358,7 +357,7 @@ type GenericActions = {
     }
     [GenericAction.transferTokens]: {
         options: [TransferTokensOptions]
-        response: Promise<TransferTokensKeyResponse>,
+        response: Promise<TransferTokensResponse>,
     }
     [GenericAction.stakeFioTokens]: {
         options: [StakeFioTokensOptions]
@@ -438,11 +437,11 @@ type GenericActions = {
     }
     [GenericAction.getAccountPubKey]: {
         options: [GetAccountPubKeyOptions]
-        response: Promise<AccountPubKeyResponse>,
+        response: Promise<AccountResponse>,
     }
     [GenericAction.getEncryptKey]: {
         options: [GetEncryptKeyOptions]
-        response: Promise<EncryptKeyResponse>,
+        response: Promise<GetEncryptKeyResponse>,
     },
 }
 
@@ -713,11 +712,11 @@ export class FIOSDK {
     public config: RequestConfig
 
     public static get abiMap() {
-        return Request.abiMap
+        return Transactions.abiMap
     }
 
     public get transactions() {
-        const request = new Request(this.config)
+        const request = new Transactions(this.config)
         return {
             createRawTransaction: request.createRawTransaction.bind(request),
             getActor: request.getActor.bind(request),
@@ -774,10 +773,10 @@ export class FIOSDK {
             // inside here to avoid “too much recursion” error
 
             const setAbi = async (accountName: string): Promise<void> => {
-                if (!Request.abiMap.get(accountName)) {
+                if (!Transactions.abiMap.get(accountName)) {
                     const newAbi = await this.main.getAbi({accountName})
                     if (newAbi && newAbi.account_name) {
-                        Request.abiMap.set(newAbi.account_name, newAbi)
+                        Transactions.abiMap.set(newAbi.account_name, newAbi)
                     }
                 }
             }
@@ -1097,11 +1096,11 @@ export class FIOSDK {
         endPoint: EndPoint,
         preparedTrx: unknown,
     ): Promise<any> {
-        const response = await new Request(this.config).multicastServers({
+        const response = await new Transactions(this.config).multicastServers({
             body: JSON.stringify(preparedTrx),
             endpoint: `chain/${endPoint}`,
         })
-        return SignedRequest.prepareResponse(response, true)
+        return SignedTransaction.prepareResponse(response, true)
     }
 
     /**
@@ -1139,7 +1138,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
-        const registerFioAddress = new requests.RegisterFioAddressRequest(this.config, {
+        const registerFioAddress = new requests.RegisterFioAddress(this.config, {
             ...args,
             technologyProviderId: this.getTechnologyProviderId(args.technologyProviderId),
         })
@@ -1189,7 +1188,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'ownerPublicKey', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
-        const registerFioAddress = new requests.RegisterFioAddressRequest(
+        const registerFioAddress = new requests.RegisterFioAddress(
             this.config,
             {
                 ...args,
@@ -1220,7 +1219,7 @@ export class FIOSDK {
      */
     public registerFioDomainAddress(options: RegisterFioDomainAddressOptions): Promise<RegisterFioAddressResponse> {
         const args = cleanupObject(options)
-        const registerFioDomainAddress = new requests.RegisterFioDomainAddressRequest(
+        const registerFioDomainAddress = new requests.RegisterFioDomainAddress(
             this.config,
             {
                 ...args,
@@ -1270,7 +1269,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioDomain', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
-        const registerFioDomain = new requests.RegisterFioDomainRequest(
+        const registerFioDomain = new requests.RegisterFioDomain(
             this.config,
             {
                 ...args,
@@ -1317,7 +1316,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioDomain', 'ownerPublicKey', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
-        const registerFioDomain = new requests.RegisterFioDomainRequest(this.config, {
+        const registerFioDomain = new requests.RegisterFioDomain(this.config, {
                 ...args,
                 technologyProviderId: this.getTechnologyProviderId(args.technologyProviderId),
             },
@@ -1354,7 +1353,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId'],
         })
-        const burnFioAddress = new requests.BurnFioAddressRequest(
+        const burnFioAddress = new requests.BurnFioAddress(
             this.config,
             {
                 ...args,
@@ -1396,7 +1395,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioDomain', 'newOwnerKey', 'maxFee', 'technologyProviderId'],
         })
-        const transferFioDomain = new requests.TransferFioDomainRequest(
+        const transferFioDomain = new requests.TransferFioDomain(
             this.config,
             {
                 ...args,
@@ -1438,7 +1437,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'newOwnerKey', 'maxFee', 'technologyProviderId'],
         })
-        const transferFioAddress = new requests.TransferFioAddressRequest(
+        const transferFioAddress = new requests.TransferFioAddress(
             this.config,
             {
                 ...args,
@@ -1485,7 +1484,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'bundleSets', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
-        const addBundledTransactions = new requests.AddBundledTransactionsRequest(
+        const addBundledTransactions = new requests.AddBundledTransactions(
             this.config,
             {
                 ...args,
@@ -1528,7 +1527,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId'],
         })
-        const renewFioAddress = new requests.RenewFioAddressRequest(
+        const renewFioAddress = new requests.RenewFioAddress(
             this.config,
             {
                 ...args,
@@ -1571,7 +1570,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioDomain', 'maxFee', 'technologyProviderId', 'expirationOffset'],
         })
-        const renewFioDomain = new requests.RenewFioDomainRequest(
+        const renewFioDomain = new requests.RenewFioDomain(
             this.config,
             {
                 ...args,
@@ -1618,7 +1617,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'chainCode', 'tokenCode', 'publicAddress', 'maxFee', 'technologyProviderId'],
         })
-        const addPublicAddress = new requests.AddPublicAddressesRequest(
+        const addPublicAddress = new requests.AddPublicAddresses(
             this.config,
             {
                 ...args,
@@ -1661,7 +1660,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioRequestId', 'maxFee', 'technologyProviderId'],
         })
-        const cancelFundsRequest = new requests.CancelFundsRequestRequest(
+        const cancelFundsRequest = new requests.CancelFundsRequest(
             this.config,
             {
                 ...args,
@@ -1705,7 +1704,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'publicAddresses', 'maxFee', 'technologyProviderId'],
         })
-        const removePublicAddresses = new requests.RemovePublicAddressesRequest(
+        const removePublicAddresses = new requests.RemovePublicAddresses(
             this.config,
             {
                 ...args,
@@ -1755,7 +1754,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['payeePublicKey', 'canVote', 'periods', 'amount', 'maxFee', 'technologyProviderId'],
         })
-        const transferLockedTokens = new requests.TransferLockedTokensRequest(
+        const transferLockedTokens = new requests.TransferLockedTokens(
             this.config,
             {
                 ...args,
@@ -1795,7 +1794,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'maxFee', 'technologyProviderId'],
         })
-        const removeAllPublicAddresses = new requests.RemoveAllPublicAddressesRequest(
+        const removeAllPublicAddresses = new requests.RemoveAllPublicAddresses(
             this.config,
             {
                 ...args,
@@ -1836,7 +1835,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'publicAddresses', 'maxFee', 'technologyProviderId'],
         })
-        const addPublicAddress = new requests.AddPublicAddressesRequest(
+        const addPublicAddress = new requests.AddPublicAddresses(
             this.config,
             {
                 ...args,
@@ -1883,7 +1882,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioDomain', 'isPublic', 'maxFee', 'technologyProviderId'],
         })
-        const SetFioDomainVisibility = new requests.SetFioDomainVisibilityRequest(
+        const SetFioDomainVisibility = new requests.SetFioDomainVisibility(
             this.config,
             {
                 ...args,
@@ -1923,7 +1922,7 @@ export class FIOSDK {
         const payeeEncryptKey = await this.getEncryptKey({
             fioAddress: args.payeeFioAddress,
         })
-        const recordObtData = new requests.RecordObtDataRequest(
+        const recordObtData = new requests.RecordObtData(
             this.config,
             {
                 ...args,
@@ -1945,7 +1944,7 @@ export class FIOSDK {
      */
     public getObtData(options: GetObtDataOptions): Promise<GetObtDataDecryptedResponse> {
         const args = cleanupObject(options)
-        const getObtDataRequest = new queries.ObtDataQuery(this.config, {
+        const getObtDataRequest = new queries.GetObtData(this.config, {
             ...args,
             fioPublicKey: this.publicKey,
             getEncryptKey: this.getEncryptKey,
@@ -1979,7 +1978,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['granteeAccount', 'limit', 'offset'],
         })
-        const getGranteePermissions = new queries.GranteePermissionsQuery(this.config, args)
+        const getGranteePermissions = new queries.GetGranteePermissions(this.config, args)
         return getGranteePermissions.execute(this.publicKey, this.privateKey)
     }
 
@@ -2009,7 +2008,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['grantorAccount', 'limit', 'offset'],
         })
-        const getGrantorPermissions = new queries.GrantorPermissionsQuery(this.config, args)
+        const getGrantorPermissions = new queries.GetGrantorPermissions(this.config, args)
         return getGrantorPermissions.execute(this.publicKey, this.privateKey)
     }
 
@@ -2042,7 +2041,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['permissionName', 'objectName', 'limit', 'offset'],
         })
-        const getObjectPermissions = new queries.ObjectPermissionsQuery(this.config, args)
+        const getObjectPermissions = new queries.GetObjectPermissions(this.config, args)
         return getObjectPermissions.execute(this.publicKey, this.privateKey)
     }
 
@@ -2059,7 +2058,7 @@ export class FIOSDK {
         fioRequestId: number,
         maxFee: number,
         technologyProviderId?: string | null,
-    ): Promise<RejectFundsRequestResponse>
+    ): Promise<RejectFundsResponse>
     /**
      * Reject funds request.
      *
@@ -2068,13 +2067,13 @@ export class FIOSDK {
      * Should be preceded by [getFee] for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    public rejectFundsRequest(options: RejectFundsRequestOptions): Promise<RejectFundsRequestResponse>
-    public rejectFundsRequest(): Promise<RejectFundsRequestResponse> {
+    public rejectFundsRequest(options: RejectFundsRequestOptions): Promise<RejectFundsResponse>
+    public rejectFundsRequest(): Promise<RejectFundsResponse> {
         const args = resolveOptions<RejectFundsRequestOptions>({
             arguments: Array.from(arguments),
             keys: ['fioRequestId', 'maxFee', 'technologyProviderId'],
         })
-        const rejectFundsRequest = new requests.RejectFundsRequestRequest(
+        const rejectFundsRequest = new requests.RejectFundsRequest(
             this.config,
             {
                 ...args,
@@ -2104,12 +2103,12 @@ export class FIOSDK {
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      * @param options.tokenCode Code of the token represented in amount requested.
      */
-    public async requestFunds(options: RequestFundsOptions): Promise<FundsRequestResponse> {
+    public async requestFunds(options: RequestFundsOptions): Promise<RequestFundsResponse> {
         const args = cleanupObject(options)
         const payerEncryptKey = await this.getEncryptKey({
             fioAddress: args.payerFioAddress,
         })
-        const requestNewFunds = new requests.FundsRequestRequest(
+        const requestNewFunds = new requests.RequestNewFunds(
             this.config,
             {
                 ...args,
@@ -2135,7 +2134,7 @@ export class FIOSDK {
     public getLocks(options: GetLocksOptions): Promise<LocksResponse>
     public getLocks(): Promise<LocksResponse> {
         const args = resolveOptions<GetLocksOptions>({keys: ['fioPublicKey'], arguments: Array.from(arguments)})
-        const getLocks = new queries.LocksQuery(this.config, args)
+        const getLocks = new queries.GetLocks(this.config, args)
         return getLocks.execute(this.publicKey)
     }
 
@@ -2154,7 +2153,7 @@ export class FIOSDK {
     public getAccount(options: GetAccountOptions): Promise<AccountResponse>
     public getAccount(): Promise<AccountResponse> {
         const args = resolveOptions<GetAccountOptions>({keys: ['actor'], arguments: Array.from(arguments)})
-        const getAccount = new queries.AccountQuery(this.config, args)
+        const getAccount = new queries.GetAccount(this.config, args)
         return getAccount.execute(this.publicKey)
     }
 
@@ -2164,14 +2163,14 @@ export class FIOSDK {
      *
      * @param fioName FIO Address or FIO Domain to check.
      */
-    public isAvailable(fioName: string): Promise<AvailabilityCheckResponse>
+    public isAvailable(fioName: string): Promise<AvailabilityResponse>
     /**
      * Checks if a FIO Address or FIO Domain is available for registration.
      *
      * @param options.fioName FIO Address or FIO Domain to check.
      */
-    public isAvailable(options: IsAvailableOptions): Promise<AvailabilityCheckResponse>
-    public isAvailable(): Promise<AvailabilityCheckResponse> {
+    public isAvailable(options: IsAvailableOptions): Promise<AvailabilityResponse>
+    public isAvailable(): Promise<AvailabilityResponse> {
         const args = resolveOptions<IsAvailableOptions>({keys: ['fioName'], arguments: Array.from(arguments)})
         const availabilityCheck = new queries.AvailabilityCheckQuery(this.config, args)
         return availabilityCheck.execute(this.publicKey)
@@ -2183,16 +2182,16 @@ export class FIOSDK {
      *
      * @param fioPublicKey FIO public key.
      */
-    public getFioBalance(fioPublicKey?: string | null): Promise<FioBalanceResponse>
+    public getFioBalance(fioPublicKey?: string | null): Promise<BalanceResponse>
     /**
      * Retrieves balance of FIO tokens
      *
      * @param options.fioPublicKey FIO public key.
      */
-    public getFioBalance(options: GetFioBalanceOptions): Promise<FioBalanceResponse>
-    public getFioBalance(): Promise<FioBalanceResponse> {
+    public getFioBalance(options: GetFioBalanceOptions): Promise<BalanceResponse>
+    public getFioBalance(): Promise<BalanceResponse> {
         const args = resolveOptions<GetFioBalanceOptions>({keys: ['fioPublicKey'], arguments: Array.from(arguments)})
-        const getFioBalance = new queries.FioBalanceQuery(this.config, args)
+        const getFioBalance = new queries.GetFioBalance(this.config, args)
         return getFioBalance.execute(this.publicKey)
     }
 
@@ -2211,7 +2210,7 @@ export class FIOSDK {
     public getFioNames(options: GetFioNamesOptions): Promise<FioNamesResponse>
     public getFioNames(): Promise<FioNamesResponse> {
         const args = resolveOptions<GetFioNamesOptions>({keys: ['fioPublicKey'], arguments: Array.from(arguments)})
-        const getNames = new queries.FioNamesQuery(this.config, args)
+        const getNames = new queries.GetNames(this.config, args)
         return getNames.execute(this.publicKey)
     }
 
@@ -2241,7 +2240,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioPublicKey', 'limit', 'offset'],
         })
-        const getNames = new queries.FioAddressesQuery(this.config, args)
+        const getNames = new queries.GetAddresses(this.config, args)
         return getNames.execute(this.publicKey)
     }
 
@@ -2271,7 +2270,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioPublicKey', 'limit', 'offset'],
         })
-        const getNames = new queries.FioDomainsQuery(this.config, args)
+        const getNames = new queries.GetDomains(this.config, args)
         return getNames.execute(this.publicKey)
     }
 
@@ -2286,7 +2285,7 @@ export class FIOSDK {
         options: GetPendingFioRequestsOptions,
     ): Promise<PendingFioRequestsDecryptedResponse | undefined> {
         const args = cleanupObject(options)
-        const pendingFioRequests = new queries.PendingFioRequestsQuery(this.config, {
+        const pendingFioRequests = new queries.PendingFioRequests(this.config, {
             ...args,
             fioPublicKey: this.publicKey,
             getEncryptKey: this.getEncryptKey.bind(this),
@@ -2306,7 +2305,7 @@ export class FIOSDK {
         options: GetReceivedFioRequestsOptions,
     ): Promise<ReceivedFioRequestsDecryptedResponse | undefined> {
         const args = cleanupObject(options)
-        const receivedFioRequests = new queries.ReceivedFioRequestsQuery(this.config, {
+        const receivedFioRequests = new queries.ReceivedFioRequests(this.config, {
             ...args,
             fioPublicKey: this.publicKey,
             getEncryptKey: this.getEncryptKey.bind(this),
@@ -2326,7 +2325,7 @@ export class FIOSDK {
         options: GetSentFioRequestsOptions,
     ): Promise<SentFioRequestsDecryptedResponse | undefined> {
         const args = cleanupObject(options)
-        const sentFioRequest = new queries.SentFioRequestsQuery(this.config, {
+        const sentFioRequest = new queries.SentFioRequests(this.config, {
             ...args,
             fioPublicKey: this.publicKey,
             getEncryptKey: this.getEncryptKey.bind(this),
@@ -2378,7 +2377,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'chainCode', 'tokenCode'],
         })
-        const publicAddressLookUp = new queries.PublicAddressQuery(this.config, args)
+        const publicAddressLookUp = new queries.GetPublicAddress(this.config, args)
         return publicAddressLookUp.execute(this.publicKey)
     }
 
@@ -2408,7 +2407,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['fioAddress', 'limit', 'offset'],
         })
-        const publicAddressesLookUp = new queries.PublicAddressesQuery(this.config, args)
+        const publicAddressesLookUp = new queries.GetPublicAddresses(this.config, args)
         return publicAddressesLookUp.execute(this.publicKey)
     }
 
@@ -2489,7 +2488,7 @@ export class FIOSDK {
         let nftsLookUp
 
         if (fioAddress !== undefined && fioAddress !== '') {
-            nftsLookUp = new queries.NftsByFioAddressQuery(this.config, {
+            nftsLookUp = new queries.GetNftsByFioAddress(this.config, {
                 fioAddress,
                 limit,
                 offset,
@@ -2497,7 +2496,7 @@ export class FIOSDK {
         }
 
         if (chainCode !== undefined && chainCode !== '' && contractAddress !== undefined && contractAddress !== '') {
-            nftsLookUp = new queries.NftsByContractQuery(this.config, {
+            nftsLookUp = new queries.GetNftsByContract(this.config, {
                 chainCode,
                 contractAddress,
                 limit,
@@ -2507,7 +2506,7 @@ export class FIOSDK {
         }
 
         if (hash !== undefined && hash !== '') {
-            nftsLookUp = new queries.NftsByHashQuery(this.config, {
+            nftsLookUp = new queries.GetNftsByHash(this.config, {
                 hash,
                 limit,
                 offset,
@@ -2537,7 +2536,7 @@ export class FIOSDK {
         amount: number,
         maxFee: number,
         technologyProviderId?: string | null,
-    ): Promise<TransferTokensKeyResponse>
+    ): Promise<TransferTokensResponse>
     /**
      * Transfers FIO tokens from public key associated with the FIO SDK instance to
      * the payeePublicKey.
@@ -2548,13 +2547,13 @@ export class FIOSDK {
      * Should be preceded by /get_fee for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    public transferTokens(options: TransferTokensOptions): Promise<TransferTokensKeyResponse>
-    public transferTokens(): Promise<TransferTokensKeyResponse> {
+    public transferTokens(options: TransferTokensOptions): Promise<TransferTokensResponse>
+    public transferTokens(): Promise<TransferTokensResponse> {
         const args = resolveOptions<TransferTokensOptions>({
             arguments: Array.from(arguments),
             keys: ['payeeFioPublicKey', 'amount', 'maxFee', 'technologyProviderId'],
         })
-        const transferTokens = new requests.TransferTokensKeyRequest(
+        const transferTokens = new requests.TransferTokens(
             this.config,
             {
                 ...args,
@@ -2598,7 +2597,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['publicKey'],
         })
-        const fioFee = new queries.OracleFeesQuery(this.config)
+        const fioFee = new queries.GetOracleFees(this.config)
         return fioFee.execute(publicKey || this.publicKey)
     }
 
@@ -2635,7 +2634,7 @@ export class FIOSDK {
     public getFee(options: GetFeeOptions): Promise<FioFeeResponse>
     public getFee(): Promise<FioFeeResponse> {
         const args = resolveOptions<GetFeeOptions>({keys: ['endPoint', 'fioAddress'], arguments: Array.from(arguments)})
-        const fioFee = new queries.FioFeeQuery(this.config, args)
+        const fioFee = new queries.GetFee(this.config, args)
         return fioFee.execute(this.publicKey)
     }
 
@@ -3027,7 +3026,7 @@ export class FIOSDK {
                 }
             }
         }
-        const pushTransaction = new requests.PushRequest(this.config, {
+        const pushTransaction = new requests.PushTransaction(this.config, {
             account,
             action,
             authPermission,
@@ -3042,14 +3041,14 @@ export class FIOSDK {
      * @deprecated
      * @description Method to get public key by account name.
      */
-    public getAccountPubKey(account: string): Promise<AccountPubKeyResponse>
+    public getAccountPubKey(account: string): Promise<AccountResponse>
     /**
      * @description Method to get public key by account name.
      */
-    public getAccountPubKey(options: GetAccountPubKeyOptions): Promise<AccountPubKeyResponse>
-    public getAccountPubKey(): Promise<AccountPubKeyResponse> {
+    public getAccountPubKey(options: GetAccountPubKeyOptions): Promise<AccountResponse>
+    public getAccountPubKey(): Promise<AccountResponse> {
         const args = resolveOptions<GetAccountPubKeyOptions>({keys: ['account'], arguments: Array.from(arguments)})
-        const getAccountPubKey = new queries.AccountPubKeyQuery(this.config, args)
+        const getAccountPubKey = new queries.GetAccountPubKey(this.config, args)
         return getAccountPubKey.execute(this.publicKey)
     }
 
@@ -3059,16 +3058,16 @@ export class FIOSDK {
      * By default, it is the same as FIO Handle wallet public key.
      * @param fioAddress FIO public key
      */
-    public getEncryptKey(fioAddress: string): Promise<EncryptKeyResponse>
+    public getEncryptKey(fioAddress: string): Promise<GetEncryptKeyResponse>
     /**
      * @description Method returns FIO Public Key that was set for encrypt/decrypt data.
      * By default, it is the same as FIO Handle wallet public key.
      * @param options.fioAddress FIO public key
      */
-    public getEncryptKey(options: GetEncryptKeyOptions): Promise<EncryptKeyResponse>
-    public getEncryptKey(): Promise<EncryptKeyResponse> {
+    public getEncryptKey(options: GetEncryptKeyOptions): Promise<GetEncryptKeyResponse>
+    public getEncryptKey(): Promise<GetEncryptKeyResponse> {
         const args = resolveOptions<GetEncryptKeyOptions>({keys: ['fioAddress'], arguments: Array.from(arguments)})
-        const getEncryptKey = new queries.EncryptKeyQuery(this.config, args)
+        const getEncryptKey = new queries.GetEncryptKey(this.config, args)
         return getEncryptKey.execute(this.publicKey)
     }
 
@@ -3221,7 +3220,7 @@ export class FIOSDK {
      */
     public registerFioNameOnBehalfOfUser(fioName: string, publicKey: string) {
         const baseUrl = this.registerMockUrl // "mock.dapix.io/mockd/DEV2"
-        const mockRegisterFioName = new requests.MockRegisterFioNameRequest({
+        const mockRegisterFioName = new requests.MockRegisterFioName({
             baseUrl,
             fioName,
             publicKey,
@@ -3239,7 +3238,7 @@ export class FIOSDK {
             arguments: Array.from(arguments),
             keys: ['accountName'],
         })
-        const abi = new queries.AbiQuery(this.config, args)
+        const abi = new queries.GetAbi(this.config, args)
         return abi.execute(this.publicKey)
     }
 }
