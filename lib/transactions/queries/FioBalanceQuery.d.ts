@@ -1,5 +1,5 @@
-import { FioBalanceResponse } from '../../entities';
-import { RequestConfig } from '../Request';
+import { BalanceResponse } from '../../entities';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type FioBalanceQueryProps = {
     fioPublicKey?: string;
@@ -7,7 +7,7 @@ export type FioBalanceQueryProps = {
 export type FioBalanceQueryData = {
     fio_public_key: string;
 };
-export declare class FioBalanceQuery extends Query<FioBalanceQueryData, FioBalanceResponse> {
+export declare class FioBalanceQuery extends Query<FioBalanceQueryData, BalanceResponse> {
     props: FioBalanceQueryProps;
     ENDPOINT: "chain/get_fio_balance";
     constructor(config: RequestConfig, props: FioBalanceQueryProps);

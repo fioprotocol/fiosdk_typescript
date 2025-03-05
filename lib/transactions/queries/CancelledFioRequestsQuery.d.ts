@@ -1,12 +1,12 @@
-import { CancelledFioRequestsDecryptedResponse, CancelledFioRequestsResponse, EncryptKeyResponse, KeysPair } from '../../entities';
-import { RequestConfig } from '../Request';
+import { CancelledFioRequestsDecryptedResponse, CancelledFioRequestResponse, GetEncryptKeyResponse, KeysPair } from '../../entities';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type CancelledFioRequestsQueryProps = {
     fioPublicKey: string;
     limit?: number;
     offset?: number;
     encryptKeys?: Map<string, KeysPair[]>;
-    getEncryptKey: (fioAddress: string) => Promise<EncryptKeyResponse>;
+    getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>;
 };
 export type CancelledFioRequestsQueryData = {
     fio_public_key: string;
@@ -23,6 +23,6 @@ export declare class CancelledFioRequestsQuery extends Query<CancelledFioRequest
         limit: number | undefined;
         offset: number | undefined;
     };
-    decrypt(result: CancelledFioRequestsResponse): Promise<CancelledFioRequestsDecryptedResponse | undefined>;
+    decrypt(result: CancelledFioRequestResponse): Promise<CancelledFioRequestsDecryptedResponse | undefined>;
 }
 //# sourceMappingURL=CancelledFioRequestsQuery.d.ts.map

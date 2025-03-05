@@ -1,4 +1,4 @@
-import { PublicAddress } from '../types/PublicAddress';
+import { PublicAddress } from '../PublicAddress';
 export type RemovePublicAddressesOptions = {
     fioAddress: string;
     publicAddresses: PublicAddress[];

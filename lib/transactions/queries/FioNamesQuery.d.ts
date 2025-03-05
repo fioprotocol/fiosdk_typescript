@@ -1,5 +1,5 @@
 import { FioNamesResponse } from '../../entities';
-import { RequestConfig } from '../Request';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type FioNamesQueryProps = {
     fioPublicKey: string;

@@ -11,7 +11,7 @@ import {
     FioSentItem,
     FioSentItemContent,
     KeysPair,
-    RenewFioAddressResponse, RequestStatus,
+    RenewFioAddressResponse, FioRequestStatus,
     TransactionResponse,
 } from '../src/FIOSDK'
 
@@ -1465,7 +1465,7 @@ describe('Request funds, approve and send', () => {
                 payeeTokenPublicAddress: publicKey2,
                 payerFioAddress: testFioAddressName,
                 payerTokenPublicAddress: publicKey,
-                status: RequestStatus.sentToBlockchain,
+                status: FioRequestStatus.sentToBlockchain,
                 tokenCode: fioTokenCode,
             })
             expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
@@ -2342,7 +2342,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
                 payeeTokenPublicAddress: encPublicKey2,
                 payerFioAddress: encTestFioAddressName,
                 payerTokenPublicAddress: encPublicKey,
-                status: RequestStatus.sentToBlockchain,
+                status: FioRequestStatus.sentToBlockchain,
                 tokenCode: fioTokenCode,
             })
             expect(result).to.have.all.keys(
@@ -2380,7 +2380,7 @@ describe('Request funds, approve and send with updated encrypt key', () => {
             payeeTokenPublicAddress: encFioSdk.publicKey,
             payerFioAddress: encTestFioAddressName2,
             payerTokenPublicAddress: encFioSdk2.publicKey,
-            status: RequestStatus.sentToBlockchain,
+            status: FioRequestStatus.sentToBlockchain,
             tokenCode: fioTokenCode,
         })
         expect(result).to.have.all.keys(
@@ -2751,7 +2751,7 @@ describe('Record obt data, check', () => {
             payeeTokenPublicAddress: publicKey2,
             payerFioAddress: testFioAddressName,
             payerTokenPublicAddress: publicKey,
-            status: RequestStatus.sentToBlockchain,
+            status: FioRequestStatus.sentToBlockchain,
             tokenCode: fioTokenCode,
         })
         expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')

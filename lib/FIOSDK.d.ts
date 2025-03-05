@@ -1,5 +1,5 @@
-import { AbiResponse, Account, AccountPubKeyResponse, AccountResponse, Action, AddBundledTransactionsOptions, AddBundledTransactionsResponse, AddPublicAddressesOptions, AddPublicAddressesResponse, AddPublicAddressOptions, AvailabilityCheckResponse, BurnFioAddressOptions, BurnFioAddressResponse, CancelFundsRequestOptions, CancelFundsRequestResponse, CancelledFioRequestsDecryptedResponse, ContentType, EncryptKeyResponse, EndPoint, FetchJson, FioAddressesResponse, FioBalanceResponse, FioDomainsResponse, FioFeeResponse, FioLogger, FioNamesResponse, FioOracleFeesResponse, FioSdkOptions, FundsRequestResponse, GetAbiOptions, GetAccountOptions, GetAccountPubKeyOptions, GetCancelledFioRequestsOptions, GetEncryptKeyOptions, GetFeeForAddBundledTransactionsOptions, GetFeeForAddPublicAddressOptions, GetFeeForBurnFioAddressOptions, GetFeeForCancelFundsRequestOptions, GetFeeForNewFundsRequestOptions, GetFeeForRecordObtDataOptions, GetFeeForRejectFundsRequestOptions, GetFeeForRemoveAllPublicAddressesOptions, GetFeeForRemovePublicAddressesOptions, GetFeeForTransferFioAddressOptions, GetFeeForTransferFioDomainOptions, GetFeeForTransferLockedTokensOptions, GetFeeOptions, GetFioAddressesOptions, GetFioBalanceOptions, GetFioDomainsOptions, GetFioNamesOptions, GetFioPublicAddressOptions, GetGranteePermissionsOptions, GetGrantorPermissionsOptions, GetLocksOptions, GetNftsOptions, GetObjectPermissionsOptions, GetObtDataDecryptedResponse, GetObtDataOptions, GetOracleFeesOptions, GetPendingFioRequestsOptions, GetPublicAddressesOptions, GetPublicAddressOptions, GetReceivedFioRequestsOptions, GetSentFioRequestsOptions, IsAvailableOptions, LockPeriod, LocksResponse, NftsResponse, PendingFioRequestsDecryptedResponse, PermissionsResponse, PublicAddress, PublicAddressesResponse, PublicAddressResponse, PushTransactionOptions, ReceivedFioRequestsDecryptedResponse, RecordObtDataOptions, RecordObtDataResponse, RegisterFioAddressOptions, RegisterFioAddressResponse, RegisterFioDomainAddressOptions, RegisterFioDomainOptions, RegisterFioDomainResponse, RegisterOwnerFioAddressOptions, RegisterOwnerFioDomainOptions, RejectFundsRequestOptions, RejectFundsRequestResponse, RemoveAllPublicAddressesOptions, RemoveAllPublicAddressesResponse, RemovePublicAddressesOptions, RemovePublicAddressesResponse, RenewFioAddressOptions, RenewFioAddressResponse, RenewFioDomainOptions, RenewFioDomainResponse, RequestFundsOptions, SentFioRequestsDecryptedResponse, SetFioDomainVisibilityOptions, SetFioDomainVisibilityResponse, StakeFioTokensOptions, TransactionResponse, TransferFioAddressOptions, TransferFioAddressResponse, TransferFioDomainOptions, TransferFioDomainResponse, TransferLockedTokensOptions, TransferLockedTokensResponse, TransferTokensKeyResponse, TransferTokensOptions, UnStakeFioTokensOptions } from './entities';
-import { RequestConfig } from './transactions/Request';
+import { AbiResponse, Account, AccountResponse, Action, AddBundledTransactionsOptions, AddBundledTransactionsResponse, AddPublicAddressesOptions, AddPublicAddressesResponse, AddPublicAddressOptions, AvailabilityResponse, BurnFioAddressOptions, BurnFioAddressResponse, CancelFundsRequestOptions, CancelFundsRequestResponse, CancelledFioRequestsDecryptedResponse, ContentType, GetEncryptKeyResponse, EndPoint, FetchJson, FioAddressesResponse, BalanceResponse, FioDomainsResponse, FioFeeResponse, FioLogger, FioNamesResponse, FioOracleFeesResponse, FioSdkOptions, RequestFundsResponse, GetAbiOptions, GetAccountOptions, GetAccountPubKeyOptions, GetCancelledFioRequestsOptions, GetEncryptKeyOptions, GetFeeForAddBundledTransactionsOptions, GetFeeForAddPublicAddressOptions, GetFeeForBurnFioAddressOptions, GetFeeForCancelFundsRequestOptions, GetFeeForNewFundsRequestOptions, GetFeeForRecordObtDataOptions, GetFeeForRejectFundsRequestOptions, GetFeeForRemoveAllPublicAddressesOptions, GetFeeForRemovePublicAddressesOptions, GetFeeForTransferFioAddressOptions, GetFeeForTransferFioDomainOptions, GetFeeForTransferLockedTokensOptions, GetFeeOptions, GetFioAddressesOptions, GetFioBalanceOptions, GetFioDomainsOptions, GetFioNamesOptions, GetFioPublicAddressOptions, GetGranteePermissionsOptions, GetGrantorPermissionsOptions, GetLocksOptions, GetNftsOptions, GetObjectPermissionsOptions, GetObtDataDecryptedResponse, GetObtDataOptions, GetOracleFeesOptions, GetPendingFioRequestsOptions, GetPublicAddressesOptions, GetPublicAddressOptions, GetReceivedFioRequestsOptions, GetSentFioRequestsOptions, IsAvailableOptions, LockPeriod, LocksResponse, NftsResponse, PendingFioRequestsDecryptedResponse, PermissionsResponse, PublicAddress, PublicAddressesResponse, PublicAddressResponse, PushTransactionOptions, ReceivedFioRequestsDecryptedResponse, RecordObtDataOptions, RecordObtDataResponse, RegisterFioAddressOptions, RegisterFioAddressResponse, RegisterFioDomainAddressOptions, RegisterFioDomainOptions, RegisterFioDomainResponse, RegisterOwnerFioAddressOptions, RegisterOwnerFioDomainOptions, RejectFundsRequestOptions, RejectFundsResponse, RemoveAllPublicAddressesOptions, RemoveAllPublicAddressesResponse, RemovePublicAddressesOptions, RemovePublicAddressesResponse, RenewFioAddressOptions, RenewFioAddressResponse, RenewFioDomainOptions, RenewFioDomainResponse, RequestFundsOptions, SentFioRequestsDecryptedResponse, SetFioDomainVisibilityOptions, SetFioDomainVisibilityResponse, StakeFioTokensOptions, TransactionResponse, TransferFioAddressOptions, TransferFioAddressResponse, TransferFioDomainOptions, TransferFioDomainResponse, TransferLockedTokensOptions, TransferLockedTokensResponse, TransferTokensResponse, TransferTokensOptions, UnStakeFioTokensOptions } from './entities';
+import { RequestConfig } from './transactions/Transactions';
 import * as fioConstants from './utils/constants';
 export * from './utils/validation';
 export * from './entities';
@@ -176,19 +176,19 @@ type GenericActions = {
     };
     [GenericAction.rejectFundsRequest]: {
         options: [RejectFundsRequestOptions];
-        response: Promise<RejectFundsRequestResponse>;
+        response: Promise<RejectFundsResponse>;
     };
     [GenericAction.requestFunds]: {
         options: [RequestFundsOptions];
-        response: Promise<FundsRequestResponse>;
+        response: Promise<RequestFundsResponse>;
     };
     [GenericAction.isAvailable]: {
         options: [IsAvailableOptions];
-        response: Promise<AvailabilityCheckResponse>;
+        response: Promise<AvailabilityResponse>;
     };
     [GenericAction.getFioBalance]: {
         options: [GetFioBalanceOptions];
-        response: Promise<FioBalanceResponse>;
+        response: Promise<BalanceResponse>;
     };
     [GenericAction.getFioNames]: {
         options: [GetFioNamesOptions];
@@ -236,7 +236,7 @@ type GenericActions = {
     };
     [GenericAction.transferTokens]: {
         options: [TransferTokensOptions];
-        response: Promise<TransferTokensKeyResponse>;
+        response: Promise<TransferTokensResponse>;
     };
     [GenericAction.stakeFioTokens]: {
         options: [StakeFioTokensOptions];
@@ -316,11 +316,11 @@ type GenericActions = {
     };
     [GenericAction.getAccountPubKey]: {
         options: [GetAccountPubKeyOptions];
-        response: Promise<AccountPubKeyResponse>;
+        response: Promise<AccountResponse>;
     };
     [GenericAction.getEncryptKey]: {
         options: [GetEncryptKeyOptions];
-        response: Promise<EncryptKeyResponse>;
+        response: Promise<GetEncryptKeyResponse>;
     };
 };
 export declare class FIOSDK {
@@ -473,7 +473,7 @@ export declare class FIOSDK {
      */
     static setRawAbiMissingWarnings(rawAbiName: string, fioSdkInstance: FIOSDK): void;
     config: RequestConfig;
-    static get abiMap(): import("./transactions/Request").ApiMap;
+    static get abiMap(): import("./transactions/Transactions").ApiMap;
     get transactions(): {
         createRawTransaction: ({ account, action, authPermission, data, publicKey, chainData, signingAccount }: {
             account: Account;
@@ -1166,7 +1166,7 @@ export declare class FIOSDK {
      * Should be preceded by [getFee] for correct value.
      * @param technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    rejectFundsRequest(fioRequestId: number, maxFee: number, technologyProviderId?: string | null): Promise<RejectFundsRequestResponse>;
+    rejectFundsRequest(fioRequestId: number, maxFee: number, technologyProviderId?: string | null): Promise<RejectFundsResponse>;
     /**
      * Reject funds request.
      *
@@ -1175,7 +1175,7 @@ export declare class FIOSDK {
      * Should be preceded by [getFee] for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    rejectFundsRequest(options: RejectFundsRequestOptions): Promise<RejectFundsRequestResponse>;
+    rejectFundsRequest(options: RejectFundsRequestOptions): Promise<RejectFundsResponse>;
     /**
      * Create a new funds request on the FIO chain.
      *
@@ -1196,7 +1196,7 @@ export declare class FIOSDK {
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      * @param options.tokenCode Code of the token represented in amount requested.
      */
-    requestFunds(options: RequestFundsOptions): Promise<FundsRequestResponse>;
+    requestFunds(options: RequestFundsOptions): Promise<RequestFundsResponse>;
     /**
      * @deprecated
      * Retrieves info on locks for this pub key
@@ -1229,26 +1229,26 @@ export declare class FIOSDK {
      *
      * @param fioName FIO Address or FIO Domain to check.
      */
-    isAvailable(fioName: string): Promise<AvailabilityCheckResponse>;
+    isAvailable(fioName: string): Promise<AvailabilityResponse>;
     /**
      * Checks if a FIO Address or FIO Domain is available for registration.
      *
      * @param options.fioName FIO Address or FIO Domain to check.
      */
-    isAvailable(options: IsAvailableOptions): Promise<AvailabilityCheckResponse>;
+    isAvailable(options: IsAvailableOptions): Promise<AvailabilityResponse>;
     /**
      * @deprecated
      * Retrieves balance of FIO tokens
      *
      * @param fioPublicKey FIO public key.
      */
-    getFioBalance(fioPublicKey?: string | null): Promise<FioBalanceResponse>;
+    getFioBalance(fioPublicKey?: string | null): Promise<BalanceResponse>;
     /**
      * Retrieves balance of FIO tokens
      *
      * @param options.fioPublicKey FIO public key.
      */
-    getFioBalance(options: GetFioBalanceOptions): Promise<FioBalanceResponse>;
+    getFioBalance(options: GetFioBalanceOptions): Promise<BalanceResponse>;
     /**
      * @deprecated
      * Returns FIO Addresses and FIO Domains owned by this public key.
@@ -1423,7 +1423,7 @@ export declare class FIOSDK {
      * Should be preceded by /get_fee for correct value.
      * @param technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    transferTokens(payeeFioPublicKey: string, amount: number, maxFee: number, technologyProviderId?: string | null): Promise<TransferTokensKeyResponse>;
+    transferTokens(payeeFioPublicKey: string, amount: number, maxFee: number, technologyProviderId?: string | null): Promise<TransferTokensResponse>;
     /**
      * Transfers FIO tokens from public key associated with the FIO SDK instance to
      * the payeePublicKey.
@@ -1434,7 +1434,7 @@ export declare class FIOSDK {
      * Should be preceded by /get_fee for correct value.
      * @param options.technologyProviderId FIO Address of the wallet which generates this transaction.
      */
-    transferTokens(options: TransferTokensOptions): Promise<TransferTokensKeyResponse>;
+    transferTokens(options: TransferTokensOptions): Promise<TransferTokensResponse>;
     /**
      * @deprecated
      * Compute and return fee amount for specific call and specific user
@@ -1692,24 +1692,24 @@ export declare class FIOSDK {
      * @deprecated
      * @description Method to get public key by account name.
      */
-    getAccountPubKey(account: string): Promise<AccountPubKeyResponse>;
+    getAccountPubKey(account: string): Promise<AccountResponse>;
     /**
      * @description Method to get public key by account name.
      */
-    getAccountPubKey(options: GetAccountPubKeyOptions): Promise<AccountPubKeyResponse>;
+    getAccountPubKey(options: GetAccountPubKeyOptions): Promise<AccountResponse>;
     /**
      * @deprecated
      * @description Method returns FIO Public Key that was set for encrypt/decrypt data.
      * By default, it is the same as FIO Handle wallet public key.
      * @param fioAddress FIO public key
      */
-    getEncryptKey(fioAddress: string): Promise<EncryptKeyResponse>;
+    getEncryptKey(fioAddress: string): Promise<GetEncryptKeyResponse>;
     /**
      * @description Method returns FIO Public Key that was set for encrypt/decrypt data.
      * By default, it is the same as FIO Handle wallet public key.
      * @param options.fioAddress FIO public key
      */
-    getEncryptKey(options: GetEncryptKeyOptions): Promise<EncryptKeyResponse>;
+    getEncryptKey(options: GetEncryptKeyOptions): Promise<GetEncryptKeyResponse>;
     genericAction<T extends GenericAction | `${GenericAction}`>(action: T, ...args: GenericActions[typeof GenericAction[T]]['options']): GenericActions[typeof GenericAction[T]]['response'];
     /**
      * @ignore

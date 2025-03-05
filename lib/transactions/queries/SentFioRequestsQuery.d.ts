@@ -1,5 +1,5 @@
 import { EncryptKeyResponse, KeysPair, SentFioRequestsDecryptedResponse, SentFioRequestsResponse } from '../../entities';
-import { RequestConfig } from '../Request';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type SentFioRequestsQueryProps = {
     fioPublicKey: string;
