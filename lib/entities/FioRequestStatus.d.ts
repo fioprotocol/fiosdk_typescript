@@ -1,4 +1,2 @@
-export declare enum FioRequestStatus {
-    sent_to_blockchain = "sent_to_blockchain"
-}
+export { RequestStatus as FioRequestStatus } from './RequestStatus';
 //# sourceMappingURL=FioRequestStatus.d.ts.map

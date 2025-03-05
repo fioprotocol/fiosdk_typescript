@@ -1,4 +1,4 @@
-import { RequestStatus } from '../RequestStatus';
+import { FioRequestStatus } from '../FioRequestStatus';
 export type RecordObtDataOptions = {
     obtId: string;
     amount: number;
@@ -14,7 +14,7 @@ export type RecordObtDataOptions = {
     memo?: string | null;
     offLineUrl?: string | null;
     payeeFioPublicKey?: string | null;
-    status?: RequestStatus | null;
+    status?: FioRequestStatus | null;
     encryptPrivateKey?: string | null;
     technologyProviderId?: string | null;
 };

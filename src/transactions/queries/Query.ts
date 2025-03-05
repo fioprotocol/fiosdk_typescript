@@ -1,7 +1,7 @@
 import {EndPoint} from '../../entities'
-import {Request} from '../Request'
+import {Transactions} from '../Transactions'
 
-export abstract class Query<T = any, R = any> extends Request {
+export abstract class Query<T = any, R = any> extends Transactions {
     public abstract ENDPOINT: `chain/${EndPoint}`
 
     public isEncrypted = false

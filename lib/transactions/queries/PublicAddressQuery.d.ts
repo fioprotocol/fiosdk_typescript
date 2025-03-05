@@ -1,5 +1,5 @@
 import { PublicAddressResponse } from '../../entities';
-import { RequestConfig } from '../Request';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type PublicAddressQueryProps = {
     fioAddress: string;

@@ -1,5 +1,5 @@
 import { EncryptKeyResponse, KeysPair, PendingFioRequestsDecryptedResponse, PendingFioRequestsResponse } from '../../entities';
-import { RequestConfig } from '../Request';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type PendingFioRequestsQueryProps = {
     fioPublicKey: string;

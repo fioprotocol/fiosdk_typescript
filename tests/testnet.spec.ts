@@ -13,7 +13,7 @@ import {
     EndPoint,
     FIOSDK,
     FioSentItem,
-    RenewFioAddressResponse, RequestStatus,
+    RenewFioAddressResponse, FioRequestStatus,
     TransactionResponse,
 } from '../src/FIOSDK'
 
@@ -1396,7 +1396,7 @@ describe('Request funds, approve and send', () => {
             payeeTokenPublicAddress: publicKey2,
             payerFioAddress: testFioAddressName,
             payerTokenPublicAddress: publicKey,
-            status: RequestStatus.sentToBlockchain,
+            status: FioRequestStatus.sentToBlockchain,
             tokenCode: fioTokenCode,
         })
         expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')
@@ -2688,7 +2688,7 @@ describe('Record obt data, check', () => {
             payeeTokenPublicAddress: publicKey2,
             payerFioAddress: testFioAddressName,
             payerTokenPublicAddress: publicKey,
-            status: RequestStatus.sentToBlockchain,
+            status: FioRequestStatus.sentToBlockchain,
             tokenCode: fioTokenCode,
         })
         expect(result).to.have.all.keys('transaction_id', 'block_num', 'block_time', 'status', 'fee_collected')

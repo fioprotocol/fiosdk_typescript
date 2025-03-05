@@ -1,5 +1,5 @@
 import { EncryptKeyResponse, GetObtDataDecryptedResponse, GetObtDataResponse, KeysPair } from '../../entities';
-import { RequestConfig } from '../Request';
+import { RequestConfig } from '../Transactions';
 import { Query } from './Query';
 export type ObtDataQueryProps = {
     fioPublicKey: string;
