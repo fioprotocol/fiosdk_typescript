@@ -30,6 +30,7 @@ import {
     FioSdkOptions,
     RequestFundsResponse, GetAbiOptions,
     GetAccountOptions,
+    GetAccountPubKeyResponse,
     GetAccountPubKeyOptions,
     GetCancelledFioRequestsOptions,
     GetEncryptKeyOptions,
@@ -437,7 +438,7 @@ type GenericActions = {
     }
     [GenericAction.getAccountPubKey]: {
         options: [GetAccountPubKeyOptions]
-        response: Promise<AccountResponse>,
+        response: Promise<GetAccountPubKeyResponse>,
     }
     [GenericAction.getEncryptKey]: {
         options: [GetEncryptKeyOptions]
@@ -3049,12 +3050,12 @@ export class FIOSDK {
      * @deprecated
      * @description Method to get public key by account name.
      */
-    public getAccountPubKey(account: string): Promise<AccountResponse>
+    public getAccountPubKey(account: string): Promise<GetAccountPubKeyResponse>
     /**
      * @description Method to get public key by account name.
      */
-    public getAccountPubKey(options: GetAccountPubKeyOptions): Promise<AccountResponse>
-    public getAccountPubKey(): Promise<AccountResponse> {
+    public getAccountPubKey(options: GetAccountPubKeyOptions): Promise<GetAccountPubKeyResponse>
+    public getAccountPubKey(): Promise<GetAccountPubKeyResponse> {
         const args = resolveOptions<GetAccountPubKeyOptions>({keys: ['account'], arguments: Array.from(arguments)})
         const getAccountPubKey = new queries.GetAccountPubKey(this.config, args)
         return getAccountPubKey.execute(this.publicKey)

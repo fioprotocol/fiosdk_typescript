@@ -1,16 +1,13 @@
-import chai from 'chai';
+import { expect } from 'chai';
 import 'mocha';
 import { FIOSDK } from '../../src/FIOSDK';
-
-const { expect } = chai;
-
-import type { ErrorType } from '../utils';
+import { ErrorType } from '../utils';
 
 const wrongBaseUrl = 'https://wrong-url-test.test.com/'
 const wrongBaseUrl2 = 'https://wrong-url-test-2.com/'
 
 
-export const wrongRequestsTests = ({ fioSdk, baseUrls, fioSdkWithWrongBaseUrl }: { fioSdk: FIOSDK, baseUrls: string[], fioSdkWithWrongBaseUrl: FIOSDK }) =>
+export const WrongRequestsTests = ({ fioSdk, baseUrls, fioSdkWithWrongBaseUrl }: { fioSdk: FIOSDK, baseUrls: string[], fioSdkWithWrongBaseUrl: FIOSDK }) =>
   describe('Testing request timeout on wrong url and 40x errors', () => {
     const baseUrlsList = [
         ...baseUrls,
@@ -136,7 +133,6 @@ export const wrongRequestsTests = ({ fioSdk, baseUrls, fioSdkWithWrongBaseUrl }:
     })
 
     it(`Make removePublicAddresses request with wrong parameter and correct base url`, async () => {
-      fioSdkWithWrongBaseUrl.setApiUrls(baseUrls)
       try {
         await fioSdk.genericAction('removePublicAddresses', {
           fioAddress: '',
@@ -163,7 +159,9 @@ export const wrongRequestsTests = ({ fioSdk, baseUrls, fioSdkWithWrongBaseUrl }:
       }
     })
 
-    it(`Return back correct baseUrls`, () => {
-      fioSdkWithWrongBaseUrl.setApiUrls(baseUrls)
+    it(`Be sure that fiosdk instance is not affected by wrong base urls instance`, () => {
+      expect(fioSdk.config.baseUrls.includes(wrongBaseUrl)).to.be.false
+      expect(fioSdk.config.baseUrls.includes(wrongBaseUrl2)).to.be.false
+      expect(fioSdkWithWrongBaseUrl.config.baseUrls.includes(wrongBaseUrl)).to.be.true
     })
 });
