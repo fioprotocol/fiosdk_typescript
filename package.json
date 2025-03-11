@@ -1,6 +1,6 @@
 {
     "name": "@fioprotocol/fiosdk",
-    "version": "1.9.4",
+    "version": "1.10.0",
     "description": "The Foundation for Interwallet Operability (FIO) is a consortium of leading blockchain wallets, exchanges and payments providers that seeks to accelerate blockchain adoption by reducing the risk, complexity, and inconvenience of sending and receiving cryptoassets.",
     "keywords": [
         "fio",
