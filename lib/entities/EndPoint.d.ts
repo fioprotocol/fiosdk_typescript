@@ -52,6 +52,8 @@ export declare enum EndPoint {
     getSentFioRequests = "get_sent_fio_requests",
     getBlock = "get_block",
     getInfo = "get_info",
-    getTableRows = "get_table_rows"
+    getTableRows = "get_table_rows",
+    voteProxy = "proxy_vote",
+    voteProducer = "vote_producer"
 }
 //# sourceMappingURL=EndPoint.d.ts.map

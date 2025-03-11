@@ -53,4 +53,6 @@ export enum EndPoint {
     getBlock = 'get_block',
     getInfo = 'get_info',
     getTableRows = 'get_table_rows',
+    voteProxy = 'proxy_vote',
+    voteProducer = 'vote_producer',
 }

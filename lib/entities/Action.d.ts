@@ -27,6 +27,9 @@ export declare enum Action {
     addNft = "addnft",
     addPerm = "addperm",
     voteProducer = "voteproducer",
-    updateCryptKey = "updcryptkey"
+    updateCryptKey = "updcryptkey",
+    voteProxy = "voteproxy",
+    unwrapTokens = "unwraptokens",
+    unwrapDomain = "unwrapdomain"
 }
 //# sourceMappingURL=Action.d.ts.map
