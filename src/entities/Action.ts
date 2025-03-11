@@ -28,4 +28,7 @@ export enum Action {
     addPerm = 'addperm',
     voteProducer = 'voteproducer',
     updateCryptKey = 'updcryptkey',
+    voteProxy = 'voteproxy',
+    unwrapTokens = 'unwraptokens',
+    unwrapDomain = 'unwrapdomain'
 }
