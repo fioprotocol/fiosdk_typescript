@@ -84,6 +84,19 @@ before(async () => {
         console.log(e)
     }
 
+    const fioSdkFaucet = new FIOSDK({
+        privateKey: faucetPriv,
+        publicKey: faucetPub,
+        apiUrls: baseUrls,
+        fetchJson,
+    })
+
+    await fioSdkFaucet.transferTokens({
+        payeeFioPublicKey: publicKey,
+        amount: defaultFee * 4,
+        maxFee: defaultFee,
+    })
+
     await timeout(4000)
 })
 

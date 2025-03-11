@@ -77,19 +77,15 @@ export const FioRequestsWithDifferentEncryptKeysTests = ({
         apiUrls: baseUrls,
         fetchJson,
       })
-      console.log('faucetPriv', faucetPriv);
-      console.log('faucetPub', faucetPub);
+
       const fioDomainFee = await fioSdkFaucet.getFee({
         endPoint: EndPoint.registerFioDomain,
       });
       const fioAddressFee = await fioSdkFaucet.getFee({
         endPoint: EndPoint.registerFioAddress,
       });
-      console.log('fioDomainFee', fioDomainFee);
-      console.log('fioAddressFee', fioAddressFee);
-      console.log(Number(fioDomainFee.fee), Number(fioAddressFee.fee));
+
       const fundsAmount = Number(fioDomainFee.fee) + Number(fioAddressFee.fee) + Number(FIOSDK.SUFUnit * 300);
-      console.log('fundsAmount', fundsAmount);
 
       await fioSdkFaucet.genericAction('transferTokens', {
         payeeFioPublicKey: encPublicKey,
