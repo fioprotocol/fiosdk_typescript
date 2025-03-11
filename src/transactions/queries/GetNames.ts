@@ -1,16 +1,21 @@
-import { FioNamesResponse } from '../../entities/FioNamesResponse'
-import { Query } from './Query'
+import {EndPoint, FioNamesResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetNames extends Query<FioNamesResponse> {
-  public ENDPOINT: string = 'chain/get_fio_names'
-  public fioPublicKey: string
+export type FioNamesQueryProps = {
+    fioPublicKey: string,
+}
 
-  constructor(fioPublicKey: string) {
-    super()
-    this.fioPublicKey = fioPublicKey
-  }
+export type FioNamesQueryData = {
+    fio_public_key: string,
+}
 
-  public getData() {
-    return { fio_public_key: this.fioPublicKey }
-  }
+export class GetNames extends Query<FioNamesQueryData, FioNamesResponse> {
+    public ENDPOINT = `chain/${EndPoint.getFioNames}` as const
+
+    constructor(config: RequestConfig, public props: FioNamesQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({fio_public_key: this.props.fioPublicKey})
 }

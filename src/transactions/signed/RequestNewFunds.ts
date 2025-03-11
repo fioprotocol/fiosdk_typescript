@@ -1,91 +1,98 @@
-import { validationRules } from '../../utils/validation'
+import {
+    Account,
+    Action,
+    ContentType,
+    EndPoint,
+    FioSentItemContent,
+    RequestFundsResponse,
+    FioRequestStatus,
+} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class RequestNewFunds extends SignedTransaction {
-
-  public ENDPOINT: string = 'chain/new_funds_request'
-  public ACTION: string = 'newfundsreq'
-  public ACCOUNT: string = 'fio.reqobt'
-
-  public payerFioAddress: string
-  public payerFioPublicKey: string
-  public payeeFioAddress: string
-  public chainCode: string
-  public tokenCode: string
-  public maxFee: number
-  public content: any
-  public technologyProviderId: string
-  public encryptPrivateKey: string | null
-
-  constructor({
-    amount,
-    chainCode,
-    encryptPrivateKey = null,
-    hash = null,
-    maxFee,
-    memo = null,
-    offlineUrl = null,
-    payeeFioAddress,
-    payeeTokenPublicAddress,
-    payerFioAddress,
-    payerFioPublicKey,
-    technologyProviderId = '',
-    tokenCode,
-  }: {
-    amount: number,
-    chainCode: string,
-    encryptPrivateKey: string | null,
-    hash?: string | null,
-    maxFee: number,
-    memo: string | null,
-    offlineUrl: string | null,
-    payeeFioAddress: string,
-    payeeTokenPublicAddress: string,
-    payerFioAddress: string,
-    payerFioPublicKey: string,
-    technologyProviderId: string,
+export type FundsRequestRequestProps = {
+    amount: number
+    maxFee: number
+    chainCode: string
     tokenCode: string,
-  }) {
-    super()
-    this.validationData = { payerFioAddress, payeeFioAddress, tokenCode, tpid: technologyProviderId || null }
-    this.validationRules = validationRules.newFundsRequest
+    payeeFioAddress: string
+    payerFioAddress: string
+    payeeTokenPublicAddress: string
+    payerFioPublicKey?: string
+    hash?: string
+    memo?: string
+    offlineUrl?: string
+    encryptPrivateKey?: string
+    technologyProviderId: string,
+}
 
-    this.payerFioAddress = payerFioAddress
-    this.payerFioPublicKey = payerFioPublicKey
-    this.payeeFioAddress = payeeFioAddress
-    this.chainCode = chainCode
-    this.tokenCode = tokenCode
-    this.maxFee = maxFee
-    this.content = {
-      payee_public_address: payeeTokenPublicAddress,
-      amount: `${amount}`,
-      chain_code: chainCode,
-      token_code: tokenCode,
-      memo,
-      hash,
-      offline_url: offlineUrl,
-    }
-    this.encryptPrivateKey = encryptPrivateKey
+export type FundsRequestRequestData = {
+    actor: string
+    content: string
+    max_fee: number
+    payee_fio_address: string
+    payer_fio_address: string
+    tpid: string,
+}
 
-    if (technologyProviderId) {
-      this.technologyProviderId = technologyProviderId
-    } else {
-      this.technologyProviderId = ''
-    }
-  }
+export class RequestNewFunds extends SignedTransaction<
+    FundsRequestRequestData,
+    RequestFundsResponse
+> {
 
-  public getData(): any {
-    const actor = this.getActor()
-    const cipherContent = this.getCipherContent('new_funds_content', this.content, this.encryptPrivateKey || this.privateKey, this.payerFioPublicKey)
-    const data = {
-      payer_fio_address: this.payerFioAddress,
-      payee_fio_address: this.payeeFioAddress,
-      content: cipherContent,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
-      actor,
+    public ENDPOINT = `chain/${EndPoint.newFundsRequest}` as const
+    public ACTION = Action.newFundsRequest
+    public ACCOUNT = Account.reqObt
+
+    public props: ReturnType<RequestNewFunds['getResolvedProps']>
+
+    constructor(config: RequestConfig, props: FundsRequestRequestProps) {
+        super(config)
+
+        this.props = this.getResolvedProps(props)
+
+        this.validationData = {
+            payeeFioAddress: this.props.payeeFioAddress,
+            payerFioAddress: this.props.payerFioAddress,
+            tokenCode: this.props.tokenCode,
+            tpid: this.props.technologyProviderId,
+        }
+        this.validationRules = validationRules.newFundsRequest
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        content: this.getCipherContent(
+            ContentType.newFundsContent,
+            this.getResolvedContent(),
+            this.props.encryptPrivateKey || this.privateKey,
+            this.props.payerFioPublicKey,
+        ),
+        max_fee: this.props.maxFee,
+        payee_fio_address: this.props.payeeFioAddress,
+        payer_fio_address: this.props.payerFioAddress,
+        tpid: this.props.technologyProviderId,
+    })
+
+    public getResolvedProps = (props: FundsRequestRequestProps) => ({
+        ...props,
+        encryptPrivateKey: props.encryptPrivateKey ?? null,
+        hash: props.hash ?? null,
+        memo: props.memo ?? null,
+        offlineUrl: props.offlineUrl ?? null,
+        payerFioPublicKey: props.payerFioPublicKey ?? '',
+    })
+
+    public getResolvedContent = (): FioSentItemContent => ({
+        amount: `${this.props.amount}`,
+        chain_code: this.props.chainCode,
+        hash: this.props.hash,
+        memo: this.props.memo,
+        offline_url: this.props.offlineUrl,
+        payee_public_address: this.props.payeeTokenPublicAddress,
+        status: FioRequestStatus.requested,
+        token_code: this.props.tokenCode,
+    })
 
 }

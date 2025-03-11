@@ -1,36 +1,40 @@
-import { Constants } from '../../utils/constants'
+import {Account, Action, EndPoint, TransferFioDomainResponse} from '../../entities'
 import { validationRules } from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class TransferFioDomain extends SignedTransaction {
-    public ENDPOINT: string = 'chain/transfer_fio_domain'
-    public ACTION: string = 'xferdomain'
-    public ACCOUNT: string = Constants.defaultAccount
-    public fioDomain: string
-    public newOwnerKey: string
-    public maxFee: number
-    public technologyProviderId: string
+export type TransferFioDomainRequestProps = {
+    fioDomain: string
+    newOwnerKey: string
+    maxFee: number
+    technologyProviderId: string,
+}
 
-    constructor(fioDomain: string, newOwnerKey: string, maxFee: number, technologyProviderId: string = '') {
-        super()
-        this.fioDomain = fioDomain
-        this.newOwnerKey =  newOwnerKey
-        this.maxFee = maxFee
-        this.technologyProviderId = technologyProviderId
+export type TransferFioDomainRequestData = {
+    actor: string,
+    fio_domain: string
+    max_fee: number
+    new_owner_fio_public_key: string
+    tpid: string,
+}
 
-        this.validationData = { fioDomain, tpid: technologyProviderId || null }
+export class TransferFioDomain extends SignedTransaction<TransferFioDomainRequestData, TransferFioDomainResponse> {
+    public ENDPOINT = `chain/${EndPoint.transferFioDomain}` as const
+    public ACTION = Action.transferDomain
+    public ACCOUNT = Account.address
+
+    constructor(config: RequestConfig, public props: TransferFioDomainRequestProps) {
+        super(config)
+
+        this.validationData = { fioDomain: props.fioDomain, tpid: props.technologyProviderId }
         this.validationRules = validationRules.registerFioDomain
     }
 
-    public getData(): any {
-        const actor = this.getActor()
-        const data = {
-            fio_domain: this.fioDomain,
-            new_owner_fio_public_key: this.newOwnerKey,
-            actor,
-            tpid: this.technologyProviderId,
-            max_fee: this.maxFee,
-        }
-        return data
-    }
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_domain: this.props.fioDomain,
+        max_fee: this.props.maxFee,
+        new_owner_fio_public_key: this.props.newOwnerKey,
+        tpid: this.props.technologyProviderId,
+    })
 }

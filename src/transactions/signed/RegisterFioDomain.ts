@@ -1,37 +1,41 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, RegisterFioDomainResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class RegisterFioDomain extends SignedTransaction {
+export type RegisterFioDomainRequestProps = {
+    fioDomain: string
+    maxFee: number
+    ownerPublicKey?: string
+    technologyProviderId: string,
+}
 
-  public ENDPOINT: string = 'chain/register_fio_domain'
-  public ACTION: string = 'regdomain'
-  public ACCOUNT: string = Constants.defaultAccount
-  public fioDomain: string
-  public ownerPublicKey: string
-  public maxFee: number
-  public technologyProviderId: string
+export type RegisterFioDomainRequestData = {
+    actor: string
+    fio_domain: string
+    max_fee: number
+    owner_fio_public_key: string
+    tpid: string,
+}
 
-  constructor(fioDomain: string, ownerPublicKey: string | null, maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioDomain = fioDomain
-    this.ownerPublicKey = ownerPublicKey || ''
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
-    this.validationData = { fioDomain, tpid: technologyProviderId || null }
-    this.validationRules = validationRules.registerFioDomain
-  }
+export class RegisterFioDomain extends SignedTransaction<RegisterFioDomainRequestData, RegisterFioDomainResponse> {
+    public ENDPOINT = `chain/${EndPoint.registerFioDomain}` as const
+    public ACTION = Action.regDomain
+    public ACCOUNT = Account.address
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      fio_domain: this.fioDomain,
-      owner_fio_public_key: this.ownerPublicKey || this.publicKey,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
-      actor,
+    constructor(config: RequestConfig, public props: RegisterFioDomainRequestProps) {
+        super(config)
+
+        this.validationData = {fioDomain: props.fioDomain, tpid: props.technologyProviderId}
+        this.validationRules = validationRules.registerFioDomain
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_domain: this.props.fioDomain,
+        max_fee: this.props.maxFee,
+        owner_fio_public_key: this.props.ownerPublicKey || this.publicKey,
+        tpid: this.props.technologyProviderId,
+    })
 
 }

@@ -1,17 +1,21 @@
-import { AccountResponse } from '../../entities/AccountResponse'
-import { Query } from './Query'
+import {AccountResponse, EndPoint} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetAccount extends Query<AccountResponse> {
-  public ENDPOINT: string = 'chain/get_account'
-  public accountToUse: string
+export type AccountQueryProps = {
+    actor: string,
+}
 
-  constructor(actor: string) {
-    super()
-    this.accountToUse = actor
-  }
+export type AccountQueryData = {
+    account_name: string,
+}
 
-  public getData() {
-    return { account_name: this.accountToUse }
-  }
+export class GetAccount extends Query<AccountQueryData, AccountResponse> {
+    public ENDPOINT = `chain/${EndPoint.getAccount}` as const
 
+    constructor(config: RequestConfig, public props: AccountQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({account_name: this.props.actor})
 }

@@ -1,14 +1,10 @@
-import { FioOracleFeesResponse} from '../../entities/FioFeeResponse'
-import { Query } from './Query'
+import {EndPoint, FioOracleFeesResponse} from '../../entities'
+import {Query} from './Query'
 
-export class GetOracleFees extends Query<FioOracleFeesResponse> {
-  public ENDPOINT: string = 'chain/get_oracle_fees'
+export class GetOracleFees extends Query<void, FioOracleFeesResponse> {
+    public ENDPOINT = `chain/${EndPoint.getOracleFees}` as const
 
-  constructor() {
-    super()
-  }
-
-  public getData() {
-    return
-  }
+    public getData() {
+        return
+    }
 }

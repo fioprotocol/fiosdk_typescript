@@ -1,0 +1,1 @@
+{"version":3,"file":"FioBalanceResponse.d.ts","sourceRoot":"","sources":["../../../src/entities/responses/FioBalanceResponse.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,kBAAkB,GAAG;IAC7B,OAAO,EAAE,MAAM,CAAA;IACf,SAAS,EAAE,MAAM,CAAA;IACjB,MAAM,EAAE,MAAM,CAAA;IACd,IAAI,EAAE,MAAM,CAAA;IACZ,GAAG,EAAE,MAAM,CAAC;CACf,CAAA"}

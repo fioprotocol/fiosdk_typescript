@@ -1,4 +1,4 @@
-export { AddPublicAddress } from './AddPublicAddress'
+export { AddPublicAddresses } from './AddPublicAddress'
 export { RemovePublicAddresses } from './RemovePublicAddresses'
 export { RemoveAllPublicAddresses } from './RemoveAllPublicAddresses'
 export { SetFioDomainVisibility } from './SetFioDomainVisibility'

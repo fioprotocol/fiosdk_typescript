@@ -1,0 +1,1 @@
+{"version":3,"file":"StakeFioTokensOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/StakeFioTokensOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,qBAAqB,GAAG;IAChC,MAAM,EAAE,MAAM,CAAA;IACd,UAAU,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;IAC1B,MAAM,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;IACtB,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxC,CAAA"}

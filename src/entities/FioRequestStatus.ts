@@ -1,3 +1,1 @@
-export enum FioRequestStatus {
-  sent_to_blockchain,
-}
+export { RequestStatus as FioRequestStatus } from './RequestStatus';

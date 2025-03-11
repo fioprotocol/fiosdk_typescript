@@ -1,6 +1,1 @@
-export interface RejectFundsResponse {
-  transaction_id: string,
-  block_num: number,
-  status: string,
-  fee_collected: number
-}
+export { RejectFundsRequestResponse as RejectFundsResponse } from './responses/RejectFundsRequestResponse';

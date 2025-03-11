@@ -1,36 +1,43 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, AddBundledTransactionsResponse, EndPoint} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class AddBundledTransactions extends SignedTransaction {
-    public ENDPOINT: string = 'chain/add_bundled_transactions'
-    public ACTION: string = 'addbundles'
-    public ACCOUNT: string = Constants.defaultAccount
-    public fioAddress: string
-    public bundleSets: number
-    public maxFee: number
-    public technologyProviderId: string
+export type AddBundledTransactionsRequestProps = {
+    fioAddress: string;
+    bundleSets: number;
+    maxFee: number;
+    technologyProviderId: string
+}
 
-    constructor(fioAddress: string, bundleSets: number, maxFee: number, technologyProviderId: string = '') {
-        super()
-        this.fioAddress = fioAddress
-        this.bundleSets = bundleSets
-        this.maxFee = maxFee
-        this.technologyProviderId = technologyProviderId
+export type AddBundledTransactionsRequestData = {
+    actor: any;
+    bundle_sets: number;
+    fio_address: string;
+    max_fee: number;
+    tpid: string;
+}
 
-        this.validationData = { fioAddress, tpid: technologyProviderId || null }
+export class AddBundledTransactions extends SignedTransaction<
+    AddBundledTransactionsRequestData,
+    AddBundledTransactionsResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.addBundledTransactions}` as const
+    public ACTION = Action.addBundledTransactions
+    public ACCOUNT = Account.address
+
+    constructor(config: RequestConfig, public props: AddBundledTransactionsRequestProps) {
+        super(config)
+
+        this.validationData = {fioAddress: props.fioAddress, tpid: props.technologyProviderId}
         this.validationRules = validationRules.registerFioAddress
     }
 
-    public getData(): any {
-        const actor = this.getActor()
-        const data = {
-            fio_address: this.fioAddress,
-            bundle_sets: this.bundleSets,
-            actor,
-            tpid: this.technologyProviderId,
-            max_fee: this.maxFee,
-        }
-        return data
-    }
+    public getData = () => ({
+        actor: this.getActor(),
+        bundle_sets: this.props.bundleSets,
+        fio_address: this.props.fioAddress,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 }

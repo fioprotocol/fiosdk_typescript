@@ -1,0 +1,1 @@
+{"version":3,"file":"RegisterFioAddressOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/RegisterFioAddressOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,yBAAyB,GAAG;IACpC,UAAU,EAAE,MAAM,CAAA;IAClB,MAAM,EAAE,MAAM,CAAA;IACd,gBAAgB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;IAChC,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxC,CAAA"}

@@ -1,37 +1,43 @@
-import { PublicAddress } from '../../entities/PublicAddress'
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, PublicAddress, RemovePublicAddressesResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class RemovePublicAddresses extends SignedTransaction {
-  public ENDPOINT: string = 'chain/remove_pub_address'
-  public ACTION: string = 'remaddress'
-  public ACCOUNT: string = Constants.defaultAccount
-  public fioAddress: string
-  public publicAddresses: PublicAddress[]
-  public maxFee: number
-  public technologyProviderId: string
+export type RemovePublicAddressesRequestProps = {
+    fioAddress: string
+    publicAddresses: PublicAddress[]
+    maxFee: number
+    technologyProviderId: string,
+}
 
-  constructor(fioAddress: string, publicAddresses: PublicAddress[], maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioAddress = fioAddress
-    this.publicAddresses = publicAddresses
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
+export type RemovePublicAddressesRequestData = {
+    actor: string
+    fio_address: string
+    max_fee: number
+    public_addresses: PublicAddress[]
+    tpid: string,
+}
 
-    this.validationData = { fioAddress, tpid: technologyProviderId || null }
-    this.validationRules = validationRules.addPublicAddressRules
-  }
+export class RemovePublicAddresses extends SignedTransaction<
+    RemovePublicAddressesRequestData,
+    RemovePublicAddressesResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.removePublicAddress}` as const
+    public ACTION = Action.removeAddress
+    public ACCOUNT = Account.address
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      fio_address: this.fioAddress,
-      public_addresses: this.publicAddresses,
-      actor,
-      tpid: this.technologyProviderId,
-      max_fee: this.maxFee,
+    constructor(config: RequestConfig, public props: RemovePublicAddressesRequestProps) {
+        super(config)
+
+        this.validationData = {fioAddress: props.fioAddress, tpid: props.technologyProviderId}
+        this.validationRules = validationRules.addPublicAddressRules
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_address: this.props.fioAddress,
+        max_fee: this.props.maxFee,
+        public_addresses: this.props.publicAddresses,
+        tpid: this.props.technologyProviderId,
+    })
 }

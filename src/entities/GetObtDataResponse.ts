@@ -1,6 +1,1 @@
-import { GetObtDataRecord } from './GetObtDataRecord'
-
-export interface GetObtDataResponse {
-  obt_data_records: GetObtDataRecord[],
-  more: number
-}
+export { GetObtDataResponse, GetObtDataDecryptedResponse } from './responses/GetObtDataResponse';

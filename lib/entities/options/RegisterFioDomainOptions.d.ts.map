@@ -1,0 +1,1 @@
+{"version":3,"file":"RegisterFioDomainOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/RegisterFioDomainOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,wBAAwB,GAAG;IACnC,SAAS,EAAE,MAAM,CAAA;IACjB,MAAM,EAAE,MAAM,CAAA;IACd,cAAc,CAAC,EAAE,MAAM,CAAA;IACvB,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;IACpC,gBAAgB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACpC,CAAA"}

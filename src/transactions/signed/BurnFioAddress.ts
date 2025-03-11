@@ -1,33 +1,37 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, BurnFioAddressResponse, EndPoint} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class BurnFioAddress extends SignedTransaction {
-    public ENDPOINT: string = 'chain/burn_fio_address'
-    public ACTION: string = 'burnaddress'
-    public ACCOUNT: string = Constants.defaultAccount
-    public fioAddress: string
-    public maxFee: number
-    public technologyProviderId: string
+export type BurnFioAddressRequestProps = {
+    fioAddress: string;
+    maxFee: number;
+    technologyProviderId: string;
+}
 
-    constructor(fioAddress: string, maxFee: number, technologyProviderId: string = '') {
-        super()
-        this.fioAddress = fioAddress
-        this.maxFee = maxFee
-        this.technologyProviderId = technologyProviderId
+export type BurnFioAddressRequestData = {
+    fio_address: string;
+    actor: string;
+    tpid: string;
+    max_fee: number;
+}
 
-        this.validationData = { fioAddress, tpid: technologyProviderId || null }
+export class BurnFioAddress extends SignedTransaction<BurnFioAddressRequestData, BurnFioAddressResponse> {
+    public ENDPOINT = `chain/${EndPoint.burnFioAddress}` as const
+    public ACTION = Action.burnAddress
+    public ACCOUNT = Account.address
+
+    constructor(config: RequestConfig, public props: BurnFioAddressRequestProps) {
+        super(config)
+
+        this.validationData = {fioAddress: props.fioAddress, tpid: props.technologyProviderId}
         this.validationRules = validationRules.registerFioAddress
     }
 
-    public getData(): any {
-        const actor = this.getActor()
-        const data = {
-            fio_address: this.fioAddress,
-            actor,
-            tpid: this.technologyProviderId,
-            max_fee: this.maxFee,
-        }
-        return data
-    }
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_address: this.props.fioAddress,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 }

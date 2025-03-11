@@ -1,30 +1,44 @@
-import { FioFeeResponse } from '../../entities/FioFeeResponse'
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
-import { Query } from './Query'
+import {EndPoint, FioFeeResponse} from '../../entities'
+import {feeNoAddressOperation} from '../../utils/constants'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetFee extends Query<FioFeeResponse> {
-  public ENDPOINT: string = 'chain/get_fee'
-  public endPoint: string
-  public fioAddress: string
+export type FioFeeQueryProps = {
+    endPoint: string
+    fioAddress?: string,
+}
 
-  constructor(endPoint: string, fioAddress: string = '') {
-    super()
-    this.endPoint = endPoint
-    this.fioAddress = fioAddress
+export type FioFeeQueryData = {
+    end_point: string
+    fio_address?: string,
+}
 
-    if (Constants.feeNoAddressOperation.findIndex((element) => element === endPoint) > -1 && fioAddress.length > 0) {
-      throw new Error('End point ' + endPoint + ' should not have any fio address, when requesting fee')
+export class GetFee extends Query<FioFeeQueryData, FioFeeResponse> {
+    public ENDPOINT = `chain/${EndPoint.getFee}` as const
+
+    public props: ReturnType<GetFee['getResolvedProps']>
+
+    constructor(config: RequestConfig, props: FioFeeQueryProps) {
+        super(config)
+
+        this.props = this.getResolvedProps(props)
+
+        if (feeNoAddressOperation.findIndex((element) => element === this.props.endPoint) > -1
+            && this.props.fioAddress.length > 0) {
+            throw new Error(`End point ${this.props.endPoint} should not have any fio address, when requesting fee`)
+        }
+
+        if (props.fioAddress) {
+            this.validationData = {fioAddress: this.props.fioAddress}
+            this.validationRules = validationRules.getFee
+        }
     }
 
-    if (fioAddress) {
-      this.validationData = { fioAddress }
-      this.validationRules = validationRules.getFee
-    }
-  }
+    public getData = () => ({end_point: this.props.endPoint, fio_address: this.props.fioAddress})
 
-  public getData() {
-    const data = { end_point: this.endPoint, fio_address: this.fioAddress || null }
-    return data
-  }
+    public getResolvedProps = (props: FioFeeQueryProps) => ({
+        ...props,
+        fioAddress: props.fioAddress ?? '',
+    })
 }

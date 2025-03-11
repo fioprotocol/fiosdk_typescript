@@ -1,6 +1,6 @@
 {
     "name": "@fioprotocol/fiosdk",
-    "version": "1.9.4",
+    "version": "1.10.0",
     "description": "The Foundation for Interwallet Operability (FIO) is a consortium of leading blockchain wallets, exchanges and payments providers that seeks to accelerate blockchain adoption by reducing the risk, complexity, and inconvenience of sending and receiving cryptoassets.",
     "keywords": [
         "fio",
@@ -8,14 +8,15 @@
         "client",
         "blockchain"
     ],
-    "main": "index.js",
+    "main": "lib/FIOSDK.js",
     "directories": {
         "lib": "lib",
         "test": "tests"
     },
+    "types": "lib/FIOSDK.d.ts",
     "scripts": {
-        "test": "mocha -t 80000 tests/testnet.spec.js",
-        "localtest": "mocha -t 80000 tests/index.spec.js"
+        "test": "mocha --require ts-node/register -t 80000 tests/testnet.spec.ts",
+        "localtest": "mocha --require ts-node/register -t 80000 tests/index.spec.ts"
     },
     "author": "",
     "license": "MIT",
@@ -24,35 +25,31 @@
         "url": "https://github.com/fioprotocol/fiosdk_typescript.git"
     },
     "devDependencies": {
-        "@types/chai": "4.3.16",
-        "@types/mocha": "5.2.7",
+        "@types/big.js": "6.2.1",
+        "@types/chai": "4.3.19",
+        "@types/mocha": "10.0.7",
         "@types/node": "12.20.55",
-        "chai": "4.4.1",
+        "@types/text-encoding": "0.0.35",
+        "@types/node-fetch": "2.6.11",
+        "chai": "4.5.0",
         "dotenv": "16.4.5",
-        "jest": "23.6.0",
-        "jest-fetch-mock": "2.1.2",
-        "mocha": "6.2.3",
+        "mocha": "10.7.3",
         "node-fetch": "2.7.0",
         "text-encoding": "0.7.0",
         "ts-node": "8.10.2",
         "tslint": "5.20.1",
         "tslint-plugin-prettier": "2.3.0",
-        "typedoc": "0.25.13",
-        "typescript": "4.9.5"
+        "typedoc": "0.26.5",
+        "typedoc-github-theme": "0.1.2",
+        "typescript": "5.5.4"
     },
     "dependencies": {
-        "@fioprotocol/fiojs": "1.0.1",
-        "@types/text-encoding": "0.0.35",
+        "@fioprotocol/fiojs": "1.0.2",
         "abort-controller": "3.0.0",
+        "big.js": "6.2.1",
         "bip39": "3.1.0",
         "hdkey": "1.1.2",
         "validate": "5.2.0",
         "wif": "2.0.6"
-    },
-    "jest": {
-        "automock": false,
-        "setupFiles": [
-            "./setupJest.js"
-        ]
     }
 }

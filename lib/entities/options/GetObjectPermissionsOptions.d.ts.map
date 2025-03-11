@@ -1,0 +1,1 @@
+{"version":3,"file":"GetObjectPermissionsOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/GetObjectPermissionsOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,2BAA2B,GAAG;IACtC,cAAc,EAAE,MAAM,CAAA;IACtB,UAAU,EAAE,MAAM,CAAA;IAClB,KAAK,CAAC,EAAE,MAAM,GAAG,IAAI,CAAA;IACrB,MAAM,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CAC1B,CAAA"}

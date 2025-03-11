@@ -1,34 +1,41 @@
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, RejectFundsResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class RejectFundsRequest extends SignedTransaction {
+export type RejectFundsRequestRequestProps = {
+    fioRequestId: number
+    maxFee: number
+    technologyProviderId: string,
+}
 
-  public ENDPOINT: string = 'chain/reject_funds_request'
-  public ACTION: string = 'rejectfndreq'
-  public ACCOUNT: string = 'fio.reqobt'
-  public fioreqid: number
-  public maxFee: number
-  public technologyProviderId: string
+export type RejectFundsRequestRequestData = {
+    fio_request_id: number
+    max_fee: number
+    tpid: string
+    actor: string,
+}
 
-  constructor(fioreqid: number, maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioreqid = fioreqid
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
+export class RejectFundsRequest extends SignedTransaction<
+    RejectFundsRequestRequestData,
+    RejectFundsResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.rejectFundsRequest}` as const
+    public ACTION = Action.rejectFundsRequest
+    public ACCOUNT = Account.reqObt
 
-    this.validationData = { tpid: technologyProviderId || null }
-    this.validationRules = validationRules.rejectFunds
-  }
+    constructor(config: RequestConfig, public props: RejectFundsRequestRequestProps) {
+        super(config)
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      fio_request_id: this.fioreqid,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
-      actor,
+        this.validationData = {tpid: props.technologyProviderId}
+        this.validationRules = validationRules.rejectFunds
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_request_id: this.props.fioRequestId,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 
 }

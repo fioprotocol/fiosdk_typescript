@@ -1,20 +1,29 @@
-import { FioAddressesResponse } from '../../entities/FioAddressesResponse'
-import { Query } from './Query'
+import {EndPoint, FioAddressesResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetAddresses extends Query<FioAddressesResponse> {
-  public ENDPOINT: string = 'chain/get_fio_addresses'
-  public fioPublicKey: string
-  public limit: number | null
-  public offset: number | null
+export type FioAddressesQueryProps = {
+    fioPublicKey: string,
+    limit?: number
+    offset?: number,
+}
 
-  constructor(fioPublicKey: string, limit: number | null = null, offset: number | null = null) {
-    super()
-    this.fioPublicKey = fioPublicKey
-    this.limit = limit
-    this.offset = offset
-  }
+export type FioAddressesQueryData = {
+    fio_public_key: string
+    limit?: number,
+    offset?: number,
+}
 
-  public getData() {
-    return { fio_public_key: this.fioPublicKey, limit: this.limit || null, offset: this.offset || null  }
-  }
+export class GetAddresses extends Query<FioAddressesQueryData, FioAddressesResponse> {
+    public ENDPOINT = `chain/${EndPoint.getFioAddresses}` as const
+
+    constructor(config: RequestConfig, public props: FioAddressesQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({
+        fio_public_key: this.props.fioPublicKey,
+        limit: this.props.limit,
+        offset: this.props.offset,
+    })
 }

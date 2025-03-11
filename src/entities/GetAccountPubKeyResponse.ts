@@ -1,3 +1,1 @@
-export interface GetAccountPubKeyResponse {
-  fio_public_key: string,
-}
+export { AccountPubKeyResponse as GetAccountPubKeyResponse } from './responses/AccountPubKeyResponse';

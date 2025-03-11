@@ -1,3 +1,1 @@
-export interface GetEncryptKeyResponse {
-  encrypt_public_key: string,
-}
+export { EncryptKeyResponse as GetEncryptKeyResponse } from './responses/EncryptKeyResponse';

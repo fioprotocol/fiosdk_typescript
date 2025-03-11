@@ -5,6 +5,13 @@
     "rulesDirectory": [],
     "rules": {
         "semicolon": [true, "never"],
-        "quotemark": [true, "single"]
+        "quotemark": [true, "single"],
+        "interface-name": false,
+        "interface-over-type-literal": false,
+        "max-classes-per-file": false,
+        "unified-signatures": false
+    },
+    "linterOptions": {
+        "exclude": ["lib/**/*", "types/**/*"]
     }
 }

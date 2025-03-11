@@ -1,24 +1,29 @@
-import { NftsResponse } from '../../entities/NftsResponse'
-import { Query } from './Query'
+import {EndPoint, NftsResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetNftsByFioAddress extends Query<NftsResponse> {
-  public ENDPOINT: string = 'chain/get_nfts_fio_address'
-  public fioAddress: string
-  public limit: number | null
-  public offset: number | null
+export type NftsByFioAddressQueryProps = {
+    fioAddress: string
+    limit?: number
+    offset?: number,
+}
 
-  constructor(fioAddress: string, limit?: number, offset?: number) {
-    super()
-    this.fioAddress = fioAddress
-    this.limit = limit || null
-    this.offset = offset || null
-  }
+export type NftsByFioAddressQueryData = {
+    fio_address: string
+    limit?: number
+    offset?: number,
+}
 
-  public getData() {
-    return {
-      fio_address: this.fioAddress,
-      limit: this.limit || null,
-      offset: this.offset || null,
+export class GetNftsByFioAddress extends Query<NftsByFioAddressQueryData, NftsResponse> {
+    public ENDPOINT = `chain/${EndPoint.getNftsFioAddress}` as const
+
+    constructor(config: RequestConfig, public props: NftsByFioAddressQueryProps) {
+        super(config)
     }
-  }
+
+    public getData = () => ({
+        fio_address: this.props.fioAddress,
+        limit: this.props.limit,
+        offset: this.props.offset,
+    })
 }

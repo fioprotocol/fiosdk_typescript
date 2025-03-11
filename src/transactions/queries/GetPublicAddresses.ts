@@ -1,24 +1,29 @@
-import { PublicAddressesResponse } from '../../entities/PublicAddressesResponse'
-import { Query } from './Query'
+import {EndPoint, PublicAddressesResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetPublicAddresses extends Query<PublicAddressesResponse> {
-  public ENDPOINT: string = 'chain/get_pub_addresses'
-  public fioAddress: string
-  public limit: number | null
-  public offset: number | null
+export type PublicAddressesQueryProps = {
+    fioAddress: string
+    limit?: number
+    offset?: number,
+}
 
-  constructor(fioAddress: string, limit?: number, offset?: number) {
-    super()
-    this.fioAddress = fioAddress
-    this.limit = limit || null
-    this.offset = offset || null
-  }
+export type PublicAddressesQueryData = {
+    fio_address: string
+    limit?: number
+    offset?: number,
+}
 
-  public getData() {
-    return {
-      fio_address: this.fioAddress,
-      limit: this.limit || null,
-      offset: this.offset || null,
+export class GetPublicAddresses extends Query<PublicAddressesQueryData, PublicAddressesResponse> {
+    public ENDPOINT = `chain/${EndPoint.getPublicAddresses}` as const
+
+    constructor(config: RequestConfig, public props: PublicAddressesQueryProps) {
+        super(config)
     }
-  }
+
+    public getData = () => ({
+        fio_address: this.props.fioAddress,
+        limit: this.props.limit,
+        offset: this.props.offset,
+    })
 }

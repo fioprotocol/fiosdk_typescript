@@ -1,0 +1,1 @@
+{"version":3,"file":"TransferTokensOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/TransferTokensOptions.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,qBAAqB,GAAG;IAChC,iBAAiB,EAAE,MAAM,CAAA;IACzB,MAAM,EAAE,MAAM,CAAA;IACd,MAAM,EAAE,MAAM,CAAA;IACd,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxC,CAAA"}

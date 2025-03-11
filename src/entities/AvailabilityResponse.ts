@@ -1,3 +1,1 @@
-export interface AvailabilityResponse {
-  is_registered: number
-}
+export { AvailabilityCheckResponse as AvailabilityResponse } from './responses/AvailabilityCheckResponse';

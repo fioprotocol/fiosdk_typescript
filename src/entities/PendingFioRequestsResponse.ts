@@ -1,6 +1,1 @@
-import { FioRequestsItem } from './FioRequestsItem'
-
-export interface PendingFioRequestsResponse {
-  requests: FioRequestsItem[],
-  more: number
-}
+export { PendingFioRequestsResponse, PendingFioRequestsDecryptedResponse } from './responses/PendingFioRequestsResponse';

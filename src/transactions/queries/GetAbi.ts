@@ -1,18 +1,23 @@
-import { AbiResponse } from '../../entities/AbiResponse'
-import { Query } from './Query'
+import {AbiResponse, EndPoint} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetAbi extends Query<AbiResponse> {
-  public ENDPOINT: string = 'chain/get_raw_abi'
-  public accountName: string
+export type AbiQueryProps = {
+    accountName: string;
+}
 
-  constructor(accountName: string) {
-    super()
-    this.accountName = accountName
-  }
+export type AbiQueryData = {
+    account_name: string;
+}
 
-  public getData() {
-    return {
-      account_name: this.accountName,
+export class GetAbi extends Query<AbiQueryData, AbiResponse> {
+    public ENDPOINT = `chain/${EndPoint.getRawAbi}` as const
+
+    constructor(config: RequestConfig, public props: AbiQueryProps) {
+        super(config)
     }
-  }
+
+    public getData = () => ({
+        account_name: this.props.accountName,
+    })
 }

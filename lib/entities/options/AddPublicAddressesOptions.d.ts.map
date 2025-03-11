@@ -1,0 +1,1 @@
+{"version":3,"file":"AddPublicAddressesOptions.d.ts","sourceRoot":"","sources":["../../../src/entities/options/AddPublicAddressesOptions.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,aAAa,EAAC,MAAM,kBAAkB,CAAA;AAE9C,MAAM,MAAM,yBAAyB,GAAG;IACpC,UAAU,EAAE,MAAM,CAAA;IAClB,MAAM,EAAE,MAAM,CAAA;IACd,eAAe,EAAE,aAAa,EAAE,CAAA;IAChC,oBAAoB,CAAC,EAAE,MAAM,GAAG,IAAI,CAAC;CACxC,CAAA"}

@@ -1,7 +1,2 @@
-export interface BalanceResponse {
-  balance: number,
-  available: number,
-  staked: number,
-  srps: number,
-  roe: string
-}
+export { FioBalanceResponse as BalanceResponse } from './responses/FioBalanceResponse';
+

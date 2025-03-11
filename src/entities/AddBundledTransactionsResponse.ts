@@ -1,4 +1,1 @@
-export interface AddBundledTransactionsResponse {
-  status: string,
-  fee_collected: number
-}
+export { AddBundledTransactionsResponse } from './responses/AddBundledTransactionsResponse';

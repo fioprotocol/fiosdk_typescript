@@ -1,4 +1,1 @@
-export interface FioAddresses {
-  fio_address: string,
-  expiration: string
-}
+export { FioAddress as FioAddresses } from './types/FioAddress';

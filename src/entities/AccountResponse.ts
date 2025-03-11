@@ -1,3 +1,1 @@
-export interface AccountResponse {
-  ram_quota: number
-}
+export { AccountResponse } from './responses/AccountResponse';

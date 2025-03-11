@@ -1,42 +1,49 @@
-import { LockPeriod } from '../../entities/LockPeriod'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, LockPeriod, TransferLockedTokensResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class TransferLockedTokens extends SignedTransaction {
-  public ENDPOINT: string = 'chain/transfer_locked_tokens'
-  public ACTION: string = 'trnsloctoks'
-  public ACCOUNT: string = 'fio.token'
-  public payeePublicKey: string
-  public canVote: number
-  public periods: LockPeriod[]
-  public amount: number
-  public maxFee: number
-  public technologyProviderId: string
+export type TransferLockedTokensRequestProps = {
+    payeePublicKey: string
+    canVote?: boolean
+    periods: LockPeriod[]
+    amount: number
+    maxFee: number
+    technologyProviderId: string,
+}
 
-  constructor(payeePublicKey: string, canVote: boolean, periods: LockPeriod[], amount: number, maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.payeePublicKey = payeePublicKey
-    this.canVote = canVote ? 1 : 0
-    this.periods = periods
-    this.amount = amount
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
+export type TransferLockedTokensRequestData = {
+    payee_public_key: string
+    can_vote: 0 | 1
+    periods: LockPeriod[]
+    amount: number
+    max_fee: number
+    actor: string
+    tpid: string,
+}
 
-    this.validationData = { tpid: technologyProviderId || null }
-    this.validationRules = validationRules.transferLockedTokensRequest
-  }
+export class TransferLockedTokens extends SignedTransaction<
+    TransferLockedTokensRequestData,
+    TransferLockedTokensResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.transferLockedTokens}` as const
+    public ACTION = Action.transferLockedTokens
+    public ACCOUNT = Account.token
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      payee_public_key: this.payeePublicKey,
-      can_vote: this.canVote,
-      periods: this.periods,
-      amount: this.amount,
-      max_fee: this.maxFee,
-      actor,
-      tpid: this.technologyProviderId,
+    constructor(config: RequestConfig, public props: TransferLockedTokensRequestProps) {
+        super(config)
+
+        this.validationData = {tpid: props.technologyProviderId}
+        this.validationRules = validationRules.transferLockedTokensRequest
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        amount: this.props.amount,
+        can_vote: this.props.canVote ? 1 as const : 0 as const,
+        max_fee: this.props.maxFee,
+        payee_public_key: this.props.payeePublicKey,
+        periods: this.props.periods,
+        tpid: this.props.technologyProviderId,
+    })
 }

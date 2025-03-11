@@ -1,5 +1,1 @@
-export interface PublicAddress {
-  chain_code: string,
-  token_code: string,
-  public_address: string,
-}
+export { PublicAddress } from './types/PublicAddress';

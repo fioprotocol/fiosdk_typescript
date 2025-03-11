@@ -1,30 +1,35 @@
-import { NftsResponse } from '../../entities/NftsResponse'
-import { Query } from './Query'
+import {EndPoint, NftsResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetNftsByContract extends Query<NftsResponse> {
-  public ENDPOINT: string = 'chain/get_nfts_contract'
-  public chainCode: string
-  public contractAddress: string
-  public tokenId: string | null
-  public limit: number | null
-  public offset: number | null
+export type NftsByContractQueryProps = {
+    chainCode: string
+    contractAddress: string
+    tokenId?: string
+    limit?: number
+    offset?: number,
+}
 
-  constructor(chainCode: string, contractAddress: string, tokenId?: string, limit?: number, offset?: number) {
-    super()
-    this.chainCode = chainCode
-    this.contractAddress = contractAddress
-    this.tokenId = tokenId || null
-    this.limit = limit || null
-    this.offset = offset || null
-  }
+export type NftsByContractQueryData = {
+    chain_code: string
+    contract_address: string
+    token_id?: string
+    limit?: number
+    offset?: number,
+}
 
-  public getData() {
-    return {
-      chain_code: this.chainCode,
-      contract_address: this.contractAddress,
-      token_id: this.tokenId,
-      limit: this.limit || null,
-      offset: this.offset || null,
+export class GetNftsByContract extends Query<NftsByContractQueryData, NftsResponse> {
+    public ENDPOINT = `chain/${EndPoint.getNftsContract}` as const
+
+    constructor(config: RequestConfig, public props: NftsByContractQueryProps) {
+        super(config)
     }
-  }
+
+    public getData = () => ({
+        chain_code: this.props.chainCode,
+        contract_address: this.props.contractAddress,
+        limit: this.props.limit,
+        offset: this.props.offset,
+        token_id: this.props.tokenId,
+    })
 }

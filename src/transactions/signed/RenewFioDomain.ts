@@ -1,35 +1,38 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, RenewFioDomainResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class RenewFioDomain extends SignedTransaction {
+export type RenewFioDomainRequestProps = {
+    fioDomain: string
+    maxFee: number
+    technologyProviderId: string,
+}
 
-  public ENDPOINT: string = 'chain/renew_fio_domain'
-  public ACTION: string = 'renewdomain'
-  public ACCOUNT: string = Constants.defaultAccount
-  public fioDomain: string
-  public maxFee: number
-  public technologyProviderId: string
+export type RenewFioDomainRequestData = {
+    fio_domain: string
+    max_fee: number
+    tpid: string
+    actor: string,
+}
 
-  constructor(fioDomain: string, maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioDomain = fioDomain
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
+export class RenewFioDomain extends SignedTransaction<RenewFioDomainRequestData, RenewFioDomainResponse> {
+    public ENDPOINT = `chain/${EndPoint.renewFioDomain}` as const
+    public ACTION = Action.renewDomain
+    public ACCOUNT = Account.address
 
-    this.validationData = { fioDomain, tpid: technologyProviderId || null }
-    this.validationRules = validationRules.renewFioDomain
-  }
+    constructor(config: RequestConfig, public props: RenewFioDomainRequestProps) {
+        super(config)
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      fio_domain: this.fioDomain,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
-      actor,
+        this.validationData = {fioDomain: props.fioDomain, tpid: props.technologyProviderId}
+        this.validationRules = validationRules.renewFioDomain
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_domain: this.props.fioDomain,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 
 }

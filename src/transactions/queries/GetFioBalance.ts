@@ -1,17 +1,22 @@
-import { BalanceResponse } from '../../entities/BalanceResponse'
-import { Query } from './Query'
+import {EndPoint, BalanceResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetFioBalance extends Query<BalanceResponse> {
-  public ENDPOINT: string = 'chain/get_fio_balance'
-  public keyToUse: string
+export type FioBalanceQueryProps = {
+    fioPublicKey?: string,
+}
 
-  constructor(othersBalance?: string) {
-    super()
-    this.keyToUse = othersBalance || ''
-  }
+export type FioBalanceQueryData = {
+    fio_public_key: string,
+}
 
-  public getData() {
-    return { fio_public_key: this.keyToUse || this.publicKey }
-  }
+export class GetFioBalance extends Query<FioBalanceQueryData, BalanceResponse> {
+    public ENDPOINT = `chain/${EndPoint.getFioBalance}` as const
+
+    constructor(config: RequestConfig, public props: FioBalanceQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({fio_public_key: this.props.fioPublicKey ?? this.publicKey})
 
 }

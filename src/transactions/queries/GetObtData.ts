@@ -1,161 +1,148 @@
-import { GetObtDataRecord } from '../../entities/GetObtDataRecord'
-import { GetObtDataResponse } from '../../entities/GetObtDataResponse'
-import { GetEncryptKeyResponse } from '../../entities/GetEncryptKeyResponse'
-import { getEncryptKeyForUnCipherContent } from '../../utils/utils'
+import {
+    ContentType,
+    GetEncryptKeyResponse,
+    EndPoint,
+    FioItem,
+    FioSentItem, FioSentItemContent,
+    GetObtDataDecryptedResponse,
+    GetObtDataResponse, KeysPair,
+} from '../../entities'
+import {getAccountPrivateKeys, getDecryptedContent, getEncryptKeyForUnCipherContent} from '../../utils/utils'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-import { Query } from './Query'
-
-export class GetObtData extends Query<GetObtDataResponse> {
-  public ENDPOINT: string = 'chain/get_obt_data'
-  public fio_public_key: string
-  public limit: number | undefined
-  public offset: number | undefined
-  public tokenCode: string
-  public includeEncrypted: boolean
-  public encryptKeys: Map<string, { privateKey: string, publicKey: string } []> | undefined
-  public isEncrypted = true
-  public getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
-
-  constructor({ fioPublicKey, limit = 0, offset = 0, tokenCode = '', includeEncrypted = false, encryptKeys, getEncryptKey }: {
+export type ObtDataQueryProps = {
     fioPublicKey: string,
     limit?: number,
     offset?: number,
     tokenCode?: string,
-    includeEncrypted: boolean,
-    encryptKeys?: Map<string, { privateKey: string, publicKey: string }[]>,
-    getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>
-  }) {
-    super()
-    this.fio_public_key = fioPublicKey
-    this.limit = limit
-    this.offset = offset
-    this.tokenCode = tokenCode
-    this.includeEncrypted = includeEncrypted
-    this.encryptKeys = encryptKeys
-    this.getEncryptKey = getEncryptKey
-  }
+    includeEncrypted?: boolean,
+    encryptKeys?: Map<string, KeysPair[]>,
+    getEncryptKey: (fioAddress: string) => Promise<GetEncryptKeyResponse>,
+}
 
-  public getData() {
-    return { fio_public_key: this.fio_public_key, limit: this.limit || null, offset: this.offset || null }
-  }
+export type ObtDataQueryData = {
+    fio_public_key: string
+    limit?: number
+    offset?: number,
+}
 
-  public async decrypt(result: GetObtDataResponse): Promise<GetObtDataResponse> {
-    return new Promise(async (resolve, reject) => {
-      if (result.obt_data_records && result.obt_data_records.length > 0) {
-        let content: {
-          token_code: string;
-        } | null = null;
-        try {
-          const requests = await Promise.allSettled(result.obt_data_records.map(async (obtDataRecord: GetObtDataRecord) => {
-            let encryptPublicKeysArray: string[] = [];
-            let encryptPrivateKeysArray: string[] = [];
+export class GetObtData extends Query<ObtDataQueryData, GetObtDataDecryptedResponse> {
+    public ENDPOINT = `chain/${EndPoint.getObtData}` as const
 
-            const { content: obtDataRecordContent, payee_fio_address, payee_fio_public_key, payer_fio_address, payer_fio_public_key } = obtDataRecord || {};
+    public isEncrypted = true
 
-            try {
-              const payerEncryptKeyRes = await getEncryptKeyForUnCipherContent({
-                getEncryptKey: this.getEncryptKey,
-                method: 'GetObtData',
-                fioAddress: payer_fio_address,
-              });
-              if (payerEncryptKeyRes) {
-                encryptPublicKeysArray.push(payerEncryptKeyRes);
-              }
-            } catch (error) {
-              console.error(error);
-            }
-            try {
-              const payeeEncryptKeyRes = await getEncryptKeyForUnCipherContent({
-                getEncryptKey: this.getEncryptKey,
-                method: 'GetObtData',
-                fioAddress: payee_fio_address,
-              });
-              if (payeeEncryptKeyRes) {
-                encryptPublicKeysArray.push(payeeEncryptKeyRes);
-              }
-            } catch (error) {
-              console.error(error);
-            }
+    public props: ReturnType<GetObtData['getResolvedProps']>
 
-            const account = this.getActor();
+    constructor(config: RequestConfig, props: ObtDataQueryProps) {
+        super(config)
 
-            if (this.encryptKeys) {
-              const accountEncryptKeys = this.encryptKeys.get(account);
-              if (accountEncryptKeys && accountEncryptKeys.length > 0) {
-                encryptPrivateKeysArray =
-                  encryptPrivateKeysArray.concat(
-                    accountEncryptKeys.map(
-                      (accountEncryptKey) =>
-                        accountEncryptKey.privateKey
+        this.props = this.getResolvedProps(props)
+    }
+
+    public getData = () => ({
+        fio_public_key: this.props.fioPublicKey,
+        limit: this.props.limit,
+        offset: this.props.offset,
+    })
+
+    public getResolvedProps = (props: ObtDataQueryProps) => ({
+        ...props,
+        includeEncrypted: props.includeEncrypted ?? false,
+        tokenCode: props.tokenCode ?? '',
+    })
+
+    public async decrypt(result: GetObtDataResponse): Promise<GetObtDataDecryptedResponse> {
+        return new Promise(async (resolve, reject) => {
+            if (result.obt_data_records && result.obt_data_records.length > 0) {
+                try {
+                    const requests = await Promise.allSettled(result.obt_data_records.map(
+                        async (obtDataRecord: FioItem) => {
+                            const account = this.getActor()
+
+                            const encryptPublicKeysArray = this.publicKey ? [this.publicKey] : []
+                            const encryptPrivateKeysArray = this.privateKey ? [this.privateKey] : []
+
+                            const accountPrivateKeys = getAccountPrivateKeys(account, this.props.encryptKeys)
+
+                            if (accountPrivateKeys.length > 0) {
+                                encryptPrivateKeysArray.push(...accountPrivateKeys)
+                            }
+
+                            const {
+                                content: obtDataRecordContent,
+                                payee_fio_address,
+                                payee_fio_public_key,
+                                payer_fio_address,
+                                payer_fio_public_key,
+                            } = obtDataRecord || {}
+
+                            for (const fioAddress of [payer_fio_address, payee_fio_address]) {
+                                try {
+                                    const encryptKeyRes = await getEncryptKeyForUnCipherContent({
+                                        fioAddress,
+                                        getEncryptKey: this.props.getEncryptKey,
+                                        method: 'GetObtData',
+                                    })
+                                    if (encryptKeyRes) {
+                                        encryptPublicKeysArray.push(encryptKeyRes)
+                                    }
+                                } catch (error) {
+                                    // tslint:disable-next-line:no-console
+                                    console.error(error)
+                                }
+                            }
+
+                            if (payee_fio_public_key) {
+                                encryptPublicKeysArray.push(payee_fio_public_key)
+                            }
+
+                            if (payer_fio_public_key) {
+                                encryptPublicKeysArray.push(payer_fio_public_key)
+                            }
+
+                            const content = getDecryptedContent<FioSentItemContent>(
+                                ContentType.recordObtDataContent,
+                                obtDataRecordContent,
+                                encryptPublicKeysArray,
+                                encryptPrivateKeysArray,
+                            )
+
+                            if (content === null) {
+                                if (this.props.includeEncrypted) {
+                                    return obtDataRecord
+                                }
+                                // Throw an error if all keys failed
+                                throw new Error(`GetObtData: Get UnCipher Content for account ${account} failed.`)
+                            }
+
+                            if (content) {
+                                if (this.props.tokenCode
+                                    && content.token_code
+                                    && content.token_code !== this.props.tokenCode) {
+                                    return null
+                                }
+
+                                return { ...obtDataRecord, content }
+                            }
+
+                            return obtDataRecord
+                        },
+                    ))
+
+                    const fulfilledRequests: Array<FioItem | FioSentItem> = []
+
+                    requests.forEach(
+                        (req) => req.status === 'fulfilled' && req.value && fulfilledRequests.push(req.value),
                     )
-                  );
-              }
-            }
 
-            if (payee_fio_public_key) {
-              encryptPublicKeysArray.push(payee_fio_public_key);
-            }
-
-            if (payer_fio_public_key) {
-              encryptPublicKeysArray.push(payer_fio_public_key);
-            }
-
-            encryptPublicKeysArray.push(this.publicKey);
-            encryptPrivateKeysArray.push(this.privateKey);
-
-            try {
-              for (let i = 0; i < encryptPublicKeysArray.length; i++) {
-                const publicKey = encryptPublicKeysArray[i];
-                for (let j = 0; j < encryptPrivateKeysArray.length; j++) {
-                  const privateKey = encryptPrivateKeysArray[j];
-                  let result = null;
-                  try {
-                    result = this.getUnCipherContent(
-                      'record_obt_data_content',
-                      obtDataRecordContent,
-                      privateKey,
-                      publicKey
-                    );
-                    if (result !== null) {
-                      content = result;
-                      break; // Exit the inner loop if a successful result is obtained
-                    }
-                  } catch (error) { }
+                    resolve({obt_data_records: fulfilledRequests, more: result.more})
+                } catch (error) {
+                    reject(error)
                 }
-              }
-
-              if (content === null) {
-                throw new Error(`GetObtData: Get UnCipher Content for account ${account} failed.`); // Throw an error if all keys failed
-              }
-            } catch (error) {
-              if (this.includeEncrypted) return obtDataRecord;
-
-              console.error(error);
-              throw error
+            } else {
+                resolve({...result, obt_data_records: []})
             }
-
-            if (content) {
-              if (this.tokenCode && content.token_code && content.token_code !== this.tokenCode) {
-                return null;
-              }
-              obtDataRecord.content = content
-            }
-
-            return obtDataRecord;
-          }));
-
-          const fulfilledRequests: GetObtDataRecord[] = [];
-
-          requests
-            .forEach(result => result.status === 'fulfilled' && result.value && fulfilledRequests.push(result.value))
-
-          resolve({ obt_data_records: fulfilledRequests, more: result.more });
-        } catch (error) {
-          reject(error);
-        }
-      } else {
-        resolve(result);
-      }
-    });
-  }
+        })
+    }
 }

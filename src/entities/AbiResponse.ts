@@ -1,6 +1,2 @@
-export interface AbiResponse {
-  account_name: string,
-  code_hash: string,
-  abi_hash: string,
-  abi: string
-}
+// Export the AbiResponse type from the responses directory
+export { AbiResponse } from './responses/AbiResponse';

@@ -1,135 +1,145 @@
-const Schema = require('validate')
-import { ErrObj } from '../entities/ValidationError'
+import {Ecc} from '@fioprotocol/fiojs'
+import Schema, { PropertyDefinition, ValidationError } from 'validate'
+import {ErrObj} from '../entities'
+
+const testFioPublicKey = (key: string) => key.startsWith('FIO') && Ecc.PublicKey.isValid(key)
 
 export const allRules = {
-  chain: {
-    required: true,
-    type: String,
-    length: { min: 1, max: 10 },
-    matchParams: {
-      regex: '^[a-z0-9]+$',
-      opt: 'i',
+    chain: {
+        length: {min: 1, max: 10},
+        match: /^[a-z0-9]+$/i,
+        required: true,
+        type: String,
     },
-  },
-  fioAddress: {
-    required: true,
-    type: String,
-    length: { min: 3, max: 64 },
-    matchParams: {
-      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
-      opt: 'gim',
+    fioAddress: {
+        length: {min: 3, max: 64},
+        match: /^(?=.{3,64}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?@[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/gim,
+        required: true,
+        type: String,
     },
-  },
-  tpid: {
-    type: String,
-    length: { min: 3, max: 64 },
-    matchParams: {
-      regex: '^(?:(?=.{3,64}$)[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}@[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$)',
-      opt: 'gim',
+    fioDomain: {
+        length: {min: 1, max: 62},
+        match: /^[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/i,
+        required: true,
+        type: String,
     },
-  },
-  fioDomain: {
-    required: true,
-    type: String,
-    length: { min: 1, max: 62 },
-    matchParams: {
-      regex: '^[a-zA-Z0-9]{1}(?:(?:(?!-{2,}))[a-zA-Z0-9-]*[a-zA-Z0-9]+){0,1}$',
-      opt: 'i',
+    fioName: {
+        length: {min: 1, max: 36},
+        match: /^(?=.{1,36}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/i,
+        required: true,
+        type: String,
     },
-  },
-  fioPublicKey: {
-    required: true,
-    type: String,
-    length: { min: 1, max: 62 },
-    matchParams: {
-      regex: '^FIO\\w+$',
+    fioPublicKey: {
+        length: {min: 1, max: 62},
+        required: true,
+        type: String,
+        use: {testFioPublicKey},
     },
-  },
-  nativeBlockchainPublicAddress: {
-    required: true,
-    type: String,
-    length: { min: 1, max: 128 },
-    matchParams: {
-      regex: '^\\w+$',
+    nativeBlockchainPublicAddress: {
+        length: {min: 1, max: 128},
+        match: /^\w+$/,
+        required: true,
+        type: String,
     },
-  },
-}
+    tpid: {
+        length: {min: 3, max: 64},
+        match: /^(?=.{3,64}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?@[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/gim,
+        type: String,
+        required: false,
+    },
+} satisfies Record<string, PropertyDefinition>
 
 export const validationRules = {
-  addPublicAddressRules: {
-    fioAddress: allRules.fioAddress,
-    tpid: allRules.tpid,
-  },
-  cancelFundsRequestRules: {
-    tpid: allRules.tpid,
-  },
-  registerFioAddress: {
-    fioAddress: allRules.fioAddress,
-    tpid: allRules.tpid,
-  },
-  registerFioDomain: {
-    fioDomain: allRules.fioDomain,
-    tpid: allRules.tpid,
-  },
-  registerFioDomainAddress: {
-    fioAddress: allRules.fioAddress,
-    tpid: allRules.tpid,
-  },
-  renewFioAddress: {
-    fioAddress: allRules.fioAddress,
-    tpid: allRules.tpid,
-  },
-  renewFioDomain: {
-    fioDomain: allRules.fioDomain,
-    tpid: allRules.tpid,
-  },
-  setFioDomainVisibility: {
-    fioDomain: allRules.fioDomain,
-    tpid: allRules.tpid,
-  },
-  newFundsRequest: {
-    payerFioAddress: allRules.fioAddress,
-    payeeFioAddress: allRules.fioAddress,
-    tokenCode: allRules.chain,
-    tpid: allRules.tpid,
-  },
-  transferLockedTokensRequest: {
-    tpid: allRules.tpid,
-  },
-  rejectFunds: {
-    tpid: allRules.tpid,
-  },
-  recordObtData: {
-    payerFioAddress: allRules.fioAddress,
-    payeeFioAddress: allRules.fioAddress,
-    tpid: allRules.tpid,
-    tokenCode: allRules.chain,
-  },
-  transferTokens: {
-    tpid: allRules.tpid,
-  },
-  getFee: {
-    fioAddress: allRules.fioAddress,
-  },
-}
+    addPublicAddressRules: {
+        fioAddress: allRules.fioAddress,
+        tpid: allRules.tpid,
+    },
+    cancelFundsRequestRules: {
+        tpid: allRules.tpid,
+    },
+    getFee: {
+        fioAddress: allRules.fioAddress,
+    },
+    newFundsRequest: {
+        payeeFioAddress: allRules.fioAddress,
+        payerFioAddress: allRules.fioAddress,
+        tokenCode: allRules.chain,
+        tpid: allRules.tpid,
+    },
+    recordObtData: {
+        payeeFioAddress: allRules.fioAddress,
+        payerFioAddress: allRules.fioAddress,
+        tokenCode: allRules.chain,
+        tpid: allRules.tpid,
+    },
+    registerFioAddress: {
+        fioAddress: allRules.fioAddress,
+        tpid: allRules.tpid,
+    },
+    registerFioDomain: {
+        fioDomain: allRules.fioDomain,
+        tpid: allRules.tpid,
+    },
+    registerFioDomainAddress: {
+        fioAddress: allRules.fioAddress,
+        tpid: allRules.tpid,
+    },
+    rejectFunds: {
+        tpid: allRules.tpid,
+    },
+    renewFioAddress: {
+        fioAddress: allRules.fioAddress,
+        tpid: allRules.tpid,
+    },
+    renewFioDomain: {
+        fioDomain: allRules.fioDomain,
+        tpid: allRules.tpid,
+    },
+    setFioDomainVisibility: {
+        fioDomain: allRules.fioDomain,
+        tpid: allRules.tpid,
+    },
+    transferLockedTokensRequest: {
+        tpid: allRules.tpid,
+    },
+    transferTokens: {
+        tpid: allRules.tpid,
+    },
+} satisfies Record<string, Record<string, PropertyDefinition>>
 
-export function validate(data: any, rules: any): { isValid: boolean, errors: ErrObj[] } {
-  const schema: any = {}
-  for (const ruleKey in rules) {
-    schema[ruleKey] = { ...rules[ruleKey] }
-    if (rules[ruleKey].matchParams && rules[ruleKey].matchParams.regex) {
-      schema[ruleKey].match = new RegExp(rules[ruleKey].matchParams.regex, rules[ruleKey].matchParams.opt)
-      delete schema[ruleKey].matchParams
+export function validate(
+    data: any,
+    rules: Record<string, PropertyDefinition>,
+): { isValid: boolean, errors: ErrObj[] } {
+    const schema: any = {}
+    const dataToValidate = {...data}
+
+    // ATTENTION! Don't change this code. This code fix error when regexp rules not working correctly if used directly
+    Object.keys(rules).forEach((ruleKey) => {
+        schema[ruleKey] = {...rules[ruleKey]}
+
+        const match = rules[ruleKey].match
+        if (match) {
+            schema[ruleKey].match = new RegExp(match.source, match.flags)
+        }
+        
+        // Remove undefined/null optional fields from validation
+        if (!schema[ruleKey].required && (dataToValidate[ruleKey] == null || dataToValidate[ruleKey] === '')) {
+            delete dataToValidate[ruleKey]
+        }
+    })
+
+    const validator = new Schema(schema)
+    const errors: ValidationError[] = validator.validate(dataToValidate)
+    const validationResult: { isValid: boolean, errors: ErrObj[] } = {isValid: true, errors: []}
+
+    if (errors.length) {
+        validationResult.isValid = false
+        validationResult.errors = errors.map((err) => ({
+            field: err.path,
+            message: ('message' in err && typeof err.message === 'string') ? err.message : '',
+        }))
     }
-  }
-  const validator = new Schema(schema)
-  const errors: Array<{ path: string, message: string }> = validator.validate(data)
-  const validationResult: { isValid: boolean, errors: ErrObj[] } = { isValid: true, errors: [] }
 
-  if (errors.length) {
-    validationResult.isValid = false
-    validationResult.errors = errors.map((err) => ({ field: err.path, message: err.message }))
-  }
-
-  return validationResult
+    return validationResult
 }

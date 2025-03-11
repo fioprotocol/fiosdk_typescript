@@ -1,128 +1,102 @@
-import { validationRules } from '../../utils/validation'
+import {
+    Account,
+    Action,
+    ContentType,
+    EndPoint, FioSentItemContent,
+    RecordObtDataResponse,
+    FioRequestStatus,
+} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export type RecordObtDataOptions = {
-  amount: number,
-  chainCode: string,
-  encryptPrivateKey: string | null,
-  fioRequestId: number | null,
-  hash: string | null,
-  maxFee: number,
-  memo: string | null,
-  obtId: string,
-  offLineUrl: string | null,
-  payeeFioAddress: string,
-  payeeFioPublicKey: string,
-  payeeTokenPublicAddress: string,
-  payerFioAddress: string,
-  payerTokenPublicAddress: string,
-  status: string,
-  technologyProviderId: string | null,
-  tokenCode: string,
+export type RecordObtDataRequestData = {
+    payer_fio_address: string;
+    payee_fio_address: string;
+    content: string;
+    fio_request_id?: number;
+    max_fee: number;
+    actor: string;
+    tpid: string;
 }
 
-export class RecordObtData extends SignedTransaction {
-
-  public ENDPOINT: string = 'chain/record_obt_data'
-  public ACTION: string = 'recordobt'
-  public ACCOUNT: string = 'fio.reqobt'
-
-  public payerFioAddress: string
-  public payeeFioPublicKey: string
-  public payeeFioAddress: string
-  public fioRequestId: number | null = null
-  public maxFee: number
-  public technologyProviderId: string = ''
-  public payerPublicAddress: string
-  public payeePublicAddress: string
-  public encryptPrivateKey: string | null
-
-  public defaultStatus: string = 'sent_to_blockchain'
-
-  public content: any
-
-  constructor({
-    amount,
-    chainCode,
-    encryptPrivateKey = null,
-    fioRequestId = null,
-    hash = null,
-    maxFee,
-    memo = null,
-    obtId,
-    offLineUrl = null,
-    payeeFioAddress,
-    payeeFioPublicKey,
-    payeePublicAddress,
-    payerFioAddress,
-    payerPublicAddress,
-    status,
-    technologyProviderId = '',
-    tokenCode,
-  }: {
+export type RecordObtDataRequestProps = {
     amount: number,
     chainCode: string,
-    encryptPrivateKey: string | null,
-    fioRequestId: number | null,
-    hash: string | null,
+    encryptPrivateKey?: string,
+    fioRequestId?: number,
+    hash?: string,
     maxFee: number,
-    memo: string | null,
+    memo?: string,
     obtId: string,
-    offLineUrl: string | null,
+    offLineUrl?: string,
     payeeFioAddress: string,
-    payeeFioPublicKey: string,
-    payeePublicAddress: string,
     payerFioAddress: string,
-    payerPublicAddress: string,
-    status: string,
+    payeeTokenPublicAddress: string,
+    payerTokenPublicAddress: string,
+    payeeFioPublicKey?: string,
+    status?: FioRequestStatus,
     technologyProviderId: string,
     tokenCode: string,
-  }) {
-    super()
-    this.fioRequestId = fioRequestId
-    this.payerFioAddress = payerFioAddress
-    this.payeeFioPublicKey = payeeFioPublicKey
-    this.payeeFioAddress = payeeFioAddress
-    this.payerPublicAddress = payerPublicAddress
-    this.payeePublicAddress = payeePublicAddress
-    this.encryptPrivateKey = encryptPrivateKey
-    if (technologyProviderId) {
-      this.technologyProviderId = technologyProviderId
-    } else {
-      this.technologyProviderId = ''
-    }
-    this.maxFee = maxFee
-    this.content = {
-      payer_public_address: this.payerPublicAddress,
-      payee_public_address: this.payeePublicAddress,
-      amount: `${amount}`,
-      chain_code: chainCode,
-      token_code: tokenCode,
-      status: status || this.defaultStatus,
-      obt_id: obtId,
-      memo,
-      hash,
-      offline_url: offLineUrl,
+}
+
+export class RecordObtData extends SignedTransaction<RecordObtDataRequestData, RecordObtDataResponse> {
+    public ENDPOINT = `chain/${EndPoint.recordObtData}` as const
+    public ACTION = Action.recordObt
+    public ACCOUNT = Account.reqObt
+
+    public props: ReturnType<RecordObtData['getResolvedProps']>
+
+    constructor(config: RequestConfig, props: RecordObtDataRequestProps) {
+        super(config)
+
+        this.props = this.getResolvedProps(props)
+
+        this.validationData = {
+            payeeFioAddress: this.props.payeeFioAddress,
+            payerFioAddress: this.props.payerFioAddress,
+            tokenCode: this.props.tokenCode,
+            tpid: this.props.technologyProviderId,
+        }
+        this.validationRules = validationRules.recordObtData
     }
 
-    this.validationData = { payerFioAddress, payeeFioAddress, tpid: technologyProviderId || null, tokenCode }
-    this.validationRules = validationRules.recordObtData
+    public getData = () => ({
+        actor: this.getActor(),
+        content: this.getCipherContent(
+            ContentType.recordObtDataContent,
+            this.getResolvedContent(),
+            this.props.encryptPrivateKey || this.privateKey,
+            this.props.payeeFioPublicKey,
+        ),
+        fio_request_id: this.props.fioRequestId,
+        max_fee: this.props.maxFee,
+        payee_fio_address: this.props.payeeFioAddress,
+        payer_fio_address: this.props.payerFioAddress,
+        tpid: this.props.technologyProviderId,
+    })
 
-  }
+    public getResolvedContent = (): FioSentItemContent => ({
+        amount: `${this.props.amount}`,
+        chain_code: this.props.chainCode,
+        hash: this.props.hash,
+        memo: this.props.memo,
+        obt_id: this.props.obtId,
+        offline_url: this.props.offLineUrl,
+        payee_public_address: this.props.payeeTokenPublicAddress,
+        payer_public_address: this.props.payerTokenPublicAddress,
+        status: this.props.status,
+        token_code: this.props.tokenCode,
+    })
 
-  public getData(): any {
-    const actor = this.getActor()
-    const cipherContent = this.getCipherContent('record_obt_data_content', this.content, this.encryptPrivateKey || this.privateKey, this.payeeFioPublicKey)
-    const data = {
-      payer_fio_address: this.payerFioAddress,
-      payee_fio_address: this.payeeFioAddress,
-      content: cipherContent,
-      fio_request_id: this.fioRequestId || '',
-      max_fee: this.maxFee,
-      actor,
-      tpid: this.technologyProviderId,
-    }
-    return data
-  }
+    public getResolvedProps = (props: RecordObtDataRequestProps) => ({
+        ...props,
+        encryptPrivateKey: props.encryptPrivateKey ?? null,
+        hash: props.hash ?? null,
+        memo: props.memo ?? null,
+        offLineUrl: props.offLineUrl ?? null,
+        payeeFioPublicKey: props.payeeFioPublicKey ?? '',
+        status: props.status ?? FioRequestStatus.sentToBlockchain,
+    })
 
 }

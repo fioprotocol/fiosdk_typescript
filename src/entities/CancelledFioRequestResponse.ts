@@ -1,6 +1,2 @@
-import { FioSentRequestsItem } from './FioSentRequestsItem'
-
-export interface CancelledFioRequestResponse {
-  requests: FioSentRequestsItem[],
-  more: number
-}
+export { CancelledFioRequestsResponse as CancelledFioRequestResponse } from './responses/CancelledFioRequestsResponse';
+export { CancelledFioRequestsDecryptedResponse } from './responses/CancelledFioRequestsResponse';

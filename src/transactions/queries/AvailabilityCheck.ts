@@ -1,16 +1,21 @@
-import { AvailabilityResponse } from '../../entities/AvailabilityResponse'
-import { Query } from './Query'
+import {AvailabilityResponse, EndPoint} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class AvailabilityCheck extends Query<AvailabilityResponse> {
-  public ENDPOINT: string = 'chain/avail_check'
-  public fioName: string
+export type AvailabilityCheckQueryProps = {
+    fioName: string;
+}
 
-  constructor(fioName: string) {
-    super()
-    this.fioName = fioName
-  }
+export type AvailabilityCheckQueryData = {
+    fio_name: string,
+}
 
-  public getData() {
-    return { fio_name: this.fioName }
-  }
+export class AvailabilityCheckQuery extends Query<AvailabilityCheckQueryData, AvailabilityResponse> {
+    public ENDPOINT = `chain/${EndPoint.availCheck}` as const
+
+    constructor(config: RequestConfig, public props: AvailabilityCheckQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({fio_name: this.props.fioName})
 }

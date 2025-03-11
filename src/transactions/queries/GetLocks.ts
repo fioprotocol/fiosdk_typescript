@@ -1,17 +1,21 @@
-import { LocksResponse } from '../../entities/LocksResponse'
-import { Query } from './Query'
+import {EndPoint, LocksResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetLocks extends Query<LocksResponse> {
-  public ENDPOINT: string = 'chain/get_locks'
-  public keyToUse: string
+export type LocksQueryProps = {
+    fioPublicKey: string,
+}
 
-  constructor(fioPublicKey: string) {
-    super()
-    this.keyToUse = fioPublicKey
-  }
+export type LocksQueryData = {
+    fio_public_key: string,
+}
 
-  public getData() {
-    return { fio_public_key: this.keyToUse }
-  }
+export class GetLocks extends Query<LocksQueryData, LocksResponse> {
+    public ENDPOINT = `chain/${EndPoint.getLocks}` as const
 
+    constructor(config: RequestConfig, public props: LocksQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({fio_public_key: this.props.fioPublicKey})
 }

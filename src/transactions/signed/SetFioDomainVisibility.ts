@@ -1,37 +1,43 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, SetFioDomainVisibilityResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class SetFioDomainVisibility extends SignedTransaction {
+export type SetFioDomainVisibilityRequestProps = {
+    fioDomain: string
+    isPublic: boolean
+    maxFee: number
+    technologyProviderId: string,
+}
 
-  public ENDPOINT: string = 'chain/set_fio_domain_public'
-  public ACTION: string = 'setdomainpub'
-  public ACCOUNT: string = Constants.defaultAccount
-  public fioDomain: string
-  public isPublic: number
-  public maxFee: number
-  public technologyProviderId: string
+export type SetFioDomainVisibilityRequestData = {
+    fio_domain: string
+    is_public: 0 | 1
+    max_fee: number
+    tpid: string
+    actor: string,
+}
 
-  constructor(fioDomain: string, isPublic: boolean, maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioDomain = fioDomain
-    this.isPublic = isPublic ? 1 : 0
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
-  }
+export class SetFioDomainVisibility extends SignedTransaction<
+    SetFioDomainVisibilityRequestData,
+    SetFioDomainVisibilityResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.setFioDomainPublic}` as const
+    public ACTION = Action.setDomainPublic
+    public ACCOUNT = Account.address
 
-  public getData(): any {
-    this.validationData = { fioDomain: this.fioDomain, tpid: this.technologyProviderId || null }
-    this.validationRules = validationRules.registerFioDomain
-    const actor = this.getActor()
-    const data = {
-      fio_domain: this.fioDomain,
-      is_public: this.isPublic,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
-      actor,
+    constructor(config: RequestConfig, public props: SetFioDomainVisibilityRequestProps) {
+        super(config)
+
+        this.validationData = {fioDomain: props.fioDomain, tpid: props.technologyProviderId}
+        this.validationRules = validationRules.registerFioDomain
     }
-    return data
-  }
 
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_domain: this.props.fioDomain,
+        is_public: this.props.isPublic ? 1 as const : 0 as const,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 }

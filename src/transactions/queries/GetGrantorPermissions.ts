@@ -1,23 +1,29 @@
-import { PermissionsResponse } from '../../entities/PermissionsResponse'
-import { Query } from './Query'
+import {EndPoint, PermissionsResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetGrantorPermissions extends Query<PermissionsResponse> {
-  public ENDPOINT: string = 'chain/get_grantor_permissions'
-  public accountToUse: string
-  public limit: number | null
-  public offset: number | null
+export type GrantorPermissionsQueryProps = {
+    grantorAccount: string
+    limit?: number
+    offset?: number,
+}
 
-  constructor(account: string, limit?: number, offset?: number ) {
-    super()
-    this.accountToUse = account
-    this.limit = limit || null
-    this.offset = offset || null
-  }
+export type GrantorPermissionsQueryData = {
+    grantor_account: string
+    limit?: number
+    offset?: number,
+}
 
-  public getData() {
-    return { grantor_account: this.accountToUse,
-      limit: this.limit || null,
-      offset: this.offset || null }
-  }
+export class GetGrantorPermissions extends Query<GrantorPermissionsQueryData, PermissionsResponse> {
+    public ENDPOINT = `chain/${EndPoint.getGrantorPermissions}` as const
 
+    constructor(config: RequestConfig, public props: GrantorPermissionsQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({
+        grantor_account: this.props.grantorAccount,
+        limit: this.props.limit,
+        offset: this.props.offset,
+    })
 }

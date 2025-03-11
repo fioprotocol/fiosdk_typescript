@@ -1,16 +1,21 @@
-import { GetEncryptKeyResponse } from '../../entities/GetEncryptKeyResponse'
-import { Query } from './Query'
+import {GetEncryptKeyResponse, EndPoint} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetEncryptKey extends Query<GetEncryptKeyResponse> {
-  public ENDPOINT: string = 'chain/get_encrypt_key'
-  public fioAddress: string
+export type EncryptKeyQueryProps = {
+    fioAddress: string,
+}
 
-  constructor(fioAddress: string) {
-    super()
-    this.fioAddress = fioAddress
-  }
+export type EncryptKeyQueryData = {
+    fio_address: string;
+}
 
-  public getData() {
-    return { fio_address: this.fioAddress }
-  }
+export class GetEncryptKey extends Query<EncryptKeyQueryData, GetEncryptKeyResponse> {
+    public ENDPOINT = `chain/${EndPoint.getEncryptKey}` as const
+
+    constructor(config: RequestConfig, public props: EncryptKeyQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({fio_address: this.props.fioAddress})
 }

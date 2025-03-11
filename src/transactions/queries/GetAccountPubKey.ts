@@ -1,16 +1,21 @@
-import { GetAccountPubKeyResponse } from '../../entities/GetAccountPubKeyResponse'
+import {GetAccountPubKeyResponse, EndPoint} from '../../entities'
+import { RequestConfig } from '../Transactions'
 import { Query } from './Query'
 
-export class GetAccountPubKey extends Query<GetAccountPubKeyResponse> {
-  public ENDPOINT: string = 'chain/get_account_fio_public_key'
-  public account: string
+export type AccountPubKeyQueryProps = {
+    account: string,
+}
 
-  constructor(account: string) {
-    super()
-    this.account = account
-  }
+export type AccountPubKeyQueryData = {
+    account: string,
+}
 
-  public getData() {
-    return { account: this.account }
-  }
+export class GetAccountPubKey extends Query<AccountPubKeyQueryData, GetAccountPubKeyResponse> {
+    public ENDPOINT = `chain/${EndPoint.getAccountFioPublicKey}` as const
+
+    constructor(config: RequestConfig, public props: AccountPubKeyQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({account: this.props.account})
 }

@@ -1,26 +1,32 @@
-import { PermissionsResponse } from '../../entities/PermissionsResponse'
-import { Query } from './Query'
+import {EndPoint, PermissionsResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetObjectPermissions extends Query<PermissionsResponse> {
-  public ENDPOINT: string = 'chain/get_object_permissions'
-  public permissionNameToUse: string
-  public objectNameToUse: string
-  public limit: number | null
-  public offset: number | null
+export type ObjectPermissionsQueryProps = {
+    permissionName: string,
+    objectName: string,
+    limit?: number,
+    offset?: number,
+}
 
-  constructor(permissionName: string, objectName: string, limit?: number, offset?: number ) {
-    super()
-    this.permissionNameToUse = permissionName
-    this.objectNameToUse = objectName
-    this.limit = limit || null
-    this.offset = offset || null
-  }
+export type ObjectPermissionsQueryData = {
+    permission_name: string
+    object_name: string
+    limit?: number
+    offset?: number,
+}
 
-  public getData() {
-    return { permission_name: this.permissionNameToUse,
-      object_name: this.objectNameToUse,
-      limit: this.limit || null,
-      offset: this.offset || null }
-  }
+export class GetObjectPermissions extends Query<ObjectPermissionsQueryData, PermissionsResponse> {
+    public ENDPOINT = `chain/${EndPoint.getObjectPermissions}` as const
 
+    constructor(config: RequestConfig, public props: ObjectPermissionsQueryProps) {
+        super(config)
+    }
+
+    public getData = () => ({
+        limit: this.props.limit,
+        object_name: this.props.objectName,
+        offset: this.props.offset,
+        permission_name: this.props.permissionName,
+    })
 }

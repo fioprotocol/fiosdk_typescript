@@ -1,4 +1,1 @@
-export interface LockPeriod {
-  duration: number,
-  amount: number,
-}
+export { LockPeriod } from './types/LockPeriod';

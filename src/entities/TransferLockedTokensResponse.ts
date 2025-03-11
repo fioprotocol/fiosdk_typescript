@@ -1,4 +1,1 @@
-export interface TransferLockedTokensResponse {
-  status: string,
-  fee_collected: number
-}
+export { TransferLockedTokensResponse } from './responses/TransferLockedTokensResponse';

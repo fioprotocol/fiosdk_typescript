@@ -1,35 +1,37 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, RenewFioAddressResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class RenewFioAddress extends SignedTransaction {
+export type RenewFioAddressRequestProps = {
+    fioAddress: string
+    maxFee: number
+    technologyProviderId: string,
+}
 
-  public ENDPOINT: string = 'chain/renew_fio_address'
-  public ACTION: string = 'renewaddress'
-  public ACCOUNT: string = Constants.defaultAccount
-  public fioAddress: string
-  public maxFee: number
-  public technologyProviderId: String
+export type RenewFioAddressRequestData = {
+    fio_address: string
+    max_fee: number
+    tpid: string
+    actor: string,
+}
 
-  constructor(fioAddress: string, maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioAddress = fioAddress
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
+export class RenewFioAddress extends SignedTransaction<RenewFioAddressRequestData, RenewFioAddressResponse> {
+    public ENDPOINT = `chain/${EndPoint.renewFioAddress}` as const
+    public ACTION = Action.renewAddress
+    public ACCOUNT = Account.address
 
-    this.validationData = { fioAddress, tpid: technologyProviderId || null }
-    this.validationRules = validationRules.renewFioAddress
-  }
+    constructor(config: RequestConfig, public props: RenewFioAddressRequestProps) {
+        super(config)
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      fio_address: this.fioAddress,
-      max_fee: this.maxFee,
-      tpid: this.technologyProviderId,
-      actor,
+        this.validationData = {fioAddress: props.fioAddress, tpid: props.technologyProviderId}
+        this.validationRules = validationRules.renewFioAddress
     }
-    return data
-  }
 
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_address: this.props.fioAddress,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 }

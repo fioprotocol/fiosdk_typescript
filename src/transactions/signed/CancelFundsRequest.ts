@@ -1,34 +1,40 @@
-
-import { validationRules } from '../../utils/validation'
+import {Account, Action, CancelFundsRequestResponse, EndPoint} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export class CancelFundsRequest extends SignedTransaction {
-  public ENDPOINT: string = 'chain/cancel_funds_request'
-  public ACTION: string = 'cancelfndreq'
-  public ACCOUNT: string = 'fio.reqobt'
+export type CancelFundsRequestRequestProps = {
+    fioRequestId: number;
+    maxFee: number;
+    technologyProviderId: string;
+}
 
-  public fioRequestId: number
-  public maxFee: number
-  public technologyProviderId: string
+export type CancelFundsRequestRequestData = {
+    fio_request_id: number;
+    max_fee: number;
+    tpid: string;
+    actor: string;
+}
 
-  constructor(fioRequestId: number,  maxFee: number, technologyProviderId: string = '') {
-    super()
-    this.fioRequestId = fioRequestId
-    this.maxFee = maxFee
-    this.technologyProviderId = technologyProviderId
+export class CancelFundsRequest extends SignedTransaction<
+    CancelFundsRequestRequestData,
+    CancelFundsRequestResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.cancelFundsRequest}` as const
+    public ACTION = Action.cancelFundsRequest
+    public ACCOUNT = Account.reqObt
 
-    this.validationData = { tpid: technologyProviderId || null }
-    this.validationRules = validationRules.cancelFundsRequestRules
-  }
+    constructor(config: RequestConfig, public props: CancelFundsRequestRequestProps) {
+        super(config)
 
-  public getData(): any {
-    const actor = this.getActor()
-    const data = {
-      fio_request_id: this.fioRequestId,
-      actor,
-      tpid: this.technologyProviderId,
-      max_fee: this.maxFee,
+        this.validationData = {tpid: props.technologyProviderId}
+        this.validationRules = validationRules.cancelFundsRequestRules
     }
-    return data
-  }
+
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_request_id: this.props.fioRequestId,
+        max_fee: this.props.maxFee,
+        tpid: this.props.technologyProviderId,
+    })
 }

@@ -1,39 +1,46 @@
-import { Constants } from '../../utils/constants'
-import { validationRules } from '../../utils/validation'
+import {Account, Action, EndPoint, RegisterFioAddressResponse} from '../../entities'
+import {validationRules} from '../../utils/validation'
+import {RequestConfig} from '../Transactions'
 import { SignedTransaction } from './SignedTransaction'
 
-export type RegisterFioDomainAddressOptions = {
-  fioAddress: string;
-  maxFee: number;
-  isPublic?: boolean;
-  ownerPublicKey?: string | null;
-  technologyProviderId?: string | null;
+export type RegisterFioDomainAddressRequestProps = {
+    fioAddress: string;
+    maxFee: number;
+    isPublic?: boolean;
+    ownerPublicKey?: string;
+    technologyProviderId: string;
 }
 
-export class RegisterFioDomainAddress extends SignedTransaction {
+export type RegisterFioDomainAddressRequestData = {
+    actor: string
+    fio_address: string
+    is_public: 0 | 1
+    max_fee: number,
+    owner_fio_public_key: string,
+    tpid: string,
+}
 
-  public ENDPOINT: string = 'chain/register_fio_domain_address'
-  public ACTION: string = 'regdomadd'
-  public ACCOUNT: string = Constants.defaultAccount
+export class RegisterFioDomainAddress extends SignedTransaction<
+    RegisterFioDomainAddressRequestData,
+    RegisterFioAddressResponse
+> {
+    public ENDPOINT = `chain/${EndPoint.registerFioDomainAddress}` as const
+    public ACTION = Action.regDomainAddress
+    public ACCOUNT = Account.address
 
-  constructor(
-      public options: RegisterFioDomainAddressOptions,
-  ) {
-    super()
-    this.validationData = { fioAddress: options.fioAddress, tpid: options.technologyProviderId }
-    this.validationRules = validationRules.registerFioDomainAddress
-  }
+    constructor(config: RequestConfig, public props: RegisterFioDomainAddressRequestProps) {
+        super(config)
 
-  public getData(): any {
-    const actor = this.getActor()
-    return {
-      fio_address: this.options.fioAddress,
-      max_fee: this.options.maxFee,
-      is_public: this.options.isPublic ? 1 : 0,
-      owner_fio_public_key: this.options.ownerPublicKey || this.publicKey || null,
-      tpid: this.options.technologyProviderId || null,
-      actor,
+        this.validationData = {fioAddress: props.fioAddress, tpid: props.technologyProviderId}
+        this.validationRules = validationRules.registerFioDomainAddress
     }
-  }
 
+    public getData = () => ({
+        actor: this.getActor(),
+        fio_address: this.props.fioAddress,
+        is_public: this.props.isPublic ? 1 as const : 0 as const,
+        max_fee: this.props.maxFee,
+        owner_fio_public_key: this.props.ownerPublicKey || this.publicKey,
+        tpid: this.props.technologyProviderId,
+    })
 }

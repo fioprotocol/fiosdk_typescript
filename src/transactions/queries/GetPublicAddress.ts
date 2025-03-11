@@ -1,24 +1,29 @@
-import { PublicAddressResponse } from '../../entities/PublicAddressResponse'
-import { Query } from './Query'
+import {EndPoint, PublicAddressResponse} from '../../entities'
+import {RequestConfig} from '../Transactions'
+import {Query} from './Query'
 
-export class GetPublicAddress extends Query<PublicAddressResponse> {
-  public ENDPOINT: string = 'chain/get_pub_address'
-  public fioAddress: string
-  public chainCode: string
-  public tokenCode: string
+export type PublicAddressQueryProps = {
+    fioAddress: string
+    chainCode: string
+    tokenCode: string,
+}
 
-  constructor(fioAddress: string, chainCode: string, tokenCode: string) {
-    super()
-    this.fioAddress = fioAddress
-    this.chainCode = chainCode
-    this.tokenCode = tokenCode
-  }
+export type PublicAddressQueryData = {
+    fio_address: string,
+    chain_code: string,
+    token_code: string,
+}
 
-  public getData() {
-    return {
-      fio_address: this.fioAddress,
-      chain_code: this.chainCode,
-      token_code: this.tokenCode,
+export class GetPublicAddress extends Query<PublicAddressQueryData, PublicAddressResponse> {
+    public ENDPOINT = `chain/${EndPoint.getPublicAddress}` as const
+
+    constructor(config: RequestConfig, public props: PublicAddressQueryProps) {
+        super(config)
     }
-  }
+
+    public getData = () => ({
+        chain_code: this.props.chainCode,
+        fio_address: this.props.fioAddress,
+        token_code: this.props.tokenCode,
+    })
 }
