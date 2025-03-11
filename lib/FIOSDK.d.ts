@@ -340,6 +340,10 @@ export declare class FIOSDK {
      */
     static setCustomRawAbiAccountName(customRawAbiAccountName: string | null): void;
     /**
+     * Private key generation in the SDK is available for testing purposes only.
+     * Do not generate private keys for production application using this method.
+     * Instead pass securely generated private keys or seed phrase to the SDK constructor.
+     *
      * @ignore
      */
     static createPrivateKey(entropy: Buffer): Promise<{
@@ -348,6 +352,10 @@ export declare class FIOSDK {
     }>;
     /**
      * Create a FIO private key.
+     *
+     * Private key generation in the SDK is available for testing purposes only.
+     * Do not generate private keys for production application using this method.
+     * Instead pass securely generated private keys or seed phrase to the SDK constructor.
      *
      * @param mnemonic mnemonic used to generate a random unique private key.
      * @example real flame win provide layer trigger soda erode upset rate beef wrist fame design merit
