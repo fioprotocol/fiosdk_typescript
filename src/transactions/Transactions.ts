@@ -398,12 +398,14 @@ export class Transactions {
         body,
         fetchOptions,
         signal,
+        returnBaseUrl = false,
     }: {
         baseUrl: string,
         endPoint: string,
         body?: string | null,
         fetchOptions?: any,
         signal: AbortSignal,
+        returnBaseUrl?: boolean,
     }): Promise<any> {
         let options: any
         this.validate()
@@ -472,7 +474,13 @@ export class Transactions {
                 }
                 throw error
             }
-            return res.json()
+            const result = await res.json();
+
+            if (returnBaseUrl) {
+                return { ...result, baseUrl };
+            }
+
+            return result;
         } catch (e) {
             // @ts-ignore
             e.requestParams = {baseUrl, endPoint, body, fetchOptions}
@@ -485,12 +493,13 @@ export class Transactions {
         body?: string | null,
         fetchOptions?: any,
         requestTimeout?: number,
+        returnBaseUrl?: boolean,
     }): Promise<any> {
-        const {endpoint, body, fetchOptions, requestTimeout} = req
+        const {endpoint, body, fetchOptions, requestTimeout, returnBaseUrl} = req
 
         const res = await asyncWaterfall({
             asyncFunctions: this.config.baseUrls.map((apiUrl) => (signal: AbortSignal) =>
-                this.executeCall({baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal}),
+                this.executeCall({ baseUrl: apiUrl, endPoint: endpoint, body, fetchOptions, signal, returnBaseUrl }),
             ),
             requestTimeout,
             baseUrls: this.config.baseUrls,
