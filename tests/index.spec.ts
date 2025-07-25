@@ -25,6 +25,7 @@ import { generateTestingFioAddress, generateTestingFioDomain, mnemonic, mnemonic
 import { CheckTransactionTests } from './common/check-transaction.spec'
 import { EncryptDecryptContentTests } from './common/encrypt-decrypt-content.spec'
 import { FioRequestsWithDifferentEncryptKeysTests } from './common/fio-requests-with-different-encrypt-keys.spec'
+import { CheckTransactionWithReturnedBackUrlTests } from './common/check-transaction-with-returned-back-url.spec'
 
 dotenv.config({path: ['.env.test', '.env']})
 
@@ -204,5 +205,6 @@ describe('', () => {
         EncryptDecryptContentTests({ baseUrls });
 
         CheckTransactionTests({ fioSdk2, testFioAddressName, testFioAddressName2 });
+        CheckTransactionWithReturnedBackUrlTests({ fioSdk2, testFioAddressName, testFioAddressName2 });
     })
 })

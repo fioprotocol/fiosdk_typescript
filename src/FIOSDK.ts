@@ -1104,10 +1104,12 @@ export class FIOSDK {
     public async executePreparedTrx(
         endPoint: EndPoint,
         preparedTrx: unknown,
+        returnBaseUrl: boolean = false,
     ): Promise<any> {
         const response = await new Transactions(this.config).multicastServers({
             body: JSON.stringify(preparedTrx),
             endpoint: `chain/${endPoint}`,
+            returnBaseUrl,
         })
         return SignedTransaction.prepareResponse(response, true)
     }
