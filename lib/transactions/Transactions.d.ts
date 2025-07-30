@@ -102,18 +102,20 @@ export declare class Transactions {
         serializedContextFreeData: any;
     }): Promise<SignedTxArgs>;
     pushToServer(transaction: RawRequest, endpoint: string, dryRun: boolean): Promise<any>;
-    executeCall({ baseUrl, endPoint, body, fetchOptions, signal, }: {
+    executeCall({ baseUrl, endPoint, body, fetchOptions, signal, returnBaseUrl, }: {
         baseUrl: string;
         endPoint: string;
         body?: string | null;
         fetchOptions?: any;
         signal: AbortSignal;
+        returnBaseUrl?: boolean;
     }): Promise<any>;
     multicastServers(req: {
         endpoint: string;
         body?: string | null;
         fetchOptions?: any;
         requestTimeout?: number;
+        returnBaseUrl?: boolean;
     }): Promise<any>;
     getCipherContent(contentType: ContentType, content: any, privateKey: string, publicKey: string): string;
     getUnCipherContent<T = any>(contentType: ContentType, content: string, privateKey: string, publicKey: string): T;

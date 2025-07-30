@@ -11,6 +11,7 @@ export declare abstract class SignedTransaction<T = any, R = any> extends Transa
                 };
             }>;
         };
+        baseUrl?: string;
     } | any, includeTrxId?: boolean): any;
     static parseProcessedResult(processed: {
         action_traces: Array<{

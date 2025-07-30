@@ -10,19 +10,28 @@ export abstract class SignedTransaction<T = any, R = any> extends Transactions {
                 block_num: number,
                 action_traces: Array<{ receipt: { response: string } }>,
             },
+            baseUrl?: string,
         } | any,
         includeTrxId: boolean = false,
     ) {
         if (!result.processed) {
             return result
         }
-        const processed = SignedTransaction.parseProcessedResult(result.processed)
-        return {
+        const processed = SignedTransaction.parseProcessedResult(result.processed);
+        const baseUrl = result.baseUrl || null;
+
+        let res = {
             block_num: result.processed.block_num,
             block_time: result.processed.block_time,
             transaction_id: result.transaction_id,
             ...processed,
         }
+
+        if (baseUrl) {
+            res.baseUrl = baseUrl;
+        }
+
+        return res;
     }
 
     public static parseProcessedResult(processed: { action_traces: Array<{ receipt: { response: string } }> }) {
