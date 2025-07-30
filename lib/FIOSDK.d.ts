@@ -661,7 +661,7 @@ export declare class FIOSDK {
      * @param endPoint endpoint.
      * @param preparedTrx
      */
-    executePreparedTrx(endPoint: EndPoint, preparedTrx: unknown): Promise<any>;
+    executePreparedTrx(endPoint: EndPoint, preparedTrx: unknown, returnBaseUrl?: boolean): Promise<any>;
     /**
      * @deprecated
      * Registers a FIO Address on the FIO blockchain.

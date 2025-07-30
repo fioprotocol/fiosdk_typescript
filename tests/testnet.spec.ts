@@ -22,6 +22,7 @@ import { FioRequestRejectTests } from './common/fio-request-reject.spec';
 import { TransferTokensTests } from './common/transfer-tokens.spec';
 import { RecordObtDataTests } from './common/record-obt-data.spec';
 import { CheckTransactionTests } from './common/check-transaction.spec';
+import { CheckTransactionWithReturnedBackUrlTests } from './common/check-transaction-with-returned-back-url.spec';
 import { timeout, fetchJson } from './utils';
 import { EncryptDecryptContentTests } from './common/encrypt-decrypt-content.spec';
 import { FioRequestsWithDifferentEncryptKeysTests } from './common/fio-requests-with-different-encrypt-keys.spec';
@@ -125,4 +126,4 @@ TransferTokensTests({ fioSdk, fioSdk2, publicKey2 });
 EncryptDecryptContentTests({ baseUrls });
 
 CheckTransactionTests({ fioSdk2, testFioAddressName, testFioAddressName2 });
-
+CheckTransactionWithReturnedBackUrlTests({ fioSdk2, testFioAddressName, testFioAddressName2 });
