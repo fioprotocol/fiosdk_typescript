@@ -10,5 +10,6 @@ export type PushTransactionOptions = {
     data: any
     authPermission?: string | null
     encryptOptions?: EncryptOptions | null
-    signingAccount?: string | null,
+    signingAccount?: string | null
+    expirationOffset?: number | null
 }
