@@ -13,5 +13,6 @@ export type PushTransactionOptions = {
     authPermission?: string | null;
     encryptOptions?: EncryptOptions | null;
     signingAccount?: string | null;
+    expirationOffset?: number | null;
 };
 //# sourceMappingURL=PushTransactionOptions.d.ts.map

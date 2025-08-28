@@ -3006,6 +3006,8 @@ export class FIOSDK {
      * @param options.authPermission
      * @param options.encryptOptions JSON object with params for encryption
      * @param options.signingAccount
+     * @param options.expirationOffset Expiration time offset for this transaction in seconds.
+     * Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
      */
     public async pushTransaction(options: PushTransactionOptions): Promise<any> {
         const {
@@ -3015,6 +3017,7 @@ export class FIOSDK {
             authPermission,
             encryptOptions = {},
             signingAccount,
+            expirationOffset,
         } = cleanupObject(options)
         data.tpid = this.getTechnologyProviderId(data.tpid)
         if (data.content && !encryptOptions.publicKey) {
@@ -3045,7 +3048,7 @@ export class FIOSDK {
             encryptOptions,
             signingAccount,
         })
-        return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx)
+        return pushTransaction.execute(this.privateKey, this.publicKey, this.returnPreparedTrx, expirationOffset)
     }
 
     /**

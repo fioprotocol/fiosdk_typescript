@@ -1694,6 +1694,8 @@ export declare class FIOSDK {
      * @param options.authPermission
      * @param options.encryptOptions JSON object with params for encryption
      * @param options.signingAccount
+     * @param options.expirationOffset Expiration time offset for this transaction in seconds.
+     * Default is 180 seconds. Increasing number of seconds gives transaction more lifetime term.
      */
     pushTransaction(options: PushTransactionOptions): Promise<any>;
     /**
