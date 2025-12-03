@@ -41,6 +41,12 @@ export const allRules = {
         required: true,
         type: String,
     },
+    tokenCode: {
+        length: {min: 1, max: 128},
+        match: /^[!@#%\^&()_+\-=;:,.<>/?a-zA-Z0-9]+$/,
+        required: true,
+        type: String,
+    },
     tpid: {
         length: {min: 3, max: 64},
         match: /^(?=.{3,64}$)[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?@[a-zA-Z0-9](?:(?!-{2,})[a-zA-Z0-9-]*[a-zA-Z0-9]+)?$/gim,
@@ -63,13 +69,13 @@ export const validationRules = {
     newFundsRequest: {
         payeeFioAddress: allRules.fioAddress,
         payerFioAddress: allRules.fioAddress,
-        tokenCode: allRules.chain,
+        tokenCode: allRules.tokenCode,
         tpid: allRules.tpid,
     },
     recordObtData: {
         payeeFioAddress: allRules.fioAddress,
         payerFioAddress: allRules.fioAddress,
-        tokenCode: allRules.chain,
+        tokenCode: allRules.tokenCode,
         tpid: allRules.tpid,
     },
     registerFioAddress: {
