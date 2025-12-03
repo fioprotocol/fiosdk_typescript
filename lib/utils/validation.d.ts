@@ -57,6 +57,15 @@ export declare const allRules: {
         required: true;
         type: StringConstructor;
     };
+    tokenCode: {
+        length: {
+            min: number;
+            max: number;
+        };
+        match: RegExp;
+        required: true;
+        type: StringConstructor;
+    };
     tpid: {
         length: {
             min: number;
