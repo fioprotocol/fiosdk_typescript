@@ -562,7 +562,7 @@ export class FIOSDK {
      * @returns Token Code is Valid
      */
     public static isTokenCodeValid(tokenCode: string) {
-        const validation = validate({tokenCode}, {tokenCode: allRules.chain})
+        const validation = validate({tokenCode}, {tokenCode: allRules.tokenCode})
         if (!validation.isValid) {
             throw new ValidationError(validation.errors)
         }
